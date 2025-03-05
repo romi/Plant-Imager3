@@ -1,0 +1,7 @@
+module PlantImager
+Main 1.0 Main.qml
+
+
+Header 1.0 Header.qml
+LeftPane 1.0 LeftPane.qml
+RightPane 1.0 RightPane.qml

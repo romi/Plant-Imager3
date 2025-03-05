@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/ttf">
+  <file>materialdesignicons-webfont.ttf</file>
+</qresource>
+</RCC>
+
+<!--to compile use: pyside6-rcc plantimager/PlantImagerApp/ttf/ttf.qrc -o plantimager/PlantImagerApp/ttf/rc_ttf.py  -->
+

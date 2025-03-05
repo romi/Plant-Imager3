@@ -1,0 +1,3 @@
+module PlantImagerApp.Style
+singleton Style 1.0 Style.qml
+Icons 1.0 Icons.js
