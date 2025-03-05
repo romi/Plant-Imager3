@@ -13,7 +13,8 @@ from .camera import CameraReceiver, CameraBridge
 from .PlantImagerApp import rc_style
 from .PlantImagerApp.ttf import rc_ttf
 
-if __name__ == "__main__":
+
+def main():
     app = QGuiApplication(sys.argv)
     font = QFont("Nunito Sans")
     app.setFont(font)
@@ -25,6 +26,9 @@ if __name__ == "__main__":
     if not engine.rootObjects():
         sys.exit(-1)
 
-    #view.setFlag(Qt.WindowType.FramelessWindowHint)
+    # view.setFlag(Qt.WindowType.FramelessWindowHint)
     ex = app.exec()
     sys.exit(ex)
+
+if __name__ == "__main__":
+   main()
