@@ -8,10 +8,10 @@ from PySide6.QtQuickControls2 import QQuickStyle
 
 
 # import QML resources in python modules
-from .camera import CameraReceiver, CameraBridge
+from plantimager.controller.camera import CameraReceiver, CameraBridge
 
-from .PlantImagerApp import rc_style
-from .PlantImagerApp.ttf import rc_ttf
+from plantimager.controller.PlantImagerApp import rc_style
+from plantimager.controller.PlantImagerApp.ttf import rc_ttf
 
 
 def main():

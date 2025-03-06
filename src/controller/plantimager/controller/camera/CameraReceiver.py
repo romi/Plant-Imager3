@@ -9,7 +9,7 @@ from PySide6.QtQml import QmlElement
 
 import av
 
-from .pyav_receiver import PyAVReceiver
+from plantimager.controller.camera.pyav_receiver import PyAVReceiver
 __all__ = ['CameraReceiver']
 
 
