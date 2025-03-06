@@ -6,6 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "plantimager.controller"
 version = "0.0.1"
 dependencies = [
+    "av",
+    "opencv-python",
+    "pyside6",
 ]
 
 [project.scripts]
