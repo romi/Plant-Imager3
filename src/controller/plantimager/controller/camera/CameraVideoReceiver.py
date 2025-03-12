@@ -10,7 +10,7 @@ from PySide6.QtQml import QmlElement
 import av
 
 from plantimager.controller.camera.pyav_receiver import PyAVReceiver
-__all__ = ['CameraReceiver']
+__all__ = ['CameraVideoReceiver']
 
 
 class ReceiverWorker(QThread):
@@ -84,7 +84,7 @@ QML_IMPORT_MAJOR_VERSION = 1
 
 
 @QmlElement
-class CameraReceiver(QObject):
+class CameraVideoReceiver(QObject):
     """
     Receives frames from remote camera using PyAVReceiver.
     Sets received frame to videoSink.
@@ -146,8 +146,8 @@ class CameraReceiver(QObject):
 
     @Slot()
     def _handle_worker_end_of_media(self):
+        self._new_media()
         if self._auto_play:
-            self._new_media()
             self.play()
 
     @Slot(QVideoFrame)
@@ -193,6 +193,7 @@ class CameraReceiver(QObject):
         if self._auto_play != autoPlay:
             self._auto_play = autoPlay
             self.autoPlayChanged.emit(autoPlay)
+            self.play()
 
     @Slot()
     def play(self):

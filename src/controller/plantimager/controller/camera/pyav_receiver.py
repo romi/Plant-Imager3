@@ -1,8 +1,6 @@
 import time
 from typing import Iterator
 
-import cv2 as cv
-
 import av
 av.logging.set_level(av.logging.ERROR)
 av.logging.set_libav_level(av.logging.ERROR)
@@ -99,6 +97,7 @@ class PyAVReceiver:
 
 
 if __name__ == "__main__":
+    import cv2 as cv
     #receiver = PyAVReceiver("tcp://picamera2.wlan:8888", format="mpegts")
     receiver = PyAVReceiver("tcp://localhost:8888", format="mpegts")
     n = 0

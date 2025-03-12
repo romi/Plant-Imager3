@@ -6,9 +6,10 @@ from PySide6.QtGui import QGuiApplication, QFont
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQuickControls2 import QQuickStyle
 
+from plantimager.controller.ImageProvider import imageProvider
 
 # import QML resources in python modules
-from plantimager.controller.camera import CameraReceiver, CameraBridge
+from plantimager.controller.camera import CameraVideoReceiver, CameraBridge
 
 from plantimager.controller.PlantImagerApp import rc_style
 from plantimager.controller.PlantImagerApp.ttf import rc_ttf
@@ -20,6 +21,7 @@ def main():
     app.setFont(font)
     QQuickStyle.setStyle("Material")
     engine = QQmlApplicationEngine()
+    engine.addImageProvider("provider", imageProvider)
     engine.addImportPath(dirname(__file__))
     engine.loadFromModule("PlantImagerApp", "Main")
 

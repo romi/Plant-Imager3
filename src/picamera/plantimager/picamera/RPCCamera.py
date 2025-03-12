@@ -7,11 +7,12 @@ import zmq
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
 from picamera2.outputs import PyavOutput
-from simplejpeg import encode_jpeg_yuv_planes, encode_jpeg
+from simplejpeg import encode_jpeg
 
 from plantimager.commons.RPC import RPCServer
 from plantimager.commons.cameradevice import Camera
 
+__all__ = ['RPCCamera']
 
 class PyavOutput_nobuffer(PyavOutput):
     def __init__(self, output_name, format=None, pts=None):
@@ -69,8 +70,8 @@ class RPCCamera(Camera, RPCServer):
     def get_image(self) -> (memoryview, dict):
         image = self.picam.capture_array()
         # buffer = jpegxl_encode(image, lossless=True, effort=2)
-        buffer = encode_jpeg(image, quality=95, fastdct=True)
-        return memoryview(buffer), {"type": "jpeg"}
+        buffer = encode_jpeg(image, quality=95, colorsubsampling="420", fastdct=True)
+        return memoryview(buffer), {"format": "jpeg"}
 
 
 def main():

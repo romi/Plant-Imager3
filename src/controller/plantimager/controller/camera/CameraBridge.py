@@ -1,9 +1,11 @@
 from enum import Flag, auto, StrEnum
 
-from PySide6.QtCore import Qt, QThread, QTimer, QObject, Signal, Slot, Property
-from PySide6.QtGui import QImage
-from PySide6.QtMultimedia import QVideoFrame, QVideoSink
-from PySide6.QtQml import QmlElement
+import zmq
+from PySide6.QtCore import QThread, QObject, Signal, Slot, Property
+from PySide6.QtQml import QmlElement, QmlUncreatable
+
+from plantimager.controller.camera.PiCameraComm import PiCameraComm
+from plantimager.controller.ImageProvider import imageProvider
 
 QML_IMPORT_NAME = "PlantImagerApp.Camera"
 QML_IMPORT_MAJOR_VERSION = 1
@@ -29,6 +31,7 @@ STATE_TO_CLASS = {
 }
 
 @QmlElement
+@QmlUncreatable("Camera bridge cannot be created from QML")
 class CameraBridge(QObject):
     """
     Bridge for Picamera to Qt Quick
@@ -44,12 +47,44 @@ class CameraBridge(QObject):
     addressChanged = Signal(str)
     statusChanged = Signal(str)
     statusClassChanged = Signal(str)
+    videoSourceChanged = Signal(str)
+    imageSourceChanged = Signal(str)
 
-    def __init__(self, parent: QObject = None):
+    def __init__(self, name: str, address: str, context: zmq.Context, parent: QObject = None):
         super().__init__(parent)
-        self._name = "picamera2"
-        self._address = "picamera2.wlan"
+        self._name = name
+        self._address = address
         self._status = States.DISCONNECTED
+
+        self._commThread = QThread()
+        self._camera = PiCameraComm(context, address)
+        self._camera.moveToThread(self._commThread)
+        self._commThread.finished.connect(self._camera.deleteLater)
+        self._camera.imageReady.connect(self._newImage)
+
+        self._video_source = ""
+        self._image_source = ""
+
+        self._commThread.start()
+
+
+    @Slot()
+    def getImage(self):
+        self._camera.getImage()
+
+    @Slot()
+    def startVideo(self):
+        self._camera.startVideo()
+
+    @Slot()
+    def stopVideo(self):
+        self._camera.stopVideo()
+
+    @Slot(memoryview, dict)
+    def _newImage(self, buffer: memoryview, buffer_info: dict):
+        imageProvider.addImageFromBuffer(self._name, buffer, buffer_info)
+        self._image_source = f"image://provider/{self._name}"
+        self.imageSourceChanged.emit(self._image_source)
 
     @Property(str, notify=nameChanged)
     def name(self) -> str:
@@ -66,4 +101,12 @@ class CameraBridge(QObject):
     @Property(str, notify=statusClassChanged)
     def statusClass(self) -> str:
         return STATE_TO_CLASS[self._status]
+
+    @Property(str, notify=videoSourceChanged)
+    def videoSource(self) -> str:
+        return self._video_source
+
+    @Property(str, notify=imageSourceChanged)
+    def imageSource(self) -> str:
+        return self._image_source
 

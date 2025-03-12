@@ -45,9 +45,9 @@ Control {
                 color: "black"
             }
 
-            P.CameraReceiver {
+            P.CameraVideoReceiver {
                 id: receiver
-                source: "tcp://Picamera2.wlan:8888"
+                source: bridge.videoSource
                 format: "mpegts"
                 videoSink: videoOutput.videoSink
                 autoPlay: false
@@ -55,6 +55,33 @@ Control {
                     componentComplete()
                 }
             }
+
+            StackLayout.onIsCurrentItemChanged: {
+                if(StackLayout.isCurrentItem) {
+                    receiver.autoplay = true
+                    receiver.play()
+                } else {
+                    receiver.autoplay = false
+                    receiver.stop()
+                }
+            }
+
+        }
+
+        Image {
+            id: imageOutput
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            Rectangle {
+                anchors.fill: parent
+                z: parent.z-1
+                color: "black"
+            }
+
+            source: bridge.imageSource
+            cache: false
+
         }
     }
 
@@ -76,7 +103,10 @@ Control {
         Button {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            text: "Button 1"
+            text: "Video"
+            onClicked: {
+                media_control.currentIndex = 0
+            }
         }
 
         Button {
@@ -88,7 +118,11 @@ Control {
         Button {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            text: "Button 3"
+            text: "Image"
+
+            onClicked: {
+                media_control.currentIndex = 1
+            }
         }
 
         Button {

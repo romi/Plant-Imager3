@@ -14,5 +14,5 @@ class Camera(ABC):
         pass
 
     @abstractmethod
-    def get_image(self) -> (memoryview, dict):
+    def get_image(self) -> tuple[memoryview, dict]:
         pass
