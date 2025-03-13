@@ -122,7 +122,8 @@ class DeviceRegistry(Thread):
         device_type = payload["device_type"]
         addr = payload["addr"]
         proposed_name = payload["name"]
-        for name, (device_type, address) in self.devices.items():
+        for name, val in self.devices.items():
+            _, address = val
             if address == addr:
                 self._remove_device(name)
         self._add_device(device_type, addr, proposed_name)
@@ -135,13 +136,15 @@ class DeviceRegistry(Thread):
         return self._remove_device(name)
 
 
-    def _add_device(self, device_type: str, addr: str, name: str = None):
+    def _add_device(self, device_type: str, addr: str, proposed_name: str = None):
         i = 0
-        if not name:
+        if not proposed_name:
             name = f"{device_type}-{i}"
+        else:
+            name = proposed_name
         while name in self.devices:
             i += 1
-            name = f"{device_type}-{i}"
+            name = f"{proposed_name}-{i}"
         self.devices[name] = (device_type, addr)
         for callback in self._new_device_callbacks:
             callback(device_type, addr, name)

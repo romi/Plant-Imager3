@@ -1,5 +1,5 @@
 import zmq
-from imagecodecs import jpegxl_encode
+from simplejpeg import encode_jpeg
 import numpy as np
 
 from plantimager.commons.RPC import RPCServer
@@ -22,12 +22,12 @@ class DummyCamera(Camera, RPCServer):
 
     @RPCServer.register_method_buffer
     def get_image(self) -> (memoryview, dict):
-        image = np.random.randint(0, 2**16, (1200, 800, 3), dtype=np.uint16)
-        buffer = jpegxl_encode(image, lossless=True, effort=2)
-        return memoryview(buffer), {"type": "jpegxl"}
+        image = np.random.randint(0, 255, (1200, 800, 3), dtype=np.uint8)
+        buffer = encode_jpeg(image, quality=95, colorsubsampling="420", fastdct=True)
+        return memoryview(buffer), {"format": "jpeg"}
 
 if __name__ == "__main__":
     context = zmq.Context()
     camera = DummyCamera(context, url="tcp://127.0.0.1")
-    camera.register_to_registry(DummyCamera.__name__, DummyCamera.__name__, "tcp://127.0.0.1:5555")
+    camera.register_to_registry("camera", DummyCamera.__name__, "tcp://127.0.0.1:5555")
     camera.serve_forever()

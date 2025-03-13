@@ -3,6 +3,8 @@ import inspect
 import json
 import logging
 from enum import StrEnum
+from weakref import finalize
+
 from decorator import decorate
 
 import zmq
@@ -40,6 +42,7 @@ class RPCClient:
         print("Got inv: ", reply)
         self._json_methods = reply["json_methods"]
         self._buffer_methods = reply["buffer_methods"]
+        finalize(self, self.socket.close)
 
     @classmethod
     def register_interface(cls, interface: type):
@@ -91,7 +94,7 @@ class RPCClient:
             if "error" in buffer_info:
                 return False, buffer_info["error"]
             else:
-                return True, reply_frames[1].buffer
+                return True, (reply_frames[1].buffer, buffer_info)
 
 
 class RPCServer:
@@ -107,6 +110,7 @@ class RPCServer:
         self.port = self.socket.bind_to_random_port(url, 10000, 12000)
 
     def register_to_registry(self, type_: str, name: str, registry_address: str):
+        logger.debug(f"Register device {name} of type {type_} to {registry_address}")
         return register_device(
             self.context, type_,
             f"{self.url}:{self.port}",
@@ -131,10 +135,8 @@ class RPCServer:
         except Exception as e:
             logger.error(f"Failed to execute {method} due to {e}")
             print(e, file=sys.stderr)
-            print("Sending", {"success": False, "error": str(e)})
             self.socket.send_json({"success": False, "error": str(e)})
         else:
-            print("Sending", {"success": True, "result": result})
             self.socket.send_json({"success": True, "result": result})
 
     def _exec_buffer(self, method: Callable, params: dict):
@@ -145,10 +147,8 @@ class RPCServer:
         except Exception as e:
             logger.error(f"Failed to execute {method} due to {e}")
             print(e, file=sys.stderr)
-            print("Sending", {"success": False, "error": str(e)})
             self.socket.send_multipart([json.dumps({"success": False, "error": str(e)})])
         else:
-            print("Sending multipart")
             self.socket.send_multipart(
                 [json.dumps(buffer_info).encode("utf-8"), buffer], copy=False
             )
@@ -156,7 +156,6 @@ class RPCServer:
     def serve_forever(self):
         while True:
             request = self.socket.recv_json()
-            print("Received request", request)
             match request["event"]:
                 case RPCEvents.GET_INVENTORY:
                     logger.info("Sending inventory")

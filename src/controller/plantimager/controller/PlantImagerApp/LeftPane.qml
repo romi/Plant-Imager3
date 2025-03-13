@@ -14,7 +14,10 @@ Control {
         anchors.fill: parent
 
         model: P.AppBridge.deviceList
-        delegate: P.CameraDelegate
+
+        delegate: P.CameraDelegate {
+
+        }
         onCurrentItemChanged: {
             if(currentIndex>=0) {
                 P.AppBridge.currentCamera = currentItem.bridge

@@ -1,33 +1,43 @@
+import logging
+import sys
+
 import zmq
-from PySide6.QtCore import QObject, QThread, Signal, Slot, QAbstractListModel, Property, QModelIndex, Qt
+from PySide6.QtCore import QObject, QThread, Signal, Slot, QAbstractListModel, Property, QModelIndex, Qt, QStringListModel
 from PySide6.QtQml import QmlSingleton, QmlElement
 
 from plantimager.commons import deviceregistry
 from plantimager.controller.camera.CameraBridge import CameraBridge
 
+logger = logging.Logger("AppBridge")
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler(sys.stderr))
 
 QML_IMPORT_NAME = "PlantImagerApp"
 QML_IMPORT_MAJOR_VERSION = 1
 QML_IMPORT_MINOR_VERSION = 0 # Optional
 
-@QmlElement
+
 class DeviceList(QAbstractListModel):
 
     def __init__(self, parent=None):
         super(DeviceList, self).__init__(parent)
         self._data: list = []
         self.roles = {
-            0: "bridge",
+            Qt.ItemDataRole.UserRole: "bridge",
         }
+        self.dataChanged.connect(lambda *_: print("data changed", self._data))
 
     def rowCount(self, /, parent= ...):
         return len(self._data)
 
     def data(self, index: QModelIndex, /, role: int = ...) -> object:
-        return self._data[index.row()][role]
+        if 0 <= index.row() < self.rowCount():
+            name = self.roleNames().get(role)
+            if name:
+                return self._data[index.row()][name]
 
     def setData(self, index: QModelIndex, value: object, /, role: int = ...) -> bool:
-        if index.row() not in self._data:
+        if not (0<=index.row()<self.rowCount()):
             self._data[index.row()] = {}
         self._data[index.row()][role] = value
         self.dataChanged.emit(index, index)
@@ -37,8 +47,8 @@ class DeviceList(QAbstractListModel):
         return self.roles
 
     def add_new_device(self, device: CameraBridge):
-        self.beginInsertRows(QModelIndex(), len(self._data), len(self._data))
-        self._data.append({0: device})
+        self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
+        self._data.append({"bridge": device})
         self.endInsertRows()
 
     def remove_device(self, device: CameraBridge):
@@ -54,7 +64,7 @@ class DeviceList(QAbstractListModel):
 class AppBridge(QObject):
 
     currentCameraChanged = Signal(QObject)
-    deviceListChanged = Signal(DeviceList)
+    deviceListChanged = Signal()
     _registryNewDevice = Signal(str, str, str)
     _registryRemoveDevice = Signal(str, str, str)
 
@@ -67,10 +77,12 @@ class AppBridge(QObject):
         # connection must be queued so that the slot is executed in the main thread
         self.registry.add_new_device_callback(self._new_device_callback)
         self.registry.add_device_removed_callback(self._remove_device_callback)
+        self.registry.daemon = True
         self._registryNewDevice.connect(self._create_new_device, Qt.ConnectionType.QueuedConnection)
         self._registryRemoveDevice.connect(self._remove_device_callback, Qt.ConnectionType.QueuedConnection)
         self.destroyed.connect(self.registry.stop)
-        self.device_list: DeviceList = DeviceList(self)
+        self.device_list: list[str] = []
+        self.device_bridges: list[CameraBridge] = []
 
         self._currentCamera = CameraBridge("name", "", self.context)
 
@@ -85,31 +97,36 @@ class AppBridge(QObject):
             self._currentCamera = camera
             self.currentCameraChanged.emit(camera)
 
-    @Property(DeviceList, notify=deviceListChanged)
-    def deviceList(self) -> DeviceList:
-        return self.device_list
+    @Slot(int, result=CameraBridge)
+    def getCameraBridgeAtIndex(self, index: int) -> CameraBridge:
+        return self.device_bridges[index]
+
+    @Property(QObject, notify=deviceListChanged)
+    def deviceList(self) -> QStringListModel:
+        self.model = QStringListModel(self.device_list)
+        return self.model
 
     @Slot(str, str, str)
     def _create_new_device(self, device_type: str, addr: str, name: str):
-        if device_type.lower() == "camera": # TODO: probably wrong
+        logger.debug(f"New device for {addr}: {device_type}, {name}")
+        if device_type.lower() == "camera":
             new_bridge = CameraBridge(name, addr, self.context)
-            self.device_list.add_new_device(new_bridge)
-            if not self.currentCamera:
+            self.device_list.append(name)
+            self.device_bridges.append(new_bridge)
+            self.deviceListChanged.emit()
+            if not self._currentCamera:
                 self.currentCamera = new_bridge
                 self.currentCameraChanged.emit(new_bridge)
 
     def _new_device_callback(self, device_type: str, addr: str, name: str):
+        logger.debug(f"New device callback for {addr}: {device_type}, {name}")
         self._registryNewDevice.emit(device_type, addr, name)
 
     @Slot(str, str, str)
     def _remove_device(self, device_type: str, addr: str, name: str):
-        to_remove = []
-        for i, device in enumerate(self.device_list._data):
-            bridge: CameraBridge = device[0]
-            if bridge.name == name:
-                to_remove.append(bridge)
-        for bridge in to_remove:
-            self.device_list.remove_device(bridge)
+        idx = self.device_list.index(name)
+        del self.device_list[idx]
+        del self.device_bridges[idx]
 
     def _remove_device_callback(self, device_type: str, addr: str, name: str):
         self._registryRemoveDevice.emit(device_type, addr, name)

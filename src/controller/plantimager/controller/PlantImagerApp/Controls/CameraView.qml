@@ -18,7 +18,7 @@ Control {
         anchors.left: parent.left
         anchors.leftMargin: P.Style.mediumMargin
         height: P.Style.bannerHeight
-        text: bridge.name
+        text: bridge ? bridge.name : "Invalid"
         font: P.Style.fonts.header
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignLeft
@@ -47,7 +47,7 @@ Control {
 
             P.CameraVideoReceiver {
                 id: receiver
-                source: bridge.videoSource
+                source: bridge ? bridge.videoSource : ""
                 format: "mpegts"
                 videoSink: videoOutput.videoSink
                 autoPlay: false
@@ -79,7 +79,7 @@ Control {
                 color: "black"
             }
 
-            source: bridge.imageSource
+            source: bridge ? bridge.imageSource : ""
             cache: false
 
         }

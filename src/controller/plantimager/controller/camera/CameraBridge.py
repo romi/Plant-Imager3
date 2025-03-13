@@ -1,3 +1,5 @@
+import logging
+import sys
 from enum import Flag, auto, StrEnum
 
 import zmq
@@ -10,6 +12,9 @@ from plantimager.controller.ImageProvider import imageProvider
 QML_IMPORT_NAME = "PlantImagerApp.Camera"
 QML_IMPORT_MAJOR_VERSION = 1
 
+logger = logging.Logger("AppBridge")
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler(sys.stderr))
 
 class StatusClass(StrEnum):
     OK = "ok"
@@ -70,6 +75,8 @@ class CameraBridge(QObject):
         self._camera.moveToThread(self._commThread)
         self._commThread.finished.connect(self._camera.deleteLater)
         self._camera.imageReady.connect(self._newImage)
+        self.destroyed.connect(self._commThread.terminate)
+        self._i = 0
 
         self._commThread.start()
 
@@ -91,9 +98,10 @@ class CameraBridge(QObject):
 
     @Slot(memoryview, dict)
     def _newImage(self, buffer: memoryview, buffer_info: dict):
-        imageProvider.addImageFromBuffer(self._name, buffer, buffer_info)
-        self._image_source = f"image://provider/{self._name}"
+        imageProvider.addImageFromBuffer(f"{self._name}-{self._i}", buffer, buffer_info)
+        self._image_source = f"image://provider/{self._name}-{self._i}"
         self.imageSourceChanged.emit(self._image_source)
+        self._i  = (self._i + 1) % 2
 
     @Property(str, notify=nameChanged)
     def name(self) -> str:

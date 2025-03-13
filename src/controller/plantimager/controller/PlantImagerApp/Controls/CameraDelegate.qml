@@ -5,13 +5,18 @@ import QtQuick.Layouts
 import PlantImagerApp.Controls as P
 import PlantImagerApp.Style as P
 import PlantImagerApp.Camera as P
+import PlantImagerApp as P
 
 ItemDelegate {
     id: _self
 
-    required property QtObject bridge
+    property QtObject bridge: P.AppBridge.getCameraBridgeAtIndex(index)
+    Component.onCompleted: {
+        console.log("Camera delegate created with bridge ", index)
+    }
 
     height: P.Style.cameraDelegateHeight
+    width: ListView.view.width
 
     highlighted: ListView.isCurrentItem
 
