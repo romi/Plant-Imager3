@@ -147,7 +147,9 @@ class RPCServer:
         except Exception as e:
             logger.error(f"Failed to execute {method} due to {e}")
             print(e, file=sys.stderr)
-            self.socket.send_multipart([json.dumps({"success": False, "error": str(e)})])
+            self.socket.send_multipart(
+                [json.dumps({"success": False, "error": str(e)}).encode("utf-8")],
+            )
         else:
             self.socket.send_multipart(
                 [json.dumps(buffer_info).encode("utf-8"), buffer], copy=False
