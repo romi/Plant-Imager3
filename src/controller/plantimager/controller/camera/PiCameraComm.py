@@ -12,6 +12,7 @@ class PiCameraProxy(Camera, RPCClient):
     def __init__(self, context: zmq.Context, url: str):
         Camera.__init__(self)
         RPCClient.__init__(self, context, url)
+        print("PROXY START url: ", url)
 
 
 class PiCameraComm(QObject):
@@ -22,6 +23,7 @@ class PiCameraComm(QObject):
     """
 
     imageReady = Signal(memoryview, dict)
+    videoReady = Signal(str)
 
     def __init__(self, context: zmq.Context, url: str, parent: QObject = None):
         QObject.__init__(self, parent)
@@ -34,7 +36,8 @@ class PiCameraComm(QObject):
 
     @Slot()
     def startVideo(self):
-        self.camera.start_video()
+        source = self.camera.start_video()
+        self.videoReady.emit(source)
 
     @Slot()
     def stopVideo(self):

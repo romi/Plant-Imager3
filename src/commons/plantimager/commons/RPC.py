@@ -172,6 +172,7 @@ class RPCServer:
                 case RPCEvents.METHOD_CALL:
                     method: str = request["method"]
                     params: dict[str, bytes] = request["params"]
+                    logger.info(f"Executing {method} with params {params}")
                     if method in self._json_methods and hasattr(self, method):
                         self._exec_json(getattr(self, method), params)
                     elif method in self._buffer_methods and hasattr(self, method):

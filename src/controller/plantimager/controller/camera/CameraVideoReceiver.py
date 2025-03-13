@@ -131,18 +131,23 @@ class CameraVideoReceiver(QObject):
             self.worker.wait()
             self.worker.deleteLater()
 
-    @Slot()
-    def _new_media(self):
+    def _new_worker(self):
         if self.worker:
             self.worker.stop()
+            self.worker.wait()
 
         if self._videoSink and self._source and self._format:
             self.worker = ReceiverWorker(self._source, self._format)
             self.worker.frameReady.connect(self._update_video_sink)
-            self.worker.finished.connect(self.worker.deleteLater)
             self.worker.endOfMediaReached.connect(self._handle_worker_end_of_media)
-            if self._auto_play:
-                self.play()
+            return True
+        else:
+            return False
+
+    @Slot()
+    def _new_media(self):
+        if self._new_worker() and self._auto_play:
+            self.play()
 
     @Slot()
     def _handle_worker_end_of_media(self):
@@ -197,7 +202,9 @@ class CameraVideoReceiver(QObject):
 
     @Slot()
     def play(self):
-        if self.worker:
+        if self.worker and self.worker.isFinished():
+            self._new_worker()
+        if self.worker and not self.worker.isFinished():
             self.worker.start()
 
     @Slot()

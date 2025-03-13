@@ -34,11 +34,12 @@ class RPCCamera(Camera, RPCServer):
             controls={'FrameRate': 15}
         )
         self.still_config = self.picam.create_still_configuration(
-            {"size": (1280, 960), "format": "RGB888"},
+            {"size": (2028, 1520), "format": "RGB888"},
             queue=False
         )
         self.video_started = False
         self.picam.configure(self.still_config)
+        self.picam.start()
 
         # video stuff
         self.encoder: H264Encoder = None
@@ -46,24 +47,28 @@ class RPCCamera(Camera, RPCServer):
 
     @RPCServer.register_method_json
     def start_video(self):
-        print("Starting camera stream")
-        self.picam.switch_mode_and_drop_frames(self.video_config, 6, wait=True)
-        hostname = socket.gethostname()
-        self.encoder = H264Encoder(bitrate=10_000_000)
-        self.output = PyavOutput_nobuffer("tcp://0.0.0.0:8888\?listen=1", format="mpegts")
-        self.output.error_callback = self.stop_video
-        self.video_started = True
-        self.picam.start_recording(self.encoder, self.output)
-        return f"tcp://{hostname}:8888"
+        if not self.video_started:
+            print("Starting camera stream")
+            self.picam.switch_mode(self.video_config, wait=True)
+            print("switched to video mode")
+            self.encoder = H264Encoder(bitrate=10_000_000)
+            self.output = PyavOutput_nobuffer("tcp://0.0.0.0:8888\?listen=1", format="mpegts")
+            self.output.error_callback = self.stop_video
+            self.video_started = True
+            self.picam.start_encoder(self.encoder, self.output)
+            print("Camera stream started")
+        return f"tcp://{socket.gethostname()}:8888"
 
     @RPCServer.register_method_json
     def stop_video(self):
-        print("Stopping camera stream")
-        self.picam.stop_recording()
-        self.encoder = None
-        self.output = None
-        self.picam.switch_mode_and_drop_frames(self.still_config, 6, wait=True)
-        self.video_started = False
+        if self.video_started:
+            print("Stopping camera stream")
+            self.picam.stop_encoder()
+            self.encoder = None
+            self.output = None
+            self.picam.switch_mode(self.still_config, wait=True)
+            print("switched to still mode")
+            self.video_started = False
         return "VIDEO STOPPED"
 
     @RPCServer.register_method_buffer
@@ -79,10 +84,13 @@ def main():
     if not REGISTRY_ADDR.startswith("tcp://"):
         REGISTRY_ADDR = "tcp://" + REGISTRY_ADDR
     context = zmq.Context()
-    camera = RPCCamera(context, REGISTRY_ADDR)
+    camera = RPCCamera(context, "tcp://10.10.10.3")
     camera.register_to_registry(
-        RPCCamera.__name__,
+        "camera",
         socket.gethostname(),
         REGISTRY_ADDR
     )
     camera.serve_forever()
+
+if __name__ == "__main__":
+    main()

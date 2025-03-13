@@ -3,7 +3,7 @@ import sys
 from enum import Flag, auto, StrEnum
 
 import zmq
-from PySide6.QtCore import QThread, QObject, Signal, Slot, Property
+from PySide6.QtCore import QThread, QObject, Signal, Slot, Property, QMetaObject, Qt
 from PySide6.QtQml import QmlElement, QmlUncreatable
 
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
@@ -56,6 +56,7 @@ class CameraBridge(QObject):
     statusClassChanged = Signal(str)
     videoSourceChanged = Signal(str)
     imageSourceChanged = Signal(str)
+    videoReady = Signal()
 
     def __init__(self, name: str, address: str, context: zmq.Context, parent: QObject = None):
         super().__init__(parent)
@@ -69,12 +70,13 @@ class CameraBridge(QObject):
             return
         self._status = States.DISCONNECTED
 
-
+        print("=====", name, address)
         self._commThread = QThread()
         self._camera = PiCameraComm(context, address)
         self._camera.moveToThread(self._commThread)
         self._commThread.finished.connect(self._camera.deleteLater)
         self._camera.imageReady.connect(self._newImage)
+        self._camera.videoReady.connect(self._videoReady)
         self.destroyed.connect(self._commThread.terminate)
         self._i = 0
 
@@ -84,17 +86,23 @@ class CameraBridge(QObject):
     @Slot()
     def getImage(self):
         if self._camera:
-            self._camera.getImage()
+            QMetaObject.invokeMethod(self._camera, "getImage", Qt.ConnectionType.QueuedConnection)
 
     @Slot()
     def startVideo(self):
         if self._camera:
-            self._camera.startVideo()
+            QMetaObject.invokeMethod(self._camera, "startVideo", Qt.ConnectionType.QueuedConnection)
 
     @Slot()
     def stopVideo(self):
         if self._camera:
-            self._camera.stopVideo()
+            QMetaObject.invokeMethod(self._camera, "stopVideo", Qt.ConnectionType.QueuedConnection)
+
+    @Slot(str)
+    def _videoReady(self, source: str):
+        self._video_source = source
+        self.videoSourceChanged.emit(self._video_source)
+        self.videoReady.emit()
 
     @Slot(memoryview, dict)
     def _newImage(self, buffer: memoryview, buffer_info: dict):

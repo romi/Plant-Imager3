@@ -12,6 +12,14 @@ Control {
 
     required property QtObject bridge
 
+    Connections {
+        target: bridge ? bridge : undefined
+        ignoreUnknownSignals: true
+        function onVideoReady() {
+            receiver.play()
+        }
+    }
+
     Label {
         id: _title
         anchors.top: parent.top
