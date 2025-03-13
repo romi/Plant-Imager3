@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import PlantImagerApp.Controls as P
 import PlantImagerApp.Style as P
 import PlantImagerApp.Camera as P
+import PlantImagerApp as P
 
 Control {
     id: _self
@@ -19,9 +20,7 @@ Control {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            bridge: P.CameraBridge {
-
-            }
+            bridge: P.AppBridge.currentCamera
         }
     }
 }

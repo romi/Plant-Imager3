@@ -19,12 +19,14 @@ class StatusClass(StrEnum):
 
 class States(StrEnum): # TODO: redo statuses when communication with picamera is figured out
     DISCONNECTED = "disconnected"
+    INVALID = "invalid"
     CONNECTED = "connected"
     VIDEO_READY = "video ready"
     VIDEO_ERROR = "video error"
 
 STATE_TO_CLASS = {
     States.DISCONNECTED: StatusClass.INACTIVE,
+    States.INVALID: StatusClass.ERROR,
     States.CONNECTED: StatusClass.OK,
     States.VIDEO_READY: StatusClass.OK,
     States.VIDEO_ERROR: StatusClass.ERROR,
@@ -54,7 +56,14 @@ class CameraBridge(QObject):
         super().__init__(parent)
         self._name = name
         self._address = address
+        self._video_source = ""
+        self._image_source = ""
+        if name == "empty" or address == "":
+            self._status = States.INVALID
+            self._camera = None
+            return
         self._status = States.DISCONNECTED
+
 
         self._commThread = QThread()
         self._camera = PiCameraComm(context, address)
@@ -62,23 +71,23 @@ class CameraBridge(QObject):
         self._commThread.finished.connect(self._camera.deleteLater)
         self._camera.imageReady.connect(self._newImage)
 
-        self._video_source = ""
-        self._image_source = ""
-
         self._commThread.start()
 
 
     @Slot()
     def getImage(self):
-        self._camera.getImage()
+        if self._camera:
+            self._camera.getImage()
 
     @Slot()
     def startVideo(self):
-        self._camera.startVideo()
+        if self._camera:
+            self._camera.startVideo()
 
     @Slot()
     def stopVideo(self):
-        self._camera.stopVideo()
+        if self._camera:
+            self._camera.stopVideo()
 
     @Slot(memoryview, dict)
     def _newImage(self, buffer: memoryview, buffer_info: dict):

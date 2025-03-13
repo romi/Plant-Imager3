@@ -51,7 +51,7 @@ class DeviceList(QAbstractListModel):
 
 @QmlElement
 @QmlSingleton
-class Orchestrator(QObject):
+class AppBridge(QObject):
 
     currentCameraChanged = Signal(QObject)
     deviceListChanged = Signal(DeviceList)
@@ -69,9 +69,10 @@ class Orchestrator(QObject):
         self.registry.add_device_removed_callback(self._remove_device_callback)
         self._registryNewDevice.connect(self._create_new_device, Qt.ConnectionType.QueuedConnection)
         self._registryRemoveDevice.connect(self._remove_device_callback, Qt.ConnectionType.QueuedConnection)
+        self.destroyed.connect(self.registry.stop)
         self.device_list: DeviceList = DeviceList(self)
 
-        self._currentCamera = None
+        self._currentCamera = CameraBridge("name", "", self.context)
 
         self.registry.start()
 

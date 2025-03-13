@@ -6,13 +6,14 @@ import PlantImagerApp.Controls as P
 import PlantImagerApp.Style as P
 import PlantImagerApp.Camera as P
 
-Control {
+ItemDelegate {
     id: _self
 
-    signal clicked()
     required property QtObject bridge
 
     height: P.Style.cameraDelegateHeight
+
+    highlighted: ListView.isCurrentItem
 
     background: Rectangle {
         anchors.fill: parent
@@ -68,13 +69,6 @@ Control {
         color: P.Style.colors.foreground
         size: P.Style.iconMedium
         rotation: 90
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            _self.clicked()
-        }
     }
 
 

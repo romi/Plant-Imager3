@@ -74,12 +74,20 @@ class DeviceRegistry(Thread):
         self._new_device_callbacks: list[Callable] = []
         self._device_removed_callbacks: list[Callable] = []
         self.devices: dict[str, (str, str)] = {}
+        self._stop = False
+
+    def stop(self):
+        self._stop = True
 
     def run(self):
         with self.context.socket(zmq.REP) as socket:
             socket.bind(f"tcp://{self.addr}:{self.port}")
             logger.info(f"Starting registry on {self.addr}:{self.port}")
-            while True:
+            while not self._stop:
+                # in order for the thread to stop properly it must not block indefinitely while waiting for
+                # a message hence polling for 100 ms and continue-ing if timeout
+                if socket.poll(100) == 0:
+                    continue
                 message = socket.recv_json()
                 event_type: str = message["event"]
                 payload: dict = message["payload"]

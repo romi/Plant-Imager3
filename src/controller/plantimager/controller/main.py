@@ -10,6 +10,7 @@ from plantimager.controller.ImageProvider import imageProvider
 
 # import QML resources in python modules
 from plantimager.controller.camera import CameraVideoReceiver, CameraBridge
+from plantimager.controller.AppBridge import AppBridge
 
 from plantimager.controller.PlantImagerApp import rc_style
 from plantimager.controller.PlantImagerApp.ttf import rc_ttf

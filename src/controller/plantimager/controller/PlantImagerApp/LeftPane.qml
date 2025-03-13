@@ -5,30 +5,20 @@ import QtQuick.Layouts
 import PlantImagerApp.Controls as P
 import PlantImagerApp.Style as P
 import PlantImagerApp.Camera as P
+import PlantImagerApp as P
 
 Control {
     id: _self
 
-    ColumnLayout {
-        id: clayout
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
+    ListView {
+        anchors.fill: parent
 
-
-        P.CameraDelegate {
-            id: camera2
-            bridge: P.CameraBridge {
-                Component.onCompleted: {
-                    console.log("Camera Bridge ", name, status)
-                }
-            }
-
-            Layout.fillWidth: true
-            onClicked: {
-                console.log("Select ", camera2.bridge.name)
+        model: P.AppBridge.deviceList
+        delegate: P.CameraDelegate
+        onCurrentItemChanged: {
+            if(currentIndex>=0) {
+                P.AppBridge.currentCamera = currentItem.bridge
             }
         }
     }
-
 }

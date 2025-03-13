@@ -179,29 +179,3 @@ class RPCServer:
                         logger.error(f"Method {method} not implemented")
                         self.socket.send_json({"success": False, "error": f"Method {method} not implemented"})
 
-
-@RPCClient.register_interface(Camera)
-class RPCCamera(Camera, RPCClient):
-    def __init__(self, context: zmq.Context, url: str):
-        Camera.__init__(self)
-        RPCClient.__init__(self, context, url)
-
-class CameraServer(Camera, RPCServer):
-    def __init__(self, context: zmq.Context, url: str):
-        RPCServer.__init__(self, context, url)
-
-    @RPCServer.register_method_json
-    def start_video(self):
-        print("Starting camera stream")
-
-
-
-if __name__ == '__main__':
-    context = zmq.Context()
-    url = "tcp://127.0.0.1:6000"
-    camera = RPCCamera(context, url)
-    print(camera.__dict__)
-    camera.start_video()
-    camera.stop_video()
-    camera.get_image()
-

@@ -197,11 +197,13 @@ class CameraVideoReceiver(QObject):
 
     @Slot()
     def play(self):
-        self.worker.start()
+        if self.worker:
+            self.worker.start()
 
     @Slot()
     def stop(self):
-        self.worker.stop()
+        if self.worker:
+            self.worker.stop()
 
     @Slot()
     def print_info(self):

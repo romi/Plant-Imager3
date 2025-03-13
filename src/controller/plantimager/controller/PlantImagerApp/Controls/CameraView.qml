@@ -58,10 +58,10 @@ Control {
 
             StackLayout.onIsCurrentItemChanged: {
                 if(StackLayout.isCurrentItem) {
-                    receiver.autoplay = true
+                    receiver.autoPlay = true
                     receiver.play()
                 } else {
-                    receiver.autoplay = false
+                    receiver.autoPlay = false
                     receiver.stop()
                 }
             }
@@ -105,6 +105,7 @@ Control {
             Layout.fillHeight: true
             text: "Video"
             onClicked: {
+                bridge.startVideo()
                 media_control.currentIndex = 0
             }
         }
@@ -121,6 +122,7 @@ Control {
             text: "Image"
 
             onClicked: {
+                bridge.stopVideo()
                 media_control.currentIndex = 1
             }
         }
@@ -128,9 +130,10 @@ Control {
         Button {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            text: "Button 4"
+            text: "Take Picture"
+            onClicked: {
+                bridge.getImage()
+            }
         }
-
     }
-
 }
