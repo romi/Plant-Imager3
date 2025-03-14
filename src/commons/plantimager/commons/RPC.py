@@ -1,6 +1,7 @@
 import sys
 import inspect
 import json
+import traceback
 import logging
 from enum import StrEnum
 from weakref import finalize
@@ -10,12 +11,10 @@ from decorator import decorate
 import zmq
 from typing import Callable, Any
 
-from .cameradevice import Camera
-from .deviceregistry import register_device
+from .deviceregistry import register_device, unregister_device
+from .logging import create_logger
 
-logger = logging.Logger("plantimager::RPC")
-logger.addHandler(logging.StreamHandler(sys.stderr))
-logger.setLevel(logging.DEBUG)
+logger = create_logger("RPC")
 
 class RPCEvents(StrEnum):
     METHOD_CALL = "METHOD_CALL"
@@ -39,7 +38,7 @@ class RPCClient:
             "event": RPCEvents.GET_INVENTORY
         })
         reply = self.socket.recv_json()
-        print("Got inv: ", reply)
+        logger.debug(f"Got inv: {reply}",)
         self._json_methods = reply["json_methods"]
         self._buffer_methods = reply["buffer_methods"]
         finalize(self, self.socket.close)
@@ -57,6 +56,7 @@ class RPCClient:
                     setattr(target_cls, method_name, func)
             # abstract methods have been implemented
             target_cls.__abstractmethods__ = frozenset()
+            target_cls._interface = interface.__name__
             return target_cls
         return _decorator
 
@@ -71,7 +71,10 @@ class RPCClient:
         if success:
             return res
         else:
-            logger.error(f"Failed to execute {method} on remote")
+            err, trace = res
+            logger.error(f"Failed to execute {method} on remote due to {err}")
+            if logger.level == logging.DEBUG:
+                print(trace, file=sys.stderr)
 
     def execute(self, method: Callable, params: dict) -> tuple[bool, object]:
         package = {
@@ -79,22 +82,45 @@ class RPCClient:
             "method": method,
             "params": params,
         }
-        logger.debug(f"Executing {package}", )
-        self.socket.send_json(package)
+        if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
+            logger.warning(f"Proxy of {self._interface} at {self.url} did not respond")
+            return False, (Warning(f"Proxy of {self._interface} at {self.url} did not respond"), "")
+        logger.debug(f"Executing {package}")
+        self.socket.send_json(package, flags=zmq.NOBLOCK)
+
         if method in self._json_methods:
+            if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
+                logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
+                return False, (Warning(f"Proxy of {self._interface} at {self.url} did not respond"), "")
             reply =  self.socket.recv_json()
             if reply["success"]:
                 return True, reply["result"]
             else:
-                return False, reply["error"]
+                return False, (reply["error"], reply["traceback"])
         elif method in self._buffer_methods:
+            if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
+                logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
+                return False, (Warning(f"Proxy of {self._interface} at {self.url} did not respond"), "")
             reply_frames: list[zmq.Frame] = self.socket.recv_multipart(copy=False)
-            print(reply_frames[0].bytes)
             buffer_info = json.loads(reply_frames[0].bytes)
             if "error" in buffer_info:
-                return False, buffer_info["error"]
+                return False, (buffer_info["error"], buffer_info["traceback"])
             else:
                 return True, (reply_frames[1].buffer, buffer_info)
+
+    def stop_server(self):
+        logger.info(f"Stopping server {self.url}")
+        if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
+            logger.info(f"Server {self.url} could not be joined (might already be dead)")
+            return
+        self.socket.send_json({
+            "event": RPCEvents.STOP_SERVER
+        }, flags=zmq.NOBLOCK)
+        if self.socket.poll(timeout=1000, flags=zmq.POLLIN) == 0:
+            logger.info(f"Server {self.url} did not respond (might already be dead)")
+            return
+        reply = self.socket.recv_json()
+        logger.debug(f"Got stop reply {reply}")
 
 
 class RPCServer:
@@ -109,13 +135,19 @@ class RPCServer:
         self.socket: zmq.Socket = context.socket(zmq.REP)
         self.port = self.socket.bind_to_random_port(url, 10000, 12000)
 
+        self._name = ""
+        self._registry_addr = ""
+        finalize(self, self._finalize)
+
     def register_to_registry(self, type_: str, name: str, registry_address: str):
         logger.debug(f"Register device {name} of type {type_} to {registry_address}")
-        return register_device(
+        self._name = register_device(
             self.context, type_,
             f"{self.url}:{self.port}",
             name, registry_address
         )
+        self._registry_addr = registry_address if self._name else ""
+        return self._name
 
     @classmethod
     def register_method_json(cls, method: Callable):
@@ -134,8 +166,10 @@ class RPCServer:
             result = method(*args, **kwargs)
         except Exception as e:
             logger.error(f"Failed to execute {method} due to {e}")
+            traceback_str = traceback.format_exc(limit=10)
+            print(traceback_str, file=sys.stderr)
             print(e, file=sys.stderr)
-            self.socket.send_json({"success": False, "error": str(e)})
+            self.socket.send_json({"success": False, "error": str(e), "traceback": traceback_str})
         else:
             self.socket.send_json({"success": True, "result": result})
 
@@ -146,9 +180,10 @@ class RPCServer:
             buffer, buffer_info = method(*args, **kwargs)
         except Exception as e:
             logger.error(f"Failed to execute {method} due to {e}")
-            print(e, file=sys.stderr)
+            traceback_str = traceback.format_exc(limit=10)
+            print(traceback_str, file=sys.stderr)
             self.socket.send_multipart(
-                [json.dumps({"success": False, "error": str(e)}).encode("utf-8")],
+                [json.dumps({"success": False, "error": str(e), "traceback": traceback_str}).encode("utf-8")],
             )
         else:
             self.socket.send_multipart(
@@ -180,4 +215,15 @@ class RPCServer:
                     else:
                         logger.error(f"Method {method} not implemented")
                         self.socket.send_json({"success": False, "error": f"Method {method} not implemented"})
+                case RPCEvents.STOP_SERVER:
+                    self.socket.send_json({"success": True})
+                    break
+        logger.info("Server stopped")
+
+    def _finalize(self):
+        if self._name and self._registry_addr:
+            unregister_device(self.context, self._name, self._registry_addr)
+            logger.info("Device unregistered successfully")
+        self.socket.close()
+        logger.info("Server deleted")
 

@@ -1,20 +1,20 @@
 import logging
 import sys
 from enum import Flag, auto, StrEnum
+from weakref import finalize
 
 import zmq
 from PySide6.QtCore import QThread, QObject, Signal, Slot, Property, QMetaObject, Qt
 from PySide6.QtQml import QmlElement, QmlUncreatable
 
+from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.ImageProvider import imageProvider
 
 QML_IMPORT_NAME = "PlantImagerApp.Camera"
 QML_IMPORT_MAJOR_VERSION = 1
 
-logger = logging.Logger("AppBridge")
-logger.setLevel(logging.DEBUG)
-logger.addHandler(logging.StreamHandler(sys.stderr))
+logger = create_logger("CameraBridge")
 
 class StatusClass(StrEnum):
     OK = "ok"
@@ -70,17 +70,30 @@ class CameraBridge(QObject):
             return
         self._status = States.DISCONNECTED
 
-        print("=====", name, address)
         self._commThread = QThread()
+        self._commThread.setObjectName(f"CommThread-{name}")
         self._camera = PiCameraComm(context, address)
         self._camera.moveToThread(self._commThread)
         self._commThread.finished.connect(self._camera.deleteLater)
         self._camera.imageReady.connect(self._newImage)
         self._camera.videoReady.connect(self._videoReady)
-        self.destroyed.connect(self._commThread.terminate)
+        finalize(self, self._stop)
         self._i = 0
 
         self._commThread.start()
+
+    def _stop(self):
+        """Handles termination of CameraBridge (to use with weakref.fialize)"""
+        logger.debug(f"finalizing bridge {self._name}")
+        self._video_source = ""
+        self._image_source = ""
+        self._status = States.INVALID
+
+        del self._camera
+        self._commThread.quit()
+        self._commThread.wait()
+        del self._commThread
+        logger.debug(f"bridge {self._name} finalized")
 
 
     @Slot()

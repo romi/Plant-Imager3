@@ -122,14 +122,15 @@ class CameraVideoReceiver(QObject):
         self.videoSinkChanged.connect(lambda : self.play() if self._auto_play else None)
         self.sourceChanged.connect(self._new_media)
 
-    @Slot()
     def _delete_worker(self):
+        self._auto_play = False
         if self.worker and not self.worker.isFinished():
+            self.worker.disconnect(self)
             self.worker.stop()
             if not self.worker.wait(2000):
                 self.worker.terminate()
             self.worker.wait()
-            self.worker.deleteLater()
+            del self.worker
 
     def _new_worker(self):
         if self.worker:

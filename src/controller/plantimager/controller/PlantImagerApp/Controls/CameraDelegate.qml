@@ -11,9 +11,6 @@ ItemDelegate {
     id: _self
 
     property QtObject bridge: P.AppBridge.getCameraBridgeAtIndex(index)
-    Component.onCompleted: {
-        console.log("Camera delegate created with bridge ", index)
-    }
 
     height: P.Style.cameraDelegateHeight
     width: ListView.view.width

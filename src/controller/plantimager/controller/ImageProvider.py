@@ -1,14 +1,11 @@
-import sys
-import logging
-
 from PySide6.QtCore import QSize
 from PySide6.QtQml import QQmlImageProviderBase
 from PySide6.QtQuick import QQuickImageProvider
 from PySide6.QtGui import QImage
 
-logger = logging.Logger("ImageProvider")
-logger.setLevel(logging.DEBUG)
-logger.addHandler(logging.StreamHandler(sys.stderr))
+from plantimager.commons.logging import create_logger
+
+logger = create_logger("ImageProvider")
 
 class ImageProvider(QQuickImageProvider):
     """

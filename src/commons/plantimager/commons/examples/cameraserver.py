@@ -13,6 +13,7 @@ class DummyCamera(Camera, RPCServer):
     @RPCServer.register_method_json
     def start_video(self):
         print("Starting camera stream")
+        raise RuntimeError("exception test")
         return "VIDEO STARTED"
 
     @RPCServer.register_method_json

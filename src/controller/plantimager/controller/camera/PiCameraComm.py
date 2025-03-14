@@ -1,3 +1,5 @@
+from weakref import finalize
+
 import zmq
 from PySide6.QtCore import QObject, Slot, Signal
 from simplejpeg import decode_jpeg
@@ -12,7 +14,6 @@ class PiCameraProxy(Camera, RPCClient):
     def __init__(self, context: zmq.Context, url: str):
         Camera.__init__(self)
         RPCClient.__init__(self, context, url)
-        print("PROXY START url: ", url)
 
 
 class PiCameraComm(QObject):
@@ -28,16 +29,20 @@ class PiCameraComm(QObject):
     def __init__(self, context: zmq.Context, url: str, parent: QObject = None):
         QObject.__init__(self, parent)
         self.camera = PiCameraProxy(context, url)
+        finalize(self, self.camera.stop_server)
 
     @Slot()
     def getImage(self):
-        buffer, buffer_info = self.camera.get_image()
-        self.imageReady.emit(buffer, buffer_info)
+        res = self.camera.get_image()
+        if res:
+            buffer, buffer_info = res
+            self.imageReady.emit(buffer, buffer_info)
 
     @Slot()
     def startVideo(self):
         source = self.camera.start_video()
-        self.videoReady.emit(source)
+        if source:
+            self.videoReady.emit(source)
 
     @Slot()
     def stopVideo(self):

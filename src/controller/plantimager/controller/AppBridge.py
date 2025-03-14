@@ -1,16 +1,14 @@
-import logging
-import sys
+from weakref import finalize
 
 import zmq
 from PySide6.QtCore import QObject, QThread, Signal, Slot, QAbstractListModel, Property, QModelIndex, Qt, QStringListModel
 from PySide6.QtQml import QmlSingleton, QmlElement
 
 from plantimager.commons import deviceregistry
+from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.CameraBridge import CameraBridge
 
-logger = logging.Logger("AppBridge")
-logger.setLevel(logging.DEBUG)
-logger.addHandler(logging.StreamHandler(sys.stderr))
+logger = create_logger("AppBridge")
 
 QML_IMPORT_NAME = "PlantImagerApp"
 QML_IMPORT_MAJOR_VERSION = 1
@@ -80,13 +78,19 @@ class AppBridge(QObject):
         self.registry.daemon = True
         self._registryNewDevice.connect(self._create_new_device, Qt.ConnectionType.QueuedConnection)
         self._registryRemoveDevice.connect(self._remove_device_callback, Qt.ConnectionType.QueuedConnection)
-        self.destroyed.connect(self.registry.stop)
+        finalize(self, self._stop)
         self.device_list: list[str] = []
         self.device_bridges: list[CameraBridge] = []
 
         self._currentCamera = CameraBridge("name", "", self.context)
 
         self.registry.start()
+
+    def _stop(self):
+        logger.debug("finalizing AppBridge")
+        self.registry.stop()
+        self.registry.join()
+        logger.debug("AppBridge finalized")
 
     @Property(QObject, notify=currentCameraChanged)
     def currentCamera(self) -> CameraBridge:

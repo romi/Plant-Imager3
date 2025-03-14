@@ -13,7 +13,7 @@ Control {
     required property QtObject bridge
 
     Connections {
-        target: bridge ? bridge : undefined
+        target: bridge
         ignoreUnknownSignals: true
         function onVideoReady() {
             receiver.play()

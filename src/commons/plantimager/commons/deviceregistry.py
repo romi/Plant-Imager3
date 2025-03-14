@@ -1,12 +1,10 @@
-import sys
 from threading import Thread
 from enum import StrEnum
 from typing import Callable
-import logging
 
-logger = logging.getLogger('plantimager::deviceregistry')
-logger.addHandler(logging.StreamHandler(sys.stderr))
-logger.setLevel(logging.DEBUG)
+from plantimager.commons.logging import create_logger
+
+logger = create_logger('deviceregistry')
 
 import zmq
 
@@ -117,6 +115,7 @@ class DeviceRegistry(Thread):
                                 "req_event": event_type,
                             }
                         })
+        logger.info(f"Registry stopped on {self.addr}:{self.port}")
 
     def _handle_register(self, payload: dict):
         device_type = payload["device_type"]
@@ -130,8 +129,6 @@ class DeviceRegistry(Thread):
         return True
 
     def _handle_unregister(self, payload: dict):
-        device_type = payload["device_type"]
-        addr = payload["addr"]
         name = payload["name"]
         return self._remove_device(name)
 
@@ -203,5 +200,27 @@ def register_device(context: zmq.Context, device_type: str, addr: str, name: str
             socket.close()
             return registered_name
         socket.close()
-    return None
+    return ""
 
+
+def unregister_device(context: zmq.Context, name: str, registry_addr:str) -> bool:
+    """
+    Unregister device of the given name from registry at `registry_addr`.
+    Returns True if device was unregistered successfully.
+    """
+    with context.socket(zmq.REQ) as socket:
+        socket.connect(registry_addr)
+        socket.send_json({
+            "event": EventType.UNREGISTER,
+            "payload": {
+                "name": name,
+            }
+        })
+        reply = socket.recv_json()
+        event_type = reply["event"]
+        payload = reply["payload"]
+        if event_type == EventType.ACK:
+            socket.close()
+            return True
+        socket.close()
+        return False
