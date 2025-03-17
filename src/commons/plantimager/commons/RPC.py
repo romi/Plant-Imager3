@@ -74,7 +74,9 @@ class RPCClient:
             err, trace = res
             logger.error(f"Failed to execute {method} on remote due to {err}")
             if logger.level == logging.DEBUG:
-                print(trace, file=sys.stderr)
+                print("Traceback from remote --->", file=sys.stderr)
+                print(trace, file=sys.stderr, end="")
+                print("<------------", file=sys.stderr)
 
     def execute(self, method: Callable, params: dict) -> tuple[bool, object]:
         package = {
@@ -182,6 +184,7 @@ class RPCServer:
             logger.error(f"Failed to execute {method} due to {e}")
             traceback_str = traceback.format_exc(limit=10)
             print(traceback_str, file=sys.stderr)
+            print(e, file=sys.stderr)
             self.socket.send_multipart(
                 [json.dumps({"success": False, "error": str(e), "traceback": traceback_str}).encode("utf-8")],
             )
