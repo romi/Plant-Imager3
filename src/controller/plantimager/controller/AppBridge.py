@@ -14,49 +14,6 @@ QML_IMPORT_NAME = "PlantImagerApp"
 QML_IMPORT_MAJOR_VERSION = 1
 QML_IMPORT_MINOR_VERSION = 0 # Optional
 
-
-class DeviceList(QAbstractListModel):
-
-    def __init__(self, parent=None):
-        super(DeviceList, self).__init__(parent)
-        self._data: list = []
-        self.roles = {
-            Qt.ItemDataRole.UserRole: "bridge",
-        }
-        self.dataChanged.connect(lambda *_: print("data changed", self._data))
-
-    def rowCount(self, /, parent= ...):
-        return len(self._data)
-
-    def data(self, index: QModelIndex, /, role: int = ...) -> object:
-        if 0 <= index.row() < self.rowCount():
-            name = self.roleNames().get(role)
-            if name:
-                return self._data[index.row()][name]
-
-    def setData(self, index: QModelIndex, value: object, /, role: int = ...) -> bool:
-        if not (0<=index.row()<self.rowCount()):
-            self._data[index.row()] = {}
-        self._data[index.row()][role] = value
-        self.dataChanged.emit(index, index)
-        return True
-
-    def roleNames(self) -> dict:
-        return self.roles
-
-    def add_new_device(self, device: CameraBridge):
-        self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
-        self._data.append({"bridge": device})
-        self.endInsertRows()
-
-    def remove_device(self, device: CameraBridge):
-        index = self._data.index({0: device})
-        self.beginRemoveRows(QModelIndex(), index, index)
-        del self._data[index]
-        self.endRemoveRows()
-
-
-
 @QmlElement
 @QmlSingleton
 class AppBridge(QObject):
