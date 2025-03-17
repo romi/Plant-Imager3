@@ -70,17 +70,11 @@ class CameraBridge(QObject):
             return
         self._status = States.DISCONNECTED
 
-        self._commThread = QThread()
-        self._commThread.setObjectName(f"CommThread-{name}")
         self._camera = PiCameraComm(context, address)
-        self._camera.moveToThread(self._commThread)
-        self._commThread.finished.connect(self._camera.deleteLater)
         self._camera.imageReady.connect(self._newImage)
         self._camera.videoReady.connect(self._videoReady)
         finalize(self, self._stop)
         self._i = 0
-
-        self._commThread.start()
 
     def _stop(self):
         """Handles termination of CameraBridge (to use with weakref.fialize)"""
@@ -90,26 +84,23 @@ class CameraBridge(QObject):
         self._status = States.INVALID
 
         del self._camera
-        self._commThread.quit()
-        self._commThread.wait()
-        del self._commThread
         logger.debug(f"bridge {self._name} finalized")
 
 
     @Slot()
     def getImage(self):
         if self._camera:
-            QMetaObject.invokeMethod(self._camera, "getImage", Qt.ConnectionType.QueuedConnection)
+            self._camera.getImage()
 
     @Slot()
     def startVideo(self):
         if self._camera:
-            QMetaObject.invokeMethod(self._camera, "startVideo", Qt.ConnectionType.QueuedConnection)
+            self._camera.startVideo()
 
     @Slot()
     def stopVideo(self):
         if self._camera:
-            QMetaObject.invokeMethod(self._camera, "stopVideo", Qt.ConnectionType.QueuedConnection)
+            self._camera.stopVideo()
 
     @Slot(str)
     def _videoReady(self, source: str):
