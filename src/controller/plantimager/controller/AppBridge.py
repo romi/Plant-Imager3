@@ -77,12 +77,12 @@ class AppBridge(QObject):
         self.registry.add_device_removed_callback(self._remove_device_callback)
         self.registry.daemon = True
         self._registryNewDevice.connect(self._create_new_device, Qt.ConnectionType.QueuedConnection)
-        self._registryRemoveDevice.connect(self._remove_device_callback, Qt.ConnectionType.QueuedConnection)
+        self._registryRemoveDevice.connect(self._remove_device, Qt.ConnectionType.QueuedConnection)
         finalize(self, self._stop)
         self.device_list: list[str] = []
         self.device_bridges: list[CameraBridge] = []
 
-        self._currentCamera = CameraBridge("name", "", self.context)
+        self._currentCamera = CameraBridge("", "", self.context)
 
         self.registry.start()
 
@@ -131,6 +131,11 @@ class AppBridge(QObject):
         idx = self.device_list.index(name)
         del self.device_list[idx]
         del self.device_bridges[idx]
+        if len(self.device_bridges) == 0:
+            self._currentCamera = CameraBridge("", "", self.context)
+            self.currentCameraChanged.emit(self._currentCamera)
+        self.deviceListChanged.emit()
 
     def _remove_device_callback(self, device_type: str, addr: str, name: str):
-        self._registryRemoveDevice.emit(device_type, addr, name)
+        if self:
+            self._registryRemoveDevice.emit(device_type, addr, name)

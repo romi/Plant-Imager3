@@ -75,6 +75,8 @@ class DeviceRegistry(Thread):
         self._stop = False
 
     def stop(self):
+        self._device_removed_callbacks = []
+        self._new_device_callbacks = []
         self._stop = True
 
     def run(self):
@@ -89,6 +91,7 @@ class DeviceRegistry(Thread):
                 message = socket.recv_json()
                 event_type: str = message["event"]
                 payload: dict = message["payload"]
+                logger.debug(f"Received event: {event_type}, {payload}")
                 match event_type:
                     case EventType.REGISTER:
                         name = self._handle_register(payload)
@@ -117,7 +120,7 @@ class DeviceRegistry(Thread):
                         })
         logger.info(f"Registry stopped on {self.addr}:{self.port}")
 
-    def _handle_register(self, payload: dict):
+    def _handle_register(self, payload: dict) -> str:
         device_type = payload["device_type"]
         addr = payload["addr"]
         proposed_name = payload["name"]
@@ -125,15 +128,14 @@ class DeviceRegistry(Thread):
             _, address = val
             if address == addr:
                 self._remove_device(name)
-        self._add_device(device_type, addr, proposed_name)
-        return True
+        return self._add_device(device_type, addr, proposed_name)
 
     def _handle_unregister(self, payload: dict):
         name = payload["name"]
         return self._remove_device(name)
 
 
-    def _add_device(self, device_type: str, addr: str, proposed_name: str = None):
+    def _add_device(self, device_type: str, addr: str, proposed_name: str = None) -> str:
         i = 0
         if not proposed_name:
             name = f"{device_type}-{i}"
