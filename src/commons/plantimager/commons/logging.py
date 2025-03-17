@@ -4,9 +4,27 @@ import sys
 import colorlog
 
 
-def create_logger(name: str) -> logging.Logger:
+def create_logger(name: str, level=logging.DEBUG) -> logging.Logger:
+    """
+    Create a logger with the given name.
+
+    This logger comes with a stream handler to sys.stderr and is formatted.
+
+    Parameters
+    ----------
+    name: str
+        Name of the logger.
+
+    level: int, optional
+        Logging level of the logger. Must be one of DEBUG, INFO, WARNING, ERROR, CRITICAL
+        from the logging module.
+
+    Returns
+    -------
+    logging.Logger
+    """
     logger = logging.Logger(name)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(level)
 
     formatter = colorlog.LevelFormatter(fmt={
         logging.getLevelName(logging.DEBUG):    "{log_color}[{asctime}] {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",

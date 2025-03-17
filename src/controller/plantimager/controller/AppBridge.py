@@ -17,6 +17,25 @@ QML_IMPORT_MINOR_VERSION = 0 # Optional
 @QmlElement
 @QmlSingleton
 class AppBridge(QObject):
+    """
+    Singleton class which is the main bridge of the application.
+
+    AppBridge is a shared object accessible across the application.
+    It initializes the zmq context and a device registry. When a new device is registered it creates the
+    appropriate bridge for the application.
+
+    Attributes
+    ----------
+    context: zmq.Context
+        Unique ZMQ context of the application.
+    registry: deviceregistry.DeviceRegistry
+        Device registry of the application.
+    device_list: list[str]
+        List of device names.
+    device_bridges: list[CameraBridge]
+        List of camera bridges.
+
+    """
 
     currentCameraChanged = Signal(QObject)
     deviceListChanged = Signal()
@@ -44,6 +63,7 @@ class AppBridge(QObject):
         self.registry.start()
 
     def _stop(self):
+        """Finalizer for AppBridge, should be called through weakref.finalize"""
         logger.debug("finalizing AppBridge")
         self.registry.stop()
         self.registry.join()
@@ -60,6 +80,17 @@ class AppBridge(QObject):
 
     @Slot(int, result=CameraBridge)
     def getCameraBridgeAtIndex(self, index: int) -> CameraBridge:
+        """
+        (Slot) Returns the camera bridge at a given index.
+        Parameters
+        ----------
+        index: int
+            Index of the camera bridge.
+
+        Returns
+        -------
+        CameraBridge
+        """
         return self.device_bridges[index]
 
     @Property(QObject, notify=deviceListChanged)
@@ -69,6 +100,11 @@ class AppBridge(QObject):
 
     @Slot(str, str, str)
     def _create_new_device(self, device_type: str, addr: str, name: str):
+        """
+        Slot creating a new device if device type is recognized.
+
+        Meant to be connected to the signal `_registryNewDevice` as a QueuedConnection.
+        """
         logger.debug(f"New device for {addr}: {device_type}, {name}")
         if device_type.lower() == "camera":
             new_bridge = CameraBridge(name, addr, self.context)
@@ -80,11 +116,31 @@ class AppBridge(QObject):
                 self.currentCameraChanged.emit(new_bridge)
 
     def _new_device_callback(self, device_type: str, addr: str, name: str):
+        """
+        Callback called by deviceregistry when a new device is registered.
+
+        This must return immediately as to avoid deadlocks.
+        Parameters
+        ----------
+        device_type
+        addr
+        name
+
+        Returns
+        -------
+
+        """
         logger.debug(f"New device callback for {addr}: {device_type}, {name}")
+        # emit a signal that is connected with QueuedConnection so that it doesn't block
         self._registryNewDevice.emit(device_type, addr, name)
 
     @Slot(str, str, str)
     def _remove_device(self, device_type: str, addr: str, name: str):
+        """
+        Slot removing an existing device.
+
+        Meant to be connected to the signal `_registryRemoveDevice` as a QueuedConnection.
+        """
         idx = self.device_list.index(name)
         del self.device_list[idx]
         del self.device_bridges[idx]
@@ -94,5 +150,20 @@ class AppBridge(QObject):
         self.deviceListChanged.emit()
 
     def _remove_device_callback(self, device_type: str, addr: str, name: str):
-        if self:
+        """
+        Callback called by deviceregistry when a device is unregistered.
+
+        This must return immediately as to avoid deadlocks.
+        Parameters
+        ----------
+        device_type
+        addr
+        name
+
+        Returns
+        -------
+
+        """
+        if self:  # in case callback is called when self underlying c++ object is already destroyed
+            # emit a signal that is connected with QueuedConnection so that it doesn't block
             self._registryRemoveDevice.emit(device_type, addr, name)
