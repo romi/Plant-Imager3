@@ -7,7 +7,9 @@ name = "plantimager.webui"
 version = "0.0.1"
 dependencies = [
     "dash",
-    "dash-bootstrap-components",
+    "dash-bootstrap-components<2.0",
+    "plantdb.commons",
+    "plantdb.client",
     "tomli"
 ]
 
