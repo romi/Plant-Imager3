@@ -7,7 +7,6 @@ name = "plantimager.controller"
 version = "0.0.1"
 dependencies = [
     "av",
-    "opencv-python",
     "pyside6",
 ]
 
