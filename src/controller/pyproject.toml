@@ -8,6 +8,7 @@ version = "0.0.1"
 dependencies = [
     "av",
     "pyside6",
+    "pyside6-addons",  # for QtMultimedia
 ]
 
 [project.scripts]
