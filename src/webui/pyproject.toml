@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plantimager.webui"
+version = "0.0.1"
+dependencies = [
+    "dash",
+    "dash-bootstrap-components",
+    "tomli"
+]
+
+[project.scripts]
+plant-imager-webui = "plantimager.webui.app:main"
