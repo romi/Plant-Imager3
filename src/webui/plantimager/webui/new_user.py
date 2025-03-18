@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import json
-import time
 from urllib.parse import urljoin
 
 import dash_bootstrap_components as dbc
@@ -12,9 +11,8 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import html
-from dash import no_update
 
-from plantdb.rest_api_client import base_url
+from plantdb.client.rest_api import base_url
 
 # Create a button for new user registration
 new_user_button = dbc.Button(

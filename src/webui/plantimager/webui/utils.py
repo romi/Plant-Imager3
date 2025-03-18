@@ -7,10 +7,10 @@ from pathlib import Path
 import requests
 import toml
 from dash import dcc
-from plantdb.fsdb import MARKER_FILE_NAME
-from plantdb.rest_api_client import base_url
-from plantdb.rest_api_client import list_scan_names
-from plantdb.rest_api_client import parse_scans_info
+from plantdb.commons.fsdb import MARKER_FILE_NAME
+from plantdb.client.rest_api import base_url
+from plantdb.client.rest_api import list_scan_names
+from plantdb.client.rest_api import parse_scans_info
 
 
 def get_dataset_dict(host, port):

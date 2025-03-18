@@ -9,11 +9,11 @@ from dash import callback
 from dash import html
 from requests import RequestException
 
-from plantdb.rest_api_client import REST_API_PORT
-from plantdb.rest_api_client import REST_API_URL
-from plantdb.rest_api_client import base_url
-from plantdb.rest_api_client import list_scan_names
-from plantdb.rest_api_client import test_host_port_availability
+from plantdb.client.rest_api import REST_API_PORT
+from plantdb.client.rest_api import REST_API_URL
+from plantdb.client.rest_api import base_url
+from plantdb.client.rest_api import list_scan_names
+from plantdb.client.rest_api import test_host_port_availability
 
 
 def dataset_cfg_status(is_connected):

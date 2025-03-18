@@ -14,7 +14,7 @@ from dash import State
 from dash import callback
 from dash import html
 
-from plantdb.rest_api_client import base_url
+from plantdb.client.rest_api import base_url
 from plantimager.webui.new_user import new_user_button
 
 

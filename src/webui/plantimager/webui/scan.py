@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import os
 from base64 import b64decode
 from logging import getLogger
 
@@ -19,6 +19,11 @@ from plantimager.webui.utils import create_temp_fsdb
 # Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
 
+# Get the directory where the current script (scan.py) is located
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# Construct the path to the assets file
+default_toml_path = os.path.join(current_dir, 'assets', 'hardware_scan_rx0.toml')
+
 # Card for scan configuration settings using TOML format
 configuration_card = [
     dbc.Card(
@@ -27,7 +32,7 @@ configuration_card = [
             dbc.CardHeader(children=[html.I(className="bi bi-code-square me-2"), "Configuration"]),
             dbc.CardBody([
                 dbc.Textarea(id="scan-cfg-toml", class_name="mb-3", size='md',
-                             value=toml.dumps(toml.load('assets/hardware_scan_rx0.toml')),
+                             value=toml.dumps(toml.load(default_toml_path)),
                              title="The scan configuration in TOML format.",
                              placeholder="Scan configuration (TOML).",
                              style={'height': "65vh"}, persistence=True),
