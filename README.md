@@ -28,7 +28,15 @@ If needed, start by creating a virtual environment named `plant_imager3`.
 Use the following command:
 
 ```shell
-conda create -n plant_imager3 'python==3.11' ipython
+conda create -n plant-imager3 'python==3.10' ipython
+```
+
+### Install `plantimager.commons`
+
+To install the `plantimager.commons` subpackage, run the following command from the root directory of the repository:
+
+```shell
+pip install -e src/commons/.
 ```
 
 ### Install `plantimager.controller`
@@ -43,4 +51,20 @@ After installation, you can start the `PlantImagerApp` with:
 
 ```shell
 plant-imager-controller-app
+```
+
+### Install `plantimager.picamera`
+
+To install the `plantimager.picamera` subpackage, run the following command from the root directory of the repository:
+
+```shell
+pip install -e src/picamera/.
+```
+
+### Install `plantimager.webui`
+
+To install the `plantimager.webui` subpackage, run the following command from the root directory of the repository:
+
+```shell
+pip install -e src/webui/.
 ```
