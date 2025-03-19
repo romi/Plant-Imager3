@@ -164,6 +164,9 @@ class AppBridge(QObject):
         -------
 
         """
-        if self:  # in case callback is called when self underlying c++ object is already destroyed
+        try:
+            # in case callback is called when self underlying c++ object is already destroyed
             # emit a signal that is connected with QueuedConnection so that it doesn't block
             self._registryRemoveDevice.emit(device_type, addr, name)
+        except RuntimeError:
+            pass
