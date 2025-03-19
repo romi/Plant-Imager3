@@ -11,5 +11,5 @@ dependencies = [
     "pyside6-addons",  # for QtMultimedia
 ]
 
-[project.scripts]
+[project.gui-scripts]
 plant-imager-controller-app = "plantimager.controller.main:main"
