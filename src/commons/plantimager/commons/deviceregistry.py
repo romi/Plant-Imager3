@@ -2,12 +2,12 @@ from threading import Thread
 from enum import StrEnum
 from typing import Callable
 
+import zmq
 from plantimager.commons.logging import create_logger
 
 logger = create_logger('deviceregistry')
 
-import zmq
-
+__all__ = ['DeviceRegistry', "register_device", "unregister_device"]
 
 class EventType(StrEnum):
     REGISTER = "REGISTER"
@@ -15,7 +15,7 @@ class EventType(StrEnum):
     UNREGISTER = "UNREGISTER"
     CHECK_ALIVE = "CHECK_ALIVE"
     ACK = "ACK"
-    UNSUPORTED = "UNSUPORTED"
+    UNSUPPORTED = "UNSUPPORTED"
 
 REGISTER_MSG = {
     "event": EventType.REGISTER,
@@ -55,8 +55,8 @@ ACK_MSG = {
     }
 }
 
-UNSUPORTED_MSG = {
-    "event": EventType.UNSUPORTED,
+UNSUPPORTED_MSG = {
+    "event": EventType.UNSUPPORTED,
     "payload": {
         "req_event": None,
     }
@@ -113,7 +113,7 @@ class DeviceRegistry(Thread):
                     case _:
                         logger.warning(f"Unknown event type: {event_type}")
                         socket.send_json({
-                            "event": EventType.UNSUPORTED,
+                            "event": EventType.UNSUPPORTED,
                             "payload": {
                                 "req_event": event_type,
                             }
@@ -177,7 +177,7 @@ class DeviceRegistry(Thread):
 
 
 
-def register_device(context: zmq.Context, device_type: str, addr: str, name: str, registry_addr:str) -> str:
+def register_device(context: zmq.Context, device_type: str, addr: str, name: str, registry_addr: str) -> str:
     """
     Register device of type `device_type` and of address `addr` to registry at `registry_addr`.
     Proposes name to registry.
