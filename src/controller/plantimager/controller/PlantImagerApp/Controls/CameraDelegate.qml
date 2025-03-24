@@ -17,6 +17,10 @@ ItemDelegate {
 
     highlighted: ListView.isCurrentItem
 
+    onClicked: {
+        ListView.view.currentIndex = index
+    }
+
     background: Rectangle {
         anchors.fill: parent
         color: "transparent"
@@ -66,8 +70,8 @@ ItemDelegate {
         anchors.rightMargin: P.Style.mediumMargin
         //width: height
 
-        //icon: _self.ListView.isCurrentItem ? P.Icons.icons["triangle"] : P.Icons.icons["triangle-outline"]
-        icon:  P.Icons.icons["triangle"]
+        icon: _self.ListView.isCurrentItem ? P.Icons.icons["triangle"] : P.Icons.icons["triangle-outline"]
+        //icon:  P.Icons.icons["triangle"]
         color: P.Style.colors.foreground
         size: P.Style.iconMedium
         rotation: 90
