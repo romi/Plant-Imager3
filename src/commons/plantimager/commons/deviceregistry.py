@@ -94,6 +94,9 @@ class DeviceRegistry(Thread):
                 logger.debug(f"Received event: {event_type}, {payload}")
                 match event_type:
                     case EventType.REGISTER:
+                        device_type = payload["device_type"]
+                        addr = payload["addr"]
+                        proposed_name = payload["name"]
                         name = self._handle_register(payload)
                         socket.send_json({
                             "event": EventType.REGISTER_ACK,
@@ -101,8 +104,13 @@ class DeviceRegistry(Thread):
                                 "name": name,
                             }
                         })
+                        for callback in self._new_device_callbacks:
+                            callback(device_type, addr, name)
                     case EventType.UNREGISTER:
-                        result = self._handle_unregister(payload)
+                        name = payload["name"]
+                        if name in self.devices:
+                            device_type, addr = self.devices[name]
+                        result = self._remove_device(name)
                         socket.send_json({
                             "event": EventType.ACK,
                             "payload": {
@@ -110,6 +118,11 @@ class DeviceRegistry(Thread):
                                 "success": result,
                             }
                         })
+                        if result:
+                            for callback in self._device_removed_callbacks:
+                                callback(device_type, addr, name)
+
+
                     case _:
                         logger.warning(f"Unknown event type: {event_type}")
                         socket.send_json({
@@ -120,20 +133,12 @@ class DeviceRegistry(Thread):
                         })
         logger.info(f"Registry stopped on {self.addr}:{self.port}")
 
-    def _handle_register(self, payload: dict) -> str:
-        device_type = payload["device_type"]
-        addr = payload["addr"]
-        proposed_name = payload["name"]
+    def _handle_register(self, device_type: str, addr: str, proposed_name: str) -> str:
         for name, val in self.devices.items():
             _, address = val
             if address == addr:
                 self._remove_device(name)
         return self._add_device(device_type, addr, proposed_name)
-
-    def _handle_unregister(self, payload: dict):
-        name = payload["name"]
-        return self._remove_device(name)
-
 
     def _add_device(self, device_type: str, addr: str, proposed_name: str = None) -> str:
         i = 0
@@ -145,8 +150,7 @@ class DeviceRegistry(Thread):
             i += 1
             name = f"{proposed_name}-{i}"
         self.devices[name] = (device_type, addr)
-        for callback in self._new_device_callbacks:
-            callback(device_type, addr, name)
+
         logger.info(f"Added new device {name}")
         return name
 
@@ -154,8 +158,6 @@ class DeviceRegistry(Thread):
         if name in self.devices:
             device_type, addr = self.devices[name]
             del self.devices[name]
-            for callback in self._device_removed_callbacks:
-                callback(device_type, addr, name)
             logger.info(f"Removed device {name}")
             return True
         return False
@@ -211,6 +213,7 @@ def unregister_device(context: zmq.Context, name: str, registry_addr:str) -> boo
     Returns True if device was unregistered successfully.
     """
     with context.socket(zmq.REQ) as socket:
+        socket: zmq.Socket
         socket.connect(registry_addr)
         socket.send_json({
             "event": EventType.UNREGISTER,
@@ -218,6 +221,10 @@ def unregister_device(context: zmq.Context, name: str, registry_addr:str) -> boo
                 "name": name,
             }
         })
+        if socket.poll(5000, flags=zmq.POLLIN) == 0:
+            logger.debug(f"No answer from registry at address {registry_addr}. Closing")
+            socket.close()
+            return False
         reply = socket.recv_json()
         event_type = reply["event"]
         payload = reply["payload"]
