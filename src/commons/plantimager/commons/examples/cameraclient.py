@@ -1,10 +1,10 @@
+from functools import partial
+
 import zmq
-from imagecodecs import jpegxl_decode, jpegxl_decode_jpeg
-import numpy as np
 from queue import Queue
 
 from plantimager.commons.RPC import RPCClient
-from plantimager.commons.cameradevice import Camera
+from plantimager.commons.cameradevice import Camera, CameraMode
 from plantimager.commons.deviceregistry import DeviceRegistry
 
 
@@ -25,14 +25,22 @@ if __name__ == "__main__":
     context = zmq.Context()
     registry = DeviceRegistry(context)
     registry.add_new_device_callback(callback)
+    registry.daemon = True
     registry.start()
     device_type, addr, name = queue.get()
     camera = RPCCamera(context, addr)
-    print("Calling camera.start_video() ==>", camera.start_video())
-    print("Calling camera.stop_video() ==>", camera.stop_video())
+    camera.modeChanged.connect(partial(print, "mode changed : "))
+    camera.videoUrlChanged.connect(partial(print, "video url changed : "))
+    camera.mode = CameraMode.VIDEO
+    camera.mode = CameraMode.STILL
     jpeg_img = camera.get_image()
-    print(jpegxl_decode(jpeg_img))
-    print("Calling camera.start_video() ==>", camera.start_video())
-    print("Calling camera.stop_video() ==>", camera.stop_video())
-    registry.join()
+    print(jpeg_img)
+    camera.mode = CameraMode.VIDEO
+    print("Accessing property mode", camera.mode)
+    camera.mode = CameraMode.STILL
+    print("Accessing property mode", camera.mode)
+    camera.stop_server()
+    registry.stop()
+    registry.join(5)
+    del registry
 

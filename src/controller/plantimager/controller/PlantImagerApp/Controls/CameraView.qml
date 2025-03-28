@@ -12,11 +12,32 @@ Control {
 
     required property QtObject bridge
 
+    onBridgeChanged: {
+        if(bridge !== undefined && bridge !== null) {
+            if(bridge.mode === "STILL") {
+                video_button.checked = false
+                image_button.checked = true
+            } else if(bridge.mode === "VIDEO") {
+                image_button.checked = false
+                video_button.checked = true
+            }
+        }
+    }
+
     Connections {
         target: bridge
-        ignoreUnknownSignals: true
+        ignoreUnknownSignals: false
         function onVideoReady() {
             receiver.play()
+        }
+        function onModeChanged() {
+            if(bridge.mode === "STILL") {
+                video_button.checked = false
+                image_button.checked = true
+            } else if(bridge.mode === "VIDEO") {
+                image_button.checked = false
+                video_button.checked = true
+            }
         }
     }
 
@@ -109,12 +130,20 @@ Control {
         columnSpacing: P.Style.mediumMargin
 
         Button {
+            id: video_button
             Layout.fillWidth: true
             Layout.fillHeight: true
             text: "Video"
+            autoExclusive: true
+            checkable: true
+            checked: false
             onClicked: {
-                bridge.startVideo()
-                media_control.currentIndex = 0
+                bridge.mode = "VIDEO"
+            }
+            onCheckedChanged: {
+                if(checked) {
+                    media_control.currentIndex = 0
+                }
             }
         }
 
@@ -125,13 +154,21 @@ Control {
         }
 
         Button {
+            id: image_button
             Layout.fillWidth: true
             Layout.fillHeight: true
             text: "Image"
+            autoExclusive: true
+            checkable: true
+            checked: false
 
             onClicked: {
-                bridge.stopVideo()
-                media_control.currentIndex = 1
+                bridge.mode = "STILL"
+            }
+            onCheckedChanged: {
+                if(checked) {
+                    media_control.currentIndex = 1
+                }
             }
         }
 

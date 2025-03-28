@@ -1,8 +1,9 @@
 from concurrent.futures import ThreadPoolExecutor, Future
+from typing import Literal
 from weakref import finalize
 
 import zmq
-from PySide6.QtCore import QObject, Slot, Signal
+from PySide6.QtCore import QObject, Slot, Signal, Property
 
 from plantimager.commons.RPC import RPCClient
 from plantimager.commons.cameradevice import Camera
@@ -23,12 +24,15 @@ class PiCameraComm(QObject):
     """
 
     imageReady = Signal(memoryview, dict)
-    videoReady = Signal(str)
+    modeChanged = Signal(str)
+    videoUrlChanged = Signal(str)
 
     def __init__(self, context: zmq.Context, url: str, parent: QObject = None):
         QObject.__init__(self, parent)
         self.camera = PiCameraProxy(context, url)
         self._thread_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"{self.__class__.__name__}Thread")
+        self.camera.modeChanged.connect(lambda *args: self.modeChanged.emit(*args))
+        self.camera.videoUrlChanged.connect(lambda *args: self.videoUrlChanged.emit(*args))
         finalize(self, self._finalize)
 
     def _finalize(self):
@@ -46,18 +50,13 @@ class PiCameraComm(QObject):
         ft = self._thread_pool.submit(self.camera.get_image)
         ft.add_done_callback(_callback)
 
+    @Property(str, notify=modeChanged)
+    def mode(self) -> Literal["VIDEO", "STILL"]:
+        return self.camera.mode
+    @mode.setter
+    def mode(self, value: Literal["VIDEO", "STILL"]):
+        ft = self._thread_pool.submit(lambda : setattr(self.camera, "mode", value))
 
-    @Slot()
-    def startVideo(self):
-        def _callback(ft_: Future):
-            if ft_.cancelled(): return
-            source = ft_.result()
-            if source:
-                self.videoReady.emit(source)
-        ft = self._thread_pool.submit(self.camera.start_video)
-        ft.add_done_callback(_callback)
-
-    @Slot()
-    def stopVideo(self):
-        self._thread_pool.submit(self.camera.stop_video)
-
+    @Property(str, notify=videoUrlChanged)
+    def videoUrl(self):
+        return self.camera.video_url

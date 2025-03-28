@@ -1,10 +1,10 @@
-import logging
 import sys
-from enum import Flag, auto, StrEnum
+from enum import StrEnum
+from typing import Literal
 from weakref import finalize
 
 import zmq
-from PySide6.QtCore import QThread, QObject, Signal, Slot, Property, QMetaObject, Qt
+from PySide6.QtCore import QObject, Signal, Slot, Property
 from PySide6.QtQml import QmlElement, QmlUncreatable
 
 from plantimager.commons.logging import create_logger
@@ -26,15 +26,11 @@ class States(StrEnum): # TODO: redo statuses when communication with picamera is
     DISCONNECTED = "disconnected"
     INVALID = "invalid"
     CONNECTED = "connected"
-    VIDEO_READY = "video ready"
-    VIDEO_ERROR = "video error"
 
 STATE_TO_CLASS = {
     States.DISCONNECTED: StatusClass.INACTIVE,
     States.INVALID: StatusClass.ERROR,
     States.CONNECTED: StatusClass.OK,
-    States.VIDEO_READY: StatusClass.OK,
-    States.VIDEO_ERROR: StatusClass.ERROR,
 }
 
 @QmlElement
@@ -57,6 +53,7 @@ class CameraBridge(QObject):
     videoSourceChanged = Signal(str)
     imageSourceChanged = Signal(str)
     videoReady = Signal()
+    modeChanged = Signal(str)
 
     def __init__(self, name: str, address: str, context: zmq.Context, parent: QObject = None):
         super().__init__(parent)
@@ -67,17 +64,20 @@ class CameraBridge(QObject):
         if name == "empty" or address == "":
             self._status = States.INVALID
             self._camera = None
+            self._mode = "STILL"
             return
         self._status = States.DISCONNECTED
 
         self._camera = PiCameraComm(context, address)
         self._camera.imageReady.connect(self._newImage)
-        self._camera.videoReady.connect(self._videoReady)
+        self._camera.modeChanged.connect(self._modeChanged)
+        self._mode: Literal["VIDEO", "STILL"]  = self._camera.mode
+        self._status = States.CONNECTED
         finalize(self, self._stop)
         self._i = 0
 
     def _stop(self):
-        """Handles termination of CameraBridge (to use with weakref.fialize)"""
+        """Handles termination of CameraBridge (to use with weakref.finalize)"""
         logger.debug(f"finalizing bridge {self._name}")
         self._video_source = ""
         self._image_source = ""
@@ -92,21 +92,26 @@ class CameraBridge(QObject):
         if self._camera:
             self._camera.getImage()
 
-    @Slot()
-    def startVideo(self):
-        if self._camera:
-            self._camera.startVideo()
-
-    @Slot()
-    def stopVideo(self):
-        if self._camera:
-            self._camera.stopVideo()
+    @Property(str, notify=modeChanged)
+    def mode(self):
+        return self._mode
+    @mode.setter
+    def mode(self, value: Literal["VIDEO", "STILL"]):
+        if self._mode != value and self._camera:
+            self._camera.mode = value
 
     @Slot(str)
-    def _videoReady(self, source: str):
-        self._video_source = source
-        self.videoSourceChanged.emit(self._video_source)
-        self.videoReady.emit()
+    def _modeChanged(self, mode: Literal["VIDEO", "STILL"]):
+        self._mode = mode
+        self.modeChanged.emit(mode)
+
+    @Slot(str)
+    def _videoUrlChanged(self, videoUrl: str):
+        if videoUrl:
+            self._video_source = self._camera.videoUrl
+            self.videoSourceChanged.emit(self._video_source)
+            self.videoReady.emit()
+
 
     @Slot(memoryview, dict)
     def _newImage(self, buffer: memoryview, buffer_info: dict):

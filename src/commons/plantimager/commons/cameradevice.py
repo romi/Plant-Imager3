@@ -1,21 +1,37 @@
 from abc import ABC, abstractmethod
+from enum import StrEnum
+from typing import Literal
+
+from plantimager.commons.RPC import RPCSignal, RPCProperty
+
+class CameraMode(StrEnum):
+    VIDEO = "VIDEO"
+    STILL = "STILL"
 
 class Camera(ABC):
     """
     Abstract class for camera devices.
     """
+    modeChanged = RPCSignal(str)
+    videoUrlChanged = RPCSignal(str)
 
     def __init__(self):
         pass
 
     @abstractmethod
-    def start_video(self) -> str:
-        pass
-
-    @abstractmethod
-    def stop_video(self) -> str:
-        pass
-
-    @abstractmethod
     def get_image(self) -> tuple[memoryview, dict]:
+        pass
+
+    @RPCProperty(notify=modeChanged)
+    @abstractmethod
+    def mode(self) -> Literal[CameraMode.VIDEO, CameraMode.STILL]:
+        pass
+    @mode.setter
+    @abstractmethod
+    def mode(self, mode: Literal[CameraMode.STILL, CameraMode.VIDEO]) -> None:
+        pass
+
+    @RPCProperty(notify=videoUrlChanged)
+    @abstractmethod
+    def video_url(self) -> str:
         pass

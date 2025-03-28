@@ -1,3 +1,4 @@
+import copy
 import sys
 import inspect
 import json
@@ -6,6 +7,7 @@ import logging
 from enum import StrEnum
 from functools import wraps, partial, partialmethod
 from idlelib.rpc import RPCServer
+import random
 from threading import Thread
 from weakref import finalize
 import socket
@@ -32,7 +34,6 @@ class RPCEvents(StrEnum):
     EMIT_SIGNAL = "EMIT_SIGNAL"
 
 url_parser = re.compile("([a-zA-Z]*)://([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}):([0-9]*)")
-FIND_PEER_PORT = 5025
 
 
 
@@ -122,13 +123,19 @@ class RPCClient:
         self.socket: zmq.Socket = context.socket(zmq.REQ)
         self.socket.connect(self.url)
 
+        # replacing class attribute signals by instance signals
+        for base in self.__class__.__bases__:
+            for key, value in base.__dict__.items():
+                if isinstance(value, RPCSignal):
+                    setattr(self, key, copy.deepcopy(value))
+
         # Finding peer address (zmq abstract addresses so we use native sockets here)
         self.socket.send_json({"event": RPCEvents.FIND_PEER_ADDRESS})
         reply = self.socket.recv_json()
         if not reply["success"]:
             raise RuntimeError(f"FIND_PEER_ADDRESS failed")
         protocol, ip_addr, port = url_parser.match(url).groups()
-        s = socket.create_connection((ip_addr, FIND_PEER_PORT))
+        s = socket.create_connection((ip_addr, reply["port"]))
         self.own_address = s.getsockname()[0]
         self.peer_address = s.getpeername()[0]
         s.close()
@@ -386,12 +393,16 @@ class RPCServer:
         if not self._signal_socket:
             logger.error(f"Signal socket not initialized")
             raise RuntimeError(f"Signal socket not initialized")
+        logger.debug(f"sending signal {signal_name} with args {args}")
         self._signal_socket.send_json({
             "event": RPCEvents.EMIT_SIGNAL,
             "signal": signal_name,
             "args": args,
             "blocking": False,
         })
+        reply = self._signal_socket.recv_json()
+        if not reply["success"]:
+            logger.error(f"Signal {signal_name} failed with {reply}")
 
     def _exec_json(self, method: Callable, params: dict):
         args = params["args"]
@@ -432,13 +443,17 @@ class RPCServer:
                 case RPCEvents.FIND_PEER_ADDRESS:
                     logger.info("Finding peer address")
                     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    s.bind(("", FIND_PEER_PORT))
+                    port = random.randint(49152, 65535)
+                    s.bind(("", port))
                     s.listen(1)
-                    self.socket.send_json({"success": True})
+                    self.socket.send_json({"success": True, "port": port})
                     c, addr_info = s.accept()
                     self.peer_addr = addr_info[0]
+                    c.shutdown(socket.SHUT_RDWR)
                     c.close()
+                    s.shutdown(socket.SHUT_RDWR)
                     s.close()
+                    del s
                     logger.info("Connected to peer at address: {}".format(self.peer_addr))
                 case RPCEvents.GET_INVENTORY:
                     logger.info("Sending inventory")
@@ -460,7 +475,7 @@ class RPCServer:
                     self._signal_socket = self.context.socket(zmq.REQ)
                     self._signal_socket.connect(f"tcp://{address}:{port}")
                     for sig_name, sig in self._signals.items():
-                        sig.connect(lambda *args: self._send_signal(sig_name, *args))
+                        sig.connect(partial(self._send_signal, sig_name))
                     self.socket.send_json({"success": True})
                     logger.info("Successfully initialized signal handling")
                 case RPCEvents.METHOD_CALL:
@@ -495,7 +510,7 @@ class RPCServer:
                     try:
                         setattr(self, prop_name, val)
                     except Exception as e:
-                        logger.error(f"Failed to execute 'get property' for property {prop_name}")
+                        logger.error(f"Failed to execute 'set property' for property {prop_name}")
                         traceback_str = traceback.format_exc(limit=10)
                         print(traceback_str, file=sys.stderr)
                         self.socket.send_json({"success": False, "error": str(e), "traceback": traceback_str})
