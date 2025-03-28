@@ -97,7 +97,7 @@ class DeviceRegistry(Thread):
                         device_type = payload["device_type"]
                         addr = payload["addr"]
                         proposed_name = payload["name"]
-                        name = self._handle_register(payload)
+                        name = self._handle_register(device_type, addr, proposed_name)
                         socket.send_json({
                             "event": EventType.REGISTER_ACK,
                             "payload": {
