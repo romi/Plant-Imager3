@@ -4,7 +4,12 @@ import json
 import traceback
 import logging
 from enum import StrEnum
+from functools import wraps, partial, partialmethod
+from idlelib.rpc import RPCServer
+from threading import Thread
 from weakref import finalize
+import socket
+import re
 
 from decorator import decorate
 
@@ -17,9 +22,91 @@ from .logging import create_logger
 logger = create_logger("RPC")
 
 class RPCEvents(StrEnum):
+    PROPERTY_GET = "PROPERTY_GET"
+    PROPERTY_SET = "PROPERTY_SET"
     METHOD_CALL = "METHOD_CALL"
     GET_INVENTORY = "GET_INVENTORY"
     STOP_SERVER = "STOP_SERVER"
+    FIND_PEER_ADDRESS = "FIND_PEER_ADDRESS"
+    INIT_SIGNALS_HANDLING = "INIT_SIGNALS_HANDLING"
+    EMIT_SIGNAL = "EMIT_SIGNAL"
+
+url_parser = re.compile("([a-zA-Z]*)://([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}):([0-9]*)")
+FIND_PEER_PORT = 5025
+
+
+
+class RPCSignal:
+    def __init__(self, *arg_types):
+        self.args = arg_types
+        self.connections = []
+
+    def emit(self, *args):
+        for conn in self.connections:
+            conn(*args)
+
+    def connect(self, conn: Callable):
+        self.connections.append(conn)
+
+    def disconnect(self, conn: Callable=None):
+        if conn:
+            self.connections.remove(conn)
+        else:
+            self.connections.clear()
+
+
+
+class RPCProperty(property):
+    """
+    Declares a property for RPC usage. When the notify signal is emitted the proxy on the RPC Client is updated.
+    The signal provided in notify must be emitted in the setter when the property changes.
+    """
+    def __init__(self, fget=None, fset=None, fdel=None, doc=None, notify: RPCSignal = None):
+        super().__init__(fget=fget, fset=fset, fdel=fdel, doc=doc)
+        self._notifier = notify
+
+    def __call__(self, func: Callable):
+        return RPCProperty(fget=func, notify=self._notifier)
+
+
+class RPCSignalReceiver(Thread):
+    """
+    A receiver thread for RPCClient to listen for and receive RPC Signals from the server and in turn
+    emit the same signals in the proxy.
+    """
+    def __init__(self, context: zmq.Context, url: str, signals: dict[str, RPCSignal]):
+        super().__init__()
+        self.context = context
+        self.url = url
+        self._stop = False
+        self.signals = signals
+        self.socket: zmq.Socket = context.socket(zmq.REP)
+        self.port = self.socket.bind_to_random_port(url)
+        finalize(self.socket, self.socket.close)
+
+    def run(self):
+        while not self._stop:
+            if self.socket.poll(100, zmq.POLLIN) == 0:
+                continue
+            request = self.socket.recv_json()
+            if request["event"] != RPCEvents.EMIT_SIGNAL:
+                logger.error(f"Expected event {RPCEvents.EMIT_SIGNAL}, got {request['event']} instead.")
+                self.socket.send_json({"success": False})
+                continue
+            signal = request["signal"]
+            args = request["args"]
+            logger.debug(f"Emitting signal {signal} with args {args}")
+            if request["blocking"]:
+                self.signals[signal].emit(*args)
+                self.socket.send_json({"success": True})
+            else:
+                self.socket.send_json({"success": True})
+                self.signals[signal].emit(*args)
+        logger.debug(f"Stopping signal receiver {self}")
+
+
+    def stop(self):
+        self._stop = True
 
 class RPCClient:
     """
@@ -34,6 +121,20 @@ class RPCClient:
         self.url: str = url
         self.socket: zmq.Socket = context.socket(zmq.REQ)
         self.socket.connect(self.url)
+
+        # Finding peer address (zmq abstract addresses so we use native sockets here)
+        self.socket.send_json({"event": RPCEvents.FIND_PEER_ADDRESS})
+        reply = self.socket.recv_json()
+        if not reply["success"]:
+            raise RuntimeError(f"FIND_PEER_ADDRESS failed")
+        protocol, ip_addr, port = url_parser.match(url).groups()
+        s = socket.create_connection((ip_addr, FIND_PEER_PORT))
+        self.own_address = s.getsockname()[0]
+        self.peer_address = s.getpeername()[0]
+        s.close()
+        logger.debug(f"Client at address {self.own_address} connected to server at {self.peer_address}")
+
+        # Getting RPCServer inventory
         self.socket.send_json({
             "event": RPCEvents.GET_INVENTORY
         })
@@ -41,19 +142,54 @@ class RPCClient:
         logger.debug(f"Got inv: {reply}",)
         self._json_methods = reply["json_methods"]
         self._buffer_methods = reply["buffer_methods"]
-        finalize(self, self.socket.close)
+        self._signals = {sig: getattr(self, sig) for sig in reply["signals"] if hasattr(self, sig)}
+        self._properties = reply["properties"]
+
+        # If signals initiate
+        self._signal_receiver = None
+        if self._signals:
+            logger.info("Initializing signal handling")
+            self._signal_receiver = RPCSignalReceiver(
+                context=self.context, url=f"tcp://{self.own_address}", signals=self._signals
+            )
+            self._signal_receiver.daemon = True
+            self._signal_receiver.start()
+            signal_port = self._signal_receiver.port
+            self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING, "address": self.own_address, "port": signal_port})
+            reply = self.socket.recv_json()
+            if not reply["success"]:
+                self._signal_receiver.stop()
+                self._signal_receiver.join(2)
+                self._signal_receiver = None
+                raise RuntimeError(f"INIT_SIGNALS_HANDLING failed")
+            logger.info("Successfully initialized signal handling")
+
+        def _finalizer():
+            self.socket.close()
+            if self._signal_receiver:
+                self._signal_receiver.stop()
+                self._signal_receiver.join(2)
+
+        finalize(self, _finalizer)
 
     @classmethod
     def register_interface(cls, interface: type):
         def _decorator(target_cls: type):
             if interface not in target_cls.__bases__ or cls not in target_cls.__bases__:
                 raise RuntimeError(f"{target_cls} must inherit from {interface} and {cls}.")
-            for method_name, method in interface.__dict__.items():
-                if inspect.isfunction(method) and not (method_name.startswith("__") and method_name.endswith("__")):
-                    logger.debug(f"registering method {method_name} in {target_cls}")
-                    func = decorate(method, cls._method_proxy)
+            for key, val in interface.__dict__.items():
+                if inspect.isfunction(val) and not (key.startswith("__") and key.endswith("__")):
+                    logger.debug(f"registering method {key} in {target_cls}")
+                    func = decorate(val, cls._method_proxy)
                     func.__isabstractmethod__ = False  # Counts as en actual implementation
-                    setattr(target_cls, method_name, func)
+                    setattr(target_cls, key, func)
+                elif isinstance(val, RPCSignal):
+                    pass # nothing to do at this stage
+                elif isinstance(val, RPCProperty):
+                    fget = wraps(val.fget)(partial(cls._property_getter_proxy, property_name=key))
+                    fset = wraps(val.fset)(partial(cls._property_setter_proxy, property_name=key))
+                    prop = RPCProperty(fget=fget, fset=fset, fdel=val.fdel, doc=val.__doc__, notify=val._notifier)
+                    setattr(target_cls, key, prop)
             # abstract methods have been implemented
             target_cls.__abstractmethods__ = frozenset()
             target_cls._interface = interface.__name__
@@ -77,6 +213,51 @@ class RPCClient:
                 print("Traceback from remote --->", file=sys.stderr)
                 print(trace, file=sys.stderr, end="")
                 print("<------------", file=sys.stderr)
+
+
+    def _property_getter_proxy(self, property_name: str) -> Any:
+        package = {
+            "event": RPCEvents.PROPERTY_GET,
+            "property":  property_name
+        }
+        logger.debug(f"getting property {property_name}")
+        self.socket.send_json(package, flags=zmq.NOBLOCK)
+        if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
+            logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
+            return None
+        reply = self.socket.recv_json()
+        if reply["success"]:
+            return reply["value"]
+        else:
+            err, traceback_ = reply["error"], reply["traceback"]
+            logger.error(f"Failed to get property {property_name} on remote due to {err}")
+            if logger.level == logging.DEBUG:
+                print("Traceback from remote --->", file=sys.stderr)
+                print(traceback_, file=sys.stderr, end="")
+                print("<------------", file=sys.stderr)
+            return None
+
+    def _property_setter_proxy(self, value: Any, property_name: str) -> None:
+        package = {
+            "event": RPCEvents.PROPERTY_SET,
+            "property":  property_name,
+            "value": value
+        }
+        logger.debug(f"setting property {property_name} to {value}")
+        self.socket.send_json(package, flags=zmq.NOBLOCK)
+        if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
+            logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
+            return
+        reply = self.socket.recv_json()
+        if not reply["success"]:
+            err, traceback_ = reply["error"], reply["traceback"]
+            logger.error(f"Failed to get property {property_name} on remote due to {err}")
+            if logger.level == logging.DEBUG:
+                print("Traceback from remote --->", file=sys.stderr)
+                print(traceback_, file=sys.stderr, end="")
+                print("<------------", file=sys.stderr)
+            return
+
 
     def execute(self, method: Callable, params: dict) -> tuple[bool, object]:
         package = {
@@ -127,45 +308,96 @@ class RPCClient:
 
 class RPCServer:
 
-    _json_methods: set[str] = set()
-    _buffer_methods: set[str] = set()
-
     def __init__(self, context: zmq.Context, url: str):
         super().__init__()
         self.context: zmq.Context = context
         self.url: str = url
-        self.socket: zmq.Socket = context.socket(zmq.REP)
+        self.socket: zmq.Socket[zmq.REP] = context.socket(zmq.REP)
         self.port = self.socket.bind_to_random_port(url, 10000, 12000)
 
-        self._name = ""
-        self._registry_addr = ""
+        self.name = ""
+        self.registry_addr = ""
+        self._json_methods: dict[str, Callable] = dict()
+        self._buffer_methods: dict[str, Callable] = dict()
+        self._rpc_properties: dict[str, property] = dict()
+        self._signals: dict[str, RPCSignal] = dict()
+        self._signal_socket: zmq.Socket[zmq.REQ] = None
+
+        self.peer_addr: str = None
+
         finalize(self, self._finalize)
 
     def register_to_registry(self, type_: str, name: str, registry_address: str):
         logger.debug(f"Register device {name} of type {type_} to {registry_address}")
-        self._name = register_device(
+        self.name = register_device(
             self.context, type_,
             f"{self.url}:{self.port}",
             name, registry_address
         )
-        self._registry_addr = registry_address if self._name else ""
-        return self._name
+        self.registry_addr = registry_address if self.name else ""
+        return self.name
 
     @classmethod
-    def register_method_json(cls, method: Callable):
-        cls._json_methods.add(method.__name__)
+    def create_server(cls, target_class: type) -> type:
+        """
+        Create an RPC server object from target_class. target_class must be a subclass of RPCServer.
+
+        Parameters
+        ----------
+        target_class: type
+            Class to be converted to an RPC server
+
+        Returns
+        -------
+
+        """
+        assert issubclass(target_class, RPCServer)
+        old_init = target_class.__init__
+        @wraps(old_init)
+        def __init__replacement(self, *args, **kwargs):
+            old_init(self, *args, **kwargs)
+            for key, val in self.__class__.__dict__.items():
+                if inspect.isfunction(val) and hasattr(val, "_is_json_method") and val._is_json_method:
+                    self._json_methods[key] = val
+                elif inspect.isfunction(val) and hasattr(val, "_is_buffer_method") and val._is_buffer_method:
+                    self._buffer_methods[key] = val
+                elif isinstance(val, property) and hasattr(val, "_is_rpc_property") and val._is_rpc_property:
+                    self._rpc_properties[key] = val
+                elif isinstance(val, RPCSignal):
+                    self._signals[key] = val
+            for base in self.__class__.__bases__:
+                for key, val in base.__dict__.items():
+                    if isinstance(val, RPCSignal):
+                        self._signals[key] = val
+        target_class.__init__ = __init__replacement
+        return target_class
+
+    @staticmethod
+    def register_method_json(method: Callable):
+        method._is_json_method = True
         return method
 
-    @classmethod
-    def register_method_buffer(cls, method: Callable):
-        cls._buffer_methods.add(method.__name__)
+    @staticmethod
+    def register_method_buffer(method: Callable):
+        method._is_buffer_method = True
         return method
+
+    def _send_signal(self, signal_name: str, *args):
+        if not self._signal_socket:
+            logger.error(f"Signal socket not initialized")
+            raise RuntimeError(f"Signal socket not initialized")
+        self._signal_socket.send_json({
+            "event": RPCEvents.EMIT_SIGNAL,
+            "signal": signal_name,
+            "args": args,
+            "blocking": False,
+        })
 
     def _exec_json(self, method: Callable, params: dict):
         args = params["args"]
         kwargs = params["kwargs"]
         try:
-            result = method(*args, **kwargs)
+            result = method(self, *args, **kwargs)
         except Exception as e:
             logger.error(f"Failed to execute {method} due to {e}")
             traceback_str = traceback.format_exc(limit=10)
@@ -179,7 +411,7 @@ class RPCServer:
         args = params["args"]
         kwargs = params["kwargs"]
         try:
-            buffer, buffer_info = method(*args, **kwargs)
+            buffer, buffer_info = method(self, *args, **kwargs)
         except Exception as e:
             logger.error(f"Failed to execute {method} due to {e}")
             traceback_str = traceback.format_exc(limit=10)
@@ -197,35 +429,88 @@ class RPCServer:
         while True:
             request = self.socket.recv_json()
             match request["event"]:
+                case RPCEvents.FIND_PEER_ADDRESS:
+                    logger.info("Finding peer address")
+                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    s.bind(("", FIND_PEER_PORT))
+                    s.listen(1)
+                    self.socket.send_json({"success": True})
+                    c, addr_info = s.accept()
+                    self.peer_addr = addr_info[0]
+                    c.close()
+                    s.close()
+                    logger.info("Connected to peer at address: {}".format(self.peer_addr))
                 case RPCEvents.GET_INVENTORY:
                     logger.info("Sending inventory")
                     logger.info({
-                        "json_methods": list(self._json_methods),
-                        "buffer_methods": list(self._buffer_methods),
+                        "json_methods": list(self._json_methods.keys()),
+                        "buffer_methods": list(self._buffer_methods.keys()),
+                        "signals": list(self._signals.keys()),
+                        "properties": list(self._rpc_properties.keys()),
                     })
                     self.socket.send_json({
                         "json_methods": list(self._json_methods),
                         "buffer_methods": list(self._buffer_methods),
+                        "signals": list(self._signals.keys()),
+                        "properties": list(self._rpc_properties.keys()),
                     })
+                case RPCEvents.INIT_SIGNALS_HANDLING:
+                    logger.info("Initializing signal handling")
+                    address, port = request["address"], request["port"]
+                    self._signal_socket = self.context.socket(zmq.REQ)
+                    self._signal_socket.connect(f"tcp://{address}:{port}")
+                    for sig_name, sig in self._signals.items():
+                        sig.connect(lambda *args: self._send_signal(sig_name, *args))
+                    self.socket.send_json({"success": True})
+                    logger.info("Successfully initialized signal handling")
                 case RPCEvents.METHOD_CALL:
                     method: str = request["method"]
                     params: dict[str, bytes] = request["params"]
                     logger.info(f"Executing {method} with params {params}")
-                    if method in self._json_methods and hasattr(self, method):
-                        self._exec_json(getattr(self, method), params)
-                    elif method in self._buffer_methods and hasattr(self, method):
-                        self._exec_buffer(getattr(self, method), params)
+                    if method in self._json_methods:
+                        self._exec_json(self._json_methods[method], params)
+                    elif method in self._buffer_methods:
+                        self._exec_buffer(self._buffer_methods[method], params)
                     else:
                         logger.error(f"Method {method} not implemented")
                         self.socket.send_json({"success": False, "error": f"Method {method} not implemented"})
+                case RPCEvents.PROPERTY_GET:
+                    prop_name: str = request["property"]
+                    logger.debug(f"Getting property {prop_name}")
+                    try:
+                        val = getattr(self, prop_name)
+                    except Exception as e:
+                        logger.error(f"Failed to execute 'get property' for property {prop_name}")
+                        traceback_str = traceback.format_exc(limit=10)
+                        print(traceback_str, file=sys.stderr)
+                        self.socket.send_json({"success": False, "error": str(e), "traceback": traceback_str})
+                    else:
+                        self.socket.send_json({
+                            "success": True, "value": val,
+                        })
+                case RPCEvents.PROPERTY_SET:
+                    prop_name: str = request["property"]
+                    val = request["value"]
+                    logger.debug(f"Setting property {prop_name} to {val}")
+                    try:
+                        setattr(self, prop_name, val)
+                    except Exception as e:
+                        logger.error(f"Failed to execute 'get property' for property {prop_name}")
+                        traceback_str = traceback.format_exc(limit=10)
+                        print(traceback_str, file=sys.stderr)
+                        self.socket.send_json({"success": False, "error": str(e), "traceback": traceback_str})
+                    else:
+                        self.socket.send_json({
+                            "success": True,
+                        })
                 case RPCEvents.STOP_SERVER:
                     self.socket.send_json({"success": True})
                     break
         logger.info("Server stopped")
 
     def _finalize(self):
-        if self._name and self._registry_addr:
-            unregister_device(self.context, self._name, self._registry_addr)
+        if self.name and self.registry_addr:
+            unregister_device(self.context, self.name, self.registry_addr)
             logger.info("Device unregistered successfully")
         self.socket.close()
         logger.info("Server deleted")
