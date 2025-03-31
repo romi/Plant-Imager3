@@ -179,15 +179,15 @@ class DeviceRegistry(Thread):
 
 
 
-def register_device(context: zmq.Context, device_type: str, addr: str, name: str, registry_addr: str) -> str:
+def register_device(context: zmq.Context, device_type: str, addr: str, name: str, registry_url: str) -> str:
     """
-    Register device of type `device_type` and of address `addr` to registry at `registry_addr`.
+    Register device of type `device_type` and of address `addr` to registry at `registry_url`.
     Proposes name to registry.
 
     Returns accepted device name.
     """
     with context.socket(zmq.REQ) as socket:
-        socket.connect(registry_addr)
+        socket.connect(registry_url)
         socket.send_json({
             "event": EventType.REGISTER,
             "payload": {

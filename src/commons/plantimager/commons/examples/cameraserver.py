@@ -6,13 +6,11 @@ from plantimager.commons.RPC import RPCServer, RPCProperty
 from plantimager.commons.cameradevice import Camera, CameraMode
 
 
-@RPCServer.create_server
 class DummyCamera(Camera, RPCServer):
     def __init__(self, context: zmq.Context, url: str):
         RPCServer.__init__(self, context, url)
         self._mode = CameraMode.STILL
         self._video_url = "tcp://test_url:1234"
-
 
     @RPCServer.register_method_buffer
     def get_image(self) -> (memoryview, dict):

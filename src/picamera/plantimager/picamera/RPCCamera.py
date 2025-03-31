@@ -23,7 +23,7 @@ class PyavOutput_nobuffer(PyavOutput):
         self._container.flags = self._container.flags | 0x40
         super(PyavOutput, self).start()
 
-@RPCServer.create_server
+
 class RPCCamera(Camera, RPCServer):
     def __init__(self, context: zmq.Context, url: str):
         RPCServer.__init__(self, context, url)
