@@ -12,6 +12,7 @@ ApplicationWindow {
     visible: true
     width: 800
     height: 480
+    //flags: Qt.FramelessWindowHint | Qt.X11BypassWindowManagerHint
     flags: Qt.FramelessWindowHint
 
     header: P.Header {
