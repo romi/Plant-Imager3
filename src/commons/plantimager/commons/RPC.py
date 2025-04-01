@@ -16,7 +16,6 @@ from decorator import decorate
 
 import zmq
 from typing import Callable, Any
-from collections.abc import Buffer
 
 from .deviceregistry import register_device, unregister_device
 from .logging import create_logger
@@ -436,13 +435,13 @@ class RPCServer:
         return method
 
     @staticmethod
-    def register_method_buffer(method: Callable[..., tuple[Buffer, dict]]):
+    def register_method_buffer(method: Callable[..., tuple[memoryview|bytes, dict]]):
         """
         Registers this method as remote callable procedure which will transmit its output as a buffer-like object
         as well as a buffer_info dictionary.
 
         `method` may take any input which will be serialized via json and must output a 2-tuple:
-        (memoryview or buffer, dict).
+        (memoryview or bytes, dict).
 
 
         Parameters
@@ -513,6 +512,8 @@ class RPCServer:
 
         """
         while True:
+            if self._socket.poll(1000, zmq.POLLIN) == 0:
+                continue
             request = self._socket.recv_json()
             match request["event"]:
                 case RPCEvents.FIND_PEER_ADDRESS:

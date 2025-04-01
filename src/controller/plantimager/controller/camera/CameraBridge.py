@@ -71,6 +71,7 @@ class CameraBridge(QObject):
         self._camera = PiCameraComm(context, address)
         self._camera.imageReady.connect(self._newImage)
         self._camera.modeChanged.connect(self._modeChanged)
+        self._camera.videoUrlChanged.connect(self._videoUrlChanged)
         self._mode: Literal["VIDEO", "STILL"]  = self._camera.mode
         self._status = States.CONNECTED
         finalize(self, self._stop)
@@ -107,10 +108,9 @@ class CameraBridge(QObject):
 
     @Slot(str)
     def _videoUrlChanged(self, videoUrl: str):
-        if videoUrl:
-            self._video_source = self._camera.videoUrl
-            self.videoSourceChanged.emit(self._video_source)
-            self.videoReady.emit()
+        self._video_source = videoUrl
+        self.videoSourceChanged.emit(self._video_source)
+        if videoUrl: self.videoReady.emit()
 
 
     @Slot(memoryview, dict)

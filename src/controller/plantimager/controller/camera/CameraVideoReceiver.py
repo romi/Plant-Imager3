@@ -125,7 +125,7 @@ class CameraVideoReceiver(QObject):
     def _delete_worker(self):
         self._auto_play = False
         if self.worker and not self.worker.isFinished():
-            self.worker.disconnect(self)
+            self.worker.disconnect()
             self.worker.stop()
             if not self.worker.wait(2000):
                 self.worker.terminate()
