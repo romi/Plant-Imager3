@@ -1,5 +1,6 @@
 import time
 from typing import Iterator
+from weakref import finalize
 
 import av
 av.logging.set_level(av.logging.ERROR)
@@ -16,7 +17,11 @@ class PyAVReceiver:
         self._base_rate: int = None
         self._t0: float = None
         self._stream: av.VideoStream = None
-        self._container = None
+        self._container: av.container.InputContainer | None = None
+        def _finalizer():
+            print("Closing stream")
+            if self._container: self._container.close()
+        finalize(self, _finalizer)
 
 
     def open(self, uri: str, format: str) -> bool:
@@ -52,6 +57,12 @@ class PyAVReceiver:
         self._t0 = None
         return True
 
+    def close(self):
+        if self._container:
+            self._container.close()
+            self._opened = False
+            self._container = None
+
     def frames(self) -> Iterator[av.VideoFrame]:
         if not self._opened:
             raise RuntimeError("No container opened")
@@ -81,6 +92,13 @@ class PyAVReceiver:
                 else:
                     yield frame
                 _n_frame += 1
+
+                if not self._opened or self._container is None:
+                    break
+
+            if not self._opened or self._container is None:
+                break
+
 
     @property
     def base_rate(self) -> int:

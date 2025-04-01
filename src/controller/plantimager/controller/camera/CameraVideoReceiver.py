@@ -44,7 +44,8 @@ class ReceiverWorker(QThread):
         self._conversion_times = [0.] * self.receiver.base_rate
         for frame in self.receiver.frames():
             if self._stop:
-                break
+                self.receiver.close()
+                continue
             t0 = time.time()
             frame_array = frame.reformat(format="rgb32").to_ndarray()
             image = QImage(frame_array.data, frame_array.shape[1], frame_array.shape[0], QImage.Format.Format_RGB32)
@@ -60,9 +61,10 @@ class ReceiverWorker(QThread):
             # or connection is lost
             self.finished.emit()
             self.endOfMediaReached.emit()
+            self.receiver.close()
             return
 
-        print("Finished")
+        self.receiver.close()
         self.finished.emit()
 
     @Slot()
@@ -125,7 +127,6 @@ class CameraVideoReceiver(QObject):
     def _delete_worker(self):
         self._auto_play = False
         if self.worker and not self.worker.isFinished():
-            self.worker.disconnect()
             self.worker.stop()
             if not self.worker.wait(2000):
                 self.worker.terminate()
