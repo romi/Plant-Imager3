@@ -2,6 +2,8 @@ import time
 from threading import Lock
 from weakref import finalize
 
+import numpy as np
+from scipy import ndimage
 from PySide6.QtCore import Qt, QThread, QTimer, QObject, Signal, Slot, Property
 from PySide6.QtGui import QImage
 from PySide6.QtMultimedia import QVideoFrame, QVideoSink
@@ -18,7 +20,7 @@ class ReceiverWorker(QThread):
     frameReady = Signal(QVideoFrame)
     endOfMediaReached = Signal()
 
-    def __init__(self, source: str, format_: str):
+    def __init__(self, source: str, format_: str, rotation: int = 0):
         super().__init__()
         self.source = source
         self.format = format_
@@ -28,6 +30,7 @@ class ReceiverWorker(QThread):
         self._lock = Lock()
         self._conversion_times = [0.] * 30
         self._stop = False
+        self._rotation = rotation
 
     def run(self):
         try:
@@ -47,7 +50,9 @@ class ReceiverWorker(QThread):
                 self.receiver.close()
                 continue
             t0 = time.time()
-            frame_array = frame.reformat(format="rgb32").to_ndarray()
+            frame_array: np.ndarray = frame.reformat(format="rgb32").to_ndarray()
+            if self._rotation:
+                frame_array = ndimage.rotate(frame_array, self._rotation)
             image = QImage(frame_array.data, frame_array.shape[1], frame_array.shape[0], QImage.Format.Format_RGB32)
             qvideoframe = QVideoFrame(image)
             self._conversion_times[self._frame_id % self.receiver.base_rate] = time.time() - t0
@@ -81,6 +86,10 @@ class ReceiverWorker(QThread):
               f"conversion {self.avg_conversion_time * 1000:.1f} ms, "
               f"wait {self.receiver.avg_wait * 1000:.1f} ms", end="\n", flush=True)
 
+    @Slot(int)
+    def set_rotation(self, rotation: int):
+        self._rotation = rotation
+
 QML_IMPORT_NAME = "PlantImagerApp.Camera"
 QML_IMPORT_MAJOR_VERSION = 1
 
@@ -96,6 +105,7 @@ class CameraVideoReceiver(QObject):
     sourceChanged = Signal(str)
     formatChanged = Signal(str)
     autoPlayChanged = Signal(bool)
+    rotationChanged = Signal(int)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -103,6 +113,7 @@ class CameraVideoReceiver(QObject):
         self._format: str = None
         self._videoSink: QVideoSink = None
         self._auto_play: bool = False
+        self._rotation: int = 0  # degrees
         self.receiver: PyAVReceiver = None
         self.worker: ReceiverWorker = None
         finalize(self, self._delete_worker)
@@ -139,9 +150,10 @@ class CameraVideoReceiver(QObject):
             self.worker.wait()
 
         if self._videoSink and self._source and self._format:
-            self.worker = ReceiverWorker(self._source, self._format)
+            self.worker = ReceiverWorker(self._source, self._format, rotation=self._rotation)
             self.worker.frameReady.connect(self._update_video_sink)
             self.worker.endOfMediaReached.connect(self._handle_worker_end_of_media)
+            self.rotationChanged.connect(self.worker.set_rotation)
             return True
         else:
             return False
@@ -201,6 +213,16 @@ class CameraVideoReceiver(QObject):
             self._auto_play = autoPlay
             self.autoPlayChanged.emit(autoPlay)
             self.play()
+
+    @Property(int, notify=rotationChanged)
+    def rotation(self):
+        return self._rotation
+    @rotation.setter
+    def rotation(self, value: int):
+        if value != self._rotation:
+            self._rotation = value
+            self.rotationChanged.emit(value)
+
 
     @Slot()
     def play(self):

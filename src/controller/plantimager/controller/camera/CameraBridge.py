@@ -54,6 +54,7 @@ class CameraBridge(QObject):
     imageSourceChanged = Signal(str)
     videoReady = Signal()
     modeChanged = Signal(str)
+    rotationChanged = Signal(int)
 
     def __init__(self, name: str, address: str, context: zmq.Context, parent: QObject = None):
         super().__init__(parent)
@@ -65,6 +66,7 @@ class CameraBridge(QObject):
             self._status = States.INVALID
             self._camera = None
             self._mode = "STILL"
+            self._rotation = 0
             return
         self._status = States.DISCONNECTED
 
@@ -73,6 +75,8 @@ class CameraBridge(QObject):
         self._camera.modeChanged.connect(self._modeChanged)
         self._camera.videoUrlChanged.connect(self._videoUrlChanged)
         self._mode: Literal["VIDEO", "STILL"]  = self._camera.mode
+        self._rotation: int = self._camera.rotation
+        self._camera.rotationChanged.connect(self._camera_rotation_change_handler)
         self._status = States.CONNECTED
         finalize(self, self._stop)
         self._i = 0
@@ -144,3 +148,16 @@ class CameraBridge(QObject):
     def imageSource(self) -> str:
         return self._image_source
 
+    @Slot(int)
+    def _camera_rotation_change_handler(self, value: int):
+        if value != self._rotation:
+            self._rotation = value
+            self.rotationChanged.emit(value)
+
+    @Property(int, notify=rotationChanged)
+    def rotation(self) -> int:
+        return self._rotation
+    @rotation.setter
+    def rotation(self, value: int):
+        if self._camera:
+            self._camera.rotation = value%360

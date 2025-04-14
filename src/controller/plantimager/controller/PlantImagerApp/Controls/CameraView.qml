@@ -80,6 +80,7 @@ Control {
                 format: "mpegts"
                 videoSink: videoOutput.videoSink
                 autoPlay: false
+                rotation: bridge.rotation
                 Component.onCompleted: {
                     componentComplete()
                 }
@@ -110,6 +111,7 @@ Control {
 
             source: bridge ? bridge.imageSource : ""
             cache: false
+            fillMode: Image.PreserveAspectFit
 
         }
     }
@@ -150,7 +152,10 @@ Control {
         Button {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            text: "Button 2"
+            text: "Rotation (" + bridge.rotation.toString() + ") +10°"
+            onClicked: {
+                bridge.rotation += 10
+            }
         }
 
         Button {

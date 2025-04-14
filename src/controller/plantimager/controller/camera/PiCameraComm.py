@@ -26,6 +26,7 @@ class PiCameraComm(QObject):
     imageReady = Signal(memoryview, dict)
     modeChanged = Signal(str)
     videoUrlChanged = Signal(str)
+    rotationChanged = Signal(int)
 
     def __init__(self, context: zmq.Context, url: str, parent: QObject = None):
         QObject.__init__(self, parent)
@@ -33,6 +34,7 @@ class PiCameraComm(QObject):
         self._thread_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"{self.__class__.__name__}Thread")
         self.camera.modeChanged.connect(lambda *args: self.modeChanged.emit(*args))
         self.camera.videoUrlChanged.connect(lambda *args: self.videoUrlChanged.emit(*args))
+        self.camera.rotationChanged.connect(lambda *args: self.rotationChanged.emit(*args))
         finalize(self, self._finalize)
 
     def _finalize(self):
@@ -55,8 +57,15 @@ class PiCameraComm(QObject):
         return self.camera.mode
     @mode.setter
     def mode(self, value: Literal["VIDEO", "STILL"]):
-        ft = self._thread_pool.submit(lambda : setattr(self.camera, "mode", value))
+        self._thread_pool.submit(lambda : setattr(self.camera, "mode", value))
 
     @Property(str, notify=videoUrlChanged)
     def videoUrl(self):
         return self.camera.video_url
+
+    @Property(int, notify=rotationChanged)
+    def rotation(self):
+        return self.camera.rotation
+    @rotation.setter
+    def rotation(self, value: int):
+        self._thread_pool.submit(lambda : setattr(self.camera, "rotation", value))

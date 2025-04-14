@@ -3,6 +3,7 @@ import sys
 import socket
 
 import av
+import numpy as np
 import zmq
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
@@ -46,15 +47,19 @@ class RPCCamera(Camera, RPCServer):
         self.encoder: H264Encoder = None
         self.output: PyavOutput_nobuffer = None
 
+        # config
+        self._rotation = 90
+
 
     def start_video(self):
         if self._mode != CameraMode.VIDEO:
             print("Starting camera stream")
             self.picam.switch_mode(self.video_config, wait=True)
+            self._mode = CameraMode.VIDEO
             print("switched to video mode")
             self.encoder = H264Encoder(bitrate=10_000_000)
             self.output = PyavOutput_nobuffer("tcp://0.0.0.0:8888\?listen=1", format="mpegts")
-            self.output.error_callback = self.stop_video
+            # self.output.error_callback = callback
             self.picam.start_encoder(self.encoder, self.output)
             print("Camera stream started")
             self._video_url = f"tcp://{socket.gethostname()}:8888"
@@ -71,6 +76,7 @@ class RPCCamera(Camera, RPCServer):
             self._video_url = ""
             self.videoUrlChanged.emit(self._video_url)
             self.picam.switch_mode(self.still_config, wait=True)
+            self._mode = CameraMode.STILL
             print("switched to still mode")
         return "VIDEO STOPPED"
 
@@ -78,10 +84,10 @@ class RPCCamera(Camera, RPCServer):
     def get_image(self) -> (memoryview, dict):
         if self._mode != CameraMode.STILL:
             self.mode = CameraMode.STILL
-        image = self.picam.capture_array()
+        image: np.ndarray = self.picam.capture_array()
         # buffer = jpegxl_encode(image, lossless=True, effort=2)
         buffer = encode_jpeg(image, quality=95, colorsubsampling="420", fastdct=True)
-        return memoryview(buffer), {"format": "jpeg"}
+        return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape}
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self):
@@ -100,6 +106,15 @@ class RPCCamera(Camera, RPCServer):
     @RPCProperty(notify=Camera.videoUrlChanged)
     def video_url(self) -> str:
         return self._video_url
+
+    @RPCProperty(notify=Camera.rotationChanged)
+    def rotation(self):
+        return self._rotation
+    @rotation.setter
+    def rotation(self, value):
+        if value != self._rotation:
+            self._rotation = value % 360
+
 
 
 def main():

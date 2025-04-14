@@ -14,6 +14,7 @@ class Camera(ABC):
     """
     modeChanged = RPCSignal(str)
     videoUrlChanged = RPCSignal(str)
+    rotationChanged = RPCSignal(int)
 
     def __init__(self):
         pass
@@ -34,4 +35,9 @@ class Camera(ABC):
     @RPCProperty(notify=videoUrlChanged)
     @abstractmethod
     def video_url(self) -> str:
+        pass
+
+    @RPCProperty(notify=rotationChanged)
+    @abstractmethod
+    def rotation(self) -> int:
         pass

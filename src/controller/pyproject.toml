@@ -9,6 +9,8 @@ dependencies = [
     "av",
     "pyside6",
     "pyside6-addons",  # for QtMultimedia
+    "scipy",
+    "numpy",
 ]
 
 [project.gui-scripts]

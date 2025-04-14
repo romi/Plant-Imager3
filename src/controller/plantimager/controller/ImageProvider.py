@@ -1,7 +1,7 @@
-from PySide6.QtCore import QSize
+from PySide6.QtCore import QSize, Qt
 from PySide6.QtQml import QQmlImageProviderBase
 from PySide6.QtQuick import QQuickImageProvider
-from PySide6.QtGui import QImage
+from PySide6.QtGui import QImage, QTransform
 
 from plantimager.commons.logging import create_logger
 
@@ -19,6 +19,9 @@ class ImageProvider(QQuickImageProvider):
     def addImageFromBuffer(self, id: str, buffer: memoryview, buffer_info: dict):
         if buffer_info["format"] == "jpeg":
             image = QImage.fromData(buffer.tobytes("C"), "JPG")
+            if "rotation" in buffer_info and buffer_info["rotation"] != 0:
+                transform = QTransform().rotate(buffer_info["rotation"])
+                image = image.transformed(transform, mode=Qt.TransformationMode.SmoothTransformation)
             self.images[id] = image
             logger.debug(f"Added image to id: {id}")
         else:

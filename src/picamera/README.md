@@ -10,7 +10,7 @@ This package is meant to be installed on a raspberry-pi such as a raspberry-pi z
 To install the package we need to create a venv which must also have access to the system packages
 
 ```shell
-python -m venv --system-site-packages --symlinks picamera-env
+python3 -m venv --system-site-packages --symlinks picamera-env
 ```
 
 Then to activate the venv:

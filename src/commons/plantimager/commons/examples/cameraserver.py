@@ -1,6 +1,7 @@
 import zmq
 from simplejpeg import encode_jpeg
 import numpy as np
+import scipy
 
 from plantimager.commons.RPC import RPCServer, RPCProperty
 from plantimager.commons.cameradevice import Camera, CameraMode
@@ -11,14 +12,16 @@ class DummyCamera(Camera, RPCServer):
         RPCServer.__init__(self, context, url)
         self._mode = CameraMode.STILL
         self._video_url = "tcp://test_url:1234"
+        self._rotation = 0
 
     @RPCServer.register_method_buffer
     def get_image(self) -> (memoryview, dict):
         if self.mode != CameraMode.STILL:
             self.mode = CameraMode.STILL
-        image = np.random.randint(0, 255, (1200, 800, 3), dtype=np.uint8)
-        buffer = encode_jpeg(image, quality=95, colorsubsampling="420", fastdct=True)
-        return memoryview(buffer), {"format": "jpeg"}
+        image: np.ndarray[np.uint8] = scipy.datasets.face()
+        image = np.clip(image.astype(int) + np.random.randint(-50, 50, image.shape, dtype=int), 0, 255)
+        buffer = encode_jpeg(image.astype(np.uint8), quality=95, colorsubsampling="420", fastdct=True)
+        return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape}
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self):
@@ -34,6 +37,15 @@ class DummyCamera(Camera, RPCServer):
     @RPCProperty(notify=Camera.videoUrlChanged)
     def video_url(self) -> str:
         return self._video_url
+
+    @RPCProperty(notify=Camera.rotationChanged)
+    def rotation(self):
+        return self._rotation
+    @rotation.setter
+    def rotation(self, value):
+        if value != self._rotation:
+            self._rotation = value
+            self.rotationChanged.emit(value)
 
 
 if __name__ == "__main__":
