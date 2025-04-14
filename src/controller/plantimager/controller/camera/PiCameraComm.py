@@ -42,7 +42,16 @@ class PiCameraComm(QObject):
         self.camera.stop_server()
 
     @Slot()
-    def getImage(self):
+    def getImage(self) -> Future[tuple[memoryview, dict]]:
+        """
+        Submit call to camera.get_image() and returns a future representing the pending result.
+        When the camera.get_image() returns and the result is available, the signal imageReady is emitted.
+
+        Returns
+        -------
+        future : Future[tuple[memoryview, dict]]
+
+        """
         def _callback(ft_: Future):
             if ft_.cancelled(): return
             res = ft_.result()
@@ -51,6 +60,7 @@ class PiCameraComm(QObject):
                 self.imageReady.emit(buffer, buffer_info)
         ft = self._thread_pool.submit(self.camera.get_image)
         ft.add_done_callback(_callback)
+        return ft
 
     @Property(str, notify=modeChanged)
     def mode(self) -> Literal["VIDEO", "STILL"]:
@@ -69,3 +79,7 @@ class PiCameraComm(QObject):
     @rotation.setter
     def rotation(self, value: int):
         self._thread_pool.submit(lambda : setattr(self.camera, "rotation", value))
+
+    @Property(str)
+    def name(self):
+        return self.camera.name

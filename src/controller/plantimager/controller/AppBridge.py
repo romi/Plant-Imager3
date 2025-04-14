@@ -7,6 +7,7 @@ from PySide6.QtQml import QmlSingleton, QmlElement
 from plantimager.commons import deviceregistry
 from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.CameraBridge import CameraBridge
+from plantimager.controller.scanner.scanner import Scanner
 
 logger = create_logger("AppBridge")
 
@@ -39,6 +40,7 @@ class AppBridge(QObject):
 
     currentCameraChanged = Signal(QObject)
     deviceListChanged = Signal()
+    scannerChanged = Signal(QObject)
     _registryNewDevice = Signal(str, str, str)
     _registryRemoveDevice = Signal(str, str, str)
 
@@ -59,6 +61,7 @@ class AppBridge(QObject):
         self.device_bridges: list[CameraBridge] = []
 
         self._currentCamera = CameraBridge("", "", self.context)
+        self._scanner = Scanner({})
 
         self.registry.start()
 
@@ -77,6 +80,10 @@ class AppBridge(QObject):
         if self._currentCamera is not camera:
             self._currentCamera = camera
             self.currentCameraChanged.emit(camera)
+
+    @Property(QObject, notify=scannerChanged)
+    def scanner(self) -> Scanner:
+        return self._scanner
 
     @Slot(int, result=CameraBridge)
     def getCameraBridgeAtIndex(self, index: int) -> CameraBridge:

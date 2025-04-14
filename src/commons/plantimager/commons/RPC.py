@@ -150,6 +150,7 @@ class RPCClient:
         self._buffer_methods = reply["buffer_methods"]
         self._signals = {sig: getattr(self, sig) for sig in reply["signals"] if hasattr(self, sig)}
         self._properties = reply["properties"]
+        self.name = reply["name"]
 
         # If signals initiate
         self._signal_receiver = None
@@ -538,12 +539,14 @@ class RPCServer:
                         "buffer_methods": list(self._buffer_methods.keys()),
                         "signals": list(self._signals.keys()),
                         "properties": list(self._rpc_properties.keys()),
+                        "name": self.name,
                     })
                     self._socket.send_json({
                         "json_methods": list(self._json_methods),
                         "buffer_methods": list(self._buffer_methods),
                         "signals": list(self._signals.keys()),
                         "properties": list(self._rpc_properties.keys()),
+                        "name": self.name,
                     })
                 case RPCEvents.INIT_SIGNALS_HANDLING:
                     logger.info("Initializing signal handling")

@@ -9,6 +9,7 @@ dependencies = [
     "av",
     "pyside6",
     "pyside6-addons",  # for QtMultimedia
+    "pyserial",
     "scipy",
     "numpy",
 ]
