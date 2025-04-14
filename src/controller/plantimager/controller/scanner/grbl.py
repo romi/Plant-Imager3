@@ -203,15 +203,15 @@ class CNC(AbstractCNC):
             # Initialize axes limits with grbl settings if not set, else check given settings:
             self.grbl_settings = self.get_grbl_settings()
             if self.x_lims is None:
-                self.x_lims = [0, self.grbl_settings["$130"]]
+                self.x_lims = (0, self.grbl_settings["$130"])
             else:
                 self._check_axes_limits(self.x_lims, [0, self.grbl_settings["$130"]], 'X')
             if self.y_lims is None:
-                self.y_lims = [0, self.grbl_settings["$131"]]
+                self.y_lims = (0, self.grbl_settings["$131"])
             else:
                 self._check_axes_limits(self.y_lims, [0, self.grbl_settings["$131"]], 'Y')
             if self.z_lims is None:
-                self.z_lims = [0, self.grbl_settings["$132"]]
+                self.z_lims = (0, self.grbl_settings["$132"])
             else:
                 self._check_axes_limits(self.z_lims, [0, self.grbl_settings["$132"]], 'Z')
 
@@ -246,15 +246,15 @@ class CNC(AbstractCNC):
     def _check_move(self, x, y, z):
         """ Make sure the `moveto` coordinates are within the axes limits."""
         try:
-            assert self.x_lims[0] <= x < self.x_lims[1]
+            assert self.x_lims[0] <= x <= self.x_lims[1]
         except AssertionError:
             raise ValueError("Move command coordinates is outside the x-limits!")
         try:
-            assert self.y_lims[0] <= y < self.y_lims[1]
+            assert self.y_lims[0] <= y <= self.y_lims[1]
         except AssertionError:
             raise ValueError("Move command coordinates is outside the y-limits!")
         try:
-            assert self.z_lims[0] <= z < self.z_lims[1]
+            assert self.z_lims[0] <= z <= self.z_lims[1]
         except AssertionError:
             raise ValueError("Move command coordinates is outside the z-limits!")
 
