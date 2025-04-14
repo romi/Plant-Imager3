@@ -5,6 +5,13 @@ This package is meant to be installed on a raspberry-pi such as a raspberry-pi z
 
 ## Install instruction
 
+### 0. System Packages
+
+Install the following packages
+```shell
+sudo apt install libzmq python3-zmq python3.11-dev ffmpeg libcap-dev python3-av python3-pil libturbojpeg0 libjpeg7 python3-libcamera python3-kms++
+```
+
 ### 1. Creating a venv
 
 To install the package we need to create a venv which must also have access to the system packages
