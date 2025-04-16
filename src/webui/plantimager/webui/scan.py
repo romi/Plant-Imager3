@@ -284,25 +284,11 @@ def disable_scan_button(valid):
     prevent_initial_call=True
 )
 def run_scan(_, cfg, dataset_name):
-    task = "Scan"  # we will run a scan task
-    from romitask.cli.romi_run_task import run_task
-    from romitask.log import get_log_filename
-    # Create a temporary fsdb with the name of the dataset as suffix:
-    tmp_db, dataset_path = create_temp_fsdb(dataset_name)
-    # Create a combined logger using the configuration:
-    logger = getLogger('reconstruct')
-    log_fname = get_log_filename(task)
 
-    # Execute the tasks:
-    success = False
-    try:
-        run_task(dataset_path, task=task, config=toml.loads(cfg), logger=logger, log_fname=log_fname)
-        success = True
-    except Exception as e:
-        logger.error(e)
+    from plantimager.webui.controller_proxy import RPCController
 
-    # Read and return the log:
-    with open(dataset_path / log_fname, 'rb') as f:
-        log = "```\n" + "".join([line.decode() for line in f.readlines()]) + "```"
+    controller = RPCController.instance()
+    controller.set_config(cfg)
+    controller.run_scan()
 
     return True, success, log, False

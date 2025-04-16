@@ -22,12 +22,16 @@ $ python app.py --host http://example-server --port 5000
 """
 
 import argparse
+from threading import Thread
 
 import dash_bootstrap_components as dbc
+import zmq
 from dash import Dash
 from dash import dcc
 from dash import html
+
 from plantimager.webui.config import plantdb_cfg_modal
+from plantimager.webui.controller_proxy import RPCController
 from plantimager.webui.login import login_modal
 from plantimager.webui.nav import navbar_layout
 from plantimager.webui.new_user import new_user_modal
@@ -110,6 +114,13 @@ def main():
     # - Parse the input arguments to variables:
     parser = parsing()
     args = parser.parse_args()
+
+    # - Create connexion with controller
+    context = zmq.Context()
+    controller_thread = Thread(target=lambda ctx: RPCController(ctx, "tcp://localhost:14567"), args=(context,))
+    controller_thread.deamon = True
+    controller_thread.start()
+
     # - Start the Dash app:
     app = setup_web_app(args.host, args.port)
     app.run(debug=True, port=8000)
