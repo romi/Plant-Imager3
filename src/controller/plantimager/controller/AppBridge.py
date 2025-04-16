@@ -4,9 +4,12 @@ import zmq
 from PySide6.QtCore import QObject, QThread, Signal, Slot, QAbstractListModel, Property, QModelIndex, Qt, QStringListModel
 from PySide6.QtQml import QmlSingleton, QmlElement
 
+from threading import Thread
+
 from plantimager.commons import deviceregistry
 from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.CameraBridge import CameraBridge
+from plantimager.controller.scanner.rpc_controller import RPCControllerServer
 from plantimager.controller.scanner.scanner import Scanner
 
 logger = create_logger("AppBridge")
@@ -62,6 +65,12 @@ class AppBridge(QObject):
 
         self._currentCamera = CameraBridge("", "", self.context)
         self._scanner = Scanner({})
+
+        self._controller_server = RPCControllerServer(self.context, "tcp://localhost:14567", self._scanner)
+        self.scannerChanged.connect(self._controller_server.handle_scanner_changed)
+        self._controller_thread = Thread(target=self._controller_server.serve_forever, name="RPCControllerServer")
+        self._controller_thread.daemon = True
+        self._controller_thread.start()
 
         self.registry.start()
 
