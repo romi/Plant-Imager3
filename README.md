@@ -28,7 +28,7 @@ If needed, start by creating a virtual environment named `plant_imager3`.
 Use the following command:
 
 ```shell
-conda create -n plant-imager3 'python==3.10' ipython
+conda create -n plant-imager3 'python==3.11' ipython
 ```
 
 ### Install `plantimager.commons`
