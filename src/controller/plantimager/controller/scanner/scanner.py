@@ -36,7 +36,7 @@ class DataUploader():
     def _upload(self, scan_id: str, fileset: str, data: DataItem):
         buffer = BytesIO(data.image)
         return self.db_client.create_file(
-            buffer, name=f"{fileset}-{data.idx}", ext=data.image_ext,
+            buffer, name=f"{data.metadata['camera_name']}-{data.idx}", ext=data.image_ext,
             scan_id=scan_id, fileset_name=fileset, metadata=data.metadata
         )
 
@@ -159,6 +159,7 @@ class Scanner(QObject):
         """
         image_future = camera.getImage()
         buffer, buffer_info = image_future.result()
+        metadata.update(buffer_info)
         data = DataItem(idx, buffer, image_ext=buffer_info["format"], metadata=metadata)
         self.uploader.upload(scan_id=self.scan_id, fileset=self.fileset, data=data)
 
@@ -202,6 +203,7 @@ class Scanner(QObject):
                     shot_id = self.inc_count()
                     metadata = {
                         **camera_param,
+                        "camera_name": name,
                         "approximate_pose": [camera_pose.x, camera_pose.y, camera_pose.z, camera_pose.pan, camera_pose.tilt],
                         "shot_id": shot_id,
                     }
@@ -210,15 +212,6 @@ class Scanner(QObject):
                 wait(jobs, return_when=ALL_COMPLETED)
 
 
-
-
-
-            f1 = fileset.create_file(data_item1.channels[c1].format_id())
-            io.write_image(f1, data_item1.channels[c1].data, ext=self.ext)
-            if data_item1.metadata is not None:
-                f1.set_metadata(data_item1.metadata)
-            f1.set_metadata("shot_id", "%06i" % data_item1.idx)
-            f1.set_metadata("channel", c1)
 
 
 
