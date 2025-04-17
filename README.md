@@ -12,6 +12,24 @@ This repository contains three Python subpackages:
 
 ## Developers
 
+### Quick Setup: One-Command Installation
+
+To quickly set up the development environment for Plant-Imager3, use the following comprehensive setup script:
+```shell
+# Create a new Conda environment with Python 3.11 and IPython
+conda create -n plant-imager3 'python==3.11' ipython -y
+# Activate the newly created environment
+conda activate plant-imager3
+
+# Install project subpackages in editable mode
+pip install -e src/commons/.
+pip install -e src/controller/.
+pip install -e src/picamera/.
+
+# Install plantdb server dependencies
+pip install plantdb.server
+```
+
 ### System Requirements
 
 To run the QtApp, you must install the required Mesa packages.
@@ -29,6 +47,7 @@ Use the following command:
 
 ```shell
 conda create -n plant-imager3 'python==3.11' ipython
+conda activate plant-imager3
 ```
 
 ### Install `plantimager.commons`
