@@ -1,4 +1,4 @@
-# Plant-Imager3
+# [![ROMI_logo](docs/assets/images/ROMI_logo_green_25.svg)](https://romi-project.eu) / Plant-Imager3
 
 This repository supersedes the earlier [Plant-Imager](https://github.com/romi/plant-imager) repository, aligning with the updated design and requirements of the _Plant Imager v3_ robot.
 
