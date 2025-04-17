@@ -88,7 +88,12 @@ scan_card = [
                             )
                         ]),
                     ], width=6),
-                    dcc.Markdown(id='scan-response', children="_Run a scan first..._"),
+                    dbc.Alert(
+                        id='scan-response',
+                        children="Run a scan first...",
+                        color="secondary",
+                        className="mb-0"
+                    ),
                 ])
             ]),
             dbc.CardFooter([
@@ -274,6 +279,8 @@ def disable_scan_button(valid):
 
 
 @callback(
+    Output('scan-response', 'children'),
+    Output('scan-output', 'children'),
     Input('start-scan-button', 'n_clicks'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
@@ -282,8 +289,12 @@ def disable_scan_button(valid):
 def run_scan(_, cfg, dataset_name):
     from plantimager.webui.controller_proxy import RPCController
 
-    controller = RPCController.instance()
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return f"Error: Raspberry Pi Controller not initialized!", print(e)
+
     controller.set_config(cfg)
     controller.run_scan()
 
-    return
+    return "Scan started.", "Scanning plant in progress..."
