@@ -76,15 +76,15 @@ class Scanner(QObject):
         self.config = config
         self.cnc = CNC()
         self.cameras: list[PiCameraComm] = []
-        self.db_url = os.getenv("PLANTDB_URL")
-        assert self.db_url is not None, "PLANTDB_URL environment variable is not set"
+        self.db_url = None
         self.path: Path | None = None
 
         self._progress = 0
         self._max_progress = 0
 
-        self.db_client = PlantDBClient(self.db_url)
-        self.uploader = DataUploader(self.db_client, 10)
+        self.db_client: PlantDBClient | None = None
+        self.uploader: DataUploader | None = None
+        self.fileset = "images"
 
     @Slot(QObject)
     def add_camera(self, camera: PiCameraComm):
@@ -95,8 +95,10 @@ class Scanner(QObject):
         self.cameras.remove(camera)
 
     @Slot(str)
-    def set_url(self, url: str):
+    def set_db_url(self, url: str):
         self.db_url = url
+        self.db_client = PlantDBClient(self.db_url)
+        self.uploader = DataUploader(self.db_client, 10)
 
     @Property(int, notify=progressChanged)
     def progress(self) -> int:
@@ -105,7 +107,6 @@ class Scanner(QObject):
     @Property(int, notify=maxProgressChanged)
     def max_progress(self) -> int:
         return self._max_progress
-
 
     def configure_scan(self, config: dict):
         """
@@ -126,7 +127,7 @@ class Scanner(QObject):
 
     @Property(bool, notify=readyToScanChanged)
     def ready_to_scan(self) -> bool:
-        if self.cnc and self.path and self.cameras:
+        if self.cnc and self.path and self.cameras and self.uploader and self.db_client and self.scan_id and self.fileset:
             return True
         return False
 
@@ -138,6 +139,7 @@ class Scanner(QObject):
 
     def set_position(self, pose: Pose) -> None:
         """Set the position of the scanner from a 5D Pose."""
+        logger.info(f"Moving arm to {pose}")
         self.cnc.moveto(pose.x, pose.y, pose.pan)
 
     def grab(self, idx: int, metadata: dict, camera: PiCameraComm) -> DataItem:
@@ -180,7 +182,7 @@ class Scanner(QObject):
                 setattr(target_pose, attr, getattr(x, attr))
         return target_pose
 
-    def scan(self, db_client: PlantDBClient, scan_id: str, fileset: str) -> None:
+    def scan(self, scan_id: str) -> None:
         if not self.path: raise RuntimeError("Path not set for scan")
         if not self.uploader: raise RuntimeError("Uploader not set for scan")
         self.scan_id = scan_id
@@ -196,6 +198,9 @@ class Scanner(QObject):
                 jobs = []
                 for camera in self.cameras:
                     name = camera.name
+                    if name not in self.config:
+                        logger.debug(f"Camera {name} not in config, skipping")
+                        continue
                     camera_param = self.config[name]
                     camera_offset = Pose(**camera_param["offset"])
                     camera_pose = arm_pose + camera_offset
