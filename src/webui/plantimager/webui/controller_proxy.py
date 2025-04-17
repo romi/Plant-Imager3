@@ -98,7 +98,7 @@ class RPCController(ControllerDevice, RPCClient):
 
         Returns
         -------
-        RPCController
+        plantimager.commons.controller_device.RPCController
             The singleton instance of this class.
         """
         if cls._instance is None:
@@ -124,7 +124,7 @@ class RPCController(ControllerDevice, RPCClient):
 
         Returns
         -------
-        RPCController
+        plantimager.commons.controller_device.RPCController
             The singleton instance of this class.
 
         Raises

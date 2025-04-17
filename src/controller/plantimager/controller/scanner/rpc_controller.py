@@ -30,7 +30,7 @@ class RPCControllerServer(ControllerDevice, RPCServer):
 
     Parameters
     ----------
-    context : object
+    context : zmq.Context
         The context object for the RPC server.
     url : str
         The URL where the RPC server will be available.
@@ -64,7 +64,7 @@ class RPCControllerServer(ControllerDevice, RPCServer):
 
         Parameters
         ----------
-        context : object
+        context : zmq.Context
             The context object for the RPC server.
         url : str
             The URL where the RPC server will be available.
