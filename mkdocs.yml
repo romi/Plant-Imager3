@@ -1,0 +1,125 @@
+site_name: Plant-Imager3
+site_description: Plant-Imager3 documentation.
+site_author: ROMI Team
+site_url: https://github.com/romi/Plant-Imager3
+copyright: 'The ROMI project has received funding from the European Community’s H2020 Programme under Grant Agreement No. 773875.'
+repo_url: https://github.com/romi/Plant-Imager3
+
+nav:
+  - 'Home': index.md
+  - 'REST API': rest_api.md
+  - 'Reference API': reference/
+  - 'Developer':
+    - developer/index.md
+    - developer/documentation.md
+
+
+theme:
+  name: 'material'
+  font:
+    text: Nunito Sans
+    code: Ubuntu Mono
+  logo: 'assets/images/ROMI_logo_white.svg'
+  favicon: 'assets/images/ROMI_ICON_green.png'
+  icon:
+    repo: fontawesome/brands/github-alt
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - content.code.copy
+
+
+extra:
+  homepage: https://github.com/romi/Plant-Imager3
+  social:
+    - icon: fontawesome/brands/x-twitter
+      link: 'https://twitter.com/ROMI_EU_PROJECT'
+    - icon: fontawesome/brands/facebook
+      link: 'https://www.facebook.com/ROMIEUProject'
+    - icon: fontawesome/brands/github
+      link: 'https://github.com/romi/Plant-Imager3'
+    - icon: fontawesome/brands/docker
+      link: 'https://hub.docker.com/repositories/roboticsmicrofarms'
+  repo_name: Plant-Imager3
+  repo_url: https://github.com/romi/Plant-Imager3
+
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - codehilite
+  - footnotes
+  - toc:
+      permalink: Link
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      use_pygments: true
+      pygments_style: "default"
+      noclasses: true
+      pygments_lang_class: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: python
+          class: python
+          validator: !!python/name:markdown_exec.validator
+          format: !!python/name:markdown_exec.formatter
+  - pymdownx.tabbed:
+      alternate_style: true
+
+
+plugins:
+  - search
+  - markdown-exec
+  - gen-files:
+      scripts:
+        - docs/assets/scripts/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - section-index
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          import:
+            - https://docs.python.org/3/objects.inv
+            - https://numpy.org/doc/stable/objects.inv
+            - https://flask.palletsprojects.com/en/latest/objects.inv
+            - https://networkx.org/documentation/stable/objects.inv
+            - https://werkzeug.palletsprojects.com/en/latest/objects.inv
+            - https://flask-restful.readthedocs.io/en/latest/objects.inv
+            - https://pytorch.org/docs/stable/objects.inv
+            - http://www.open3d.org/docs/latest/objects.inv
+            - https://docs.python-requests.org/en/latest/objects.inv
+            - https://dash.plotly.com/objects.inv
+            - https://dash-bootstrap-components.opensource.faculty.ai/objects.inv
+            - https://pyserial.readthedocs.io/en/latest/objects.inv
+            - https://click.palletsprojects.com/en/latest/objects.inv
+            - https://imageio.readthedocs.io/en/stable/objects.inv
+            - https://python-colorlog.readthedocs.io/en/latest/objects.inv
+            - https://psutil.readthedocs.io/en/latest/objects.inv
+          options:
+            docstring_style: numpy
+            docstring_section_style: table
+            ignore_init_summary: true
+            merge_init_into_class: true
+            show_docstring_examples: true
+            show_docstring_raises: true
+            signature_crossrefs: true
+            show_root_full_path: true
+            show_root_heading: true
+            show_category_heading: False
+            show_bases: true
+            separate_signature: true
+            show_symbol_type_heading: False
+            show_symbol_type_toc: true
+            inherited_members: true
+
+extra_css:
+  - assets/css/extra.css
+
+
+extra_javascript:
+  - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
+  - 'https://buttons.github.io/buttons.js'
