@@ -1,31 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# plantimager - Python tools for the ROMI 3D Scanner
-#
-# Copyright (C) 2018 Sony Computer Science Laboratories
-# Authors: D. Colliaux, T. Wintz, P. Hanappe
-#
-# This file is part of plantimager.
-#
-# plantimager is free software: you can redistribute it
-# and/or modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation, either
-# version 3 of the License, or (at your option) any later version.
-#
-# plantimager is distributed in the hope that it will be
-# useful, but WITHOUT ANY WARRANTY; without even the implied
-# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with plantimager.  If not, see
-# <https://www.gnu.org/licenses/>.
+
+"""Unit Type Definitions for Plant Imaging Systems.
+
+This module provides strongly typed unit definitions for physical quantities used in the
+plant imaging system, enabling better type checking and preventing unit conversion errors.
+
+Key Features:
+- Type-safe unit definitions for physical quantities
+- Clear distinction between different units of measurement
+- Support for static type checking with mypy
+- Improved code readability and maintainability
+"""
 
 from typing import NewType
 
+# Angular units
+#: Angle in degrees.
 deg = NewType("deg", float)
+#: Angle in radians.
 rad = NewType("rad", float)
+
+# Distance units
+#: Length in millimeters.
 length_mm = NewType("length_mm", float)
+
+# Velocity units
+#: Velocity in millimeters per second.
 velocity_mm_p_s = NewType("velocity_mm_p_s", float)
+
+# Time units
+#: Time in seconds.
 time_s = NewType("time_s", float)

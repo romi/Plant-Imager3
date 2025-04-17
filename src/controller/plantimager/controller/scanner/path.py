@@ -1,33 +1,43 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# plantimager - Python tools for the ROMI 3D Plant Imager
-#
-# Copyright (C) 2018 Sony Computer Science Laboratories
-# Authors: D. Colliaux, T. Wintz, P. Hanappe
-#
-# This file is part of plantimager.
-#
-# plantimager is free software: you can redistribute it
-# and/or modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation, either
-# version 3 of the License, or (at your option) any later version.
-#
-# plantimager is distributed in the hope that it will be
-# useful, but WITHOUT ANY WARRANTY; without even the implied
-# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with plantimager.  If not, see
-# <https://www.gnu.org/licenses/>.
+
+"""Path Generation for Plant Imaging Systems.
+
+This module provides classes and functions for generating and manipulating 3D paths
+for plant imaging systems. It includes implementations for various path types such as
+circles, cylinders, and lines, as well as utilities for path manipulation.
+
+Key Features:
+- Abstract representation of camera poses in 5D space (x, y, z, pan, tilt)
+- Path generation for common scanning patterns (circles, cylinders, lines)
+- Path manipulation and combination utilities
+- Support for calibration paths
+- Precise control over camera orientation at each path point
+
+Usage Examples:
+```python
+>>> from plantimager.controller.scanner.path import Circle, Pose
+>>> # Create a circular path with 10 points
+>>> center_x, center_y = 200, 200  # Center coordinates in mm
+>>> height = 50  # Height in mm
+>>> tilt = 0  # Camera tilt in degrees
+>>> radius = 100  # Circle radius in mm
+>>> n_points = 10  # Number of points in the circle
+>>> circular_path = Circle(center_x, center_y, height, tilt, radius, n_points)
+>>> # Access the first point in the path
+>>> first_point = circular_path[0]
+>>> print(f"First point: x={first_point.x}, y={first_point.y}, z={first_point.z}")
+```
+"""
 
 import math
 from collections.abc import Iterable
 
 import numpy as np
-from .units import length_mm
+
 from .units import deg
+from .units import length_mm
+
 
 class Pose(object):
     """Abstract representation of a 'camera pose' as its 5D coordinates.
@@ -69,7 +79,7 @@ class Pose(object):
         return ["x", "y", "z", "pan", "tilt"]
 
     def __add__(self, other):
-        return Pose(self.x+other.x, self.y+other.y, self.z+other.z, self.pan+other.pan, self.tilt+other.tilt)
+        return Pose(self.x + other.x, self.y + other.y, self.z + other.z, self.pan + other.pan, self.tilt + other.tilt)
 
 
 class PathElement(Pose):
@@ -482,5 +492,5 @@ class CalibrationPath(Path):
         x_max = path[np.argmax([pelt.x - el0.x for pelt in path])].x
         # y-axis line, from the first `ElementPath` xyz position to the most distant point from the origin along this y-axis
         y_max = path[np.argmax([pelt.y - el0.y for pelt in path])].y
-        self.extend(Line(el0.x, el0.y, el0.z, x_max//2, el0.y, el0.z, el0.pan, el0.tilt, n_points_line))
+        self.extend(Line(el0.x, el0.y, el0.z, x_max // 2, el0.y, el0.z, el0.pan, el0.tilt, n_points_line))
         self.extend(Line(el0.x, el0.y, el0.z, el0.x, y_max, el0.z, el0.pan, el0.tilt, n_points_line))

@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""RPC Controller
+"""RPC Controller for Plant Imaging Systems.
 
 A module that implements a Remote Procedure Call (RPC) controller for handling client-server communication through JSON-RPC protocol.
-This enables remote execution of functions with robust error handling and input validation.
+This enables remote execution of scanner control functions with robust error handling and input validation.
 
 Key Features
 ------------
@@ -12,11 +12,28 @@ Key Features
 - Validates input parameters against method specifications
 - Handles and returns standardized error responses
 - Supports both regular and notification RPC calls
+- Provides properties for monitoring scan progress
+- Exposes scanner configuration and control methods remotely
 - Preserves call context for security and tracing purposes
+
+Usage Examples
+--------------
+```python
+>>> import zmq
+>>> from plantimager.controller.scanner.scanner import Scanner
+>>> from plantimager.controller.scanner.rpc_controller import RPCControllerServer
+>>> # Create a scanner instance
+>>> scanner = Scanner()
+>>> # Create a ZeroMQ context
+>>> context = zmq.Context()
+>>> # Create an RPC server for the scanner
+>>> server = RPCControllerServer(context, "tcp://*:5555", scanner)
+>>> # Start the server
+>>> server.start()
+```
 """
 
-from plantimager.commons.RPC import RPCProperty
-from plantimager.commons.RPC import RPCServer
+from plantimager.commons.RPC import RPCProperty, RPCServer
 from plantimager.commons.controller_device import ControllerDevice
 from plantimager.controller.scanner.scanner import Scanner
 

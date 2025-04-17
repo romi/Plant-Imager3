@@ -1,35 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# plantimager - Python tools for the ROMI 3D Plant Imager
-#
-# Copyright (C) 2018 Sony Computer Science Laboratories
-# Authors: D. Colliaux, T. Wintz, P. Hanappe
-#
-# This file is part of plantimager.
-#
-# plantimager is free software: you can redistribute it
-# and/or modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation, either
-# version 3 of the License, or (at your option) any later version.
-#
-# plantimager is distributed in the hope that it will be
-# useful, but WITHOUT ANY WARRANTY; without even the implied
-# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with plantimager.  If not, see
-# <https://www.gnu.org/licenses/>.
 
-from abc import ABC
-from abc import ABCMeta
-from abc import abstractmethod
-from typing import List
-from typing import Tuple
+"""Hardware Abstraction Layer for Plant Imaging Systems.
+
+This module provides abstract interfaces and data structures for hardware components
+of plant imaging systems. It defines the core abstractions for CNC controllers and
+data handling, enabling hardware independence in the scanning process.
+
+Key Features:
+- Abstract CNC interface for hardware-independent motion control
+- Data structures for image and metadata handling
+- Type-safe interfaces with proper unit annotations
+- Support for different hardware implementations
+- Standardized data formats for database storage
+"""
+
+from abc import ABC, ABCMeta, abstractmethod
+from typing import List, Tuple, Union
 
 import numpy as np
 from plantdb.client.plantdb_client import PlantDBClient
+
 from plantimager.commons.logging import create_logger
 from plantimager.controller.scanner.path import Path, PathElement, Pose
 from plantimager.controller.scanner.units import deg, length_mm
@@ -80,6 +71,3 @@ class AbstractCNC(metaclass=ABCMeta):
     @abstractmethod
     def wait(self) -> None:
         pass
-
-
-

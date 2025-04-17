@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""A dummy CNC implementation based on GRBL.
+"""Dummy CNC Implementation for Plant Imaging Systems.
 
-Usage Examples
---------------
+A simulated CNC controller that mimics the behavior of a real GRBL-based CNC machine
+without requiring actual hardware. This is useful for development, testing, and
+demonstration purposes when physical hardware is unavailable.
+
+Key Features:
+- Simulates all standard CNC operations (movement, homing, positioning)
+- Implements the AbstractCNC interface for compatibility with scanner code
+- Adds realistic delays and position noise to mimic real hardware behavior
+- Provides status reporting and command handling like a real GRBL controller
+- Enforces position limits and validates movement commands
+- Thread-safe asynchronous operation support
+
+Usage Examples:
 ```python
 >>> from plantimager.controller.scanner.dummy_cnc import DummyCNC
 >>> # Initialize the dummy CNC
@@ -18,23 +29,27 @@ Usage Examples
 >>> cnc.moveto_async(200, 200, 90)
 >>> # Do other things...
 >>> cnc.wait()  # Wait for movement to complete
+```
 """
 
-import time
 import random
+import threading
+import time
 
-from plantimager.controller.scanner.hal import AbstractCNC
-from plantimager.controller.scanner.units import deg, length_mm
 from plantimager.commons.logging import create_logger
+from plantimager.controller.scanner.hal import AbstractCNC
+from plantimager.controller.scanner.units import deg
+from plantimager.controller.scanner.units import length_mm
 
 logger = create_logger(__name__)
 
+
 class DummyCNC(AbstractCNC):
     """A dummy implementation of CNC machine control for testing purposes.
-    
+
     This class mimics the behavior of the real CNC class without connecting to actual hardware.
     It simulates basic CNC operations like movement, positioning, and homing.
-    
+
     Attributes
     ----------
     x_lims : tuple[float, float]
@@ -49,7 +64,8 @@ class DummyCNC(AbstractCNC):
         Flag indicating if the CNC is currently moving
     """
 
-    def __init__(self, x_limits=(0, 740), y_limits=(0, 740), z_limits=(0, 360)):
+    def __init__(self, x_limits: tuple[float, float] = (0, 740), y_limits: tuple[float, float] = (0, 740),
+                 z_limits: tuple[float, float] = (0, 360)) -> None:
         """Initialize the dummy CNC controller with default axis limits."""
         super().__init__()
         self.x_lims = x_limits
@@ -58,12 +74,12 @@ class DummyCNC(AbstractCNC):
         self._position = (0, 0, 0)  # Initial position
         self._busy = False
         self.has_started = True
-        
+
         # Simulate initialization delay
         time.sleep(0.2)
         logger.info("Dummy CNC initialized")
 
-    def _check_move(self, x, y, z):
+    def _check_move(self, x: float, y: float, z: float) -> None:
         """Validate that the requested movement coordinates are within the machine's axis limits.
 
         Parameters
@@ -87,9 +103,9 @@ class DummyCNC(AbstractCNC):
         if not (self.z_lims[0] <= z <= self.z_lims[1]):
             raise ValueError(f"Move command coordinates {z} is outside the z-limits {self.z_lims}!")
 
-    def home(self):
+    def home(self) -> None:
         """Simulate performing a homing cycle.
-        
+
         Sets the current position to a starting point near the origin,
         simulating the behavior of the real CNC homing procedure.
         """
@@ -102,7 +118,7 @@ class DummyCNC(AbstractCNC):
         self._busy = False
         logger.info("Dummy CNC homing completed")
 
-    def get_position(self):
+    def get_position(self) -> tuple[length_mm, length_mm, deg]:
         """Get the current XYZ position of the dummy CNC machine.
 
         Returns
@@ -118,14 +134,14 @@ class DummyCNC(AbstractCNC):
         noise_x = random.uniform(-0.01, 0.01)
         noise_y = random.uniform(-0.01, 0.01)
         noise_z = random.uniform(-0.01, 0.01)
-        
+
         return (
             self._position[0] + noise_x,
             self._position[1] + noise_y,
             self._position[2] + noise_z
         )
 
-    def moveto(self, x, y, z):
+    def moveto(self, x: length_mm, y: length_mm, z: deg) -> None:
         """Move the dummy CNC machine to specified coordinates and wait until the target position is reached.
 
         Parameters
@@ -145,7 +161,7 @@ class DummyCNC(AbstractCNC):
         self.moveto_async(x, y, z)
         self.wait()
 
-    def moveto_async(self, x, y, z):
+    def moveto_async(self, x: length_mm, y: length_mm, z: deg) -> None:
         """Asynchronously move the dummy CNC machine to specified coordinates.
 
         Parameters
@@ -164,29 +180,28 @@ class DummyCNC(AbstractCNC):
         """
         # Convert to float to ensure compatibility
         x, y, z = float(x), float(y), float(z)
-        
+
         # Check if the move is within limits
         self._check_move(x, y, z)
-        
+
         # Set busy flag
         self._busy = True
-        
+
         # Log the movement
         logger.info(f"Dummy CNC moving to (x={x}, y={y}, z={z})")
-        
+
         # Start simulated movement in a separate thread
-        import threading
         threading.Thread(
             target=self._simulate_movement,
             args=(x, y, z),
             daemon=True
         ).start()
 
-    def _simulate_movement(self, target_x, target_y, target_z):
+    def _simulate_movement(self, target_x: float, target_y: float, target_z: float) -> None:
         """Simulate movement from current position to target position.
-        
+
         This method runs in a separate thread to allow async operation.
-        
+
         Parameters
         ----------
         target_x : float
@@ -198,29 +213,29 @@ class DummyCNC(AbstractCNC):
         """
         # Get current position
         start_x, start_y, start_z = self._position
-        
+
         # Calculate distance
         dx = target_x - start_x
         dy = target_y - start_y
         dz = target_z - start_z
-        
+
         # Calculate total distance for time estimation
-        distance = (dx**2 + dy**2 + dz**2)**0.5
-        
+        distance = (dx ** 2 + dy ** 2 + dz ** 2) ** 0.5
+
         # Simulate movement time (longer for greater distances)
         movement_time = 0.5 + distance * 0.005  # Base time + distance-dependent time
-        
+
         # Sleep to simulate movement time
         time.sleep(movement_time)
-        
+
         # Update position
         self._position = (target_x, target_y, target_z)
-        
+
         # Movement complete
         self._busy = False
         logger.info(f"Dummy CNC reached position (x={target_x}, y={target_y}, z={target_z})")
 
-    def wait(self, timeout=60):
+    def wait(self, timeout: int=60) -> None:
         """Wait for the dummy CNC machine to complete any ongoing operations.
 
         Parameters
@@ -234,18 +249,18 @@ class DummyCNC(AbstractCNC):
             If the simulated movement doesn't complete within the timeout
         """
         start_time = time.time()
-        
+
         while self._busy:
             time.sleep(0.1)  # Small delay to prevent CPU overload
             if time.time() - start_time > timeout:
                 raise TimeoutError("Timeout waiting for CNC movement to complete")
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop the dummy CNC and clean up resources."""
         logger.info("Stopping dummy CNC")
         self._busy = False
-    
-    def send_cmd(self, cmd):
+
+    def send_cmd(self, cmd: str) -> str:
         """Simulate sending a command to the GRBL controller.
 
         Parameters
@@ -262,8 +277,8 @@ class DummyCNC(AbstractCNC):
         # Simulate response delay
         time.sleep(0.1)
         return "ok"
-    
-    def get_status(self):
+
+    def get_status(self) -> dict:
         """Simulate querying the current status of the GRBL controller.
 
         Returns
@@ -276,18 +291,18 @@ class DummyCNC(AbstractCNC):
             'status': state,
             'position': self._position
         }
-    
+
     @property
-    def x(self):
+    def x(self) -> length_mm:
         """Get the current X-axis position."""
         return self.get_position()[0]
-    
+
     @property
-    def y(self):
+    def y(self) -> length_mm:
         """Get the current Y-axis position."""
         return self.get_position()[1]
-    
+
     @property
-    def z(self):
+    def z(self) -> deg:
         """Get the current Z-axis position."""
         return self.get_position()[2]

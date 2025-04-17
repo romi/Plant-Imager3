@@ -1,26 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# plantimager - Python tools for the ROMI 3D Plant Imager
-#
-# Copyright (C) 2018 Sony Computer Science Laboratories
-# Authors: D. Colliaux, T. Wintz, P. Hanappe
-#
-# This file is part of plantimager.
-#
-# plantimager is free software: you can redistribute it
-# and/or modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation, either
-# version 3 of the License, or (at your option) any later version.
-#
-# plantimager is distributed in the hope that it will be
-# useful, but WITHOUT ANY WARRANTY; without even the implied
-# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with plantimager.  If not, see
-# <https://www.gnu.org/licenses/>.
 
 """GRBL-based CNC Controller for Plant Imaging Systems.
 
@@ -166,7 +145,7 @@ class CNC(AbstractCNC):
     - G-Code Reference: http://linuxcnc.org/docs/html/gcode/g-code.html
     """
 
-    def __init__(self, port="/dev/ttyUSB0", baud_rate=115200):
+    def __init__(self, port: str="/dev/ttyUSB0", baud_rate: int=115200) -> None:
         """Initializes the GRBL controller."""
         super().__init__()
         self.port = port
@@ -182,7 +161,7 @@ class CNC(AbstractCNC):
         self._start()
         finalize(self, self.stop)
 
-    def _start(self):
+    def _start(self) -> None:
         """Initialize the serial connection with Arduino and configure the GRBL-based CNC machine.
 
         This method establishes a serial connection with the Arduino running GRBL firmware,
@@ -246,7 +225,7 @@ class CNC(AbstractCNC):
         self.y_lims = (0, self.grbl_settings["$131"])
         self.z_lims = (0, self.grbl_settings["$132"])
 
-    def stop(self):
+    def stop(self) -> None:
         """Close the serial connection to the GRBL controller.
 
         Notes
@@ -380,7 +359,7 @@ class CNC(AbstractCNC):
         """
         return self.get_position()[2]
 
-    def home(self):
+    def home(self) -> None:
         """Performs the GRBL homing cycle and sets machine coordinates.
 
         Notes
@@ -423,7 +402,7 @@ class CNC(AbstractCNC):
         # G92 sets the current position without moving the machine
         self.send_cmd(f"g92 x{sign_x * pulloff} y{sign_y * pulloff} z{sign_z * pulloff}")
 
-    def _check_move(self, x, y, z):
+    def _check_move(self, x: float, y: float, z: float) -> None:
         """Validate that the requested movement coordinates are within the machine's axis limits.
 
         Parameters
@@ -444,7 +423,7 @@ class CNC(AbstractCNC):
         assert self.y_lims[0] <= y <= self.y_lims[1], "Move command coordinates is outside the y-limits!"
         assert self.z_lims[0] <= z <= self.z_lims[1], "Move command coordinates is outside the z-limits!"
 
-    def moveto(self, x, y, z):
+    def moveto(self, x: length_mm, y: length_mm, z: deg) -> None:
         """Move the CNC machine to specified coordinates and wait until the target position is reached.
 
         Parameters
@@ -476,7 +455,7 @@ class CNC(AbstractCNC):
         self.moveto_async(x, y, z)
         self.wait(timeout=30)
 
-    def moveto_async(self, x, y, z):
+    def moveto_async(self, x: length_mm, y: length_mm, z: deg) -> None:
         """Asynchronously move the CNC machine to specified coordinates using G0 rapid positioning.
 
         This method executes a rapid linear movement (G0) to the specified position without
@@ -525,7 +504,7 @@ class CNC(AbstractCNC):
         # This allows time for command processing
         time.sleep(0.1)
 
-    def wait(self, timeout=60):
+    def wait(self, timeout: int=60) -> None:
         """Wait for the CNC machine to complete any ongoing operations.
 
         Notes
@@ -571,7 +550,7 @@ class CNC(AbstractCNC):
                 raise RuntimeError("Serial port is closed or not properly initialized") from e
             raise
 
-    def send_cmd(self, cmd):
+    def send_cmd(self, cmd: str) -> str:
         """Send a command to the GRBL controller and return its response.
 
         Parameters
