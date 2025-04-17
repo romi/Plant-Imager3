@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 from base64 import b64decode
-from logging import getLogger
 
 import dash_bootstrap_components as dbc
 import toml
@@ -14,7 +13,6 @@ from dash import dcc
 from dash import html
 
 from plantimager.webui.utils import config_upload
-from plantimager.webui.utils import create_temp_fsdb
 
 # Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
@@ -276,19 +274,16 @@ def disable_scan_button(valid):
 
 
 @callback(
-    Output('scan-response', 'children'),
-    Output('scan-output', 'children'),
     Input('start-scan-button', 'n_clicks'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
     prevent_initial_call=True
 )
 def run_scan(_, cfg, dataset_name):
-
     from plantimager.webui.controller_proxy import RPCController
 
     controller = RPCController.instance()
     controller.set_config(cfg)
     controller.run_scan()
 
-    return True, success, log, False
+    return
