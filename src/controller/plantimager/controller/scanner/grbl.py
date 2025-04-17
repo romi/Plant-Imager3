@@ -122,7 +122,7 @@ class CNC(AbstractCNC):
     y_lims : tuple[float, float]
         Allowed range for Y-axis movement
     z_lims : tuple[float, float]
-        Allowed range for Z-axis movement
+        Allowed range for Z-axis movement (rotationa axis)
     serial_port : serial.Serial
         Serial connection instance
     invert_x : bool
@@ -258,7 +258,7 @@ class CNC(AbstractCNC):
         SerialException
             If there's an error while closing the serial port
         """
-        if (self.has_started):
+        if self.has_started:
             self.serial_port.close()
 
     def get_position(self) -> tuple[length_mm, length_mm, deg]:
@@ -379,9 +379,6 @@ class CNC(AbstractCNC):
         - get_position : Method to get a complete X,Y,Z position tuple
         """
         return self.get_position()[2]
-
-    def async_enabled(self):
-        return True
 
     def home(self):
         """Performs the GRBL homing cycle and sets machine coordinates.
@@ -534,28 +531,28 @@ class CNC(AbstractCNC):
         Notes
         -----
         - This method blocks until a response is received from the device
-        - Uses a 10ms delay between polling attempts to prevent CPU overload
+        - Uses a 10 ms delay between polling attempts to prevent CPU overload
         - The status query command '?' is part of the GRBL protocol
         - This method is typically used after async operations to ensure completion
 
         Raises
         ------
-    SerialException
-        If there are communication issues with the serial port
-    RuntimeError
-        If the serial port is closed or not properly initialized
-    TimeoutError
-        If the machine does not respond within the timeout period
+        serial.SerialException
+            If there are communication issues with the serial port
+        RuntimeError
+            If the serial port is closed or not properly initialized
+        TimeoutError
+            If the machine does not respond within the timeout period
         """
         from time import sleep, time
 
         start_time = time()
 
         try:
+            # Send a status query command ('?') to check if the machine is idle
+            self.serial_port.write(b"?\r\n")
             # Poll until we get a response indicating the machine is idle
             while True:
-                # Send a status query command ('?') to check if the machine is idle
-                self.serial_port.write(b"?\r\n")
                 # Read response
                 lines = self.serial_port.readlines()
                 # Check if we got a response and if it indicates the machine is idle

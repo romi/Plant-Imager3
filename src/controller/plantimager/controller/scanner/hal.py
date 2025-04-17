@@ -74,10 +74,6 @@ class AbstractCNC(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def async_enabled(self):
-        pass
-
-    @abstractmethod
     def moveto_async(self, x: length_mm, y: length_mm, z: length_mm) -> None:
         pass
 
