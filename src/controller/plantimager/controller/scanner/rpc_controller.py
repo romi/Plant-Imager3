@@ -77,6 +77,17 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         self.scanner.maxProgressChanged.connect(self.maxProgressChanged)
 
     @RPCServer.register_method_json
+    def set_db_url(self, url: str):
+        """Set the database URL for the scanner.
+
+        Parameters
+        ----------
+        url : str
+            The URL, including protocol and port, of the database to connect to.
+        """
+        self.scanner.set_db_url(url)
+
+    @RPCServer.register_method_json
     def set_config(self, config):
         """Configure the scanner with the provided configuration.
 
@@ -86,6 +97,17 @@ class RPCControllerServer(ControllerDevice, RPCServer):
             Configuration dictionary with scanner settings.
         """
         self.scanner.configure_scan(config)
+
+    @RPCServer.register_method_json
+    def set_dataset_name(self, name: str):
+        """Set the name of the dataset to be created.
+
+        Parameters
+        ----------
+        name : str
+            The name of the dataset to be created.
+        """
+        self.scanner.set_scan_id(name)
 
     @RPCServer.register_method_json
     def run_scan(self):

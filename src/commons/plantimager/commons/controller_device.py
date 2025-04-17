@@ -16,8 +16,18 @@ class ControllerDevice(ABC):
         pass
 
     @abstractmethod
-    def set_config(self, config):
+    def set_db_url(self, url: str):
+        """Set the database URL for the controller."""
+        pass
+
+    @abstractmethod
+    def set_config(self, config: dict):
         """Send a configuration dictionary to the controller."""
+        pass
+
+    @abstractmethod
+    def set_dataset_name(self, name: str):
+        """Set the name of the dataset to be created."""
         pass
 
     @abstractmethod
