@@ -32,8 +32,7 @@ class RPCEvents(StrEnum):
     INIT_SIGNALS_HANDLING = "INIT_SIGNALS_HANDLING"
     EMIT_SIGNAL = "EMIT_SIGNAL"
 
-url_parser = re.compile("([a-zA-Z]*)://([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}):([0-9]*)")
-
+url_parser = re.compile("([a-zA-Z]*)://([a-zA-Z.0-9]*):?([0-9]*)")
 
 
 class RPCSignal:
@@ -115,6 +114,7 @@ class RPCClient:
     This new class must be decorated with `@RPCClient.register_interface`
 
     """
+
     def __init__(self, context: zmq.Context, url: str):
         super().__init__()
         self.context: zmq.Context = context
@@ -146,11 +146,11 @@ class RPCClient:
         })
         reply = self.socket.recv_json()
         logger.debug(f"Got inv: {reply}",)
-        self._json_methods = reply["json_methods"]
-        self._buffer_methods = reply["buffer_methods"]
+        self._json_methods: dict[str, int|None] = reply["json_methods"]
+        self._buffer_methods: dict[str, int|None] = reply["buffer_methods"]
         self._signals = {sig: getattr(self, sig) for sig in reply["signals"] if hasattr(self, sig)}
-        self._properties = reply["properties"]
-        self.name = reply["name"]
+        self._properties: list = reply["properties"]
+        self.name: str = reply["name"]
 
         # If signals initiate
         self._signal_receiver = None
@@ -266,10 +266,10 @@ class RPCClient:
             return
 
 
-    def execute(self, method: Callable, params: dict) -> tuple[bool, object]:
+    def execute(self, method_name: str, params: dict) -> tuple[bool, object]:
         package = {
             "event": RPCEvents.METHOD_CALL,
-            "method": method,
+            "method": method_name,
             "params": params,
         }
         if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
@@ -278,8 +278,8 @@ class RPCClient:
         logger.debug(f"Executing {package}")
         self.socket.send_json(package, flags=zmq.NOBLOCK)
 
-        if method in self._json_methods:
-            if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
+        if method_name in self._json_methods:
+            if self.socket.poll(timeout=self._json_methods[method_name], flags=zmq.POLLIN) == 0:
                 logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
                 return False, (Warning(f"Proxy of {self._interface} at {self.url} did not respond"), "")
             reply =  self.socket.recv_json()
@@ -287,8 +287,8 @@ class RPCClient:
                 return True, reply["result"]
             else:
                 return False, (reply["error"], reply["traceback"])
-        elif method in self._buffer_methods:
-            if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
+        elif method_name in self._buffer_methods:
+            if self.socket.poll(timeout=self._buffer_methods[method_name], flags=zmq.POLLIN) == 0:
                 logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
                 return False, (Warning(f"Proxy of {self._interface} at {self.url} did not respond"), "")
             reply_frames: list[zmq.Frame] = self.socket.recv_multipart(copy=False)
@@ -297,6 +297,7 @@ class RPCClient:
                 return False, (buffer_info["error"], buffer_info["traceback"])
             else:
                 return True, (reply_frames[1].buffer, buffer_info)
+        return False, (Warning(f"Unknown method {method_name}"), "")
 
     def stop_server(self):
         logger.info(f"Stopping server {self.url}")
@@ -375,12 +376,21 @@ class RPCServer:
         self.context: zmq.Context = context
         self.url: str = url
         self._socket: zmq.Socket[zmq.REP] = context.socket(zmq.REP)
-        self.port = self._socket.bind_to_random_port(url, 10000, 12000)
+
+        protocol, ip_addr, port = url_parser.match(url).groups()
+        if port:
+            self.port = int(port)
+            self._socket.bind(url)
+        else:
+            self.port = self._socket.bind_to_random_port(url, 10000, 12000)
+        logger.debug(f"RPCServer of type {type(self)} bound to {ip_addr} on port {self.port}")
 
         self.name = ""
         self.registry_addr = ""
         self._signal_socket: zmq.Socket[zmq.REQ] | None = None
         self.peer_addr: str | None = None
+
+        self._stop = False
 
         finalize(self, self._finalize)
 
@@ -417,7 +427,7 @@ class RPCServer:
 
 
     @staticmethod
-    def register_method_json(method: Callable):
+    def register_method_json(timeout: int | None = 10000):
         """
         Registers this method as remote callable procedure which will transmit its output via json.
         It is advised to only send basic types and containers as output (int, float, str, bool, list, tuple, dict, ...)
@@ -425,18 +435,26 @@ class RPCServer:
 
         Parameters
         ----------
-        method
+        timeout: int | None
+            Specifies how much time in ms a client is expected to wait for the method to finish. If None, waits indefinitely.
 
         Returns
         -------
-        method
+        decorator: Callable[Callable[..., Any], Callable[..., Any]]
 
         """
-        method._is_json_method = True
-        return method
+        if inspect.isfunction(timeout):
+            timeout._is_json_method = True
+            timeout._timeout = 10000
+            return timeout
+        def _decorator(method: Callable[..., Any]):
+            method._is_json_method = True
+            method._timeout = timeout
+            return method
+        return _decorator
 
     @staticmethod
-    def register_method_buffer(method: Callable[..., tuple[memoryview|bytes, dict]]):
+    def register_method_buffer(timeout: int | None = 10000):
         """
         Registers this method as remote callable procedure which will transmit its output as a buffer-like object
         as well as a buffer_info dictionary.
@@ -451,11 +469,18 @@ class RPCServer:
 
         Returns
         -------
-        method
+        decorator: Callable[Callable[..., tuple[memoryview|bytes, dict]], Callable[..., tuple[memoryview|bytes, dict]]]
 
         """
-        method._is_buffer_method = True
-        return method
+        if inspect.isfunction(timeout):
+            timeout._is_buffer_method = True
+            timeout._timeout = 10000
+            return timeout
+        def _decorator(method: Callable[..., tuple[memoryview|bytes, dict]]):
+            method._is_buffer_method = True
+            method._timeout = timeout
+            return method
+        return _decorator
 
     def _send_signal(self, signal_name: str, *args):
         if not self._signal_socket:
@@ -504,6 +529,9 @@ class RPCServer:
                 [json.dumps(buffer_info).encode("utf-8"), buffer], copy=False
             )
 
+    def stop_server(self):
+        self._stop = True
+
     def serve_forever(self):
         """
         Starts serving requests for this RPCServer.
@@ -512,7 +540,8 @@ class RPCServer:
         -------
 
         """
-        while True:
+        self._stop = False
+        while not self._stop:
             if self._socket.poll(1000, zmq.POLLIN) == 0:
                 continue
             request = self._socket.recv_json()
@@ -534,20 +563,15 @@ class RPCServer:
                     logger.info("Connected to peer at address: {}".format(self.peer_addr))
                 case RPCEvents.GET_INVENTORY:
                     logger.info("Sending inventory")
-                    logger.info({
-                        "json_methods": list(self._json_methods.keys()),
-                        "buffer_methods": list(self._buffer_methods.keys()),
+                    response = {
+                        "json_methods": {name: func._timeout for name, func in self._json_methods.items()},
+                        "buffer_methods": {name: func._timeout for name, func in self._buffer_methods.items()},
                         "signals": list(self._signals.keys()),
                         "properties": list(self._rpc_properties.keys()),
                         "name": self.name,
-                    })
-                    self._socket.send_json({
-                        "json_methods": list(self._json_methods),
-                        "buffer_methods": list(self._buffer_methods),
-                        "signals": list(self._signals.keys()),
-                        "properties": list(self._rpc_properties.keys()),
-                        "name": self.name,
-                    })
+                    }
+                    logger.info(response)
+                    self._socket.send_json(response)
                 case RPCEvents.INIT_SIGNALS_HANDLING:
                     logger.info("Initializing signal handling")
                     address, port = request["address"], request["port"]

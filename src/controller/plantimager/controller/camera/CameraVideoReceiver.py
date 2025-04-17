@@ -52,7 +52,7 @@ class ReceiverWorker(QThread):
             t0 = time.time()
             frame_array: np.ndarray = frame.reformat(format="rgb32").to_ndarray()
             if self._rotation:
-                frame_array = ndimage.rotate(frame_array, self._rotation)
+                frame_array = ndimage.rotate(frame_array, -self._rotation)
             image = QImage(frame_array.data, frame_array.shape[1], frame_array.shape[0], QImage.Format.Format_RGB32)
             qvideoframe = QVideoFrame(image)
             self._conversion_times[self._frame_id % self.receiver.base_rate] = time.time() - t0

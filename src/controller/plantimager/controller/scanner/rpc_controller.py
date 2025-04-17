@@ -73,8 +73,11 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         """
         RPCServer.__init__(self, context, url)
         self.scanner = scanner
-        self.scanner.progressChanged.connect(self.progressChanged)
-        self.scanner.maxProgressChanged.connect(self.maxProgressChanged)
+        self.scanner.progressChanged.connect(self.progressChanged.emit)
+        self.scanner.maxProgressChanged.connect(self.maxProgressChanged.emit)
+        self.scanner.readyToScanChanged.connect(self.readyToScanChanged.emit)
+        self.scanner.cameraNamesChanged.connect(self.cameraNamesChanged.emit)
+
 
     @RPCServer.register_method_json
     def set_db_url(self, url: str):
@@ -109,7 +112,7 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         """
         self.scanner.set_scan_id(name)
 
-    @RPCServer.register_method_json
+    @RPCServer.register_method_json(timeout=None)
     def run_scan(self):
         """Start a scanning operation with the current configuration."""
         self.scanner.scan()
@@ -136,6 +139,22 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         """
         return self.scanner.max_progress
 
+    @RPCProperty(notify=ControllerDevice.readyToScanChanged)
+    def ready_to_scan(self) -> bool:
+        """Get whether the scanner is ready to start a scan.
+
+        Returns
+        -------
+        bool
+            True if the scanner is ready to start a scan, False otherwise.
+        """
+        return self.scanner.ready_to_scan
+
+    @RPCProperty(notify=ControllerDevice.cameraNamesChanged)
+    def camera_names(self) -> list[str]:
+        """Return the list of camera names."""
+        return self.scanner.camera_names
+
     def handle_scanner_changed(self, scanner):
         """Update the controlled scanner and synchronize progress values.
 
@@ -149,5 +168,11 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         """
         if self.scanner is not scanner:
             self.scanner = scanner
-            self.scanner.progressChanged.emit(self.scanner.progress)
-            self.scanner.maxProgressChanged.emit(self.scanner.progressChanged)
+            self.scanner.progressChanged.connect(self.progressChanged.emit)
+            self.scanner.maxProgressChanged.connect(self.maxProgressChanged.emit)
+            self.scanner.readyToScanChanged.connect(self.readyToScanChanged.emit)
+            self.scanner.cameraNamesChanged.connect(self.cameraNamesChanged.emit)
+            self.progressChanged.emit(self.scanner.progress)
+            self.maxProgressChanged.emit(self.scanner.max_progress)
+            self.readyToScanChanged.emit(self.scanner.ready_to_scan)
+            self.cameraNamesChanged.emit(self.scanner.camera_names)

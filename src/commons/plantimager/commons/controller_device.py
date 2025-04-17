@@ -11,6 +11,8 @@ class ControllerDevice(ABC):
 
     progressChanged = RPCSignal(int)
     maxProgressChanged = RPCSignal(int)
+    readyToScanChanged = RPCSignal(bool)
+    cameraNamesChanged = RPCSignal(list[str])
 
     def __init__(self):
         pass
@@ -45,4 +47,16 @@ class ControllerDevice(ABC):
     @abstractmethod
     def max_progress(self) -> int:
         """Return the maximum progress of the scan."""
+        pass
+
+    @RPCProperty(notify=readyToScanChanged)
+    @abstractmethod
+    def ready_to_scan(self) -> bool:
+        """Return whether the controller is ready to start a scan."""
+        pass
+
+    @RPCProperty(notify=cameraNamesChanged)
+    @abstractmethod
+    def camera_names(self) -> list[str]:
+        """Return the list of camera names."""
         pass

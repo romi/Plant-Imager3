@@ -102,7 +102,8 @@ class RPCController(ControllerDevice, RPCClient):
             The singleton instance of this class.
         """
         if cls._instance is None:
-            super(RPCController, cls).__new__(cls)
+            instance = super(RPCController, cls).__new__(cls)
+            return instance
         return cls._instance
 
     def __init__(self, context: zmq.Context, url: str):
@@ -135,3 +136,13 @@ class RPCController(ControllerDevice, RPCClient):
         if cls._instance is None:
             raise RuntimeError("Controller proxy not initialized.")
         return cls._instance
+
+
+if __name__ == "__main__":
+    context = zmq.Context()
+    RPCController(context, "tcp://localhost:14567")
+    controller = RPCController.instance()
+    print(controller.progress)
+    print(controller.max_progress)
+    print(controller.ready_to_scan)
+    print(controller.camera_names)

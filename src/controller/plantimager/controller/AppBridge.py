@@ -64,7 +64,7 @@ class AppBridge(QObject):
         self.device_bridges: list[CameraBridge] = []
 
         self._currentCamera = CameraBridge("", "", self.context)
-        self._scanner = Scanner({})
+        self._scanner = Scanner()
 
         self._controller_server = RPCControllerServer(self.context, "tcp://localhost:14567", self._scanner)
         self.scannerChanged.connect(self._controller_server.handle_scanner_changed)
@@ -79,6 +79,8 @@ class AppBridge(QObject):
         logger.debug("finalizing AppBridge")
         self.registry.stop()
         self.registry.join()
+        self._controller_server.stop_server()
+        self._controller_thread.join(2)
         logger.debug("AppBridge finalized")
 
     @Property(QObject, notify=currentCameraChanged)
@@ -127,6 +129,7 @@ class AppBridge(QObject):
             self.device_list.append(name)
             self.device_bridges.append(new_bridge)
             self.deviceListChanged.emit()
+            self.scanner.add_camera(new_bridge.camera)
             if not self._currentCamera:
                 self.currentCamera = new_bridge
                 self.currentCameraChanged.emit(new_bridge)
@@ -158,6 +161,8 @@ class AppBridge(QObject):
         Meant to be connected to the signal `_registryRemoveDevice` as a QueuedConnection.
         """
         idx = self.device_list.index(name)
+        device = self.device_list[idx]
+        self.scanner.remove_camera(device)
         del self.device_list[idx]
         del self.device_bridges[idx]
         if len(self.device_bridges) == 0:

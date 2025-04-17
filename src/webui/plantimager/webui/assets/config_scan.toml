@@ -1,0 +1,51 @@
+[Path]
+name = "Circle"
+
+[Path.kwargs]
+center_x = 370
+center_y = 370
+z = 0
+tilt = 0
+radius = 350
+n_points = 36
+
+[Picamera1]
+
+[Picamera1.offset] # top camera
+x = 0
+y = 0
+z = 0
+pan = 0
+tilt = 0
+
+[Picamera2]
+
+[Picamera2.offset] # bottom camera
+x = 0
+y = 0
+z = -100
+pan = 0
+tilt = 0
+
+[Metadata.object]
+species = "Arabidopsis thaliana"  # the species of the biological object analyzed;
+seed_stock = "Col-0"  # an identifier of the seed stock used;
+plant_id = "romi_demo_1"  # an identifier for the plant;
+growth_environment = "Lyon-Indoor"  # location of the growth environment;
+growth_conditions = "LD+SD"  # growth condition used, eg: "LD", "SD", "LD+SD";
+treatment = "None"  # specific treatment applied, if any, eg: "Auxin 1 mM";
+DAG = 40  #Days After Germination or age of the plant in days, eg: 40;
+sample = "main stem"  # part of the plant used, if any, eg: "main stem";
+experiment_id = "romi_demo_2020"  # an identifier for the experiment, eg: "dry plant";
+dataset_id = "romi_demo_1"  # the dataset identifier for the biological dataset, eg: 12;
+
+[Metadata.hardware]
+name = "RDP_PlantImagerv3"
+frame = "30profile v3"  # scanner frame type and version, eg: "30profile v2";
+X_motor = "X-Carve NEMA23"  # type of motor used for the X axis, eg: "X-Carve NEMA23";
+Y_motor = "X-Carve NEMA23"  # type of motor used for the Y axis, eg: "X-Carve NEMA23";
+Z_motor = "None"  # type of motor used for the Z axis, eg: "X-Carve NEMA23";
+pan_motor = "Nema 23 Hollow Shaft 23HS18-2004H"  # type of motor used for the camera pan axis, eg: "Dynamixel";
+tilt_motor = "None"  # type of motor used for the camera tilt axis, eg: "gimbal";
+sensor_1 = "PiCamera HQ / Official 6mm lens 3MP"  # type of sensor used during acquisition, eg: "Sony alpha";
+sensor_2 = "PiCamera HQ / Official 6mm lens 3MP"  # type of sensor used during acquisition, eg: "Sony alpha";

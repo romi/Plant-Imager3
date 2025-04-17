@@ -270,7 +270,7 @@ class CNC(AbstractCNC):
             Current X-axis position in millimeters
         length_mm
             Current Y-axis position in millimeters
-        length_mm
+        deg
             Current Z-axis position in degrees
 
         Raises
@@ -544,9 +544,8 @@ class CNC(AbstractCNC):
         TimeoutError
             If the machine does not respond within the timeout period
         """
-        from time import sleep, time
 
-        start_time = time()
+        start_time = time.time()
 
         try:
             # Send a status query command ('?') to check if the machine is idle
@@ -562,10 +561,10 @@ class CNC(AbstractCNC):
                     if 'Idle' in status_line or 'Home' in status_line:
                         return
                 # Check for timeout
-                if time() - start_time > timeout:
+                if time.time() - start_time > timeout:
                     raise TimeoutError("Timeout waiting for CNC machine to become idle")
                 # Short delay to prevent CPU overload
-                sleep(0.01)
+                time.sleep(0.01)
 
         except Exception as e:
             if self.serial_port is None or not self.serial_port.is_open:

@@ -1,32 +1,34 @@
-import os
-import queue
+import importlib
+import traceback
 from concurrent.futures import ThreadPoolExecutor, Future, wait, FIRST_COMPLETED, ALL_COMPLETED
+from http.client import responses
 from io import BytesIO
 from weakref import finalize
 
 from PySide6.QtCore import QObject, Signal, Slot, Property
 from PySide6.QtQml import QmlUncreatable, QmlElement
-
 from plantdb.client.plantdb_client import PlantDBClient
+from requests.exceptions import RequestException
 
 from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
+from plantimager.controller.scanner.dummy_cnc import DummyCNC
 from plantimager.controller.scanner.grbl import CNC
-from plantimager.controller.scanner.path import circle, Circle, Path, Pose, PathElement
 from plantimager.controller.scanner.hal import DataItem
-
+from plantimager.controller.scanner.path import Path, Pose, PathElement
 
 QML_IMPORT_NAME = "PlantImagerApp.Scanner"
 QML_IMPORT_MAJOR_VERSION = 1
 
 logger = create_logger(__name__)
 
+
 class DataUploader():
     """
     Worker thread that will upload scan data from a queue to a plantdb instance.
     """
+
     def __init__(self, db_client: PlantDBClient, queue_size: int):
-        super().__init__(name=f"{__name__}-worker")
         self.db_client = db_client
         self.jobs: set[Future] = set()
         self.pool = ThreadPoolExecutor(max_workers=4, thread_name_prefix=__name__)
@@ -35,10 +37,15 @@ class DataUploader():
 
     def _upload(self, scan_id: str, fileset: str, data: DataItem):
         buffer = BytesIO(data.image)
-        return self.db_client.create_file(
-            buffer, name=f"{data.metadata['camera_name']}-{data.idx}", ext=data.image_ext,
-            scan_id=scan_id, fileset_name=fileset, metadata=data.metadata
-        )
+        buffer.seek(0)
+        try:
+            response = self.db_client.create_file(
+                buffer, file_id=f"{data.metadata['camera_name']}-{data.idx}", ext=data.image_ext,
+                scan_id=scan_id, fileset_id=fileset, metadata=data.metadata
+            )
+        except Exception as e:
+            traceback.print_exception(e)
+        return
 
     def upload(self, scan_id: str, fileset: str, data: DataItem):
         """
@@ -66,18 +73,22 @@ class DataUploader():
 @QmlElement
 @QmlUncreatable("Scanner cannot be created from QML")
 class Scanner(QObject):
-
     progressChanged = Signal(int)
     maxProgressChanged = Signal(int)
     readyToScanChanged = Signal(bool)
+    cameraNamesChanged = Signal(list)
 
-    def __init__(self, config: dict):
+    def __init__(self):
         super().__init__()
-        self.config = config
-        self.cnc = CNC()
+        self.config = {}
+        try:
+            self.cnc = CNC()
+        except Exception as e:
+            logger.warning(f"Could not connect to CNC, using DummyCNC instead: {e}")
+            self.cnc = DummyCNC()
         self.cameras: list[PiCameraComm] = []
         self.db_url = None
-        self.path: Path | None = None
+        self.scan_path: Path | None = None
 
         self._progress = 0
         self._max_progress = 0
@@ -89,16 +100,27 @@ class Scanner(QObject):
     @Slot(QObject)
     def add_camera(self, camera: PiCameraComm):
         self.cameras.append(camera)
+        self.cameraNamesChanged.emit(self.camera_names)
+        self.readyToScanChanged.emit(self.ready_to_scan)
 
     @Slot(QObject)
     def remove_camera(self, camera: PiCameraComm):
         self.cameras.remove(camera)
+        self.cameraNamesChanged.emit(self.camera_names)
+        self.readyToScanChanged.emit(self.ready_to_scan)
+
+    @Property(list, notify=cameraNamesChanged)
+    def camera_names(self) -> list[str]:
+        return [cam.name for cam in self.cameras]
 
     @Slot(str)
     def set_db_url(self, url: str):
-        self.db_url = url
-        self.db_client = PlantDBClient(self.db_url)
-        self.uploader = DataUploader(self.db_client, 10)
+        """Sets the url of the database to connect to."""
+        if self.db_url != url:
+            self.db_url = url
+            self.db_client = PlantDBClient(self.db_url)
+            self.uploader = DataUploader(self.db_client, 10)
+            self.readyToScanChanged.emit(self.ready_to_scan)
 
     @Property(int, notify=progressChanged)
     def progress(self) -> int:
@@ -109,25 +131,34 @@ class Scanner(QObject):
         return self._max_progress
 
     def configure_scan(self, config: dict):
-        """
-        Configures the scan from a config dict.
+        """Configures the scan from a config dict.
 
-        Configures the cnc, the position of the different cameras and their configuration.
-        Configures the path
+        Configures the scan:
+        - select the cameras
+        - defines the path to follow
+        - defines biological metadata
+        - defines hardware metadata
 
         Parameters
         ----------
-        config
-
-        Returns
-        -------
-
+        config : dict
+            The configuration dictionary to use for the scan.
         """
-        pass
+        self.config = config
+        # Defines the path to follow for scanning
+        path_module = importlib.import_module("plantimager.controller.scanner.path")
+        path_cfg = config["Path"]
+        self.scan_path = getattr(path_module, path_cfg["name"])(**path_cfg["kwargs"])
+        self._max_progress = len(self.scan_path)
+        self.maxProgressChanged.emit(self._max_progress)
+        # Defines the dataset metadata
+        self.dataset_metadata = config["Metadata"]["object"]
+        # Defines the hardware metadata
+        self.hw_metadata = config["Metadata"]["hardware"]
 
     @Property(bool, notify=readyToScanChanged)
     def ready_to_scan(self) -> bool:
-        if self.cnc and self.path and self.cameras and self.uploader and self.db_client and self.scan_id and self.fileset:
+        if self.cnc and self.scan_path and self.cameras and self.uploader and self.db_client and self.scan_id and self.fileset:
             return True
         return False
 
@@ -141,6 +172,10 @@ class Scanner(QObject):
         """Set the position of the scanner from a 5D Pose."""
         logger.info(f"Moving arm to {pose}")
         self.cnc.moveto(pose.x, pose.y, pose.pan)
+
+    def set_scan_id(self, scan_id: str):
+        """Set the name of the dataset to create."""
+        self.scan_id = scan_id
 
     def grab(self, idx: int, metadata: dict, camera: PiCameraComm) -> DataItem:
         """Grab data with an id and metadata using camera and sends the data to
@@ -165,11 +200,11 @@ class Scanner(QObject):
         data = DataItem(idx, buffer, image_ext=buffer_info["format"], metadata=metadata)
         self.uploader.upload(scan_id=self.scan_id, fileset=self.fileset, data=data)
 
-
     def inc_count(self) -> int:
         """Incremental counter used to return id for `grab` method. """
-        x = self.progress
-        self.progress += 1
+        x = self._progress
+        self._progress += 1
+        self.progressChanged.emit(self._progress)
         return x
 
     def get_target_pose(self, x: PathElement) -> Pose:
@@ -182,14 +217,42 @@ class Scanner(QObject):
                 setattr(target_pose, attr, getattr(x, attr))
         return target_pose
 
-    def scan(self, scan_id: str) -> None:
-        if not self.path: raise RuntimeError("Path not set for scan")
+    def scan(self) -> None:
+        if not self.config: raise RuntimeError("Config not set for scan")
+        if not self.scan_path: raise RuntimeError("Path not set for scan")
+        if not self.db_url: raise RuntimeError("DB url not set for scan")
+        if not self.db_client: raise RuntimeError("DB client not set for scan")
         if not self.uploader: raise RuntimeError("Uploader not set for scan")
-        self.scan_id = scan_id
-        self.fileset = fileset
+        if not self.scan_id: raise RuntimeError("Scan id not set for scan")
+        if not self.cameras: raise RuntimeError("No Cameras connected")
+
+        if isinstance(self.cnc, DummyCNC):
+            self.hw_metadata["name"] = "DummyCNC"
+
+        # Create the scan on the remote database
+        try:
+            self.db_client.create_scan(self.scan_id, metadata=self.dataset_metadata | self.hw_metadata)
+        except RequestException as e:
+            logger.error(f"{e}")
+        except ValueError as e:
+            logger.error(f"{e}")
+            logger.error(f"Scan {self.scan_id} already exists in plantdb")
+
+        # Create the image fileset on the remote database
+        try:
+            self.db_client.create_fileset(self.fileset, self.scan_id)
+        except RequestException as e:
+            logger.error(f"{e}")
+        except ValueError as e:
+            logger.error(f"{e}")
+            logger.error(f"Fileset {self.fileset} already exists for scan {self.scan_id}")
 
         with ThreadPoolExecutor(max_workers=4) as executor:
-            for x in self.path:
+            shot_id = 0
+            self._progress = 0
+            for x in self.scan_path:
+                self._progress += 1
+                self.progressChanged.emit(self._progress)
                 # move arm to position
                 pose = self.get_target_pose(x)
                 self.set_position(pose)
@@ -205,28 +268,14 @@ class Scanner(QObject):
                     camera_offset = Pose(**camera_param["offset"])
                     camera_pose = arm_pose + camera_offset
 
-                    shot_id = self.inc_count()
                     metadata = {
                         **camera_param,
                         "camera_name": name,
-                        "approximate_pose": [camera_pose.x, camera_pose.y, camera_pose.z, camera_pose.pan, camera_pose.tilt],
+                        "approximate_pose": [camera_pose.x, camera_pose.y, camera_pose.z, camera_pose.pan,
+                                             camera_pose.tilt],
                         "shot_id": shot_id,
                     }
+                    shot_id += 1
                     jobs.append(executor.submit(self.grab, shot_id, metadata, camera))
-
                 wait(jobs, return_when=ALL_COMPLETED)
-
-
-
-
-
-    def scan_at(self, pose: Pose, exact_pose: bool = True, metadata: dict = {}) -> DataItem:
-        logger.debug(f"scanning at: {pose}")
-        if exact_pose:
-            metadata = {**metadata, "pose": [pose.x, pose.y, pose.z, pose.pan, pose.tilt]}
-        else:
-            metadata = {**metadata, "approximate_pose": [pose.x, pose.y, pose.z, pose.pan, pose.tilt]}
-        logger.debug(f"with metadata: {metadata}")
-        self.set_position(pose)
-        return self.grab(self.inc_count(), metadata=metadata)
-
+        logger.info(f"Scan completed")

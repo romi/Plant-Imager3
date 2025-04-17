@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
+import tomllib
 from base64 import b64decode
 
 import dash_bootstrap_components as dbc
-import toml
 from dash import Input
 from dash import Output
 from dash import State
@@ -14,13 +14,16 @@ from dash import html
 
 from plantimager.webui.utils import config_upload
 
-# Characters not allowed in dataset names for system compatibility
+#: Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
 
-# Get the directory where the current script (scan.py) is located
+#: Get the directory where the current script (scan.py) is located
 current_dir = os.path.dirname(os.path.abspath(__file__))
-# Construct the path to the assets file
-default_toml_path = os.path.join(current_dir, 'assets', 'hardware_scan_rx0.toml')
+#: Construct the path to the sample TOML config file (`assets` directory)
+default_toml_path = os.path.join(current_dir, 'assets', 'config_scan.toml')
+#: Load the default TOML configuration file into a string variable
+with open(default_toml_path, 'r') as f:
+    default_toml = f.read()
 
 # Card for scan configuration settings using TOML format
 configuration_card = [
@@ -30,7 +33,7 @@ configuration_card = [
             dbc.CardHeader(children=[html.I(className="bi bi-code-square me-2"), "Configuration"]),
             dbc.CardBody([
                 dbc.Textarea(id="scan-cfg-toml", class_name="mb-3", size='md',
-                             value=toml.dumps(toml.load(default_toml_path)),
+                             value=default_toml,
                              title="The scan configuration in TOML format.",
                              placeholder="Scan configuration (TOML).",
                              style={'height': "65vh"}, persistence=True),
@@ -282,11 +285,13 @@ def disable_scan_button(valid):
     Output('scan-response', 'children'),
     Output('scan-output', 'children'),
     Input('start-scan-button', 'n_clicks'),
+    State('rest-api-host', 'data'),
+    State('rest-api-port', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
     prevent_initial_call=True
 )
-def run_scan(_, cfg, dataset_name):
+def run_scan(_, url, port, cfg, dataset_name):
     from plantimager.webui.controller_proxy import RPCController
 
     try:
@@ -294,7 +299,10 @@ def run_scan(_, cfg, dataset_name):
     except RuntimeError as e:
         return f"Error: Raspberry Pi Controller not initialized!", print(e)
 
-    controller.set_config(cfg)
+    controller.set_db_url(f"http://{url}:{port}")
+    controller.set_dataset_name(dataset_name)
+    print(tomllib.loads(cfg))
+    controller.set_config(tomllib.loads(cfg))
     controller.run_scan()
 
     return "Scan started.", "Scanning plant in progress..."
