@@ -18,7 +18,7 @@ Following these guidelines ensures consistency, readability, and maintainability
 All Python files should:
 1. Start with a shebang line: `#!/usr/bin/env python3`
 2. Include UTF-8 encoding declaration: `# -*- coding: utf-8 -*-`
-3. Include license information if applicable
+3. Remove any license information if applicable
 4. Follow with module documentation
 5. Include imports in a logical order (standard library, third-party, local) and always split them
 6. Define constants, classes, and functions
@@ -27,39 +27,16 @@ Example:
 ```python
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# plantimager - Python tools for the ROMI 3D Plant Imager
-#
-# Copyright (C) 2018 Sony Computer Science Laboratories
-# Authors: D. Colliaux, T. Wintz, P. Hanappe
-#
-# This file is part of plantimager.
-#
-# plantimager is free software: you can redistribute it
-# and/or modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation, either
-# version 3 of the License, or (at your option) any later version.
-#
-# plantimager is distributed in the hope that it will be
-# useful, but WITHOUT ANY WARRANTY; without even the implied
-# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with plantimager.  If not, see
-# <https://www.gnu.org/licenses/>.
 
 """Module title and brief description.
 
 Key Features
 ------------
-
 - Feature 1
 - Feature 2
 
 Usage Examples
 --------------
-
 ```python
 >>> import example_module
 >>> example_module.function()
@@ -260,6 +237,7 @@ Inline comments should be:
 3. Placed on the line above the code they describe, not at the end of the line
 4. Written in complete sentences with proper punctuation
 5. The comments may be grouped over several lines of code or omitted if the code is obvious 
+6. Do not add extra blank lines
 
 Example:
 ```python
