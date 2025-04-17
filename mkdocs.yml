@@ -12,6 +12,7 @@ nav:
   - 'Developer':
     - developer/index.md
     - developer/documentation.md
+    - developer/architecture.md
 
 
 theme:
