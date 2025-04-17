@@ -17,7 +17,7 @@ class ControllerDevice(ABC):
 
     @abstractmethod
     def set_config(self, config):
-        """Send configuration dictionary to the controller."""
+        """Send a configuration dictionary to the controller."""
         pass
 
     @abstractmethod
