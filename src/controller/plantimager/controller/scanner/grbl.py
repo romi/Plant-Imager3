@@ -61,6 +61,8 @@ from .units import deg
 from .units import length_mm
 
 logger = create_logger(__name__)
+
+#: Regular expression pattern for parsing GRBL status messages to extract X,Y,Z coordinates.
 pos_regex = re.compile("MPos:(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)")
 
 #: Dictionary mapping the GRBL codes to their meaning, units and default values.
@@ -80,8 +82,8 @@ GRBL_SETTINGS = {
     "$21": ("Hard limits", "boolean", 0),
     "$22": ("Homing cycle", "boolean", 1),
     "$23": ("Homing dir invert", "mask", 4),
-    "$24": ("Homing feed", "mm/min", 100),
-    "$25": ("Homing seek", "mm/min", 750),
+    "$24": ("Homing feed", "mm/min", 200),
+    "$25": ("Homing seek", "mm/min", 1000),
     "$26": ("Homing debounce", "milliseconds", 250),
     "$27": ("Homing pull-off", "mm", 20),
     "$30": ("Max spindle speed", "RPM", 12000),
@@ -98,7 +100,7 @@ GRBL_SETTINGS = {
     "$122": ("Z Acceleration", "deg/sec^2", 50),
     "$130": ("X Max travel", "mm", 740),
     "$131": ("Y Max travel", "mm", 740),
-    "$132": ("Z Max travel", "deg", 1000000)
+    "$132": ("Z Max travel", "deg", 360)
 }
 
 
@@ -360,8 +362,8 @@ class CNC(AbstractCNC):
 
         Returns
         -------
-        length_mm
-            The current Z-axis position in millimeters.
+        deg
+            The current Z-axis position in degrees.
 
         Raises
         ------
@@ -373,7 +375,7 @@ class CNC(AbstractCNC):
         See Also
         --------
         - x : X-axis position property
-        - z : Z-axis position property
+        - y : Y-axis position property
         - get_position : Method to get a complete X,Y,Z position tuple
         """
         return self.get_position()[2]
@@ -407,7 +409,7 @@ class CNC(AbstractCNC):
         """
         # Execute GRBL homing cycle to find machine zero
         self.send_cmd("$H")
-        self.wait()  # Wait for homing to complete
+        self.wait(timeout=60)  # Wait for homing to complete
 
         # Get GRBL settings that affect homing behavior
         pulloff = self.grbl_settings["$27"]  # Distance machine moves after finding the limit switch
@@ -475,7 +477,7 @@ class CNC(AbstractCNC):
         - The method will block until the movement is complete
         """
         self.moveto_async(x, y, z)
-        self.wait()
+        self.wait(timeout=30)
 
     def moveto_async(self, x, y, z):
         """Asynchronously move the CNC machine to specified coordinates using G0 rapid positioning.
