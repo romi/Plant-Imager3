@@ -68,3 +68,16 @@ To install the `plantimager.webui` subpackage, run the following command from th
 ```shell
 pip install -e src/webui/.
 ```
+
+After installation, you can start the Dash `WebUI` with:
+
+```shell
+plant-imager-webui
+```
+
+You will need to connect to a running FSDB REST API.
+
+For testing purposes, providing that you have the `plantdb.commons` and `plantdb.server` libraries installed, you may start one with:
+```shell
+fsdb_rest_api --test
+```
