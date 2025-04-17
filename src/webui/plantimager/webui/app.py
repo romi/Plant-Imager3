@@ -7,10 +7,10 @@ A web-based user interface for the Plant Imager system, providing a graphical fr
 
 Key Features
 ------------
-    - Bootstrap-styled Dash web application for plant imaging
-    - REST API connectivity for data operations
-    - User authentication and account management
-    - Dataset acquisition with metadata management
+- Bootstrap-styled Dash web application for plant imaging
+- REST API connectivity for data operations
+- User authentication and account management
+- Dataset acquisition with metadata management
 
 Usage Examples
 --------------
@@ -41,7 +41,24 @@ REST_API_URL = "127.0.0.1"
 REST_API_PORT = 5000
 
 
-def parsing():
+def parsing() -> argparse.ArgumentParser:
+    """Create and configure the command-line argument parser for the Plant Imager WebUI.
+
+    Sets up command-line arguments for configuring the connection to the PlantDB REST API,
+    including host address and port options.
+
+    Returns
+    -------
+    argparse.ArgumentParser
+        Configured argument parser with application options
+
+    Examples
+    --------
+    >>> parser = parsing()
+    >>> args = parser.parse_args(['--host', '192.168.1.100', '--port', '5001'])
+    >>> print(args.host, args.port)
+    192.168.1.100 5001
+    """
     parser = argparse.ArgumentParser(description="PlantImager WebUI.")
 
     app_args = parser.add_argument_group("Dash app options")
@@ -52,7 +69,7 @@ def parsing():
     return parser
 
 
-def setup_web_app(url, port):
+def setup_web_app(url: str, port: int) -> Dash:
     """Initialize and configure the Plant Imager Dash web application.
 
     Creates a Dash application instance with Bootstrap styling and sets up the main
@@ -110,7 +127,19 @@ def setup_web_app(url, port):
     return app
 
 
-def main():
+def main() -> None:
+    """Run the Plant Imager Web Interface application.
+
+    This function serves as the entry point for the Plant Imager Web UI. It:
+    1. Parses command-line arguments for REST API connection settings
+    2. Establishes a ZeroMQ connection to the controller service
+    3. Initializes and runs the Dash web application
+
+    Notes
+    -----
+    - The controller connection runs in a separate daemon thread
+    - The Dash application runs in debug mode on port 8000
+    """
     # - Parse the input arguments to variables:
     parser = parsing()
     args = parser.parse_args()
@@ -118,7 +147,7 @@ def main():
     # - Create connexion with controller
     context = zmq.Context()
     controller_thread = Thread(target=lambda ctx: RPCController(ctx, "tcp://localhost:14567"), args=(context,))
-    controller_thread.deamon = True
+    controller_thread.daemon = True
     controller_thread.start()
 
     # - Start the Dash app:

@@ -1,8 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+"""Scan Configuration and Execution Components for Plant Imager Web UI.
+
+This module provides the user interface components and functionality for configuring
+and executing plant scans in the Plant Imager system.
+
+Key Features
+------------
+- TOML-based scan configuration editor
+- Dataset name validation with real-time feedback
+- Scan execution controls with status reporting
+- Configuration file upload functionality
+- Comprehensive error handling and user feedback
+"""
+
 import os
 import tomllib
 from base64 import b64decode
+from typing import Dict
 
 import dash_bootstrap_components as dbc
 from dash import Input
@@ -129,7 +145,7 @@ scan_layout = html.Div(
 @callback(Output('scan-cfg-toml', 'value'),
           Input('cfg-upload', 'contents'),
           prevent_initial_call=True)
-def update_toml_cfg(contents):
+def update_toml_cfg(contents: str) -> str:
     """Updates the TOML configuration text area with the content of the uploaded base64 encoded config file.
 
     Parameters
@@ -150,7 +166,7 @@ def update_toml_cfg(contents):
     return cfg.decode()
 
 
-def all_valid_characters(dataset_name):
+def all_valid_characters(dataset_name: str) -> bool:
     """Validates if all characters in a given dataset name are permissible.
 
     Parameters
@@ -166,7 +182,7 @@ def all_valid_characters(dataset_name):
     return sum([letter in FORBIDDEN_CHAR for letter in dataset_name]) == 0
 
 
-def is_valid_dataset_name(dataset_name, existing_datasets):
+def is_valid_dataset_name(dataset_name: str, existing_datasets: list[str]) -> bool:
     """Check if a dataset name is valid and does not already exist.
 
     Parameters
@@ -196,7 +212,7 @@ def is_valid_dataset_name(dataset_name, existing_datasets):
     Input('dataset-input-name', 'value'),
     State('dataset-list', 'data')
 )
-def validate_dataset_name(dataset_name, existing_datasets):
+def validate_dataset_name(dataset_name: str, existing_datasets: list[str]) -> tuple[bool, bool, str]:
     """Callback to validate the selected dataset name.
 
     It should follow two rules:
@@ -230,7 +246,7 @@ def validate_dataset_name(dataset_name, existing_datasets):
     Input('dataset-input-name', 'value'),
     State('dataset-list', 'data')
 )
-def check_dataset_name_uniqueness(dataset_name, existing_datasets):
+def check_dataset_name_uniqueness(dataset_name: str, existing_datasets: list[str]) -> dict[str, str]:
     """Check if the specified dataset name already exists.
 
     Parameters
@@ -243,7 +259,7 @@ def check_dataset_name_uniqueness(dataset_name, existing_datasets):
 
     Returns
     -------
-    dict
+    Dict[str, str]
         A style dictionary for controlling the visibility of a message. If the
         dataset name already exists, the dictionary will display the message.
         Otherwise, it will hide the message.
@@ -258,7 +274,7 @@ def check_dataset_name_uniqueness(dataset_name, existing_datasets):
     Output('start-scan-button', 'disabled'),
     Input('dataset-input-name', 'valid'),
 )
-def disable_scan_button(valid):
+def disable_scan_button(valid: bool) -> bool:
     """Disables the 'Start scanning' button based on dataset validation status.
 
     This callback function determines whether the 'start-scan-button' element
@@ -291,9 +307,34 @@ def disable_scan_button(valid):
     State('dataset-input-name', 'value'),
     prevent_initial_call=True
 )
-def run_scan(_, url, port, cfg, dataset_name):
-    from plantimager.webui.controller_proxy import RPCController
+def run_scan(_, url: str, port: str, cfg: str, dataset_name: str) -> tuple[str, str]:
+    """Execute a plant scan with the specified configuration.
 
+    Parameters
+    ----------
+    _ : Any
+        Unused parameter (n_clicks from the button).
+    url : str
+        The hostname or IP address of the PlantDB REST API server.
+    port : str
+        The port number of the PlantDB REST API server.
+    cfg : str
+        The TOML configuration string for the scan.
+    dataset_name : str
+        The name to use for the dataset that will be created.
+
+    Returns
+    -------
+    Tuple[str, str]
+        A tuple containing two status messages:
+        - First message: Short status for the alert component
+        - Second message: Detailed status for the output component
+
+    Raises
+    ------
+    RuntimeError
+        If the Raspberry Pi Controller is not initialized.
+    """
     try:
         controller = RPCController.instance()
     except RuntimeError as e:

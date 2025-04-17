@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""User Authentication Module for Plant Imager Web UI.
+
+This module provides components and callbacks for user authentication in the Plant Imager web interface,
+including login, logout, and user profile management.
+
+Key Features
+------------
+- User authentication with username and password
+- User profile display with dynamically generated avatars
+- Login/logout modal interface with Bootstrap styling
+- REST API integration for authentication services
+- Secure password handling
+"""
+
 import hashlib
 import json
 import time
@@ -18,7 +32,7 @@ from plantdb.client.rest_api import base_url
 from plantimager.webui.new_user import new_user_button
 
 
-def create_avatar(fullname):
+def create_avatar(fullname: str) -> html.Div | None:
     """Create an avatar with user's initials in a colored circle.
 
     Generates a circular avatar component containing the initials of a user's full name
@@ -65,7 +79,7 @@ def create_avatar(fullname):
     return html.Div(initials, style=avatar_style)
 
 
-def create_login_button(is_logged_in=False, user_fullname=None):
+def create_login_button(is_logged_in: bool = False, user_fullname: str | None = None) -> dbc.NavLink:
     """Create a login/logout button with avatar for the navigation bar.
 
     This function generates a navigation link component that displays either a default
@@ -117,7 +131,22 @@ login_button_tooltip = dbc.Tooltip(
 login_button = create_login_button()
 
 
-def login_title(fullname=None, username=None):
+def login_title(fullname: str | None = None, username: str | None = None) -> list:
+    """Create a title for the login modal based on user login status.
+
+    Parameters
+    ----------
+    fullname : str or None, optional
+        The full name of the logged-in user, by default None
+    username : str or None, optional
+        The username of the logged-in user, by default None
+
+    Returns
+    -------
+    list
+        A list of components for the modal title, either showing the user's name and username
+        or a default login icon and text
+    """
     icon = html.I(className="bi bi-person-bounding-box me-2")
     if fullname:
         return [f"{fullname} (@{username})"]
@@ -203,7 +232,7 @@ login_modal = dbc.Modal(children=[
           Input('login-avatar-button', 'n_clicks'),
           State('login-modal', 'is_open'),
           prevent_initial_call=True)
-def toggle_login_modal(_, is_open):
+def toggle_login_modal(_: int, is_open: bool) -> bool | None:
     """Toggle the visibility of the login modal.
 
     This callback function controls the visibility of the login modal when the login avatar button is clicked.
@@ -237,7 +266,30 @@ def toggle_login_modal(_, is_open):
     State('rest-api-host', 'data'),
     State('rest-api-port', 'data')
 )
-def validate_username(username, is_modal_open, host, port):
+def validate_username(username: str | None, is_modal_open: bool, host: str, port: int | str) -> tuple[bool, bool]:
+    """Validate a username by checking if it exists in the database.
+
+    Parameters
+    ----------
+    username : str or None
+        The username to validate
+    is_modal_open : bool
+        Whether the login modal is currently open
+    host : str
+        The REST API host address
+    port : int or str
+        The REST API port number
+
+    Returns
+    -------
+    tuple[bool, bool]
+        A tuple of (valid, invalid) flags for the username input field
+
+    Raises
+    ------
+    requests.exceptions.RequestException
+        If there are network connectivity issues or server communication problems
+    """
     if not is_modal_open or not username:
         return False, False
     # Make request to the login API endpoint
@@ -264,7 +316,15 @@ def validate_username(username, is_modal_open, host, port):
           State('rest-api-host', 'data'),
           State('rest-api-port', 'data'),
           prevent_initial_call=True)
-def login(username_submit, password_submit, n_clicks, username, password, host, port):
+def login(
+    username_submit: int, 
+    password_submit: int, 
+    n_clicks: int, 
+    username: str, 
+    password: str, 
+    host: str, 
+    port: int | str
+) -> tuple[str | None, str | None, dict, dbc.Alert]:
     """Handle user authentication through the REST API.
 
     This callback function processes login attempts by sending credentials to a REST API endpoint
@@ -356,7 +416,7 @@ def login(username_submit, password_submit, n_clicks, username, password, host, 
     Output("login-avatar-button", "children"),
     Input("logged-fullname", "data")
 )
-def update_login_avatar_button(fullname):
+def update_login_avatar_button(fullname: str | None) -> list:
     """Update the login avatar button display based on user login status.
 
     This callback function modifies the login button appearance in the navigation bar
@@ -391,7 +451,7 @@ def update_login_avatar_button(fullname):
     Input("logged-fullname", "data"),
     Input("logged-username", "data"),
 )
-def update_login_modal_title(fullname, username):
+def update_login_modal_title(fullname: str | None, username: str | None) -> list:
     """Updates the title of the login modal window dynamically based on the logged-in
     user's information. If the logged-in user's full name is available, it uses the
     provided full name and username to generate the title. Otherwise, it defaults
@@ -426,7 +486,7 @@ def update_login_modal_title(fullname, username):
     Input("logged-fullname", "data"),
     prevent_initial_call=True,
 )
-def update_login_modal_body(fullname):
+def update_login_modal_body(fullname: str | None) -> tuple[dict, dict, str]:
     """Update the visibility of login modal components based on login status.
 
     This callback controls the display of username and password input groups in the login modal,
@@ -463,7 +523,7 @@ def update_login_modal_body(fullname):
     Input("logged-username", "data"),
     prevent_initial_call=True,
 )
-def timeout_modal(username):
+def timeout_modal(username: str | None) -> bool:
     """Control the visibility of the login-modal with a timeout.
 
     This callback automatically closes the login-modal after a 1-second delay
@@ -497,7 +557,7 @@ def timeout_modal(username):
     Input('logout-button', 'n_clicks'),
     prevent_initial_call=True
 )
-def logout(_):
+def logout(_: int) -> tuple[None, None, str]:
     """Handle user logout functionality.
 
     This callback clears the user session data when the logout button is clicked.
@@ -524,7 +584,7 @@ def logout(_):
     Input("logged-username", "data"),
 
 )
-def disable_logout_button(username):
+def disable_logout_button(username: str | None) -> bool:
     """Control the enabled/disabled state of the logout button.
 
     This callback toggles the disabled state of the logout button based on whether
