@@ -1,7 +1,22 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""User Registration Components for Plant Imager Web UI.
+
+This module provides the user interface components and functionality for creating
+new user accounts in the Plant Imager system.
+
+Key Features
+------------
+- User registration form with validation
+- Real-time username availability checking
+- Password confirmation validation
+- Secure account creation via REST API
+- Comprehensive error handling and user feedback
+"""
+
 import json
+from typing import Tuple
 from urllib.parse import urljoin
 
 import dash_bootstrap_components as dbc
@@ -11,13 +26,12 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import html
-
 from plantdb.client.rest_api import base_url
 
 # Create a button for new user registration
 new_user_button = dbc.Button(
     [
-        html.I(className="bi bi-person-plus me-2"),  # Add icon with right margin
+        html.I(className="bi bi-person-plus me-2"),  # Add icon with a right margin
         "Create Account"
     ],
     id="new-user-button",
@@ -102,7 +116,7 @@ new_user_modal = dbc.Modal([
     State("new-user-modal", "is_open"),
     prevent_initial_call=True
 )
-def toggle_register_modal(new_user_clicks, is_open):
+def toggle_register_modal(new_user_clicks: int | None, is_open: bool) -> bool:
     """Toggle the visibility state of the new user registration modal.
 
     This callback controls the opening and closing of the registration modal dialog
@@ -126,7 +140,23 @@ def toggle_register_modal(new_user_clicks, is_open):
     return is_open
 
 
-def _validate_new_username(new_username, host, port):
+def _validate_new_username(new_username: str, host: str, port: str) -> bool:
+    """Check if a username is available for registration.
+
+    Parameters
+    ----------
+    new_username : str
+        The username to check for availability.
+    host : str
+        The hostname or IP address of the REST API server.
+    port : str
+        The port number of the REST API server.
+
+    Returns
+    -------
+    bool
+        ``True`` if the username is available, ``False`` if it already exists or there was an error.
+    """
     try:
         response = requests.get(urljoin(base_url(host, port), f'/login?username={new_username}'))
         user_exists = response.json().get('exists', False)
@@ -146,7 +176,7 @@ def _validate_new_username(new_username, host, port):
     State('rest-api-host', 'data'),
     State('rest-api-port', 'data')
 )
-def validate_new_username(new_username, is_modal_open, host, port):
+def validate_new_username(new_username: str | None, is_modal_open: bool, host: str, port: str) -> tuple[bool, bool]:
     """Validate if the entered username is available for registration.
 
     Makes an API request to check if the username already exists in the system.
@@ -160,15 +190,15 @@ def validate_new_username(new_username, is_modal_open, host, port):
         Current state of the registration modal.
     host : str
         The host address of the REST API server.
-    port : int
+    port : str
         The port number of the REST API server.
 
     Returns
     -------
-    bool
-        ``True`` if username is available (valid new username), ``False`` otherwise.
-    bool
-        ``True`` if username exists or there's an error (invalid new username), ``False`` otherwise.
+    Tuple[bool, bool]
+        A tuple containing:
+        - bool: ``True`` if username is available (valid new username), ``False`` otherwise.
+        - bool: ``True`` if username exists or there's an error (invalid new username), ``False`` otherwise.
 
     Raises
     ------
@@ -193,7 +223,7 @@ def validate_new_username(new_username, is_modal_open, host, port):
         Input("confirm-password-input", "value")
     ]
 )
-def validate_password_match(password, confirm_password):
+def validate_password_match(password: str | None, confirm_password: str | None) -> tuple[bool, bool, bool, bool]:
     """Validate that the password and confirmation password match.
 
     Provides real-time validation feedback for both password input fields,
@@ -208,16 +238,12 @@ def validate_password_match(password, confirm_password):
 
     Returns
     -------
-    tuple
+    Tuple[bool, bool, bool, bool]
         A tuple of four boolean values in the order:
-    bool
-        ``True`` if passwords match and not empty, ``False`` otherwise.
-    bool
-        ``True`` if passwords don't match, ``False`` otherwise.
-    bool
-        ``True`` if passwords match and not empty, ``False`` otherwise.
-    bool
-        ``True`` if passwords don't match, ``False`` otherwise.
+        - bool: ``True`` if passwords match and not empty, ``False`` otherwise.
+        - bool: ``True`` if passwords don't match, ``False`` otherwise.
+        - bool: ``True`` if passwords match and not empty, ``False`` otherwise.
+        - bool: ``True`` if passwords don't match, ``False`` otherwise.
 
     Notes
     -----
@@ -240,7 +266,7 @@ def validate_password_match(password, confirm_password):
 
 
 @callback(
-     Output("registration-message", "children"),
+    Output("registration-message", "children"),
     [Input("register-button", "n_clicks")],
     [State("new-username-input", "value"),
      State("new-fullname-input", "value"),
@@ -250,7 +276,8 @@ def validate_password_match(password, confirm_password):
      State("rest-api-port", "data")],
     prevent_initial_call=True
 )
-def register_user(n_clicks, username, fullname, password, confirm_password, host, port):
+def register_user(n_clicks: int | None, username: str, fullname: str, password: str, 
+               confirm_password: str, host: str, port: str) -> str | dbc.Alert:
     """Process user registration by validating inputs and creating a new account.
 
     This callback handles the complete user registration process, including input
@@ -259,7 +286,7 @@ def register_user(n_clicks, username, fullname, password, confirm_password, host
     Parameters
     ----------
     n_clicks : int or None
-        Number of times the register button has been clicked. ``None`` before first click.
+        Number of times the register button has been clicked. ``None`` before the first click.
     username : str
         The desired username for the new account.
     fullname : str
@@ -270,20 +297,20 @@ def register_user(n_clicks, username, fullname, password, confirm_password, host
         Password confirmation entry.
     host : str
         The host address of the REST API server.
-    port : int
+    port : str
         The port number of the REST API server.
 
     Returns
     -------
-    dash_bootstrap_components.Alert
-        A Bootstrap alert component containing either:
+    Union[str, dbc.Alert]
+        Either an empty string (if no clicks) or a Bootstrap alert component containing:
         - Success message if registration is successful
         - Error message if validation fails or API request fails
 
     Notes
     -----
     The function performs the following validations:
-    - Username must not already exist in the Backend API
+    - Username must not yet exist in the Backend API
     - All fields must be non-empty
     - Passwords must match
     - Backend API must successfully create the account

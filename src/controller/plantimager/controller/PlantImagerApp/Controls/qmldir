@@ -4,3 +4,4 @@ Icon 1.0 Icon.qml
 IconButton 1.0 IconButton.qml
 CameraDelegate 1.0 CameraDelegate.qml
 CameraView 1.0 CameraView.qml
+Scanner 1.0 Scanner.qml

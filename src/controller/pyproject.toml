@@ -5,10 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "plantimager.controller"
 version = "0.0.1"
+requires-python = ">=3.11"
 dependencies = [
     "av",
     "pyside6",
     "pyside6-addons",  # for QtMultimedia
+    "pyserial",
     "scipy",
     "numpy",
 ]

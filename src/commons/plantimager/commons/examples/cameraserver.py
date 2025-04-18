@@ -14,7 +14,7 @@ class DummyCamera(Camera, RPCServer):
         self._video_url = "tcp://test_url:1234"
         self._rotation = 0
 
-    @RPCServer.register_method_buffer
+    @RPCServer.register_method_buffer(timeout=10000)
     def get_image(self) -> (memoryview, dict):
         if self.mode != CameraMode.STILL:
             self.mode = CameraMode.STILL

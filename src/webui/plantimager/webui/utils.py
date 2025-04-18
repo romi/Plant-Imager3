@@ -1,19 +1,40 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import tempfile
-from pathlib import Path
+"""Utility Functions for Plant Imager Web UI.
+
+This module provides common utility functions used across the Plant Imager web interface,
+particularly for interacting with the PlantDB REST API and handling configuration files.
+
+Key Features
+------------
+- Dataset retrieval and management
+- Pipeline configuration handling
+- TOML configuration file upload component
+- REST API interaction helpers
+
+Usage Examples
+--------------
+```python
+>>> from plantimager.webui.utils import get_dataset_dict, has_pipeline_cfg
+>>> # Get all datasets from the PlantDB server
+>>> datasets = get_dataset_dict('localhost', '5000')
+>>> # Check if a dataset has a pipeline configuration
+>>> has_config = has_pipeline_cfg('localhost', '5000', 'my_plant_scan')
+```
+"""
+
+from typing import Any
 
 import requests
 import toml
 from dash import dcc
-from plantdb.commons.fsdb import MARKER_FILE_NAME
 from plantdb.client.rest_api import base_url
 from plantdb.client.rest_api import list_scan_names
 from plantdb.client.rest_api import parse_scans_info
 
 
-def get_dataset_dict(host, port):
+def get_dataset_dict(host: str, port: str) -> dict[str, Any] | None:
     """Returns the dataset dictionary for the PlantDB REST API at given host url and port.
 
     Parameters
@@ -25,8 +46,9 @@ def get_dataset_dict(host, port):
 
     Returns
     -------
-    dict
+    dict[str, Any] | None
         The dataset dictionary for the PlantDB REST API at given host url and port.
+        Returns ``None`` if no scans are found.
 
     See Also
     --------
@@ -41,7 +63,7 @@ def get_dataset_dict(host, port):
     return dataset_dict
 
 
-def pipeline_cfg_url(host, port, scan_id):
+def pipeline_cfg_url(host: str, port: str, scan_id: str) -> str:
     """Get the URL corresponding to the 'pipeline.toml' backup file for the given scan ID in a PlantDB REST API.
 
     Parameters
@@ -61,7 +83,7 @@ def pipeline_cfg_url(host, port, scan_id):
     return f"{base_url(host, port)}/files/{scan_id}/pipeline.toml"
 
 
-def get_pipeline_cfg(host, port, scan_id):
+def get_pipeline_cfg(host: str, port: str, scan_id: str) -> dict[str, Any]:
     """Get the backup configuration file of the reconstruction pipeline for the given scan ID.
 
     Parameters
@@ -75,8 +97,9 @@ def get_pipeline_cfg(host, port, scan_id):
 
     Returns
     -------
-    dict
+    dict[str, Any]
         The backup configuration for the reconstruction pipeline for the given scan ID.
+        Returns an empty dictionary if no pipeline configuration is found.
 
     Examples
     --------
@@ -91,10 +114,10 @@ def get_pipeline_cfg(host, port, scan_id):
         return {}
 
 
-def has_pipeline_cfg(host, port, scan_id):
+def has_pipeline_cfg(host: str, port: str, scan_id: str) -> bool:
     """Test if a named dataset has a reconstruction pipeline.
 
-    Reconstruction pipeline are named 'pipeline.toml', so we test if the request from the file ressource is ok.
+    Reconstruction pipeline is named 'pipeline.toml', so we test if the request from the file ressource is ok.
 
     Parameters
     ----------
@@ -121,44 +144,14 @@ def has_pipeline_cfg(host, port, scan_id):
     return requests.get(pipeline_cfg_url(host, port, scan_id)).ok
 
 
-def temp_fsdb_dir(scan_id):
-    """Path to the temporary FSDB directory."""
-    return Path(tempfile.gettempdir()) / f'romidb_{scan_id}'
-
-
-def temp_scan_dir(scan_id):
-    """Path to the temporary FSDB dataset directory."""
-    return temp_fsdb_dir(scan_id) / scan_id
-
-
-def create_temp_fsdb(scan_id):
-    """Creates a temporary FSDB dataset directory.
-
-    Parameters
-    ----------
-    scan_id : str
-        The name of the dataset to create.
+def config_upload() -> dcc.Upload:
+    """The TOML configuration file upload component.
 
     Returns
     -------
-    pathlib.Path
-        The path to the temporary FSDB directory.
-    pathlib.Path
-        The path to the temporary dataset directory.
+    dcc.Upload
+        A Dash Upload component configured for TOML files.
     """
-    # Create a temporary fsdb with the name of the dataset as suffix:
-    tmp_db = temp_fsdb_dir(scan_id)
-    tmp_db.mkdir(parents=True, exist_ok=True)
-    marker_file = tmp_db / MARKER_FILE_NAME  # define the marker file
-    marker_file.open(mode='w').close()  # create the marker file
-    # Define the local dataset path:
-    dataset_path = temp_scan_dir(scan_id)
-    dataset_path.mkdir(parents=True, exist_ok=True)
-    return tmp_db, dataset_path
-
-
-def config_upload():
-    """The TOML configuration file upload component."""
     return dcc.Upload(
         children=['Drag and Drop or Select a TOML configuration file.'],
         id="cfg-upload",

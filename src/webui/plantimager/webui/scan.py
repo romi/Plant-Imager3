@@ -1,11 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+"""Scan Configuration and Execution Components for Plant Imager Web UI.
+
+This module provides the user interface components and functionality for configuring
+and executing plant scans in the Plant Imager system.
+
+Key Features
+------------
+- TOML-based scan configuration editor
+- Dataset name validation with real-time feedback
+- Scan execution controls with status reporting
+- Configuration file upload functionality
+- Comprehensive error handling and user feedback
+"""
+
 import os
+import tomllib
 from base64 import b64decode
-from logging import getLogger
+from typing import Dict
 
 import dash_bootstrap_components as dbc
-import toml
 from dash import Input
 from dash import Output
 from dash import State
@@ -14,15 +29,17 @@ from dash import dcc
 from dash import html
 
 from plantimager.webui.utils import config_upload
-from plantimager.webui.utils import create_temp_fsdb
 
-# Characters not allowed in dataset names for system compatibility
+#: Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
 
-# Get the directory where the current script (scan.py) is located
+#: Get the directory where the current script (scan.py) is located
 current_dir = os.path.dirname(os.path.abspath(__file__))
-# Construct the path to the assets file
-default_toml_path = os.path.join(current_dir, 'assets', 'hardware_scan_rx0.toml')
+#: Construct the path to the sample TOML config file (`assets` directory)
+default_toml_path = os.path.join(current_dir, 'assets', 'config_scan.toml')
+#: Load the default TOML configuration file into a string variable
+with open(default_toml_path, 'r') as f:
+    default_toml = f.read()
 
 # Card for scan configuration settings using TOML format
 configuration_card = [
@@ -32,7 +49,7 @@ configuration_card = [
             dbc.CardHeader(children=[html.I(className="bi bi-code-square me-2"), "Configuration"]),
             dbc.CardBody([
                 dbc.Textarea(id="scan-cfg-toml", class_name="mb-3", size='md',
-                             value=toml.dumps(toml.load(default_toml_path)),
+                             value=default_toml,
                              title="The scan configuration in TOML format.",
                              placeholder="Scan configuration (TOML).",
                              style={'height': "65vh"}, persistence=True),
@@ -90,7 +107,12 @@ scan_card = [
                             )
                         ]),
                     ], width=6),
-                    dcc.Markdown(id='scan-response', children="_Run a scan first..._"),
+                    dbc.Alert(
+                        id='scan-response',
+                        children="Run a scan first...",
+                        color="secondary",
+                        className="mb-0"
+                    ),
                 ])
             ]),
             dbc.CardFooter([
@@ -123,7 +145,7 @@ scan_layout = html.Div(
 @callback(Output('scan-cfg-toml', 'value'),
           Input('cfg-upload', 'contents'),
           prevent_initial_call=True)
-def update_toml_cfg(contents):
+def update_toml_cfg(contents: str) -> str:
     """Updates the TOML configuration text area with the content of the uploaded base64 encoded config file.
 
     Parameters
@@ -144,7 +166,7 @@ def update_toml_cfg(contents):
     return cfg.decode()
 
 
-def all_valid_characters(dataset_name):
+def all_valid_characters(dataset_name: str) -> bool:
     """Validates if all characters in a given dataset name are permissible.
 
     Parameters
@@ -160,7 +182,7 @@ def all_valid_characters(dataset_name):
     return sum([letter in FORBIDDEN_CHAR for letter in dataset_name]) == 0
 
 
-def is_valid_dataset_name(dataset_name, existing_datasets):
+def is_valid_dataset_name(dataset_name: str, existing_datasets: list[str]) -> bool:
     """Check if a dataset name is valid and does not already exist.
 
     Parameters
@@ -190,7 +212,7 @@ def is_valid_dataset_name(dataset_name, existing_datasets):
     Input('dataset-input-name', 'value'),
     State('dataset-list', 'data')
 )
-def validate_dataset_name(dataset_name, existing_datasets):
+def validate_dataset_name(dataset_name: str, existing_datasets: list[str]) -> tuple[bool, bool, str]:
     """Callback to validate the selected dataset name.
 
     It should follow two rules:
@@ -224,7 +246,7 @@ def validate_dataset_name(dataset_name, existing_datasets):
     Input('dataset-input-name', 'value'),
     State('dataset-list', 'data')
 )
-def check_dataset_name_uniqueness(dataset_name, existing_datasets):
+def check_dataset_name_uniqueness(dataset_name: str, existing_datasets: list[str]) -> dict[str, str]:
     """Check if the specified dataset name already exists.
 
     Parameters
@@ -237,7 +259,7 @@ def check_dataset_name_uniqueness(dataset_name, existing_datasets):
 
     Returns
     -------
-    dict
+    Dict[str, str]
         A style dictionary for controlling the visibility of a message. If the
         dataset name already exists, the dictionary will display the message.
         Otherwise, it will hide the message.
@@ -252,7 +274,7 @@ def check_dataset_name_uniqueness(dataset_name, existing_datasets):
     Output('start-scan-button', 'disabled'),
     Input('dataset-input-name', 'valid'),
 )
-def disable_scan_button(valid):
+def disable_scan_button(valid: bool) -> bool:
     """Disables the 'Start scanning' button based on dataset validation status.
 
     This callback function determines whether the 'start-scan-button' element
@@ -279,30 +301,49 @@ def disable_scan_button(valid):
     Output('scan-response', 'children'),
     Output('scan-output', 'children'),
     Input('start-scan-button', 'n_clicks'),
+    State('rest-api-host', 'data'),
+    State('rest-api-port', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
     prevent_initial_call=True
 )
-def run_scan(_, cfg, dataset_name):
-    task = "Scan"  # we will run a scan task
-    from romitask.cli.romi_run_task import run_task
-    from romitask.log import get_log_filename
-    # Create a temporary fsdb with the name of the dataset as suffix:
-    tmp_db, dataset_path = create_temp_fsdb(dataset_name)
-    # Create a combined logger using the configuration:
-    logger = getLogger('reconstruct')
-    log_fname = get_log_filename(task)
+def run_scan(_, url: str, port: str, cfg: str, dataset_name: str) -> tuple[str, str]:
+    """Execute a plant scan with the specified configuration.
 
-    # Execute the tasks:
-    success = False
+    Parameters
+    ----------
+    _ : Any
+        Unused parameter (n_clicks from the button).
+    url : str
+        The hostname or IP address of the PlantDB REST API server.
+    port : str
+        The port number of the PlantDB REST API server.
+    cfg : str
+        The TOML configuration string for the scan.
+    dataset_name : str
+        The name to use for the dataset that will be created.
+
+    Returns
+    -------
+    Tuple[str, str]
+        A tuple containing two status messages:
+        - First message: Short status for the alert component
+        - Second message: Detailed status for the output component
+
+    Raises
+    ------
+    RuntimeError
+        If the Raspberry Pi Controller is not initialized.
+    """
     try:
-        run_task(dataset_path, task=task, config=toml.loads(cfg), logger=logger, log_fname=log_fname)
-        success = True
-    except Exception as e:
-        logger.error(e)
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return f"Error: Raspberry Pi Controller not initialized!", print(e)
 
-    # Read and return the log:
-    with open(dataset_path / log_fname, 'rb') as f:
-        log = "```\n" + "".join([line.decode() for line in f.readlines()]) + "```"
+    controller.set_db_url(f"http://{url}:{port}")
+    controller.set_dataset_name(dataset_name)
+    print(tomllib.loads(cfg))
+    controller.set_config(tomllib.loads(cfg))
+    controller.run_scan()
 
-    return True, success, log, False
+    return "Scan started.", "Scanning plant in progress..."

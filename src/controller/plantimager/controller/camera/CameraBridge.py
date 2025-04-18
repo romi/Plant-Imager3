@@ -64,19 +64,19 @@ class CameraBridge(QObject):
         self._image_source = ""
         if name == "empty" or address == "":
             self._status = States.INVALID
-            self._camera = None
+            self.camera = None
             self._mode = "STILL"
             self._rotation = 0
             return
         self._status = States.DISCONNECTED
 
-        self._camera = PiCameraComm(context, address)
-        self._camera.imageReady.connect(self._newImage)
-        self._camera.modeChanged.connect(self._modeChanged)
-        self._camera.videoUrlChanged.connect(self._videoUrlChanged)
-        self._mode: Literal["VIDEO", "STILL"]  = self._camera.mode
-        self._rotation: int = self._camera.rotation
-        self._camera.rotationChanged.connect(self._camera_rotation_change_handler)
+        self.camera = PiCameraComm(context, address)
+        self.camera.imageReady.connect(self._newImage)
+        self.camera.modeChanged.connect(self._modeChanged)
+        self.camera.videoUrlChanged.connect(self._videoUrlChanged)
+        self._mode: Literal["VIDEO", "STILL"]  = self.camera.mode
+        self._rotation: int = self.camera.rotation
+        self.camera.rotationChanged.connect(self._camera_rotation_change_handler)
         self._status = States.CONNECTED
         finalize(self, self._stop)
         self._i = 0
@@ -88,22 +88,22 @@ class CameraBridge(QObject):
         self._image_source = ""
         self._status = States.INVALID
 
-        del self._camera
+        del self.camera
         logger.debug(f"bridge {self._name} finalized")
 
 
     @Slot()
     def getImage(self):
-        if self._camera:
-            self._camera.getImage()
+        if self.camera:
+            self.camera.getImage()
 
     @Property(str, notify=modeChanged)
     def mode(self):
         return self._mode
     @mode.setter
     def mode(self, value: Literal["VIDEO", "STILL"]):
-        if self._mode != value and self._camera:
-            self._camera.mode = value
+        if self._mode != value and self.camera:
+            self.camera.mode = value
 
     @Slot(str)
     def _modeChanged(self, mode: Literal["VIDEO", "STILL"]):
@@ -159,5 +159,5 @@ class CameraBridge(QObject):
         return self._rotation
     @rotation.setter
     def rotation(self, value: int):
-        if self._camera:
-            self._camera.rotation = value%360
+        if self.camera:
+            self.camera.rotation = value % 360
