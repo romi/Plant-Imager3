@@ -1,14 +1,18 @@
 # [![ROMI_logo](docs/assets/images/ROMI_logo_green_25.svg)](https://romi-project.eu) / Plant-Imager3
 
+[![Licence](https://img.shields.io/github/license/romi/Plant-Imager3?color=lightgray)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+[![Python Version](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fromi%2FPlant-Imager3%2Frefs%2Fheads%2Fdevelop%2Fsrc%2Fcommons%2Fpyproject.toml&logo=python&logoColor=white)]()
+
 This repository supersedes the earlier [Plant-Imager](https://github.com/romi/plant-imager) repository, aligning with the updated design and requirements of the _Plant Imager v3_ robot.
 
-## About
+## Overview
 
-This repository contains three Python subpackages:
+This repository contains four Python subpackages:
 
-1. `picamera`: A Python package designed for the Raspberry Pi Zero W with a camera. It manages video streaming and image capture.
+1. `commons`: The common utilities and interfaces used by other packages.
 2. `controller`: A Qt-based Python package intended for the main Raspberry Pi 4 or 5. This package acts as the central controller and provides a touchscreen interface.
-3. `webui`: A Dash-based Python package also for the main Raspberry Pi 4 or 5. It offers a client interface for plant scanning.
+3. `picamera`: A Python package designed for the Raspberry Pi Zero W with a camera. It manages video streaming and image capture.
+4. `webui`: A Dash-based Python package also for the main Raspberry Pi 4 or 5. It offers a client interface for plant scanning.
 
 ## Developers
 
