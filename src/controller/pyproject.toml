@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools >=75"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -12,6 +12,7 @@ dependencies = [
     "pyserial",
     "scipy",
     "numpy",
+    "plantimager.commons",
 ]
 description = "A Qt-based interface turning a Raspberry Pi 4/5 into the main controller of the ROMI Plant Imager."
 readme = "README.md"

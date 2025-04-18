@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools >=75"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,8 +10,6 @@ dependencies = [
     "bcrypt",
     "dash",
     "dash-bootstrap-components<2.0",
-    "plantdb.commons",
-    "plantdb.client",
     "tomli"
 ]
 description = "A Dash-based web interface, served by the Raspberry PI 4/5 main controller, to setup and run acquisitions with the ROMI Plant Imager."
