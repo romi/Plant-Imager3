@@ -26,7 +26,8 @@ The RPC framework is implemented in the `plantimager.commons.RPC` module and con
 #### RPCClient
 
 The `RPCClient` class provides a client-side interface for making remote procedure calls.
-It connects to an `RPCServer` and allows calling methods on the server as if they were local methods. It also handles property access and signal connections.
+It connects to an `RPCServer` and allows calling methods on the server as if they were local methods.
+It also handles property access and signal connections.
 
 ```python
 from plantimager.commons.RPC import RPCClient
@@ -108,6 +109,7 @@ The central PyQt application (`src/controller/plantimager/controller/main.py`) s
 It provides a touchscreen interface for controlling the scanner and viewing images.
 
 Key features:
+
 - QML-based user interface
 - Integration with the camera and scanner components
 - Image processing and display
@@ -137,6 +139,7 @@ The Raspberry Pi camera module (`src/picamera/plantimager/picamera`) captures im
 It runs on a Raspberry Pi Zero W and communicates with the central controller using ZMQ-based RPC.
 
 Key features:
+
 - Image capture
 - Video streaming
 - Remote control via RPC
@@ -167,6 +170,7 @@ The Web UI (`src/webui/plantimager/webui`) provides a web-based interface for co
 It communicates with the central controller using ZMQ-based RPC and with the PlantDB REST API for data storage and retrieval.
 
 Key features:
+
 - Dash-based web application
 - Bootstrap styling
 - Scan configuration and execution
@@ -196,6 +200,7 @@ The GRBL-based plant scanner (`src/controller/plantimager/controller/scanner/grb
 It communicates with the central controller and provides precise positioning of the camera.
 
 Key features:
+
 - Serial communication with GRBL controller
 - 3-axis (X, Y, Z) movement control
 - Position tracking
@@ -225,6 +230,7 @@ The PlantDB REST API serves as a central database repository for the Plant-Image
 It stores scan data, metadata, and images, and provides a RESTful interface for accessing this data.
 
 Key features:
+
 - RESTful API for data access
 - Storage of scan data and metadata
 - User authentication and authorization
@@ -281,6 +287,7 @@ The following diagram illustrates the communication between the different compon
 ```
 
 In this diagram:
+
 - The central PyQt application communicates with the Raspberry Pi camera and the GRBL-based plant scanner using ZMQ RPC
 - The Web UI communicates with the central PyQt application using ZMQ RPC
 - The Web UI and the central PyQt application communicate with the PlantDB REST API using HTTP
