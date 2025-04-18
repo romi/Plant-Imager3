@@ -45,7 +45,6 @@ EXCLUDED_FILES = [
 ]
 EXCLUDED_DIRS = [
     "tests",
-    "webui"
 ]
 
 # Create an object to manage the navigation structure of the documentation
