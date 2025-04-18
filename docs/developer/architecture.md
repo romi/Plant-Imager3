@@ -256,34 +256,35 @@ def get_dataset_list(host: str, port: int) -> list:
 The following diagram illustrates the communication between the different components of the Plant-Imager3 system:
 
 ```
-+----------------+       ZMQ RPC       +----------------+
-|                |<------------------->|                |
-|  Central PyQt  |                     |  Raspberry Pi  |
-|  Application   |                     |    Camera      |
+                                       +----------------+
+                                       |                |
+                                       |  GRBL-based    |
+                                       | Plant Scanner  |
+                                       |                |
+                                       +----------------+
+                                               ^
+                                               |
+                                               | Serial
+                                               |
+                                               v
+                                      +----------------+                     +----------------+
+                     HTTP             |                |       ZMQ RPC       |                |
+         ---------------------------->|  Central PyQt  |<------------------->|  Raspberry Pi  |
+         |                            |  Application   |                     |    Camera      |
+         |                            |                |                     |                |
+         |                            +----------------+                     +----------------+
+         |                                    ^
+         |                                    |
+         |                                    | ZMQ RPC
+         |                                    |
+         v                                    v
++----------------+                     +----------------+
+|                |       HTTP          |                |
+|  PlantDB REST  |<------------------->|     Web UI     |
+|      API       |                     |                |
 |                |                     |                |
 +----------------+                     +----------------+
-        ^
-        |
-        | ZMQ RPC
-        |
-        v
-+----------------+       HTTP          +----------------+
-|                |<------------------->|                |
-|     Web UI     |                     |  PlantDB REST  |
-|                |                     |      API       |
-|                |                     |                |
-+----------------+                     +----------------+
-        ^
-        |
-        | ZMQ RPC
-        |
-        v
-+----------------+
-|                |
-|  GRBL-based    |
-| Plant Scanner  |
-|                |
-+----------------+
+
 ```
 
 In this diagram:
