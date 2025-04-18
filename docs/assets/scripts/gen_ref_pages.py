@@ -34,18 +34,9 @@ Notes
 - Changing the location of the script (from `docs/assets/scripts`) requires to update the `src` variable.
 """
 
-import logging
-import mkdocs_gen_files
 from pathlib import Path
-
-# Files to exclude from the documentation
-# WARNING: do NOT exclude __init__.py files as they are needed to build the navigation tree
-EXCLUDED_FILES = [
-    "__main__.py"  # skip any __main__.py files as they shouldn't be included in the docs
-]
-EXCLUDED_DIRS = [
-    "tests",
-]
+import mkdocs_gen_files
+import logging
 
 # Create an object to manage the navigation structure of the documentation
 nav = mkdocs_gen_files.Nav()
@@ -54,67 +45,56 @@ nav = mkdocs_gen_files.Nav()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("API Builder")
 
+# Define the known subpackages
+SUBPACKAGES = ['commons', 'controller', 'webui']
+
 # Define the source directory where the Python code resides
 src = Path(__file__).parent.parent.parent.parent / "src"
 logger.info(f"Browsing source code in {src}...")
 
-# Recursively scan all Python files in the source directory
-for path in sorted(src.rglob("*.py")):
-    # Skip excluded directories
-    if any(d in path.parts for d in EXCLUDED_DIRS) or path.name in EXCLUDED_FILES:
-        logger.info(f"Skipping {Path(path).relative_to(src)}...")
-        continue
+def scan_src_path(src_path, subpackage):
+    # Recursively scan all Python files in the source directory
+    for path in sorted(src_path.rglob("*.py")):
+        logger.info(f"Processing {Path(path).relative_to(src_path)}...")
+        # Get the module path (relative path without file extension)
+        module_path = path.relative_to(src_path).with_suffix("")
+        # Create the corresponding documentation path ending in .md
+        doc_path = path.relative_to(src_path).with_suffix(".md")
+        # Full path in the "reference" directory for generated Markdown files
+        full_doc_path = Path("reference", doc_path)
 
-    logger.info(f"Processing {Path(path).relative_to(src)}...")
-    # Get the module path (relative path without file extension)
-    module_path = path.relative_to(src).with_suffix("")
-    # Create the corresponding documentation path ending in .md
-    doc_path = path.relative_to(src).with_suffix(".md")
-    # Full path in the "reference" directory for generated Markdown files
-    full_doc_path = Path("reference", doc_path)
+        # Extract the individual path parts (used for navigation hierarchy)
+        parts = tuple([subpackage]) + tuple(module_path.parts)
 
-    # Extract the individual path parts (used for navigation hierarchy)
-    parts = tuple(module_path.parts)
+        # Special handling for __init__.py: treat as index.md in navigation
+        if parts[-1] == "__init__":
+            parts = parts[:-1]  # Exclude the "__init__" part
+            doc_path = doc_path.with_name("index.md")  # Rename to index.md
+            full_doc_path = full_doc_path.with_name("index.md")
 
-    # Special handling for __init__.py: treat as index.md in navigation
-    if parts[-1] == "__init__":
-        parts = parts[:-1]  # Exclude the "__init__" part
-        doc_path = doc_path.with_name("index.md")  # Rename to index.md
-        full_doc_path = full_doc_path.with_name("index.md")
+        # Skip any __main__.py files as they shouldn't be included in the docs
+        elif parts[-1] == "__main__":
+            continue
 
-    # Skip any __main__.py files as they shouldn't be included in the docs
-    elif parts[-1] in EXCLUDED_FILES:
-        logger.info(f"Skipping {Path(path).relative_to(src)}...")
-        continue
+        # Add the module to the navigation structure, converting to a POSIX path
+        nav[parts] = doc_path.as_posix()
 
-    # Add the module to the navigation structure, converting to a POSIX path
-    nav[parts] = doc_path.as_posix()
-
-    # Write the documentation stub for the module
-    with mkdocs_gen_files.open(full_doc_path, "w") as fd:
-        # For namespace packages, we need to ensure the module identifier includes the full namespace path
-        # The structure is src/commons/plantimager/commons/... so we need to handle this special case
-        if len(parts) >= 3 and parts[0] in ["commons", "controller", "picamera", "webui"] and parts[1] == "plantimager":
-            # Construct the module identifier with the namespace package format: plantimager.commons.module
-            ident = f"plantimager.{parts[2]}.{'.'.join(parts[3:])}" if len(parts) > 3 else f"plantimager.{parts[2]}"
-        else:
-            # Fallback to the original behavior for non-namespace packages
+        # Write the documentation stub for the module
+        with mkdocs_gen_files.open(full_doc_path, "w") as fd:
+            parts = tuple(["plantimager"]) + parts[1:]
             ident = ".".join(parts)  # Module identifier (e.g., package.module)
-
-        # Write the documentation content
-        # For picamera package, which might not be installed, provide a placeholder
-        if parts[0] == "picamera":
-            fd.write(f"# {ident}\n\n")
-            fd.write("!!! warning \"Package Not Installed\"\n")
-            fd.write("    This package documentation is not available because the package is not installed.\n")
-            fd.write("    Please install the package to view its documentation.\n\n")
-            fd.write(f"This is a placeholder for the `{ident}` module documentation.\n")
-        else:
             # Write the `:::` directive for mkdocs-material plugin to include the module docs
             fd.write(f"::: {ident}")
 
-    # Assign an edit path for the generated Markdown file
-    mkdocs_gen_files.set_edit_path(full_doc_path, path)
+        # Assign an edit path for the generated Markdown file
+        mkdocs_gen_files.set_edit_path(full_doc_path, path)
+
+# Create an object to manage the navigation structure of the documentation
+for subpackage in SUBPACKAGES:
+    src_path = src / subpackage / "plantimager"
+    scan_src_path(src_path, subpackage)
+
+print(list(nav.items()))
 
 # Create a summary file (reference index) with the full navigation structure
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
