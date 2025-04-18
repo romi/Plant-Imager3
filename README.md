@@ -28,7 +28,7 @@ conda activate plant-imager3
 # Install project subpackages in editable mode
 pip install -e src/commons/.
 pip install -e src/controller/.
-pip install -e src/picamera/.
+pip install -e src/webui/.
 
 # Install plantdb server dependencies
 pip install plantdb.server
