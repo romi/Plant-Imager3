@@ -14,6 +14,43 @@ dependencies = [
     "plantdb.client",
     "tomli"
 ]
+description = "A Dash-based web interface, served by the Raspberry PI 4/5 main controller, to setup and run acquisitions with the ROMI Plant Imager."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { 'text' = "LGPL-3.0-or-later" }   # to replace by "LGPL-3.0-or-later" only in next release, pending deprecation
+authors = [
+    { name = "Nabil Ait Taleb", email = "mohamednabil.aittaleb@sony.com" },
+    { name = "Julie Charlaix", email = "julie.charlaix@ens-lyon.fr" },
+    { name = "David Colliaux", email = "david.colliaux@sony.com" },
+    { name = "Peter Hanappe", email = "peter.hanappe@sony.com" },
+    { name = "Arthur Luciani", email = "arthur.luciani@ens-lyon.fr" },
+    { name = "Timothée Wintz", email = "timothee@timwin.fr" },
+]
+maintainers = [
+    { name = "Jonathan Legrand", email = "jonathan.legrand@ens-lyon.fr" }
+]
+keywords = [
+    "Robotics for Microfarms",
+    "ROMI",
+    "Plant Phenotyping",
+    "GRBL",
+    "PyQt6",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Operating System :: Linux",
+    "Natural Language :: English"
+]
+
+[project.urls]
+homepage = "https://romi-project.eu/"
+documentation = "https://docs.romi-project.eu/plant_imager/"
+source = "https://github.com/romi/Plant-Imager3"
+issues = "https://github.com/romi/Plant-Imager3/issues"
 
 [project.scripts]
 plant-imager-webui = "plantimager.webui.app:main"
