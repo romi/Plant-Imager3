@@ -1,8 +1,13 @@
 # Plant-Imager3
 
+[![Licence](https://img.shields.io/github/license/romi/Plant-Imager3?color=lightgray)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+[![Python Version](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fromi%2FPlant-Imager3%2Frefs%2Fheads%2Fdevelop%2Fsrc%2Fcommons%2Fpyproject.toml&logo=python&logoColor=white)]()
+
 This repository supersedes the earlier [Plant-Imager](https://github.com/romi/plant-imager) repository, aligning with the updated design and requirements of the _Plant Imager v3_ robot.
 
-## About
+![ROMI_ICON2_greenB.png](assets/images/ROMI_ICON2_greenB.png)
+
+## Overview
 
 This repository contains three Python subpackages:
 
