@@ -1,0 +1,11 @@
+{% set pyproject = load_file_data('../../pyproject.toml', 'toml', from_recipe_dir=True) %}
+{% set requires-python = pyproject.get('project', {}).get('requires-python') %}
+
+name: plantimager
+channels:
+  - defaults
+  - conda-forge
+  - romi-eu
+dependencies:
+  - python {{ requires-python }}
+  - ipython

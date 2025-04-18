@@ -1,0 +1,49 @@
+# Template for generating Conda package metadata YAML files
+
+{% set subpackage = os.environ.get('ROMI_SUBPACKAGE', '') %}
+{% set package_path = "../../src/" + subpackage%}  # Define path to package directory
+{% set pyproject = load_file_data(package_path + '/pyproject.toml', 'toml', from_recipe_dir=True) %}  # Load pyproject.toml content
+{% set project = pyproject.get('project', {}) %}  # Extract project metadata
+{% set deps = project.get('dependencies', []) %}  # Get package dependencies
+{% set urls = project.get('urls', {}) %}  # Get URLs from project metadata
+{% set build_system = pyproject.get('build-system', {}) %}  # Extract build-system info
+{% set build_requires = build_system.get('requires', []) %}  # Get build requirements
+
+# References for conda-build metadata and Jinja context functionality
+# https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#loading-data-from-other-files
+# Source code for Jinja context: https://github.com/conda/conda-build/blob/main/conda_build/jinja_context.py
+# Then search for the `load_file_data` function.
+
+package:
+  name: {{ project.get('name') }}  # Package name from pyproject.toml
+  version: {{ project.get('version') }}  # Version from pyproject.toml
+
+source:
+  path: {{ package_path }}  # Local path to package source code
+
+build:
+  noarch: python  # Build as a platform-independent Python package
+  script: python -m pip install .
+
+requirements:
+  host:
+    {% for req in build_requires %}
+    - {{ req }}  # Build requirements from pyproject.toml
+    {% endfor %}
+    - pip
+    - python  {{ project.get('requires-python') }}  # Minimum Python version requirement from pyproject.toml
+  run:
+    - python  {{ project.get('requires-python') }}  # Runtime Python dependency (using minimum version)
+    {% for dep in deps %}
+    - {{ dep }}  # Add dependencies
+    {% endfor %}
+
+test:
+  imports:
+    - {{ project.get('name') }}  # Basic import test
+
+about:
+  home: {{ urls.get('homepage', '') }}  # Project homepage
+  summary: {{ project.get('description', '') }}  # Package description
+  dev_url: {{ urls.get('source', '') }}  # Repository URL
+  license: LGPL-3.0-or-later  # License type
