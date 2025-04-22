@@ -29,6 +29,7 @@ from dash import dcc
 from dash import html
 
 from plantimager.webui.utils import config_upload
+from plantimager.webui.controller_proxy import RPCController
 
 #: Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
