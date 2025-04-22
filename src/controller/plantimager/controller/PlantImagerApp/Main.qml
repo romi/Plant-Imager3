@@ -10,8 +10,8 @@ import PlantImagerApp.Style as P
 ApplicationWindow {
     id: window
     visible: true
-    width: 800
-    height: 480
+    width: P.Style.windowWidth
+    height: P.Style.windowHeight
     //flags: Qt.FramelessWindowHint | Qt.X11BypassWindowManagerHint
     flags: Qt.FramelessWindowHint
 

@@ -5,26 +5,28 @@ import QtQuick
 QtObject {
     id: _self
 
-    property int iconSmall: 12
-    property int iconMedium: 25
-    property int iconLarge: 30
+    property int scale: 2
 
-    property int smallMargin: 5
-    property int mediumMargin: 10
-    property int largeMargin: 20
+    property int iconSmall: scale * 12
+    property int iconMedium: scale * 25
+    property int iconLarge: scale * 30
 
-    property int smallHeight: 20
-    property int mediumHeight: 40
-    property int bigHeight: 80
+    property int smallMargin: scale * 5
+    property int mediumMargin: scale * 10
+    property int largeMargin: scale * 20
 
-    property int windowWidth: 800
-    property int windowHeight: 480
+    property int smallHeight: scale * 20
+    property int mediumHeight: scale * 40
+    property int bigHeight: scale * 80
 
-    property int bannerHeight: 40
-    property int cameraDelegateHeight: 60
+    property int windowWidth: scale * 800
+    property int windowHeight: scale * 480
 
-    property int videoWidth: 640
-    property int videoHeight: 480
+    property int bannerHeight: scale * 40
+    property int cameraDelegateHeight: scale * 60
+
+    property int videoWidth: scale * 640
+    property int videoHeight: scale * 480
     property real videoRatio: videoWidth/videoHeight
 
     property QtObject colors: QtObject {
