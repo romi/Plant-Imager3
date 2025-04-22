@@ -180,7 +180,7 @@ def circle(center_x, center_y, radius, n_points):
         x.append(center_x - radius * math.cos(pan))
         y.append(center_y - radius * math.sin(pan))
         pan = pan * 180 / math.pi
-        p.append((pan - 90) % 360)
+        p.append(pan % 360)
 
     return x, y, p
 
