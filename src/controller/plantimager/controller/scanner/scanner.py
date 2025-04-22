@@ -28,6 +28,7 @@ Usage Examples:
 """
 
 import importlib
+import time
 import traceback
 from concurrent.futures import ALL_COMPLETED
 from concurrent.futures import FIRST_COMPLETED
@@ -251,6 +252,7 @@ class Scanner(QObject):
         try:
             # Try to connect to the real CNC hardware
             self.cnc = CNC()
+            self.cnc.moveto(20, 20, 45)
         except Exception as e:
             # Fall back to dummy CNC if hardware connection fails
             logger.warning(f"Could not connect to CNC, using DummyCNC instead: {e}")
@@ -505,6 +507,7 @@ class Scanner(QObject):
         logger.info(f"Moving arm to {pose}")
         # Move CNC to the specified position (only x, y, and pan are used)
         self.cnc.moveto(pose.x, pose.y, pose.pan)
+        time.sleep(1)  # Wait for movement to complete as grbl returns a bit early
 
     def set_scan_id(self, scan_id: str):
         """Set the identifier for the scan dataset.
@@ -744,5 +747,11 @@ class Scanner(QObject):
 
                 # Wait for all image captures to complete before moving to next position
                 wait(jobs, return_when=ALL_COMPLETED)
+
+        # Move the arm back close to origin
+        self.cnc.moveto(10, 10,10)
+        time.sleep(1)
+        self.cnc.home()
+        self.cnc.moveto(20, 20, 45)
 
         logger.info(f"Scan completed")  # Log completion
