@@ -3913,7 +3913,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
         x<span style="color: #666">.</span>append(center_x <span style="color: #666">-</span> radius <span style="color: #666">*</span> math<span style="color: #666">.</span>cos(pan))
         y<span style="color: #666">.</span>append(center_y <span style="color: #666">-</span> radius <span style="color: #666">*</span> math<span style="color: #666">.</span>sin(pan))
         pan <span style="color: #666">=</span> pan <span style="color: #666">*</span> <span style="color: #666">180</span> <span style="color: #666">/</span> math<span style="color: #666">.</span>pi
-        p<span style="color: #666">.</span>append((pan <span style="color: #666">-</span> <span style="color: #666">90</span>) <span style="color: #666">%</span> <span style="color: #666">360</span>)
+        p<span style="color: #666">.</span>append(pan <span style="color: #666">%</span> <span style="color: #666">360</span>)
 
     <span style="color: #008000; font-weight: bold">return</span> x, y, p
 </code></pre></div></td></tr></table></div>
