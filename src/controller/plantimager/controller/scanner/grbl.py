@@ -79,9 +79,17 @@ GRBL_SETTINGS = {
     "$122": ("Z Acceleration", "deg/sec^2", 50),
     "$130": ("X Max travel", "mm", 740),
     "$131": ("Y Max travel", "mm", 740),
-    "$132": ("Z Max travel", "deg", 360)
+    "$132": ("Z Max travel", "deg", 360 - 8)  # 8 degree offset from encoder 0
 }
 
+def angle_min_travel(current_angle: deg, desired_angle: deg) -> deg:
+    """Calculate the postion of the machine to achieve a desired angle with minimal travel.
+    Minimal travel means that machine_order-current_angle is in [-180, 180]
+    """
+    if (desired_angle - current_angle) % 360 > 180:
+        return current_angle - 360 + (desired_angle - current_angle) % 360
+    else:
+        return current_angle + (desired_angle - current_angle) % 360
 
 class CNC(AbstractCNC):
     """A concrete implementation of CNC machine control using GRBL firmware.
@@ -202,7 +210,7 @@ class CNC(AbstractCNC):
 
         # Apply all GRBL configuration settings from a predefined dictionary
         for code, (_, _, value) in GRBL_SETTINGS.items():
-            self.send_cmd(f"{code}={value}")
+            self.send_cmd(f"{code}={value}", wait=True, timeout=1)
 
         # Get current GRBL settings
         self.grbl_settings = self.get_grbl_settings()
@@ -275,11 +283,14 @@ class CNC(AbstractCNC):
 
         # Decode and clean up response string
         res = res.decode("ascii").strip()
-        # Extract X,Y,Z coordinates using a regex pattern
+        # Extract X, Y,Z coordinates using a regex pattern
         match = pos_regex.search(res)
         if match:
             # If match found, extract the three position values
             x, y, z = match.groups()
+            x = -float(x) if self.invert_x else float(x)
+            y = -float(y) if self.invert_y else float(y)
+            z = -float(z) if self.invert_z else float(z)
         else:
             # If no match found, position data is invalid
             raise RuntimeError("Error reading position from cnc")
@@ -384,26 +395,31 @@ class CNC(AbstractCNC):
         - ``G92`` Reference: http://linuxcnc.org/docs/html/gcode/g-code.html#gcode:g92
         """
         # Execute GRBL homing cycle to find machine zero
-        self.send_cmd("$H")
-        self.wait(timeout=60)  # Wait for homing to complete
+        self.send_cmd("$H", wait=True, timeout=60)
 
         # Get GRBL settings that affect homing behavior
         pulloff = self.grbl_settings["$27"]  # Distance machine moves after finding the limit switch
         pulloff_mask = self.grbl_settings["$23"]  # Determines positive/negative homing direction
         dir_mask = self.grbl_settings["$3"]  # Inverts motor direction signals
+        x_max, y_max, z_max = self.grbl_settings["$130"], self.grbl_settings["$131"], self.grbl_settings["$132"]
 
         # Calculate direction signs for each axis based on homing and direction masks
         # XOR operation determines if a pull-off direction should be inverted
-        sign_x = -1 if pulloff_mask ^ dir_mask & 1 else 1  # Check bit 0 for X axis
-        sign_y = -1 if pulloff_mask ^ dir_mask & 2 else 1  # Check bit 1 for Y axis
-        sign_z = -1 if pulloff_mask ^ dir_mask & 4 else 1  # Check bit 2 for Z axis
+        sign_x = -1 if dir_mask & 1 else 1  # Check bit 0 for X axis
+        sign_y = -1 if dir_mask & 2 else 1  # Check bit 1 for Y axis
+        sign_z = -1 if dir_mask & 4 else 1  # Check bit 2 for Z axis
 
         # Set machine coordinates to account for pull-off distance
         # G92 sets the current position without moving the machine
-        self.send_cmd(f"g92 x{sign_x * pulloff} y{sign_y * pulloff} z{sign_z * pulloff}")
+        x_init = sign_x * (x_max - pulloff) if pulloff_mask & 1 else sign_x * pulloff  # if homing dir is inverted, homing to max range
+        y_init = sign_y * (y_max - pulloff) if pulloff_mask & 2 else sign_y * pulloff
+        z_init = sign_z * (z_max - pulloff) if pulloff_mask & 4 else sign_z * pulloff
+        self.send_cmd(f"g92 x{x_init} y{y_init} z{z_init}", wait=True, timeout=10)
 
     def _check_move(self, x: float, y: float, z: float) -> None:
         """Validate that the requested movement coordinates are within the machine's axis limits.
+
+        No limit on z axis rotation
 
         Parameters
         ----------
@@ -417,11 +433,10 @@ class CNC(AbstractCNC):
         Raises
         ------
         AssertionError
-            If any coordinate (x, y, or z) is outside its defined limits
+            If any coordinate (x, y) is outside its defined limits
         """
         assert self.x_lims[0] <= x <= self.x_lims[1], "Move command coordinates is outside the x-limits!"
         assert self.y_lims[0] <= y <= self.y_lims[1], "Move command coordinates is outside the y-limits!"
-        assert self.z_lims[0] <= z <= self.z_lims[1], "Move command coordinates is outside the z-limits!"
 
     def moveto(self, x: length_mm, y: length_mm, z: deg) -> None:
         """Move the CNC machine to specified coordinates and wait until the target position is reached.
@@ -452,10 +467,11 @@ class CNC(AbstractCNC):
         - Units are in millimeters (``G21`` mode)
         - The method will block until the movement is complete
         """
-        self.moveto_async(x, y, z)
-        self.wait(timeout=30)
+        response = self.moveto_async(x, y, z)
+        if not response:
+            self.wait(timeout=30)
 
-    def moveto_async(self, x: length_mm, y: length_mm, z: deg) -> None:
+    def moveto_async(self, x: length_mm, y: length_mm, z: deg) -> bytes:
         """Asynchronously move the CNC machine to specified coordinates using G0 rapid positioning.
 
         This method executes a rapid linear movement (G0) to the specified position without
@@ -474,6 +490,11 @@ class CNC(AbstractCNC):
             Target position along the Z-axis in degrees. Must be within the
             machine's z_lims range.
 
+        Returns
+        -------
+        bytes
+            Response from GRBL after sending the G0 command. b'ok' if successful. '' if still processing.
+
         Notes
         -----
         - A small delay (0.1 s) is added after sending the command to prevent buffer overflow
@@ -490,6 +511,8 @@ class CNC(AbstractCNC):
         # Validate that the target coordinates are within machine limits
         self._check_move(x, y, z)
 
+        z = angle_min_travel(self.z, z)
+
         # Apply axis inversions based on machine configuration
         # Convert coordinates to integers for GRBL compatibility
         x = int(-x) if self.invert_x else int(x)
@@ -498,14 +521,10 @@ class CNC(AbstractCNC):
 
         # Send G0 rapid positioning command with target coordinates
         # G0 moves at maximum speed in a straight line
-        self.send_cmd(f"g0 x{x} y{y} z{z}")
-
-        # Add delay to prevent GRBL buffer overflow
-        # This allows time for command processing
-        time.sleep(0.1)
+        return self.send_cmd(f"g0 x{x} y{y} z{z}", wait=False)
 
     def wait(self, timeout: int=60) -> None:
-        """Wait for the CNC machine to complete any ongoing operations.
+        """Wait for the CNC machine to complete any ongoing operations and returns the last response.
 
         Notes
         -----
@@ -538,7 +557,7 @@ class CNC(AbstractCNC):
                     status_line = lines[0].decode('ascii', errors='ignore').strip()
                     # GRBL status format is typically <status|...>, check for 'Idle' status
                     if 'Idle' in status_line or 'Home' in status_line:
-                        return
+                        return lines[1] if len(lines) > 1 else ""
                 # Check for timeout
                 if time.time() - start_time > timeout:
                     raise TimeoutError("Timeout waiting for CNC machine to become idle")
@@ -550,7 +569,7 @@ class CNC(AbstractCNC):
                 raise RuntimeError("Serial port is closed or not properly initialized") from e
             raise
 
-    def send_cmd(self, cmd: str) -> str:
+    def send_cmd(self, cmd: str, wait=False, timeout=None) -> str:
         """Send a command to the GRBL controller and return its response.
 
         Parameters
@@ -558,6 +577,10 @@ class CNC(AbstractCNC):
         cmd : str
             A GRBL-compatible G-code command or system command.
             Must be a valid command according to the GRBL command specification.
+        wait : bool, optional
+            If wait is True, the method will block until the command is completed or until timeout is reached.
+        timeout : int, optional
+            Specifies the maximum time in seconds to wait for the command to complete.
 
         Returns
         -------
@@ -605,9 +628,11 @@ class CNC(AbstractCNC):
             # Read response from GRBL controller
             grbl_out = self.serial_port.readline()
 
-            if not grbl_out:
-                logger.error("No response received from GRBL")
-                raise TimeoutError("No response received from GRBL")
+            if not grbl_out and not wait:
+                logger.debug("cnc -> response pending (async)")
+                return ""
+            elif not grbl_out and wait:
+                grbl_out = self.wait(timeout=timeout)
 
             logger.debug(f"cnc -> {grbl_out.strip()}")
             grbl_out = grbl_out.decode("ascii").strip()
