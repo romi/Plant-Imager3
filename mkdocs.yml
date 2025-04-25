@@ -13,6 +13,7 @@ nav:
     - developer/index.md
     - developer/documentation.md
     - developer/architecture.md
+    - developer/RPC.md
 
 
 theme:
@@ -66,6 +67,9 @@ markdown_extensions:
           class: python
           validator: !!python/name:markdown_exec.validator
           format: !!python/name:markdown_exec.formatter
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
 

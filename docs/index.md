@@ -13,7 +13,7 @@ This repository contains four Python subpackages:
 
 1. [`commons`](reference/commons/plantimager/commons): The common utilities and interfaces used by other packages.
 2. [`controller`](reference/controller/plantimager/controller): A Qt-based Python package intended for the main Raspberry Pi 4 or 5. This package acts as the central controller and provides a touchscreen interface.
-3. [`picamera`](reference/picameraplantimager/picamera): A Python package designed for the Raspberry Pi Zero W with a camera. It manages video streaming and image capture.
+3. [`picamera`](reference/picamera/plantimager/picamera): A Python package designed for the Raspberry Pi Zero W with a camera. It manages video streaming and image capture.
 4. [`webui`](reference/webui/plantimager/webui): A Dash-based Python package also for the main Raspberry Pi 4 or 5. It offers a client interface for plant scanning.
 
 ## Namespace Packages
