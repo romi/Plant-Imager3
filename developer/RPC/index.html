@@ -2238,18 +2238,21 @@ classDiagram
     client-&gt;&gt;+server: FIND_PEER_ADDRESS
     Note right of server: Creates a socket server
     server-&gt;&gt;client: url
-    client--&gt;&gt;server: connects to temp server
+    client&lt;&lt;--&gt;&gt;server: connects to temp server
     deactivate server
 
 
-    Note over client,server: closing temporary server
+    Note over client,server: Getting peer address and &lt;br/&gt; closing connection and temporary server
     client-&gt;&gt;+server: GET_INVENTORY
     server-&gt;&gt;-client: methods, properties and signals inventory
 
     opt RPCSignals declared
-    client-&gt;&gt;+signal_recv: __init__() 
-    signal_recv--&gt;-client: 
     Note over signal_recv, client: Start Signal Receiver thread
+    client-&gt;&gt;+signal_recv: __init__()
+    signal_recv--&gt;&gt;-client: 
+    client-&gt;&gt;+server: INIT_SIGNALS_HANDLING
+    Note right of server: Connect to signal socket and &lt;br/&gt; connect signals to _send_signal()
+    server-&gt;&gt;-client: success
 
     end
 
@@ -2337,7 +2340,7 @@ sequenceDiagram
     other-&gt;&gt;+client: some_property setter()
     Note over client: some_property setter is a proxy method &lt;br/&gt; RPCClient._property_setter_proxy() is called
 
-    client-&gt;&gt;+server: PROPERTY_GET
+    client-&gt;&gt;+server: PROPERTY_SET
     server-&gt;&gt;server: some_property setter()
     server-&gt;&gt;-client: result
 
