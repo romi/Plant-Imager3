@@ -100,8 +100,6 @@ class DummyCNC(AbstractCNC):
             raise ValueError(f"Move command coordinates {x} is outside the x-limits {self.x_lims}!")
         if not (self.y_lims[0] <= y <= self.y_lims[1]):
             raise ValueError(f"Move command coordinates {y} is outside the y-limits {self.y_lims}!")
-        if not (self.z_lims[0] <= z <= self.z_lims[1]):
-            raise ValueError(f"Move command coordinates {z} is outside the z-limits {self.z_lims}!")
 
     def home(self) -> None:
         """Simulate performing a homing cycle.
