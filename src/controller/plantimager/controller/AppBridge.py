@@ -80,7 +80,7 @@ class AppBridge(QObject):
         self.registry.stop()
         self.registry.join()
         self._controller_server.stop_server()
-        self._controller_thread.join(2)
+        self._controller_thread.join(4)
         logger.debug("AppBridge finalized")
 
     @Property(QObject, notify=currentCameraChanged)
@@ -161,8 +161,8 @@ class AppBridge(QObject):
         Meant to be connected to the signal `_registryRemoveDevice` as a QueuedConnection.
         """
         idx = self.device_list.index(name)
-        device = self.device_list[idx]
-        self.scanner.remove_camera(device)
+        device = self.device_bridges[idx]
+        self.scanner.remove_camera(device.camera)
         del self.device_list[idx]
         del self.device_bridges[idx]
         if len(self.device_bridges) == 0:
