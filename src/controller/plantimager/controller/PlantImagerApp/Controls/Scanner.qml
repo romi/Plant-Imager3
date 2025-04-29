@@ -4,19 +4,23 @@ import QtQuick.Layouts
 
 import PlantImagerApp.Controls as P
 import PlantImagerApp.Style as P
-import PlantImagerApp.Camera as P
 import PlantImagerApp as P
 
 Control {
     id: self_
-    property object scanner: P.AppBridge.scanner
+    property var scanner: P.AppBridge.scanner
 
-    ProgressBar {
+
+
+
+
+    P.ProgressBar {
         id: progress
 
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        anchors.margins: P.Style.largeMargin
 
         to: scanner.max_progress
         value: scanner.progress

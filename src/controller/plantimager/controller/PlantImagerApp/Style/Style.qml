@@ -5,7 +5,7 @@ import QtQuick
 QtObject {
     id: _self
 
-    property int scale: 2
+    property int scale: 1
 
     property int iconSmall: scale * 12
     property int iconMedium: scale * 25
@@ -24,6 +24,8 @@ QtObject {
 
     property int bannerHeight: scale * 40
     property int cameraDelegateHeight: scale * 60
+
+    property int progressBarLabelWidth: scale * 40
 
     property int videoWidth: scale * 640
     property int videoHeight: scale * 480
