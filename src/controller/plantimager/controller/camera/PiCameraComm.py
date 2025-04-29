@@ -45,7 +45,7 @@ class PiCameraComm(QObject):
     def getImage(self) -> Future[tuple[memoryview, dict]]:
         """
         Submit call to camera.get_image() and returns a future representing the pending result.
-        When the camera.get_image() returns and the result is available, the signal imageReady is emitted.
+        When camera.get_image() returns and the result is available, the signal imageReady is emitted.
 
         Returns
         -------
