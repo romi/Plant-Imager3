@@ -80,7 +80,7 @@ class RPCCamera(Camera, RPCServer):
             print("switched to still mode")
         return "VIDEO STOPPED"
 
-    @RPCServer.register_method_buffer
+    @RPCServer.register_method_buffer(timeout=None)
     def get_image(self) -> (memoryview, dict):
         if self._mode != CameraMode.STILL:
             self.mode = CameraMode.STILL

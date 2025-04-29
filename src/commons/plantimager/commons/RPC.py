@@ -45,7 +45,8 @@ class RPCSignal:
             conn(*args)
 
     def connect(self, conn: Callable):
-        self.connections.append(conn)
+        if not conn in self.connections:
+            self.connections.append(conn)
 
     def disconnect(self, conn: Callable=None):
         if conn:
@@ -465,7 +466,8 @@ class RPCServer:
 
         Parameters
         ----------
-        method
+        timeout: int | None
+            Specifies how much time in ms a client is expected to wait for the method to finish. If None, waits indefinitely.
 
         Returns
         -------
@@ -542,7 +544,7 @@ class RPCServer:
         """
         self._stop = False
         while not self._stop:
-            if self._socket.poll(1000, zmq.POLLIN) == 0:
+            if self._socket.poll(100, zmq.POLLIN) == 0:
                 continue
             request = self._socket.recv_json()
             match request["event"]:
@@ -627,9 +629,9 @@ class RPCServer:
         logger.info("Server stopped")
 
     def _finalize(self):
+        self._stop = True
         if self.name and self.registry_addr:
             unregister_device(self.context, self.name, self.registry_addr)
             logger.info("Device unregistered successfully")
-        self._socket.close()
         logger.info("Server deleted")
 
