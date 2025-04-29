@@ -270,6 +270,11 @@ class Scanner(QObject):
         self.uploader: DataUploader | None = None  # Data uploader
         self.fileset = "images"  # Default fileset name
 
+    @Property(str)
+    def cnc_type(self) -> str:
+        """Get the type of the CNC controller."""
+        return "DummyCNC" if isinstance(self.cnc, DummyCNC) else "GRBL CNC"
+
     @Slot(QObject)
     def add_camera(self, camera: PiCameraComm):
         """Add a camera to the scanner.
@@ -576,28 +581,6 @@ class Scanner(QObject):
 
         return data
 
-    def inc_count(self) -> int:
-        """Increment and return the progress counter.
-
-        Returns
-        -------
-        int
-            The previous progress value before incrementing
-
-        Notes
-        -----
-        This method:
-        1. Gets the current progress value
-        2. Increments the progress counter
-        3. Emits the progressChanged signal
-        4. Returns the original value
-
-        This is used to generate sequential IDs for data items.
-        """
-        x = self._progress  # Get current progress value
-        self._progress += 1  # Increment progress
-        self.progressChanged.emit(self._progress)  # Emit signal
-        return x  # Return original value
 
     def get_target_pose(self, x: PathElement) -> Pose:
         """Calculate the target pose from a path element.
@@ -711,7 +694,7 @@ class Scanner(QObject):
                 self._progress += 1
                 self.progressChanged.emit(self._progress)
 
-                # Calculate and move to target position
+                # Calculate and move to the target position
                 pose = self.get_target_pose(x)
                 self.set_position(pose)
 
@@ -749,9 +732,9 @@ class Scanner(QObject):
                 wait(jobs, return_when=ALL_COMPLETED)
 
         # Move the arm back close to origin
-        self.cnc.moveto(10, 10,10)
+        #self.cnc.moveto(10, 10,-10)
         time.sleep(1)
-        self.cnc.home()
+        #self.cnc.home()
         self.cnc.moveto(20, 20, 45)
 
         logger.info(f"Scan completed")  # Log completion
