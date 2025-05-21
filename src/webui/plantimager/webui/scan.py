@@ -21,12 +21,13 @@ from base64 import b64decode
 from typing import Dict
 
 import dash_bootstrap_components as dbc
-from dash import Input
+from dash import Input, set_props
 from dash import Output
 from dash import State
 from dash import callback
 from dash import dcc
 from dash import html
+from dash.exceptions import PreventUpdate
 
 from plantimager.webui.utils import config_upload
 from plantimager.webui.controller_proxy import RPCController
@@ -96,24 +97,43 @@ scan_card = [
         children=[
             dbc.CardHeader(children=[html.I(className="bi bi-camera me-2"), "Scan"]),
             dbc.CardBody([
+                dbc.Row(dbc.Col(
+                    dbc.Accordion(
+                        dbc.AccordionItem(children=[
+                                dcc.Markdown(id="available-cameras", children="No camera connected")
+                            ],
+                            title="Available cameras:" ,
+                        ), start_collapsed=True, flush=True
+                    ),
+                )),
                 dbc.Row([
                     dbc.Col([
                         dcc.Loading([
                             dbc.Button(
                                 children=[
                                     html.I(className="bi bi-play-fill me-2"),
-                                    'Start scanning'
+                                    'Start scan'
                                 ],
                                 id='start-scan-button'
                             )
                         ]),
-                    ], width=6),
-                    dbc.Alert(
-                        id='scan-response',
-                        children="Run a scan first...",
-                        color="secondary",
-                        className="mb-0"
-                    ),
+                    ], width=3),
+                    dbc.Col([
+                        dbc.Alert(
+                            id='scan-response',
+                            children="",
+                            color="secondary",
+                            className="mb-0"
+                        )
+                    ], width="auto"),
+                ], align="center"),
+                dbc.Row([
+                    dbc.Col([
+                        dcc.Interval(id='scan-progress-interval', disabled=True, interval=1000),
+                        dbc.Progress(
+                            id='scan-progress', style={"margin-top": "15px"}, className="mb-3"
+                        ),
+                    ])
                 ])
             ]),
             dbc.CardFooter([
@@ -135,12 +155,65 @@ scan_card = [
 # Right column, containing multiple stacked cards
 scan_layout = html.Div(
     children=[
+        dcc.Interval(id='main-interval', disabled=False, interval=4000),
         dbc.Row([
             dbc.Col(configuration_card, md=6),
             dbc.Col(dataset_name_card + [html.Br()] + scan_card, md=6)
         ])
     ], id="scan-page-layout"
 )
+
+progress = 0
+max_progress = 100
+available_cameras = []
+
+def update_progress(val):
+    global progress
+    progress = val
+
+def update_max_progress(val):
+    global max_progress
+    max_progress = val
+
+def update_available_cameras(val):
+    global available_cameras
+    available_cameras = val
+
+
+@callback(
+    Output("available-cameras", "children"),
+    Input("main-interval", "n_intervals"))
+def update_interval(n_intervals):
+    """Updates various components on a timer
+
+    Updates the camera list
+
+    Parameters
+    ----------
+    n_intervals
+
+    Returns
+    -------
+    str:
+        Markdown message which is printed at available-cameras
+
+    """
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return f"Controller not connected", str(e)
+    if update_available_cameras not in controller.cameraNamesChanged.connections:
+        controller.cameraNamesChanged.connect(update_available_cameras)
+        update_available_cameras(controller.camera_names)
+
+
+    if available_cameras:
+        lines = []
+        for camera in available_cameras:
+            lines.append(f"- {camera}")
+        return "\n".join(lines)
+    else:
+        return "No camera connected"
 
 
 @callback(Output('scan-cfg-toml', 'value'),
@@ -274,9 +347,11 @@ def check_dataset_name_uniqueness(dataset_name: str, existing_datasets: list[str
 @callback(
     Output('start-scan-button', 'disabled'),
     Input('dataset-input-name', 'valid'),
+    Input('main-interval', 'n_intervals'),
+    State('start-scan-button', 'disabled')
 )
-def disable_scan_button(valid: bool) -> bool:
-    """Disables the 'Start scanning' button based on dataset validation status.
+def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> bool:
+    """Disables the 'Start scanning' button based on dataset validation status and if scanner is connected.
 
     This callback function determines whether the 'start-scan-button' element
     should be disabled or enabled based on the validity of input provided
@@ -288,6 +363,8 @@ def disable_scan_button(valid: bool) -> bool:
     valid : bool
         Indicates whether the dataset input is valid.
         ``True`` if valid, ``False`` otherwise.
+    n_intervals : int
+        Number of times interval is raised
 
     Returns
     -------
@@ -295,6 +372,14 @@ def disable_scan_button(valid: bool) -> bool:
         Returns ``True`` if the scan button should be disabled, and ``False``
         if it should be enabled.
     """
+    try:
+        RPCController.instance()
+    except RuntimeError as e:
+        if previous_state:
+            raise PreventUpdate
+        return True
+    if previous_state == (not valid):
+        raise PreventUpdate
     return not valid
 
 
@@ -306,9 +391,15 @@ def disable_scan_button(valid: bool) -> bool:
     State('rest-api-port', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
-    prevent_initial_call=True
+    prevent_initial_call=True,
+    running=[
+        (Output('start-scan-button', 'disabled'), True, False),
+        (Output('scan-progress-interval', 'disabled'), False, True),
+        (Output('scan-response', 'children'), 'Scan in progress', ""),
+        (Output('scan-output', 'children'), 'Scan in progress', ""),
+    ]
 )
-def run_scan(_, url: str, port: str, cfg: str, dataset_name: str) -> tuple[str, str]:
+def run_scan(_, url: str, port: str, cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
 
     Parameters
@@ -339,7 +430,15 @@ def run_scan(_, url: str, port: str, cfg: str, dataset_name: str) -> tuple[str, 
     try:
         controller = RPCController.instance()
     except RuntimeError as e:
-        return f"Error: Raspberry Pi Controller not initialized!", print(e)
+        return f"Error: Raspberry Pi Controller not initialized!", str(e)
+
+    set_props('scan-response', {'children': "Scan started"})
+    set_props('scan-output', {'children': "Scan in progress ..."})
+
+    controller.progressChanged.connect(update_progress)
+    controller.maxProgressChanged.connect(update_max_progress)
+    update_progress(controller.progress)
+    update_max_progress(controller.max_progress)
 
     controller.set_db_url(f"http://{url}:{port}")
     controller.set_dataset_name(dataset_name)
@@ -347,4 +446,14 @@ def run_scan(_, url: str, port: str, cfg: str, dataset_name: str) -> tuple[str, 
     controller.set_config(tomllib.loads(cfg))
     controller.run_scan()
 
-    return "Scan started.", "Scanning plant in progress..."
+    return "Scan finished", "Scan complete"
+
+
+@callback(
+    Output('scan-progress', 'value'),
+    Output('scan-progress', 'max'),
+    Output('scan-progress', 'label'),
+    Input('scan-progress-interval', 'n_intervals'),
+)
+def progress_bar_update(n_int):
+    return progress, max_progress, f"{progress}/{max_progress}"

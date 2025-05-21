@@ -221,7 +221,7 @@ class DummyCNC(AbstractCNC):
         distance = (dx ** 2 + dy ** 2 + dz ** 2) ** 0.5
 
         # Simulate movement time (longer for greater distances)
-        movement_time = 0.5 + distance * 0.005  # Base time + distance-dependent time
+        movement_time = 0.1 + distance * 0.005  # Base time + distance-dependent time
 
         # Sleep to simulate movement time
         time.sleep(movement_time)

@@ -120,7 +120,7 @@ class RPCController(ControllerDevice, RPCClient):
         self.__class__._instance = self
 
     @classmethod
-    def instance(cls):
+    def instance(cls) -> "RPCController":
         """Get the singleton instance of the RPCController.
 
         Returns

@@ -36,8 +36,6 @@ Control {
         anchors.bottom: parent.bottom
         anchors.left: label.right
         anchors.leftMargin: P.Style.mediumMargin
-        Layout.fillHeight: true
-        Layout.fillWidth: true
         from: root.from
         to: root.to
         value: root.value
