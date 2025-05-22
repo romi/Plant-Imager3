@@ -152,7 +152,7 @@ def main() -> None:
 
     # - Start the Dash app:
     app = setup_web_app(args.host, args.port)
-    app.run(debug=True, port=8000)
+    app.run(host="0.0.0.0", debug=True, port=8000)
 
 
 if __name__ == "__main__":
