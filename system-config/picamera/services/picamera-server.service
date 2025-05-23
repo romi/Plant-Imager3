@@ -10,6 +10,7 @@ Requires=
 # A list of units to activate when this one is activated, if a unit listed here fails this unit will continue to run.
 Wants=
 
+# If this unit restarts more than StartLimitBurst under StartLimitIntervalSec this unit enters a failed state
 StartLimitBurst=2
 StartLimitIntervalSec=30
 
@@ -21,21 +22,29 @@ StartLimitIntervalSec=30
 # oneshot - The process will exit right away, use with RemainAfterExit= to ensure the serice is marked as active.
 # Consult the documentantion for types (https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=) other options.
 Type=simple
+
+# Working diretory
 WorkingDirectory=/home/romi
 
+# Environment variables (alternatively use EnvironmentFile)
 Environment=PI_REGISTRY=tcp://10.10.10.1:5555
 Environment=IP_ADDR=10.10.10.2
 # Command with arguments to invoke when the unit is activated.
 ExecStart=/home/romi/picamera-env/bin/picamera-server
 # Command with arguments to invoke when the unit is deactivated.
 ExecStop=
-KillMode=control-group
+
+# First signal sent to the processes to stop the unit
 KillSignal=SIGINT
+# First signal sent for a restart
 RestartKillSignal=SIGINT
+# Time before the final signal is sent
 TimeoutStopSec=5
+# Final signal used to kill the unit. This signal should not be caugth by the process as it must kill it
 FinalKillSignal=SIGKILL
 # Configures under what conditions the unit will be restarted.
 Restart=always
+# Time between unit stop ant restart
 RestartSec=5
 
 [Install]
