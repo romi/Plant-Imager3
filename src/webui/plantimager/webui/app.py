@@ -68,12 +68,14 @@ def parsing() -> argparse.ArgumentParser:
                           help="Host address of the PlantDB REST API.")
     app_args.add_argument('--port', type=int, default=REST_API_PORT,
                           help="Port of the PlantDB REST API.")
-    app_args.add_argument('--proxy', type=bool, default=False, action='store_true',
+    app_args.add_argument('--proxy', action='store_true',
                           help="Activate if the server is behind a reverse proxy")
+    app_args.add_argument('--url-base-pathname', type=str, default='/webui/',
+                          help="Base URL path for the application (should match Nginx location).")
     return parser
 
 
-def setup_web_app(url: str, port: int, proxy=False) -> Dash:
+def setup_web_app(url: str, port: int, proxy=False, url_base_pathname: str = '/webui/') -> Dash:
     """Initialize and configure the Plant Imager Dash web application.
 
     Creates a Dash application instance with Bootstrap styling and sets up the main
@@ -87,6 +89,10 @@ def setup_web_app(url: str, port: int, proxy=False) -> Dash:
         The base URL for the REST API server (e.g., 'http://localhost')
     port : int
         The port number for the REST API server connection
+    proxy : bool, optional
+        Boolean flag indicating whether the application is behind a reverse proxy, by default ``False``.
+    url_base_pathname : str
+        The base URL path where the application is served (should match Nginx location)
 
     Returns
     -------
@@ -105,12 +111,13 @@ def setup_web_app(url: str, port: int, proxy=False) -> Dash:
     app = Dash(
         name="PlantImager_WebUI",
         title="Plant Imager",
-        external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP]
+        external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
+        url_base_pathname=url_base_pathname,
     )
 
     if proxy:
         # App is behind one proxy that sets the -For and -Host headers.
-        app.server.wsgi_app = ProxyFix(app.server.wsgi_app, x_for=1, x_host=0, x_proto=1)
+        app.server.wsgi_app = ProxyFix(app.server.wsgi_app, x_for=1, x_host=1, x_proto=1)
 
     # Main application layout definition
     app.layout = html.Div([
@@ -161,7 +168,7 @@ def main() -> None:
 
     # - Start the Dash app:
     app = setup_web_app(args.host, args.port, args.proxy)
-    app.run(host="0.0.0.0", debug=True, port=8000)
+    app.run(host="0.0.0.0", debug=True, port=8080)
 
 
 if __name__ == "__main__":
