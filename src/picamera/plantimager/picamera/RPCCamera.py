@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 import socket
 
@@ -12,6 +13,7 @@ from simplejpeg import encode_jpeg
 
 from plantimager.commons.RPC import RPCServer, RPCProperty
 from plantimager.commons.cameradevice import Camera, CameraMode
+from plantimager.commons.systemd import notify_ready, notify_stopping, notify_watchdog
 
 __all__ = ['RPCCamera']
 
@@ -122,13 +124,16 @@ def main():
     if not REGISTRY_ADDR.startswith("tcp://"):
         REGISTRY_ADDR = "tcp://" + REGISTRY_ADDR
     context = zmq.Context()
-    camera = RPCCamera(context, "tcp://10.10.10.3")
+    ip_addr = os.getenv("IP_ADDR") or subprocess.call()
+    camera = RPCCamera(context, f"tcp://{ip_addr}")
     camera.register_to_registry(
         "camera",
         socket.gethostname(),
         REGISTRY_ADDR
     )
+    notify_ready()
     camera.serve_forever()
+    notify_stopping()
 
 if __name__ == "__main__":
     main()

@@ -19,6 +19,7 @@ from typing import Callable, Any
 
 from .deviceregistry import register_device, unregister_device
 from .logging import create_logger
+from .systemd import notify_watchdog
 
 logger = create_logger("RPC")
 
@@ -544,6 +545,7 @@ class RPCServer:
         """
         self._stop = False
         while not self._stop:
+            notify_watchdog()
             if self._socket.poll(100, zmq.POLLIN) == 0:
                 continue
             request = self._socket.recv_json()

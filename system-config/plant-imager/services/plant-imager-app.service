@@ -1,14 +1,16 @@
 [Unit]
 # A short human readable title of the unit
-Description="A camera server of the Plant-Imager v3 scanner"
+Description="Plant-Imager v3 controller GUI"
 # A list of units whose activations will wait until after this unit has completed.
 Before=
 # A list of units whose activations will occur before this unit starts.
-After=network.target network-online.target
+After=network.target network-online.target graphical-session.target
 # A list of units to activate when this one is activated, if any unit listed here fails this unit will deactivate.
 Requires=
 # A list of units to activate when this one is activated, if a unit listed here fails this unit will continue to run.
 Wants=
+
+PartOf=graphical-session.target
 
 # If this unit restarts more than StartLimitBurst under StartLimitIntervalSec this unit enters a failed state
 StartLimitBurst=2
@@ -23,19 +25,14 @@ StartLimitIntervalSec=30
 # Consult the documentantion for types (https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=) other options.
 Type=notify
 
-# Working diretory
-WorkingDirectory=/home/romi
-
 # Environment variables (alternatively use EnvironmentFile)
 Environment=PI_REGISTRY=tcp://10.10.10.1:5555
 Environment=IP_ADDR=10.10.10.2
+
 # Command with arguments to invoke when the unit is activated.
-ExecStart=/home/romi/picamera-env/bin/picamera-server
+ExecStart=/home/arthur/miniconda3/envs/plant-imager/bin/plant-imager-controller-app
 # Command with arguments to invoke when the unit is deactivated.
 ExecStop=
-
-# If service does not notify readiness before the end of the timeout, fail the service
-#TimeoutStartSec=180
 
 # First signal sent to the processes to stop the unit
 KillSignal=SIGINT
@@ -46,16 +43,12 @@ TimeoutStopSec=5
 # Final signal used to kill the unit. This signal should not be caugth by the process as it must kill it
 FinalKillSignal=SIGKILL
 # Configures under what conditions the unit will be restarted.
-Restart=always
+Restart=on-failure
 # Time between unit stop ant restart
 RestartSec=5
 
-# Sets a watchdog timer. The service is killed if the process does not notify the system manager at least once every WatchdogSec
-WatchdogSec=60
-WatchdogSignal=SIGINT
-
 [Install]
 # A list of units who when activated will try and activate this unit
-WantedBy=default.target
+WantedBy=graphical-session.target
 # A list of units to enable or disable when this unit is enabled or disabled (e.g., with systemctl enable)
 Also=
