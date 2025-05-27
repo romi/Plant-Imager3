@@ -29,6 +29,8 @@ import zmq
 from dash import Dash
 from dash import dcc
 from dash import html
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 
 from plantimager.webui.config import plantdb_cfg_modal
 from plantimager.webui.controller_proxy import RPCController
@@ -66,10 +68,12 @@ def parsing() -> argparse.ArgumentParser:
                           help="Host address of the PlantDB REST API.")
     app_args.add_argument('--port', type=int, default=REST_API_PORT,
                           help="Port of the PlantDB REST API.")
+    app_args.add_argument('--proxy', type=bool, default=False, action='store_true',
+                          help="Activate if the server is behind a reverse proxy")
     return parser
 
 
-def setup_web_app(url: str, port: int) -> Dash:
+def setup_web_app(url: str, port: int, proxy=False) -> Dash:
     """Initialize and configure the Plant Imager Dash web application.
 
     Creates a Dash application instance with Bootstrap styling and sets up the main
@@ -97,11 +101,16 @@ def setup_web_app(url: str, port: int) -> Dash:
     - Configuration and authentication modals
     - Main content area for scan management
     """
+
     app = Dash(
         name="PlantImager_WebUI",
         title="Plant Imager",
         external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP]
     )
+
+    if proxy:
+        # App is behind one proxy that sets the -For and -Host headers.
+        app.server.wsgi_app = ProxyFix(app.server.wsgi_app, x_for=1, x_host=0, x_proto=1)
 
     # Main application layout definition
     app.layout = html.Div([
@@ -151,7 +160,7 @@ def main() -> None:
     controller_thread.start()
 
     # - Start the Dash app:
-    app = setup_web_app(args.host, args.port)
+    app = setup_web_app(args.host, args.port, args.proxy)
     app.run(host="0.0.0.0", debug=True, port=8000)
 
 
