@@ -721,6 +721,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commons/systemd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    systemd
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1286,6 +1309,21 @@
       <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;main
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label=" main">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.main.sigint_handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;sigint_handler
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1982,6 +2020,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" main">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.main.sigint_handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;sigint_handler
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2034,6 +2087,35 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="plantimager.controller.main.sigint_handler" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">sigint_handler</span>
+
+
+<a href="#plantimager.controller.main.sigint_handler" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>sigint_handler(sig, frame)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Handle SIGINT (ctrl+c)</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>plantimager/controller/main.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">sigint_handler</span>(sig, frame):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Handle SIGINT (ctrl+c)&quot;&quot;&quot;</span>
+    QGuiApplication<span style="color: #666">.</span>quit()
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
