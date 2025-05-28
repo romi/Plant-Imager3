@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# ------------------------------------------------------------------------------
+#  Copyright (c) 2022 Univ. Lyon, ENS de Lyon, UCB Lyon 1, CNRS, INRAe, Inria
+#  All rights reserved.
+#  This file is part of the TimageTK library, and is released under the "GPLv3"
+#  license. Please see the LICENSE.md file that should have been included as
+#  part of this package.
+# ------------------------------------------------------------------------------
+
+"""WSGI Entry Point for Plant Imager Web Interface
+
+This module provides the WSGI entry point to run the Plant Imager web application using a WSGI-compatible server.
+It sets up the Dash web application and configures it to connect with the REST API backend.
+
+Key Features
+------------
+- Configures and initializes the Plant Imager Dash application for WSGI deployment
+- Sets up the correct URL base path name for the application
+- Allows for custom configuration of the server host, port, and proxy settings
+
+Usage Examples
+--------------
+# Run the web interface with default REST API settings using a WSGI server like uWSGI
+```shell
+uwsgi --http :8080 --module plantimager.webui.wsgi:application --callable application --master
+```
+"""
+
+from plantimager.webui.app import setup_web_app
+
+# Get the Dash application
+dash_app = setup_web_app("localhost", 8080, proxy=True)
+# Use the Flask server attribute of the Dash application
+application = dash_app.server
+
+if __name__ == "__main__":
+    from werkzeug.serving import run_simple
+    run_simple('localhost', 8080, application)
