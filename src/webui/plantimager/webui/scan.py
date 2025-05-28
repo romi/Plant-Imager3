@@ -309,7 +309,7 @@ def validate_dataset_name(dataset_name: str, existing_datasets: list[str]) -> tu
     str
         The name of the dataset.
     """
-    if is_valid_dataset_name(dataset_name, existing_datasets):
+    if dataset_name is not None and is_valid_dataset_name(dataset_name, existing_datasets):
         return False, True, dataset_name
     else:
         return True, False, dataset_name
