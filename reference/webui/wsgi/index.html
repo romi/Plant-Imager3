@@ -12,23 +12,25 @@
         <meta name="author" content="ROMI Team">
       
       
-        <link rel="canonical" href="https://github.com/romi/Plant-Imager3/developer/RPC/">
+        <link rel="canonical" href="https://github.com/romi/Plant-Imager3/reference/webui/wsgi/">
       
       
-        <link rel="prev" href="../architecture/">
+        <link rel="prev" href="../utils/">
       
       
+        <link rel="next" href="../../../developer/">
       
-      <link rel="icon" href="../../assets/images/ROMI_ICON_green.png">
+      
+      <link rel="icon" href="../../../assets/images/ROMI_ICON_green.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
-        <title>RPC Communication - Plant-Imager3</title>
+        <title>wsgi - Plant-Imager3</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.342714a4.min.css">
       
       
 
@@ -47,15 +49,15 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_markdown_exec_pyodide.css">
+      <link rel="stylesheet" href="../../../assets/_markdown_exec_pyodide.css">
     
-      <link rel="stylesheet" href="../../assets/_markdown_exec_ansi.css">
+      <link rel="stylesheet" href="../../../assets/_markdown_exec_ansi.css">
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../assets/css/extra.css">
+      <link rel="stylesheet" href="../../../assets/css/extra.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rpc-communication" class="md-skip">
+        <a href="#plantimager.webui.wsgi" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +94,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="https://github.com/romi/Plant-Imager3" title="Plant-Imager3" class="md-header__button md-logo" aria-label="Plant-Imager3" data-md-component="logo">
       
-  <img src="../../assets/images/ROMI_logo_white.svg" alt="logo">
+  <img src="../../../assets/images/ROMI_logo_white.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -109,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              RPC Communication
+              wsgi
             
           </span>
         </div>
@@ -188,7 +190,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
   
@@ -207,7 +209,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../rest_api/" class="md-tabs__link">
+      <a href="../../../rest_api/" class="md-tabs__link">
         
   
   
@@ -224,6 +226,8 @@
   
   
   
+    
+  
   
     
     
@@ -231,11 +235,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../reference/commons/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../commons/" class="md-tabs__link">
           
   
   
@@ -254,11 +260,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="../" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../../../developer/" class="md-tabs__link">
         
   
   
@@ -301,7 +305,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="https://github.com/romi/Plant-Imager3" title="Plant-Imager3" class="md-nav__button md-logo" aria-label="Plant-Imager3" data-md-component="logo">
       
-  <img src="../../assets/images/ROMI_logo_white.svg" alt="logo">
+  <img src="../../../assets/images/ROMI_logo_white.svg" alt="logo">
 
     </a>
     Plant-Imager3
@@ -328,7 +332,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -350,7 +354,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rest_api/" class="md-nav__link">
+      <a href="../../../rest_api/" class="md-nav__link">
         
   
   
@@ -369,24 +373,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -399,7 +408,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Reference API
@@ -469,7 +478,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/commons/" class="md-nav__link ">
+            <a href="../../commons/" class="md-nav__link ">
               
   
   
@@ -502,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/commons/RPC/" class="md-nav__link">
+      <a href="../../commons/RPC/" class="md-nav__link">
         
   
   
@@ -525,7 +534,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/commons/cameradevice/" class="md-nav__link">
+      <a href="../../commons/cameradevice/" class="md-nav__link">
         
   
   
@@ -548,7 +557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/commons/controller_device/" class="md-nav__link">
+      <a href="../../commons/controller_device/" class="md-nav__link">
         
   
   
@@ -571,7 +580,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/commons/deviceregistry/" class="md-nav__link">
+      <a href="../../commons/deviceregistry/" class="md-nav__link">
         
   
   
@@ -609,7 +618,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/commons/examples/" class="md-nav__link ">
+            <a href="../../commons/examples/" class="md-nav__link ">
               
   
   
@@ -642,7 +651,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/commons/examples/cameraclient/" class="md-nav__link">
+      <a href="../../commons/examples/cameraclient/" class="md-nav__link">
         
   
   
@@ -665,7 +674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/commons/examples/cameraserver/" class="md-nav__link">
+      <a href="../../commons/examples/cameraserver/" class="md-nav__link">
         
   
   
@@ -696,7 +705,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/commons/logging/" class="md-nav__link">
+      <a href="../../commons/logging/" class="md-nav__link">
         
   
   
@@ -719,7 +728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/commons/systemd/" class="md-nav__link">
+      <a href="../../commons/systemd/" class="md-nav__link">
         
   
   
@@ -814,7 +823,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/controller/" class="md-nav__link ">
+            <a href="../../controller/" class="md-nav__link ">
               
   
   
@@ -847,7 +856,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/AppBridge/" class="md-nav__link">
+      <a href="../../controller/AppBridge/" class="md-nav__link">
         
   
   
@@ -870,7 +879,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/ImageProvider/" class="md-nav__link">
+      <a href="../../controller/ImageProvider/" class="md-nav__link">
         
   
   
@@ -908,7 +917,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/controller/PlantImagerApp/" class="md-nav__link ">
+            <a href="../../controller/PlantImagerApp/" class="md-nav__link ">
               
   
   
@@ -941,7 +950,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/PlantImagerApp/Controls/" class="md-nav__link">
+      <a href="../../controller/PlantImagerApp/Controls/" class="md-nav__link">
         
   
   
@@ -964,7 +973,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/PlantImagerApp/Style/" class="md-nav__link">
+      <a href="../../controller/PlantImagerApp/Style/" class="md-nav__link">
         
   
   
@@ -987,7 +996,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/PlantImagerApp/rc_style/" class="md-nav__link">
+      <a href="../../controller/PlantImagerApp/rc_style/" class="md-nav__link">
         
   
   
@@ -1025,7 +1034,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/controller/PlantImagerApp/ttf/" class="md-nav__link ">
+            <a href="../../controller/PlantImagerApp/ttf/" class="md-nav__link ">
               
   
   
@@ -1058,7 +1067,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/PlantImagerApp/ttf/rc_ttf/" class="md-nav__link">
+      <a href="../../controller/PlantImagerApp/ttf/rc_ttf/" class="md-nav__link">
         
   
   
@@ -1112,7 +1121,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/controller/camera/" class="md-nav__link ">
+            <a href="../../controller/camera/" class="md-nav__link ">
               
   
   
@@ -1145,7 +1154,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/camera/CameraBridge/" class="md-nav__link">
+      <a href="../../controller/camera/CameraBridge/" class="md-nav__link">
         
   
   
@@ -1168,7 +1177,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/camera/CameraVideoReceiver/" class="md-nav__link">
+      <a href="../../controller/camera/CameraVideoReceiver/" class="md-nav__link">
         
   
   
@@ -1191,7 +1200,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/camera/PiCameraComm/" class="md-nav__link">
+      <a href="../../controller/camera/PiCameraComm/" class="md-nav__link">
         
   
   
@@ -1214,7 +1223,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/camera/pyav_receiver/" class="md-nav__link">
+      <a href="../../controller/camera/pyav_receiver/" class="md-nav__link">
         
   
   
@@ -1245,7 +1254,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/main/" class="md-nav__link">
+      <a href="../../controller/main/" class="md-nav__link">
         
   
   
@@ -1283,7 +1292,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/controller/scanner/" class="md-nav__link ">
+            <a href="../../controller/scanner/" class="md-nav__link ">
               
   
   
@@ -1316,7 +1325,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/scanner/dummy_cnc/" class="md-nav__link">
+      <a href="../../controller/scanner/dummy_cnc/" class="md-nav__link">
         
   
   
@@ -1339,7 +1348,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/scanner/grbl/" class="md-nav__link">
+      <a href="../../controller/scanner/grbl/" class="md-nav__link">
         
   
   
@@ -1362,7 +1371,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/scanner/hal/" class="md-nav__link">
+      <a href="../../controller/scanner/hal/" class="md-nav__link">
         
   
   
@@ -1385,7 +1394,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/scanner/path/" class="md-nav__link">
+      <a href="../../controller/scanner/path/" class="md-nav__link">
         
   
   
@@ -1408,7 +1417,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/scanner/rpc_controller/" class="md-nav__link">
+      <a href="../../controller/scanner/rpc_controller/" class="md-nav__link">
         
   
   
@@ -1431,7 +1440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/scanner/scanner/" class="md-nav__link">
+      <a href="../../controller/scanner/scanner/" class="md-nav__link">
         
   
   
@@ -1454,7 +1463,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/controller/scanner/units/" class="md-nav__link">
+      <a href="../../controller/scanner/units/" class="md-nav__link">
         
   
   
@@ -1498,6 +1507,8 @@
                 
   
   
+    
+  
   
   
     
@@ -1508,11 +1519,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
@@ -1528,7 +1539,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_3">
             <span class="md-nav__icon md-icon"></span>
             webui
@@ -1539,6 +1550,8 @@
                 
   
   
+    
+  
   
   
     
@@ -1549,15 +1562,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_1" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/webui/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -1576,7 +1589,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_3_1">
             <span class="md-nav__icon md-icon"></span>
             webui
@@ -1590,7 +1603,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/app/" class="md-nav__link">
+      <a href="../app/" class="md-nav__link">
         
   
   
@@ -1613,7 +1626,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/config/" class="md-nav__link">
+      <a href="../config/" class="md-nav__link">
         
   
   
@@ -1636,7 +1649,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/controller_proxy/" class="md-nav__link">
+      <a href="../controller_proxy/" class="md-nav__link">
         
   
   
@@ -1659,7 +1672,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/login/" class="md-nav__link">
+      <a href="../login/" class="md-nav__link">
         
   
   
@@ -1682,7 +1695,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/nav/" class="md-nav__link">
+      <a href="../nav/" class="md-nav__link">
         
   
   
@@ -1705,7 +1718,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/new_user/" class="md-nav__link">
+      <a href="../new_user/" class="md-nav__link">
         
   
   
@@ -1728,7 +1741,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/scan/" class="md-nav__link">
+      <a href="../scan/" class="md-nav__link">
         
   
   
@@ -1751,157 +1764,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/utils/" class="md-nav__link">
+      <a href="../utils/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     utils
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/webui/wsgi/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    wsgi
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    Developer
-    
-  </span>
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            Developer
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../documentation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Documentation Guidelines
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    System Architecture
     
   </span>
   
@@ -1925,15 +1793,13 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
   
   <span class="md-ellipsis">
-    RPC Communication
+    wsgi
     
   </span>
   
@@ -1946,7 +1812,7 @@
   
   
   <span class="md-ellipsis">
-    RPC Communication
+    wsgi
     
   </span>
   
@@ -1959,8 +1825,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1969,73 +1833,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#plantimager.webui.wsgi" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;wsgi
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#communication-diagram" class="md-nav__link">
-    <span class="md-ellipsis">
-      Communication diagram
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Communication diagram">
+    <nav class="md-nav" aria-label=" wsgi">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#class-diagram" class="md-nav__link">
+  <a href="#plantimager.webui.wsgi--run-the-web-interface-with-default-rest-api-settings-using-a-wsgi-server-like-uwsgi" class="md-nav__link">
     <span class="md-ellipsis">
-      Class diagram
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#connection-diagram" class="md-nav__link">
-    <span class="md-ellipsis">
-      Connection diagram
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#method-call" class="md-nav__link">
-    <span class="md-ellipsis">
-      Method call
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#emitting-a-signal" class="md-nav__link">
-    <span class="md-ellipsis">
-      Emitting a signal
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#property-getter" class="md-nav__link">
-    <span class="md-ellipsis">
-      Property getter
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#property-setter" class="md-nav__link">
-    <span class="md-ellipsis">
-      Property setter
+      Run the web interface with default REST API settings using a WSGI server like uWSGI
     </span>
   </a>
   
@@ -2050,6 +1860,146 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../developer/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Developer
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Developer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developer/documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Documentation Guidelines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developer/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    System Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developer/RPC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    RPC Communication
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -2079,8 +2029,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2089,73 +2037,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#plantimager.webui.wsgi" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;wsgi
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#communication-diagram" class="md-nav__link">
-    <span class="md-ellipsis">
-      Communication diagram
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Communication diagram">
+    <nav class="md-nav" aria-label=" wsgi">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#class-diagram" class="md-nav__link">
+  <a href="#plantimager.webui.wsgi--run-the-web-interface-with-default-rest-api-settings-using-a-wsgi-server-like-uwsgi" class="md-nav__link">
     <span class="md-ellipsis">
-      Class diagram
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#connection-diagram" class="md-nav__link">
-    <span class="md-ellipsis">
-      Connection diagram
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#method-call" class="md-nav__link">
-    <span class="md-ellipsis">
-      Method call
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#emitting-a-signal" class="md-nav__link">
-    <span class="md-ellipsis">
-      Emitting a signal
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#property-getter" class="md-nav__link">
-    <span class="md-ellipsis">
-      Property getter
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#property-setter" class="md-nav__link">
-    <span class="md-ellipsis">
-      Property setter
+      Run the web interface with default REST API settings using a WSGI server like uWSGI
     </span>
   </a>
   
@@ -2185,213 +2079,65 @@
   
 
 
-<h1 id="rpc-communication">RPC Communication<a class="headerlink" href="#rpc-communication" title="Permanent link">Link</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">Link</a></h2>
-<p>RPC or Remote Procedure Call is a communication pattern between a client and a server where the client can access an 
-object provided by the server as if it was a local object. In a sense, the client serves as a proxy of an object and 
-the server makes the actual object available.</p>
-<p>In Plant-Imager3 this communication protocol is implemented in the module <code>plantimager.commons.RPC</code> with the main two 
-classes <code>RPCClient</code> and <code>RPCServer</code> as well as other auxiliary classes <code>RPCSignal</code>, <code>RPCProperty</code> and <code>RPCSignalReceiver</code>.</p>
-<ul>
-<li><code>RPCServer</code>: When used as a parent to a class, makes that class available as an RPC object</li>
-<li><code>RPCClient</code>: Proxy of an RPC object which connects to the <code>RPCServer</code> providing said object</li>
-<li><code>RPCSignal</code>: Declare signals for RPC objects which when emitted server-side are also emitted client-side, calling any connected method</li>
-<li><code>RPCProperty</code>: Declare python-style properties that are made available to the client</li>
-<li><code>RPCSignalReceiver</code>: Internal signal receiver client-side in charge of receiving and copying signals from the server</li>
+  <h1>wsgi</h1>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="plantimager.webui.wsgi" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">plantimager.webui.wsgi</span>
+
+
+<a href="#plantimager.webui.wsgi" class="headerlink" title="Permanent link">Link</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>WSGI Entry Point for Plant Imager Web Interface</p>
+<p>This module provides the WSGI entry point to run the Plant Imager web application using a WSGI-compatible server.
+It sets up the Dash web application and configures it to connect with the REST API backend.</p>
+
+
+<details class="key-features" open>
+  <summary>Key Features</summary>
+  <ul>
+<li>Configures and initializes the Plant Imager Dash application for WSGI deployment</li>
+<li>Sets up the correct URL base path name for the application</li>
+<li>Allows for custom configuration of the server host, port, and proxy settings</li>
 </ul>
-<h2 id="communication-diagram">Communication diagram<a class="headerlink" href="#communication-diagram" title="Permanent link">Link</a></h2>
-<h3 id="class-diagram">Class diagram<a class="headerlink" href="#class-diagram" title="Permanent link">Link</a></h3>
-<p>Class diagram for a typical implementation where we want to make available te class <code>AbstractDevice</code>. To that end we
-implement <code>DeviceServer</code> which inherits from both <code>AbstractDevice</code> and <code>RPCServer</code> and in which we implement the various
-methods defined in the abstract class; <code>DeviceServer</code> will serve the implementation.</p>
-<p>Client-side we simply declare a class <code>DeviceClient</code>inheriting from both <code>AbstractDevice</code> and <code>RPCClient</code> and which must
-be decorated with the classmethod <code>RPCClient.register_interface()</code>. Implementation of the abstract methods of <code>AbstractDevice</code>
-is automatically handled, creating proxy methods which will call the proper methods from <code>DeviceServer</code>.</p>
-<pre class="mermaid"><code>---
-title: Animal example
----
-classDiagram
-    note for AbstractDevice "Abstract class defining the interface which will be exposed via RPC"
-    RPCServer &lt;|-- DeviceServer
-    AbstractDevice &lt;|-- DeviceServer
-    AbstractDevice &lt;|-- DeviceClient
-    RPCClient &lt;|-- DeviceClient
-    RPCClient *-- RPCSignalReceiver
-    class RPCServer {
-        +zmq.Context context
-        +String url
-        +int port
-        +String name
-        +String registry_addr
-        +String peer_addr
-        -zmq.Socket _socket
+</details>
 
-        +register_to_registry(type_name, name, registry_url)
-        +register_method_json(timeout)$
-        +register_method_buffer(timeout)$
-        +stop_server()
-        +serve_forever()
-        -_send_signal(signal_name, *args)
-        -_exec_json(method, params)
-        -_exec_buffer(method, params)
-        -_finalize()
-    }
-
-    class RPCClient {
-        +zmq.Context context
-        +String url
-        +zmq.Socket socket
-        +String own_address
-        +String peer_address
-        +String name
-
-        +execute(method_name, params)
-        +stop_server()
-        +register_interface(interface)$
-        -_finalizer()
-        -_method_proxy(func, self, *args, **kwargs)$
-        -_property_getter_proxy(property_name)
-        -_property_setter_proxy(value, property_name)
-    }
-    class RPCSignalReceiver {
-        +zmq.Context context
-        +String url
-        +dict[str, RPCSignals] signals
-        +zmq.Socket socket
-        +int port
-        +run()
-        +stop()
-    }
-    class AbstractDevice{
-        &lt;&lt;Abstract&gt;&gt;
-        +RPCSignal some_signal$
-        +RPCProperty some_property*
-        +some_method()*
-    }
-    class DeviceServer{
-    }
-    class DeviceClient{
-    }
-</code></pre>
-<h3 id="connection-diagram">Connection diagram<a class="headerlink" href="#connection-diagram" title="Permanent link">Link</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant signal_recv as RPCSignalReceiver
-    participant client as Device Client
-    participant server as Device Server
-    activate client
-    Note over server: The method serve_forever() must have been called
-    Note over client: in __init__ after &lt;br/&gt; the socket is connected
-    client-&gt;&gt;+server: FIND_PEER_ADDRESS
-    Note right of server: Creates a socket server
-    server-&gt;&gt;client: url
-    client&lt;&lt;--&gt;&gt;server: connects to temp server
-    deactivate server
+<details class="usage-examples" open>
+  <summary>Usage Examples</summary>
+  <h3 id="plantimager.webui.wsgi--run-the-web-interface-with-default-rest-api-settings-using-a-wsgi-server-like-uwsgi">Run the web interface with default REST API settings using a WSGI server like uWSGI<a class="headerlink" href="#plantimager.webui.wsgi--run-the-web-interface-with-default-rest-api-settings-using-a-wsgi-server-like-uwsgi" title="Permanent link">Link</a></h3>
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>uwsgi<span style="color: #BBB"> </span>--http<span style="color: #BBB"> </span>:8080<span style="color: #BBB"> </span>--module<span style="color: #BBB"> </span>plantimager.webui.wsgi:application<span style="color: #BBB"> </span>--callable<span style="color: #BBB"> </span>application<span style="color: #BBB"> </span>--master
+</code></pre></div>
+</details>
 
 
-    Note over client,server: Getting peer address and &lt;br/&gt; closing connection and temporary server
-    client-&gt;&gt;+server: GET_INVENTORY
-    server-&gt;&gt;-client: methods, properties and signals inventory
-
-    opt RPCSignals declared
-    Note over signal_recv, client: Start Signal Receiver thread
-    client-&gt;&gt;+signal_recv: __init__()
-    signal_recv--&gt;&gt;-client: 
-    client-&gt;&gt;+server: INIT_SIGNALS_HANDLING
-    Note right of server: Connect to signal socket and &lt;br/&gt; connect signals to _send_signal()
-    server-&gt;&gt;-client: success
-
-    end
-
-    deactivate client
-</code></pre>
-<h3 id="method-call">Method call<a class="headerlink" href="#method-call" title="Permanent link">Link</a></h3>
-<pre class="mermaid"><code>
-sequenceDiagram
-    participant other
-    participant client as Device Client
-    participant server as Device Server
-
-    Note over client, server: server.serve_forever() called &lt;br/&gt; and client connected
-    other-&gt;&gt;+client: some_method()
-    Note over client: some_method is a proxy method
-    client-&gt;&gt;+client: execute()
-
-    Alt is json_method
-        client-&gt;&gt;+server: METHOD_CALL
-        server-&gt;&gt;+server: _exec_json()
-        server-&gt;&gt;server: some_method()
-        deactivate server
-        server-&gt;&gt;-client: result
-    else is buffer_method
-        client-&gt;&gt;+server: METHOD_CALL
-        server-&gt;&gt;+server: _exec_buffer()
-        server-&gt;&gt;server: some_method()
-        deactivate server
-        server-&gt;&gt;-client: result
-    end
-    deactivate client
-
-    client--&gt;&gt;-other: result</code></pre>
-<h3 id="emitting-a-signal">Emitting a signal<a class="headerlink" href="#emitting-a-signal" title="Permanent link">Link</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant client_signal as Signal proxy
-    participant recv as RPCSignalReceiver
-    participant server as Device Server
-    participant server_signal as Original Signal
-
-    Note over recv, server: server.serve_forever() called &lt;br/&gt; and client connected
-
-    Note over server_signal: emit() called
-    activate server_signal
-    server_signal-&gt;&gt;+server: _send_signal()
-    server-&gt;&gt;+recv: EMIT_SIGNAL
-    Note over recv: select corresponding signal
-    alt is blocking
-        recv-&gt;&gt;+client_signal: emit()
-        client_signal--&gt;&gt;-recv: 
-        recv-&gt;&gt;server: success
-    else
-        recv-&gt;&gt;server: success
-        recv-&gt;&gt;+client_signal: emit()
-        client_signal--&gt;&gt;-recv: 
-        deactivate recv
-    end
 
 
-    server--&gt;&gt;-server_signal: 
-    deactivate server_signal</code></pre>
-<h3 id="property-getter">Property getter<a class="headerlink" href="#property-getter" title="Permanent link">Link</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant other
-    participant client as Device Client
-    participant server as Device Server
 
-    Note over client, server: server.serve_forever() called &lt;br/&gt; and client connected
-    other-&gt;&gt;+client: some_property getter()
-    Note over client: some_property getter is a proxy method &lt;br/&gt; RPCClient._property_getter_proxy() is called
 
-    client-&gt;&gt;+server: PROPERTY_GET
-    server-&gt;&gt;server: some_property getter()
-    server-&gt;&gt;-client: result
 
-    client--&gt;&gt;-other: result
-</code></pre>
-<h3 id="property-setter">Property setter<a class="headerlink" href="#property-setter" title="Permanent link">Link</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant other
-    participant client as Device Client
-    participant server as Device Server
 
-    Note over client, server: server.serve_forever() called &lt;br/&gt; and client connected
-    other-&gt;&gt;+client: some_property setter()
-    Note over client: some_property setter is a proxy method &lt;br/&gt; RPCClient._property_setter_proxy() is called
+  <div class="doc doc-children">
 
-    client-&gt;&gt;+server: PROPERTY_SET
-    server-&gt;&gt;server: some_property setter()
-    server-&gt;&gt;-client: result
 
-    client--&gt;&gt;-other: result
-</code></pre>
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
@@ -2492,12 +2238,12 @@ sequenceDiagram
     
     
       
-      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
-        <script src="../../assets/_markdown_exec_pyodide.js"></script>
+        <script src="../../../assets/_markdown_exec_pyodide.js"></script>
       
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
       
