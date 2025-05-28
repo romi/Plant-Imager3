@@ -9,6 +9,7 @@ dependencies = [
     "colorlog",
     "decorator",
     "pyzmq",
+    "sdnotify",
 ]
 description = "Core shared library for the ROMI Plant Imager."
 readme = "README.md"
@@ -31,7 +32,6 @@ keywords = [
     "Plant Phenotyping",
     "GRBL",
     "PyQt6",
-    "sdnotify",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
