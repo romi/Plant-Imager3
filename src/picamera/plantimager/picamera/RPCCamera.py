@@ -126,12 +126,12 @@ def main():
     context = zmq.Context()
     ip_addr = os.getenv("IP_ADDR") or subprocess.call()
     camera = RPCCamera(context, f"tcp://{ip_addr}")
+    notify_ready()
     camera.register_to_registry(
         "camera",
         socket.gethostname(),
         REGISTRY_ADDR
     )
-    notify_ready()
     camera.serve_forever()
     notify_stopping()
 

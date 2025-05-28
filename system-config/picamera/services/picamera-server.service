@@ -51,7 +51,7 @@ Restart=always
 RestartSec=5
 
 # Sets a watchdog timer. The service is killed if the process does not notify the system manager at least once every WatchdogSec
-WatchdogSec=60
+WatchdogSec=2min
 WatchdogSignal=SIGINT
 
 [Install]
