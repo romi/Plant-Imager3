@@ -12,6 +12,7 @@ This package provides a web-based user interface for plant scanning:
 - Scan configuration and execution
 - Integration with the controller package
 
+
 ## Environment Setup
 
 We strongly recommend using isolated environments to install ROMI libraries.
@@ -19,19 +20,38 @@ We strongly recommend using isolated environments to install ROMI libraries.
 This documentation uses `conda` as both an environment and package manager.
 If you don't have`miniconda3` installed, please refer to the [official documentation](https://docs.conda.io/en/latest/miniconda.html).
 
-To create a new conda environment for PlantDB:
+To create a new conda environment:
 ``` shell
 conda create -n plant-imager3 'python==3.11' ipython
 ```
 
+
 ## Installation
 
-Activate your environment and install the packages using `pip`:
-
+### Developer - Installing from Source Code
+If you are a developer and need to work on the source code or make modifications, follow these steps:
+1. **Activate your environment:** First, activate your conda environment:
 ``` shell
-conda activate plant-imager3  # activate your environment first!
-pip install plantimager.webui
+   conda activate plant-imager3  # Make sure your development environment is activated!
 ```
+2. **Install from sources:** Install the package directly from the source directory using pip:
+``` shell
+   python -m pip install src/webui
+```
+This method allows you to work on the code and test changes locally before committing them.
+
+### User - Installing via pip Package
+For regular users who just need to use the application without modifying the source code, follow these steps:
+1. **Activate your environment:** First, activate your conda environment:
+``` shell
+   conda activate plant-imager3  # Make sure your user environment is activated!
+```
+2. **Install via pip:** Install the package using pip from the Python Package Index (PyPI):
+``` shell
+   pip install plantimager.webui
+```
+This method installs a pre-built version of the application, making it quick and easy to set up.
+
 
 ## Development
 
