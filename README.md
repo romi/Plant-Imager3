@@ -46,8 +46,7 @@ sudo apt install libegl1-mesa libgl1-mesa-dri libgl1-mesa-glx mesa-utils
 
 ### Create a Virtual Environment
 
-If needed, start by creating a virtual environment named `plant_imager3`.
-Use the following command:
+To create a new conda environment, named `plant-imager3`, with Python3.11 & IPython:
 
 ```shell
 conda create -n plant-imager3 'python==3.11' ipython
@@ -86,21 +85,13 @@ pip install -e src/picamera/.
 
 ### Install `plantimager.webui`
 
-To install the `plantimager.webui` subpackage, run the following command from the root directory of the repository:
+For instructions on how to install the `plantimager.webui` subpackage, have a look [here](src/webui/README.md#developer---installing-from-source-code).
 
-```shell
-pip install -e src/webui/.
-```
+For instructions on how to start the WebUI application, have a look [here](src/webui/README.md#development).
 
-After installation, you can start the Dash `WebUI` with:
+This application requires a running FSDB REST API to interact with, notably to get available dataset names and to receive data from the _Plant Imager_.
 
-```shell
-plant-imager-webui
-```
-
-You will need to connect to a running FSDB REST API.
-
-For testing purposes, providing that you have the `plantdb.commons` and `plantdb.server` libraries installed, you may start one with:
+For development purposes, providing that you have the `plantdb.commons` and `plantdb.server` libraries installed, you may start one with:
 ```shell
 fsdb_rest_api --test
 ```
