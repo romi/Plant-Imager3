@@ -3549,7 +3549,7 @@ base64 encoded config file.</p>
 <span style="color: #BA2121; font-style: italic">    str</span>
 <span style="color: #BA2121; font-style: italic">        The name of the dataset.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    <span style="color: #008000; font-weight: bold">if</span> is_valid_dataset_name(dataset_name, existing_datasets):
+    <span style="color: #008000; font-weight: bold">if</span> dataset_name <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">and</span> is_valid_dataset_name(dataset_name, existing_datasets):
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #008000; font-weight: bold">True</span>, dataset_name
     <span style="color: #008000; font-weight: bold">else</span>:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>, <span style="color: #008000; font-weight: bold">False</span>, dataset_name

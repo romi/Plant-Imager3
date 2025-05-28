@@ -1839,21 +1839,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" wsgi">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#plantimager.webui.wsgi--run-the-web-interface-with-default-rest-api-settings-using-a-wsgi-server-like-uwsgi" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run the web interface with default REST API settings using a WSGI server like uWSGI
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -2043,21 +2028,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" wsgi">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#plantimager.webui.wsgi--run-the-web-interface-with-default-rest-api-settings-using-a-wsgi-server-like-uwsgi" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run the web interface with default REST API settings using a WSGI server like uWSGI
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -2109,9 +2079,12 @@ It sets up the Dash web application and configures it to connect with the REST A
 
 <details class="usage-examples" open>
   <summary>Usage Examples</summary>
-  <h3 id="plantimager.webui.wsgi--run-the-web-interface-with-default-rest-api-settings-using-a-wsgi-server-like-uwsgi">Run the web interface with default REST API settings using a WSGI server like uWSGI<a class="headerlink" href="#plantimager.webui.wsgi--run-the-web-interface-with-default-rest-api-settings-using-a-wsgi-server-like-uwsgi" title="Permanent link">Link</a></h3>
+  <p>Run the web interface with default REST API settings using a WSGI server like uWSGI
 <div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>uwsgi<span style="color: #BBB"> </span>--http<span style="color: #BBB"> </span>:8080<span style="color: #BBB"> </span>--module<span style="color: #BBB"> </span>plantimager.webui.wsgi:application<span style="color: #BBB"> </span>--callable<span style="color: #BBB"> </span>application<span style="color: #BBB"> </span>--master
-</code></pre></div>
+</code></pre></div></p>
+<p>Run with Gunicorn
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>gunicorn<span style="color: #BBB"> </span>wsgi:application
+</code></pre></div></p>
 </details>
 
 
