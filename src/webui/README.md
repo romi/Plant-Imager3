@@ -33,6 +33,23 @@ conda activate plant-imager3  # activate your environment first!
 pip install plantimager.webui
 ```
 
+## Development
+
+To run the app in development mode, you have two options:
+1. **Using the command-line interface:**
+You can simply run the following command:
+``` shell
+   plant-imager-webui
+```
+This command is a convenience wrapper that sets up the necessary environment and starts the application.
+2. **From the root directory of the repository:**
+If you prefer to run the app directly from the source code, navigate to the root directory of the repository and execute:
+``` shell
+   python src/webui/plantimager/webui/app.py
+```
+
+Both methods will start the Dash-based web application in development mode, which includes features like automatic code reloading and detailed error messages, making it easier to develop and test your application efficiently.
+
 ## Production
 
 ### Running with uWSGI
