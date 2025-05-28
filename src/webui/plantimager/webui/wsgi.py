@@ -21,13 +21,29 @@ Key Features
 
 Usage Examples
 --------------
-# Run the web interface with default REST API settings using a WSGI server like uWSGI
+Run the web interface with default REST API settings using a WSGI server like uWSGI
 ```shell
 uwsgi --http :8080 --module plantimager.webui.wsgi:application --callable application --master
 ```
+
+Run with Gunicorn
+```shell
+gunicorn wsgi:application
+```
 """
 
+from threading import Thread
+
+import zmq
+
 from plantimager.webui.app import setup_web_app
+from plantimager.webui.controller_proxy import RPCController
+
+# - Create connexion with controller
+context = zmq.Context()
+controller_thread = Thread(target=lambda ctx: RPCController(ctx, "tcp://localhost:14567"), args=(context,))
+controller_thread.daemon = True
+controller_thread.start()
 
 # Get the Dash application
 dash_app = setup_web_app("localhost", 8080, proxy=True)
