@@ -72,6 +72,8 @@ def parsing() -> argparse.ArgumentParser:
                           help="Activate if the server is behind a reverse proxy")
     app_args.add_argument('--url-base-pathname', type=str, default='/webui/',
                           help="Base URL path for the application (should match Nginx location).")
+    app_args.add_argument('--debug', action='store_true',
+                          help="Enable/disable all the dev tools.")
     return parser
 
 
@@ -168,7 +170,7 @@ def main() -> None:
 
     # - Start the Dash app:
     app = setup_web_app(args.host, args.port, args.proxy)
-    app.run(host="0.0.0.0", debug=True, port=8080)
+    app.run(host="0.0.0.0", debug=args.debug, port=8080)
 
 
 if __name__ == "__main__":
