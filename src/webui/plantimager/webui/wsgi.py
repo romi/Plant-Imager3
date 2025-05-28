@@ -30,6 +30,12 @@ Run with Gunicorn
 ```shell
 gunicorn wsgi:application
 ```
+
+Direct call with Python for development purposes:
+```shell
+python src/webui/plantimager/webui/wsgi.py
+```
+Should then be accessible under: https://localhost:8080/webui/
 """
 
 from threading import Thread
@@ -52,4 +58,6 @@ application = dash_app.server
 
 if __name__ == "__main__":
     from werkzeug.serving import run_simple
-    run_simple('localhost', 8080, application)
+    # SSL context for development testing
+    ssl_context = ('docker/nginx/ssl/cert.pem', 'docker/nginx/ssl/key.pem')
+    run_simple('localhost', 8080, application, ssl_context=ssl_context)

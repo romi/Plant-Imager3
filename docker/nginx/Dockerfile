@@ -10,6 +10,13 @@ ARG SERVER_URL
 ARG CONTROLLER_URL
 ARG CONTROLLER_PORT
 
+# Create directory for SSL certificates
+RUN mkdir -p /etc/nginx/ssl
+
+# Copy SSL certificates (you'll need to create these files)
+COPY ssl/cert.pem /etc/nginx/ssl/
+COPY ssl/key.pem /etc/nginx/ssl/
+
 # Copy the default configuration file to NGINX directory
 COPY default.conf .
 

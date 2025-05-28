@@ -120,6 +120,11 @@ def setup_web_app(url: str, port: int, proxy=False, url_base_pathname: str = '/w
     if proxy:
         # App is behind one proxy that sets the -For and -Host headers.
         app.server.wsgi_app = ProxyFix(app.server.wsgi_app, x_for=1, x_host=1, x_proto=1)
+        # Set secure cookies
+        app.server.config.update(
+            SESSION_COOKIE_SECURE=True,
+            SESSION_COOKIE_SAMESITE='Lax'
+        )
 
     # Main application layout definition
     app.layout = html.Div([
