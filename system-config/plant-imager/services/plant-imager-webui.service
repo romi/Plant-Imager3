@@ -1,16 +1,16 @@
 [Unit]
 # A short human readable title of the unit
-Description="Plant-Imager v3 controller GUI"
+Description="Plant-Imager v3 webui"
 # A list of units whose activations will wait until after this unit has completed.
 Before=
 # A list of units whose activations will occur before this unit starts.
-After=network.target network-online.target graphical-session.target
+After=network.target network-online.target
 # A list of units to activate when this one is activated, if any unit listed here fails this unit will deactivate.
 Requires=
 # A list of units to activate when this one is activated, if a unit listed here fails this unit will continue to run.
 Wants=
+#PartOf=plant-imager-app.service
 
-PartOf=graphical-session.target
 
 # If this unit restarts more than StartLimitBurst under StartLimitIntervalSec this unit enters a failed state
 StartLimitBurst=2
@@ -23,18 +23,12 @@ StartLimitIntervalSec=30
 # forking - The process defined in ExecStart= will fork a background process and exit right away.
 # oneshot - The process will exit right away, use with RemainAfterExit= to ensure the serice is marked as active.
 # Consult the documentantion for types (https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=) other options.
-Type=notify
-
-# Environment variables (alternatively use EnvironmentFile)
-Environment=PI_REGISTRY=tcp://10.10.10.1:5555
-Environment=IP_ADDR=10.10.10.2
+Type=exec
 
 # Command with arguments to invoke when the unit is activated.
-ExecStart=/home/arthur/miniconda3/envs/plant-imager/bin/plant-imager-controller-app
+ExecStart=/home/arthur/miniconda3/envs/plant-imager/bin/plant-imager-webui --proxy
 # Command with arguments to invoke when the unit is deactivated.
-#ExecStop=
-
-ExecStopPost=/bin/sh -c "systemctl --user restart plant-imager-webui.service || echo 'plant-imager-webui.service not present'"
+ExecStop=
 
 # First signal sent to the processes to stop the unit
 KillSignal=SIGINT
@@ -51,6 +45,6 @@ RestartSec=5
 
 [Install]
 # A list of units who when activated will try and activate this unit
-WantedBy=graphical-session.target
+WantedBy=plant-imager-app.service
 # A list of units to enable or disable when this unit is enabled or disabled (e.g., with systemctl enable)
 Also=
