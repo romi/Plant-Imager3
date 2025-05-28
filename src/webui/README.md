@@ -103,3 +103,95 @@ uwsgi --http :8080 --module plantimager.webui.wsgi:application --callable applic
 - `--processes 4`: Run 4 worker processes to handle requests in parallel
 - `--threads 2`: Use 2 threads per worker process for additional concurrency
 - `--thunder-lock`: Use a more efficient lock mechanism for multi-process deployments
+
+
+#### Security Recommendations
+
+1. **Use a volume for certificates** - This allows you to update certificates without rebuilding the container
+2. **Use a proper certificate authority** - Let's Encrypt is free and widely trusted
+3. **Set up auto-renewal** - Let's Encrypt certificates expire after 90 days
+4. **Use strong SSL settings** - As included in the configuration
+
+
+## Let's Encrypt Certificates
+
+Let's Encrypt is a free, automated, and open Certificate Authority that provides TLS certificates trusted by all major browsers.
+
+### How Let's Encrypt Works
+1. **Domain Validation**: Let's Encrypt validates that you control a domain before issuing a certificate
+2. **Automated**: The entire process can be automated using the Certbot client
+3. **Short Validity**: Certificates are valid for 90 days to encourage automation
+4. **Renewal**: Certificates must be renewed before expiration
+
+### Setting Up Let's Encrypt with NGINX in Docker
+
+#### Method 1: Using Certbot with Docker
+
+1. **Create a Docker network for your services**:
+   ``` bash
+   docker network create web
+   ```
+1. **Run Certbot in Docker to obtain certificates**:
+   ``` bash
+   docker run -it --rm \
+     -v /etc/letsencrypt:/etc/letsencrypt \
+     -v /var/lib/letsencrypt:/var/lib/letsencrypt \
+     -p 80:80 \
+     certbot/certbot certonly --standalone \
+     -d yourdomain.com --agree-tos -m your-email@example.com
+   ```
+1. **Mount the certificates in your NGINX container**:
+   ``` bash
+   docker run -d \
+     -v /etc/letsencrypt:/etc/letsencrypt \
+     -p 80:80 -p 443:443 \
+     --network web \
+     your-nginx-image
+   ```
+1. **Update your NGINX configuration to use the certificates**:
+   ``` nginx
+   ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
+   ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
+   ```
+
+#### Method 2: Using Docker Compose with Nginx and Certbot
+
+``` yaml
+version: '3'
+
+services:
+  nginx:
+    image: your-nginx-image
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+```
+
+### Let's Encrypt Certificate Renewal
+
+Certificates expire after 90 days and must be renewed. Set up automatic renewal:
+1. **Using a Cron Job on the Host**:
+   ``` 
+   0 12 * * * docker run --rm -v /etc/letsencrypt:/etc/letsencrypt -v /var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot renew --quiet && docker exec nginx nginx -s reload
+   ```
+2. **Using a Docker Container** (as shown in Docker Compose example above)
+
+### Testing Your SSL Configuration
+
+After setting up, test your SSL configuration using:
+1. **SSL Labs**: [https://www.ssllabs.com/ssltest/](https://www.ssllabs.com/ssltest/)
+2. **Mozilla Observatory**: [https://observatory.mozilla.org/](https://observatory.mozilla.org/)
+
+These tools will analyze your HTTPS implementation and suggest improvements.
