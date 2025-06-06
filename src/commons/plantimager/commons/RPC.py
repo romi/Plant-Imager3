@@ -422,7 +422,8 @@ class RPCServer:
         self.name = register_device(
             self.context, type_,
             f"{self.url}:{self.port}",
-            name, registry_url
+            name, registry_url,
+            overwrite=True,
         )
         self.registry_addr = registry_url if self.name else ""
         return self.name
