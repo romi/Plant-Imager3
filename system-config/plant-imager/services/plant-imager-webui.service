@@ -26,7 +26,7 @@ StartLimitIntervalSec=30
 Type=exec
 
 # Command with arguments to invoke when the unit is activated.
-ExecStart=/home/arthur/miniconda3/envs/plant-imager/bin/plant-imager-webui --proxy
+ExecStart=/home/romi/miniconda3/envs/plant-imager/bin/plant-imager-webui --proxy
 # Command with arguments to invoke when the unit is deactivated.
 ExecStop=
 
@@ -45,6 +45,6 @@ RestartSec=5
 
 [Install]
 # A list of units who when activated will try and activate this unit
-WantedBy=plant-imager-app.service
+WantedBy=default.target
 # A list of units to enable or disable when this unit is enabled or disabled (e.g., with systemctl enable)
 Also=
