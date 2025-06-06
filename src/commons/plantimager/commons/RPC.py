@@ -36,6 +36,34 @@ class RPCEvents(StrEnum):
 url_parser = re.compile("([a-zA-Z]*)://([a-zA-Z.0-9]*):?([0-9]*)")
 
 
+class NoResult:
+    """
+    Represents an outcome with no result, typically used to indicate
+    an operation failure along with associated error details.
+
+    This class encapsulates the error message and traceback information
+    to provide a structured representation of operation failures, useful
+    for logging or debugging purposes.
+
+    This class is Falsey
+
+    Attributes
+    ----------
+    error : str
+        A string containing the error message describing the nature
+        of the failure.
+    traceback : str
+        A string containing the traceback or detailed information
+        about where and why the failure occurred.
+    """
+    def __init__(self, error: str, traceback: str):
+        self.error = error
+        self.traceback = traceback
+
+    def __bool__(self):
+        return False
+
+
 class RPCSignal:
     def __init__(self, *arg_types):
         self.args = arg_types
@@ -112,7 +140,7 @@ class RPCSignalReceiver(Thread):
 class RPCClient:
     """
     Abstract class for RPC clients.
-    To use create a class inheriting from the interface and this.
+    To use, create a class inheriting from the interface and this.
     This new class must be decorated with `@RPCClient.register_interface`
 
     """
@@ -124,7 +152,7 @@ class RPCClient:
         self.socket: zmq.Socket = context.socket(zmq.REQ)
         self.socket.connect(self.url)
 
-        # replacing class attribute signals by instance signals
+        # replacing class attribute signals with instance signals
         for base in self.__class__.__bases__:
             for key, value in base.__dict__.items():
                 if isinstance(value, RPCSignal):
@@ -222,7 +250,7 @@ class RPCClient:
                 print("Traceback from remote --->", file=sys.stderr)
                 print(trace, file=sys.stderr, end="")
                 print("<------------", file=sys.stderr)
-
+            return NoResult(err, trace)
 
     def _property_getter_proxy(self, property_name: str) -> Any:
         package = {
@@ -233,7 +261,7 @@ class RPCClient:
         self.socket.send_json(package, flags=zmq.NOBLOCK)
         if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
             logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
-            return None
+            return NoResult("Timeout reached", "")
         reply = self.socket.recv_json()
         if reply["success"]:
             return reply["value"]
@@ -244,7 +272,7 @@ class RPCClient:
                 print("Traceback from remote --->", file=sys.stderr)
                 print(traceback_, file=sys.stderr, end="")
                 print("<------------", file=sys.stderr)
-            return None
+            return NoResult(err, traceback_)
 
     def _property_setter_proxy(self, value: Any, property_name: str) -> None:
         package = {
