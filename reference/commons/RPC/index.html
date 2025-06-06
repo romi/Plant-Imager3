@@ -571,6 +571,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.commons.RPC.NoResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;NoResult
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.commons.RPC.RPCClient" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;RPCClient
@@ -2116,6 +2125,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.commons.RPC.NoResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;NoResult
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.commons.RPC.RPCClient" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;RPCClient
@@ -2252,6 +2270,102 @@
 
 
 
+<h3 id="plantimager.commons.RPC.NoResult" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">NoResult</span>
+
+
+<a href="#plantimager.commons.RPC.NoResult" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>NoResult(error, traceback)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+
+        <p>Represents an outcome with no result, typically used to indicate
+an operation failure along with associated error details.</p>
+<p>This class encapsulates the error message and traceback information
+to provide a structured representation of operation failures, useful
+for logging or debugging purposes.</p>
+<p>This class is Falsey</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="plantimager.commons.RPC.NoResult.error">error</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A string containing the error message describing the nature
+of the failure.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="plantimager.commons.RPC.NoResult.traceback">traceback</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A string containing the traceback or detailed information
+about where and why the failure occurred.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+                  <details class="quote">
+                    <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">61</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, error: <span style="color: #008000">str</span>, traceback: <span style="color: #008000">str</span>):
+    <span style="color: #008000">self</span><span style="color: #666">.</span>error <span style="color: #666">=</span> error
+    <span style="color: #008000">self</span><span style="color: #666">.</span>traceback <span style="color: #666">=</span> traceback
+</code></pre></div></td></tr></table></div>
+                  </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
 <h3 id="plantimager.commons.RPC.RPCClient" class="doc doc-heading">
             <span class="doc doc-object-name doc-class-name">RPCClient</span>
 
@@ -2264,7 +2378,7 @@
 
 
         <p>Abstract class for RPC clients.
-To use create a class inheriting from the interface and this.
+To use, create a class inheriting from the interface and this.
 This new class must be decorated with <code>@RPCClient.register_interface</code></p>
 
 
@@ -2275,35 +2389,7 @@ This new class must be decorated with <code>@RPCClient.register_interface</code>
 
                   <details class="quote">
                     <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">123</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">125</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">126</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">127</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">128</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">129</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">130</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">131</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">132</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">133</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">134</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">135</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">136</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">137</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">138</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">139</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">141</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">142</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">143</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">144</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">145</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">146</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">147</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">149</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">151</span>
@@ -2337,14 +2423,42 @@ This new class must be decorated with <code>@RPCClient.register_interface</code>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">179</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">180</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">181</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">182</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">182</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">183</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">184</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">186</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">187</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">188</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">189</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">190</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">191</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">192</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">207</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">209</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">210</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000">self</span><span style="color: #666">.</span>context: zmq<span style="color: #666">.</span>Context <span style="color: #666">=</span> context
     <span style="color: #008000">self</span><span style="color: #666">.</span>url: <span style="color: #008000">str</span> <span style="color: #666">=</span> url
     <span style="color: #008000">self</span><span style="color: #666">.</span>socket: zmq<span style="color: #666">.</span>Socket <span style="color: #666">=</span> context<span style="color: #666">.</span>socket(zmq<span style="color: #666">.</span>REQ)
     <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>url)
 
-    <span style="color: #3D7B7B; font-style: italic"># replacing class attribute signals by instance signals</span>
+    <span style="color: #3D7B7B; font-style: italic"># replacing class attribute signals with instance signals</span>
     <span style="color: #008000; font-weight: bold">for</span> base <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span><span style="color: #19177C">__class__</span><span style="color: #666">.</span><span style="color: #19177C">__bases__</span>:
         <span style="color: #008000; font-weight: bold">for</span> key, value <span style="color: #A2F; font-weight: bold">in</span> base<span style="color: #666">.</span><span style="color: #19177C">__dict__</span><span style="color: #666">.</span>items():
             <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(value, RPCSignal):
@@ -2451,9 +2565,9 @@ The signal provided in notify must be emitted in the setter when the property ch
 
                   <details class="quote">
                     <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, fget<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, fset<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, fdel<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, doc<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, notify: RPCSignal <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">93</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">94</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">95</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, fget<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, fset<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, fdel<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, doc<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, notify: RPCSignal <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>(fget<span style="color: #666">=</span>fget, fset<span style="color: #666">=</span>fset, fdel<span style="color: #666">=</span>fdel, doc<span style="color: #666">=</span>doc)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_notifier <span style="color: #666">=</span> notify
 </code></pre></div></td></tr></table></div>
@@ -2626,35 +2740,7 @@ of the local network interface ip which must be accessible from the client.</p>
 
                   <details class="quote">
                     <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">321</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">322</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">323</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">324</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">325</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">326</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">327</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">328</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">329</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">330</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">331</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">332</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">333</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">334</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">335</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">336</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">337</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">338</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">339</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">340</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">341</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">342</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">343</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">344</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">345</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">346</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">347</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">348</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">349</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">349</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">350</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">351</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">352</span>
@@ -2702,7 +2788,35 @@ of the local network interface ip which must be accessible from the client.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">394</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">395</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">396</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">397</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">397</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">398</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">399</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">400</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">401</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">402</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">403</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">404</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">405</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">406</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">407</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">408</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">409</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">410</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">411</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">412</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">413</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">414</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">415</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">416</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">417</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">418</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">419</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">420</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">421</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">422</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">423</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">424</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">425</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    RPCServer to use in combination with RPCClient.</span>
 <span style="color: #BA2121; font-style: italic">    The server holds the concrete implementation of an interface that is made available on the network.</span>
@@ -2873,35 +2987,35 @@ as well as a buffer_info dictionary.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">459</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">462</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">464</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">465</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">466</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">467</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">468</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">469</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">470</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">471</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">472</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">473</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">474</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">475</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">476</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">477</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">478</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">479</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">480</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">481</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">482</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">483</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">484</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">485</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">486</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">488</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">489</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">490</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">491</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">492</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">494</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">495</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">497</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">498</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">499</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">500</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">501</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">502</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">503</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">504</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">505</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">506</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">507</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">508</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">509</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">510</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">511</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">512</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">513</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">514</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">515</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_buffer</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output as a buffer-like object</span>
@@ -3014,32 +3128,32 @@ Arguments are also serialized via json.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">432</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">433</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">434</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">435</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">436</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">437</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">438</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">439</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">440</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">441</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">442</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">443</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">444</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">445</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">446</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">447</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">448</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">449</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">450</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">451</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">452</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">453</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">454</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">455</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">456</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">457</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">462</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">464</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">465</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">466</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">467</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">468</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">469</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">470</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">471</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">472</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">473</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">474</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">475</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">476</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">477</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">478</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">479</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">480</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">481</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">482</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">483</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">484</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">485</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_json</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output via json.</span>
@@ -3177,37 +3291,37 @@ returns the accepted name of this device.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">399</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">400</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">401</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">402</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">403</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">404</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">405</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">406</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">407</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">408</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">409</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">410</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">411</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">412</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">413</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">414</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">415</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">416</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">417</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">418</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">419</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">420</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">421</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">422</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">423</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">424</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">425</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">426</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">428</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">429</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_to_registry</span>(<span style="color: #008000">self</span>, type_: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">429</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">430</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">431</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">432</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">433</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">434</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">435</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">436</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">437</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">438</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">439</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">440</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">441</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">442</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">443</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">444</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">445</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">446</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">447</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">448</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">449</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">450</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">451</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">452</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">453</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">454</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">455</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">456</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">457</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_to_registry</span>(<span style="color: #008000">self</span>, type_: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Register this RPCServer to the registry at `registry_address` as a device of type `type_` and name `name`.</span>
 
@@ -3262,35 +3376,7 @@ returns the accepted name of this device.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">539</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">540</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">541</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">542</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">543</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">544</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">545</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">546</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">547</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">548</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">549</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">550</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">551</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">552</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">553</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">554</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">555</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">556</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">557</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">558</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">559</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">560</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">561</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">562</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">563</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">564</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">565</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">566</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">567</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">567</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">568</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">569</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">570</span>
@@ -3355,7 +3441,35 @@ returns the accepted name of this device.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">629</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">630</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">631</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">632</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">serve_forever</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">632</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">633</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">634</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">635</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">636</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">637</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">638</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">639</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">640</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">641</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">642</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">643</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">644</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">645</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">646</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">647</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">648</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">649</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">650</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">651</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">652</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">653</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">654</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">655</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">656</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">657</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">658</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">659</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">660</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">serve_forever</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Starts serving requests for this RPCServer.</span>
 
@@ -3491,15 +3605,15 @@ emit the same signals in the proxy.</p>
 
                   <details class="quote">
                     <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">78</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">81</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">84</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">85</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">86</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, signals: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, RPCSignal]):
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">106</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, signals: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, RPCSignal]):
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000">self</span><span style="color: #666">.</span>context <span style="color: #666">=</span> context
     <span style="color: #008000">self</span><span style="color: #666">.</span>url <span style="color: #666">=</span> url
