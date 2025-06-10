@@ -1,9 +1,11 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 import PlantImagerApp.Controls as P
 import PlantImagerApp.Style as P
+import PlantImagerApp as P
 
 
 Control {
@@ -45,19 +47,57 @@ Control {
     Popup {
         id: _shutdown_popup
         modal: true
-        x: P.Style.windowWidth/2 - width/2
-        y: P.Style.windowHeight/2 - height/2
+        x: window.width/2 - width/2
+        y: window.height/2 - height/2
         ColumnLayout {
             anchors.fill: parent
             Button {
-                id: _restart_button
-                text: "Restart"
+                id: _restart_app_button
+                text: "Restart App"
                 Layout.fillWidth: true
+                enabled: P.AppBridge.is_systemd_service
+                visible: enabled
+
+                onClicked: {
+                    P.AppBridge.restart_app()
+                }
+            }
+            Button {
+                id: _restart_host_button
+                text: "Restart Host"
+                Layout.fillWidth: true
+
+                onClicked: {
+                    restart_host_dialog.open()
+                }
+                MessageDialog {
+                    id: restart_host_dialog
+                    flags: Qt.FramelessWindowHint
+                    text: "Are you sure you want to restart the host?"
+                    buttons: MessageDialog.Yes | MessageDialog.Cancel
+
+                    onAccepted: {
+                        P.AppBridge.reboot_host()
+                    }
+                }
             }
             Button {
                 id: _shutdown_button
                 text: "Shutdown"
                 Layout.fillWidth: true
+                onClicked: {
+                    shutdown_host_dialog.open()
+                }
+                MessageDialog {
+                    id: shutdown_host_dialog
+                    flags: Qt.FramelessWindowHint
+                    text: "Are you sure you want to shutdown the host?"
+                    buttons: MessageDialog.Yes | MessageDialog.Cancel
+
+                    onAccepted: {
+                        P.AppBridge.shutdown_host()
+                    }
+                }
             }
             Button {
                 id: _exit_button

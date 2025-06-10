@@ -1,3 +1,4 @@
+import subprocess
 from weakref import finalize
 
 import zmq
@@ -8,6 +9,7 @@ from threading import Thread
 
 from plantimager.commons import deviceregistry
 from plantimager.commons.logging import create_logger
+from plantimager.commons.systemd import is_systemd_process
 from plantimager.controller.camera.CameraBridge import CameraBridge
 from plantimager.controller.scanner.rpc_controller import RPCControllerServer
 from plantimager.controller.scanner.scanner import Scanner
@@ -191,3 +193,22 @@ class AppBridge(QObject):
             self._registryRemoveDevice.emit(device_type, addr, name)
         except RuntimeError:
             pass
+
+    @Slot()
+    def shutdown_host(self):
+        """Shuts down the host."""
+        subprocess.run(["poweroff"])
+
+    @Slot()
+    def reboot_host(self):
+        """Reboots the host."""
+        subprocess.run(["reboot"])
+
+    @Slot()
+    def restart_app(self):
+        """Reboots the app."""
+        subprocess.run(["systemctl", "--user", "restart", "plant-imager-app.service"])
+
+    @Property(bool, constant=True)
+    def is_systemd_service(self) -> bool:
+        return subprocess.run(["systemctl", "--user", "is-active", "plant-imager-app.service", "-q"]).returncode == 0 and is_systemd_process()

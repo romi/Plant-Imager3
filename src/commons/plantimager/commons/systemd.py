@@ -9,6 +9,12 @@ import sdnotify
 
 notifier = sdnotify.SystemdNotifier()
 
+def is_systemd_process():
+    """
+    Returns True if the current process is running under systemd.
+    """
+    return os.environ.get("SYSTEMD_EXEC_PID") is not None
+
 def notify_ready():
     """Tells the service manager that service startup is finished, or the service finished re-loading its configuration.
 
