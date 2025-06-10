@@ -32,7 +32,7 @@ def main():
     engine = QQmlApplicationEngine()
     engine.addImageProvider("provider", imageProvider)
     engine.addImportPath(dirname(__file__))
-    engine.loadFromModule("PlantImagerApp", "Main")
+    engine.loadFromModule("PlantImagerApp", "Loader")
 
     if not engine.rootObjects():
         sys.exit(-1)
@@ -47,7 +47,6 @@ def main():
     notify_ready()
     app.aboutToQuit.connect(notify_stopping)
     ex = app.exec()
-    print("exited with exit code", ex)
     sys.exit(ex)
 
 if __name__ == "__main__":

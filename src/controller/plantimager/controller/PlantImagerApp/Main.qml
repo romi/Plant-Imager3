@@ -14,6 +14,7 @@ ApplicationWindow {
     height: P.Style.windowHeight
     //flags: Qt.FramelessWindowHint | Qt.X11BypassWindowManagerHint
     flags: Qt.FramelessWindowHint
+    //visibility: Window.FullScreen
 
     header: P.Header {
 

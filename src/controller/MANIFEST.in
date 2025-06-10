@@ -1,0 +1,13 @@
+include plantimager/controller/PlantImagerApp/qmldir
+include plantimager/controller/PlantImagerApp/qtquickcontrols2.conf
+include plantimager/controller/PlantImagerApp/style.qrc
+include plantimager/controller/PlantImagerApp/*.qml
+include plantimager/controller/PlantImagerApp/Controls/*.qml
+include plantimager/controller/PlantImagerApp/Controls/qmldir
+include plantimager/controller/PlantImagerApp/Style/*.qml
+include plantimager/controller/PlantImagerApp/Style/qmldir
+include plantimager/controller/PlantImagerApp/Style/Icons.js
+include plantimager/controller/PlantImagerApp/Style/*.png
+include plantimager/controller/PlantImagerApp/ttf/*.ttf
+include plantimager/controller/PlantImagerApp/ttf/OFL.txt
+include plantimager/controller/PlantImagerApp/ttf/ttf.qrc

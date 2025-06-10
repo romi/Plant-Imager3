@@ -1,5 +1,6 @@
 module PlantImager
 Main 1.0 Main.qml
+Loader 1.0 Loader.qml
 
 
 Header 1.0 Header.qml
