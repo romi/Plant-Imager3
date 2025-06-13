@@ -373,12 +373,15 @@ class RPCServer:
             Port where the RPCServer is opened.
         name: int
             Name of the RPCServer as given by the deviceregistry once registered
+        uuid: str
+            Unique identifier of this RPCServer given by the registry once registered..
         peer_addr: str
             Ip address of the client once connected.
 
         """
         super().__init__()
 
+        self.uuid: None | str = None
         self._json_methods: dict[str, Callable] = dict()
         self._buffer_methods: dict[str, Callable] = dict()
         self._rpc_properties: dict[str, property] = dict()
@@ -447,7 +450,7 @@ class RPCServer:
 
         """
         logger.debug(f"Register device {name} of type {type_} to {registry_url}")
-        self.name = register_device(
+        self.name, self.uuid = register_device(
             self.context, type_,
             f"{self.url}:{self.port}",
             name, registry_url,
@@ -661,8 +664,8 @@ class RPCServer:
 
     def _finalize(self):
         self._stop = True
-        if self.name and self.registry_addr:
-            unregister_device(self.context, self.name, self.registry_addr)
+        if self.name and self.registry_addr and self.uuid:
+            unregister_device(self.context, self.uuid, self.registry_addr)
             logger.info("Device unregistered successfully")
         logger.info("Server deleted")
 

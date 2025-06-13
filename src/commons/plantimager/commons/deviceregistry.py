@@ -1,6 +1,7 @@
 from threading import Thread
 from enum import StrEnum
 from typing import Callable, Literal
+from uuid import uuid1
 
 import zmq
 from plantimager.commons.logging import create_logger
@@ -30,16 +31,15 @@ REGISTER_MSG = {
 REGISTER_ACK_MSG = {
     "event": EventType.REGISTER_ACK,
     "payload": {
-        "name": ""
+        "name": "",
+        "uuid": "",
     }
 }
 
 UNREGISTER_MSG = {
     "event": EventType.UNREGISTER,
     "payload": {
-        "device_type": type,
-        "addr": "",
-        "name": ""
+        "uuid": ""
     }
 }
 
@@ -102,6 +102,7 @@ class DeviceRegistry(Thread):
             "added": [], "removed": []
         }
         self.devices: dict[str, tuple[str, str]] = {}  # name --> (device_type, addr)
+        self.device_names: dict[str, str] = {} # uuid --> name
         self._stop = False
 
     def stop(self):
@@ -134,22 +135,21 @@ class DeviceRegistry(Thread):
                         addr = payload["addr"]
                         proposed_name = payload["name"]
                         overwrite = payload["overwrite"] if "overwrite" in payload else False
-                        name = self._handle_register(device_type, addr, proposed_name, overwrite=overwrite)
+                        name, uuid = self._handle_register(device_type, addr, proposed_name, overwrite=overwrite)
                         socket.send_json({
                             "event": EventType.REGISTER_ACK,
                             "payload": {
                                 "name": name,
+                                "uuid": str(uuid),
                             }
                         })
                     case EventType.UNREGISTER:
-                        name = payload["name"]
-                        addr = payload["addr"]
-                        device_type = payload["device_type"]
-                        if name in self.devices and self.devices[name] == (device_type, addr):
-                            result = self._remove_device(name)
+                        uuid = payload["uuid"]
+                        if uuid in self.device_names:
+                            result = self._remove_device(uuid)
                         else:
                             result = False
-                            logger.warning(f"Device {name} not found in registry")
+                            logger.warning(f"Device of id {uuid} not found in registry")
                         socket.send_json({
                             "event": EventType.ACK,
                             "payload": {
@@ -199,17 +199,21 @@ class DeviceRegistry(Thread):
         while name in self.devices:
             i += 1
             name = f"{proposed_name}-{i}"
+        uuid = uuid1()
+        self.device_names[str(uuid)] = name
         self.devices[name] = (device_type, addr)
 
         logger.info(f"Added new device {name}")
         self._callback_events_to_process["added"].append((device_type, addr, name))
-        return name
+        return name, uuid
 
-    def _remove_device(self, name: str):
-        if name in self.devices:
+    def _remove_device(self, uuid: str):
+        if uuid in self.device_names and self.device_names[uuid] in self.devices:
+            name = self.device_names[uuid]
             device_type, addr = self.devices[name]
             del self.devices[name]
-            logger.info(f"Removed device {name}")
+            del self.device_names[uuid]
+            logger.info(f"Removed device {name} with id {uuid} from registry. Device type: {device_type}, address: {addr}")
             self._callback_events_to_process["removed"].append((device_type, addr, name))
             return True
         return False
@@ -245,7 +249,8 @@ def register_device(context: zmq.Context, device_type: str, addr: str, name: str
     Register device of type `device_type` and of address `addr` to registry at `registry_url`.
     Proposes name to registry.
 
-    Returns accepted device name.
+    Returns accepted device name and the uuid of the device if successful, otherwise an empty string.
+    The uuid must be kept to unregister the device later.
     """
     with context.socket(zmq.REQ) as socket:
         socket.connect(registry_url)
@@ -263,15 +268,16 @@ def register_device(context: zmq.Context, device_type: str, addr: str, name: str
         payload = reply["payload"]
         if event_type == EventType.REGISTER_ACK:
             registered_name = payload["name"]
+            uuid = payload["uuid"]
             socket.close()
-            return registered_name
+            return registered_name, uuid
         socket.close()
     return ""
 
 
-def unregister_device(context: zmq.Context, name: str, registry_addr:str) -> bool:
+def unregister_device(context: zmq.Context, uuid: str, registry_addr: str) -> bool:
     """
-    Unregister the device of the given name from the registry at `registry_addr`.
+    Unregister the device of the given uuid from the registry at `registry_addr`.
     Returns True if the device was unregistered successfully.
     """
     with context.socket(zmq.REQ) as socket:
@@ -280,7 +286,7 @@ def unregister_device(context: zmq.Context, name: str, registry_addr:str) -> boo
         socket.send_json({
             "event": EventType.UNREGISTER,
             "payload": {
-                "name": name,
+                "uuid": uuid,
             }
         })
         if socket.poll(5000, flags=zmq.POLLIN) == 0:
