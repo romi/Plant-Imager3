@@ -2719,6 +2719,17 @@ of the local network interface ip which must be accessible from the client.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
+            <td><code><span title="plantimager.commons.RPC.RPCServer.__init__.uuid">uuid</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Unique identifier of this RPCServer given by the registry once registered..</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
             <td><code><span title="plantimager.commons.RPC.RPCServer.__init__.peer_addr">peer_addr</span></code></td>
             <td>
                   <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
@@ -2816,7 +2827,10 @@ of the local network interface ip which must be accessible from the client.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">422</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">423</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">424</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">425</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">425</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">426</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">428</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    RPCServer to use in combination with RPCClient.</span>
 <span style="color: #BA2121; font-style: italic">    The server holds the concrete implementation of an interface that is made available on the network.</span>
@@ -2843,12 +2857,15 @@ of the local network interface ip which must be accessible from the client.</p>
 <span style="color: #BA2121; font-style: italic">        Port where the RPCServer is opened.</span>
 <span style="color: #BA2121; font-style: italic">    name: int</span>
 <span style="color: #BA2121; font-style: italic">        Name of the RPCServer as given by the deviceregistry once registered</span>
+<span style="color: #BA2121; font-style: italic">    uuid: str</span>
+<span style="color: #BA2121; font-style: italic">        Unique identifier of this RPCServer given by the registry once registered..</span>
 <span style="color: #BA2121; font-style: italic">    peer_addr: str</span>
 <span style="color: #BA2121; font-style: italic">        Ip address of the client once connected.</span>
 
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
 
+    <span style="color: #008000">self</span><span style="color: #666">.</span>uuid: <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">|</span> <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_json_methods: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, Callable] <span style="color: #666">=</span> <span style="color: #008000">dict</span>()
     <span style="color: #008000">self</span><span style="color: #666">.</span>_buffer_methods: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, Callable] <span style="color: #666">=</span> <span style="color: #008000">dict</span>()
     <span style="color: #008000">self</span><span style="color: #666">.</span>_rpc_properties: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">property</span>] <span style="color: #666">=</span> <span style="color: #008000">dict</span>()
@@ -2987,10 +3004,7 @@ as well as a buffer_info dictionary.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">488</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">489</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">490</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">490</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">491</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">492</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span>
@@ -3015,7 +3029,10 @@ as well as a buffer_info dictionary.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">512</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">513</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">514</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">515</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">515</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">516</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">517</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">518</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_buffer</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output as a buffer-like object</span>
@@ -3128,10 +3145,7 @@ Arguments are also serialized via json.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">462</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">464</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">465</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">466</span>
@@ -3153,7 +3167,10 @@ Arguments are also serialized via json.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">482</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">483</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">484</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">485</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">485</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">486</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">488</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_json</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output via json.</span>
@@ -3291,10 +3308,7 @@ returns the accepted name of this device.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">428</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">429</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">430</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">430</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">431</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">432</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">433</span>
@@ -3321,7 +3335,10 @@ returns the accepted name of this device.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">454</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">455</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">456</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">457</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_to_registry</span>(<span style="color: #008000">self</span>, type_: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">457</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">458</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">459</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_to_registry</span>(<span style="color: #008000">self</span>, type_: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Register this RPCServer to the registry at `registry_address` as a device of type `type_` and name `name`.</span>
 
@@ -3344,7 +3361,7 @@ returns the accepted name of this device.</p>
 
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Register device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #666">=</span> register_device(
+    <span style="color: #008000">self</span><span style="color: #666">.</span>name, <span style="color: #008000">self</span><span style="color: #666">.</span>uuid <span style="color: #666">=</span> register_device(
         <span style="color: #008000">self</span><span style="color: #666">.</span>context, type_,
         <span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>,
         name, registry_url,
@@ -3376,10 +3393,7 @@ returns the accepted name of this device.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">567</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">568</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">569</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">570</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">570</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">571</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">572</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">573</span>
@@ -3469,7 +3483,10 @@ returns the accepted name of this device.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">657</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">658</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">659</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">660</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">serve_forever</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">660</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">661</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">662</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">663</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">serve_forever</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Starts serving requests for this RPCServer.</span>
 

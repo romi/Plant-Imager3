@@ -2392,7 +2392,8 @@ callbacks for.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">103</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">104</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">105</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, addr: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&quot;*&quot;</span>, port: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&quot;5555&quot;</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">105</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">106</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, addr: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&quot;*&quot;</span>, port: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&quot;5555&quot;</span>):
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000">self</span><span style="color: #666">.</span>addr: <span style="color: #008000">str</span> <span style="color: #666">=</span> addr
     <span style="color: #008000">self</span><span style="color: #666">.</span>port: <span style="color: #008000">str</span> <span style="color: #666">=</span> port
@@ -2403,6 +2404,7 @@ callbacks for.</p>
         <span style="color: #BA2121">&quot;added&quot;</span>: [], <span style="color: #BA2121">&quot;removed&quot;</span>: []
     }
     <span style="color: #008000">self</span><span style="color: #666">.</span>devices: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>]] <span style="color: #666">=</span> {}  <span style="color: #3D7B7B; font-style: italic"># name --&gt; (device_type, addr)</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>device_names: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>] <span style="color: #666">=</span> {} <span style="color: #3D7B7B; font-style: italic"># uuid --&gt; name</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_stop <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
 </code></pre></div></td></tr></table></div>
                   </details>
@@ -2437,11 +2439,11 @@ callbacks for.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/deviceregistry.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">223</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">224</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">226</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">227</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">add_device_removed_callback</span>(<span style="color: #008000">self</span>, callback: Callable):
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">227</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">228</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">229</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">230</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">231</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">add_device_removed_callback</span>(<span style="color: #008000">self</span>, callback: Callable):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Register a callback function to be executed when a device is removed.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
@@ -2470,11 +2472,11 @@ callbacks for.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/deviceregistry.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">217</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">218</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">220</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">221</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">add_new_device_callback</span>(<span style="color: #008000">self</span>, callback: Callable):
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">221</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">222</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">223</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">224</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">add_new_device_callback</span>(<span style="color: #008000">self</span>, callback: Callable):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Register a callback function to be executed when a new device is registered.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
@@ -2527,17 +2529,17 @@ values are tuples containing the name and type of the device as strings.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/deviceregistry.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">229</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">230</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">231</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">232</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">233</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">233</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">234</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">235</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">236</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">237</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">238</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">239</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_devices</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>]]:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">239</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">240</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">241</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">242</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">243</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_devices</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>]]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Returns the registered devices.</span>
 
@@ -2574,8 +2576,7 @@ the events accordingly.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/deviceregistry.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">116</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span>
@@ -2664,22 +2665,21 @@ the events accordingly.</p>
                     addr <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;addr&quot;</span>]
                     proposed_name <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;name&quot;</span>]
                     overwrite <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;overwrite&quot;</span>] <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">&quot;overwrite&quot;</span> <span style="color: #A2F; font-weight: bold">in</span> payload <span style="color: #008000; font-weight: bold">else</span> <span style="color: #008000; font-weight: bold">False</span>
-                    name <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_handle_register(device_type, addr, proposed_name, overwrite<span style="color: #666">=</span>overwrite)
+                    name, uuid <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_handle_register(device_type, addr, proposed_name, overwrite<span style="color: #666">=</span>overwrite)
                     socket<span style="color: #666">.</span>send_json({
                         <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>REGISTER_ACK,
                         <span style="color: #BA2121">&quot;payload&quot;</span>: {
                             <span style="color: #BA2121">&quot;name&quot;</span>: name,
+                            <span style="color: #BA2121">&quot;uuid&quot;</span>: <span style="color: #008000">str</span>(uuid),
                         }
                     })
                 <span style="color: #008000; font-weight: bold">case</span> EventType<span style="color: #666">.</span>UNREGISTER:
-                    name <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;name&quot;</span>]
-                    addr <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;addr&quot;</span>]
-                    device_type <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;device_type&quot;</span>]
-                    <span style="color: #008000; font-weight: bold">if</span> name <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>devices <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">self</span><span style="color: #666">.</span>devices[name] <span style="color: #666">==</span> (device_type, addr):
-                        result <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_remove_device(name)
+                    uuid <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;uuid&quot;</span>]
+                    <span style="color: #008000; font-weight: bold">if</span> uuid <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>device_names:
+                        result <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_remove_device(uuid)
                     <span style="color: #008000; font-weight: bold">else</span>:
                         result <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
-                        logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f&quot;Device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> not found in registry&quot;</span>)
+                        logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f&quot;Device of id </span><span style="color: #A45A77; font-weight: bold">{</span>uuid<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> not found in registry&quot;</span>)
                     socket<span style="color: #666">.</span>send_json({
                         <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>ACK,
                         <span style="color: #BA2121">&quot;payload&quot;</span>: {
@@ -2731,11 +2731,11 @@ the events accordingly.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/deviceregistry.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Stop the registry thread.&quot;&quot;&quot;</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_device_removed_callbacks <span style="color: #666">=</span> []
     <span style="color: #008000">self</span><span style="color: #666">.</span>_new_device_callbacks <span style="color: #666">=</span> []
@@ -2770,16 +2770,13 @@ the events accordingly.</p>
 
         <p>Register device of type <code>device_type</code> and of address <code>addr</code> to registry at <code>registry_url</code>.
 Proposes name to registry.</p>
-<p>Returns accepted device name.</p>
+<p>Returns accepted device name and the uuid of the device if successful, otherwise an empty string.
+The uuid must be kept to unregister the device later.</p>
 
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/deviceregistry.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">243</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">244</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">245</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">246</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">248</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
@@ -2801,12 +2798,19 @@ Proposes name to registry.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">268</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_device</span>(context: zmq<span style="color: #666">.</span>Context, device_type: <span style="color: #008000">str</span>, addr: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, overwrite: <span style="color: #008000">bool</span><span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">270</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">271</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">272</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">273</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">274</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">275</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_device</span>(context: zmq<span style="color: #666">.</span>Context, device_type: <span style="color: #008000">str</span>, addr: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, overwrite: <span style="color: #008000">bool</span><span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Register device of type `device_type` and of address `addr` to registry at `registry_url`.</span>
 <span style="color: #BA2121; font-style: italic">    Proposes name to registry.</span>
 
-<span style="color: #BA2121; font-style: italic">    Returns accepted device name.</span>
+<span style="color: #BA2121; font-style: italic">    Returns accepted device name and the uuid of the device if successful, otherwise an empty string.</span>
+<span style="color: #BA2121; font-style: italic">    The uuid must be kept to unregister the device later.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">with</span> context<span style="color: #666">.</span>socket(zmq<span style="color: #666">.</span>REQ) <span style="color: #008000; font-weight: bold">as</span> socket:
         socket<span style="color: #666">.</span>connect(registry_url)
@@ -2824,8 +2828,9 @@ Proposes name to registry.</p>
         payload <span style="color: #666">=</span> reply[<span style="color: #BA2121">&quot;payload&quot;</span>]
         <span style="color: #008000; font-weight: bold">if</span> event_type <span style="color: #666">==</span> EventType<span style="color: #666">.</span>REGISTER_ACK:
             registered_name <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;name&quot;</span>]
+            uuid <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;uuid&quot;</span>]
             socket<span style="color: #666">.</span>close()
-            <span style="color: #008000; font-weight: bold">return</span> registered_name
+            <span style="color: #008000; font-weight: bold">return</span> registered_name, uuid
         socket<span style="color: #666">.</span>close()
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
@@ -2842,24 +2847,18 @@ Proposes name to registry.</p>
 
 
 <a href="#plantimager.commons.deviceregistry.unregister_device" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>unregister_device(context, name, registry_addr)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>unregister_device(context, uuid, registry_addr)
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Unregister the device of the given name from the registry at <code>registry_addr</code>.
+        <p>Unregister the device of the given uuid from the registry at <code>registry_addr</code>.
 Returns True if the device was unregistered successfully.</p>
 
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/deviceregistry.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">272</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">273</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">274</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">275</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">276</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">277</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">278</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">278</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">279</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">280</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">281</span>
@@ -2877,9 +2876,15 @@ Returns True if the device was unregistered successfully.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">294</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">295</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">296</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">unregister_device</span>(context: zmq<span style="color: #666">.</span>Context, name: <span style="color: #008000">str</span>, registry_addr:<span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">296</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">297</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">298</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">299</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">300</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">301</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">302</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">unregister_device</span>(context: zmq<span style="color: #666">.</span>Context, uuid: <span style="color: #008000">str</span>, registry_addr: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
-<span style="color: #BA2121; font-style: italic">    Unregister the device of the given name from the registry at `registry_addr`.</span>
+<span style="color: #BA2121; font-style: italic">    Unregister the device of the given uuid from the registry at `registry_addr`.</span>
 <span style="color: #BA2121; font-style: italic">    Returns True if the device was unregistered successfully.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">with</span> context<span style="color: #666">.</span>socket(zmq<span style="color: #666">.</span>REQ) <span style="color: #008000; font-weight: bold">as</span> socket:
@@ -2888,7 +2893,7 @@ Returns True if the device was unregistered successfully.</p>
         socket<span style="color: #666">.</span>send_json({
             <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>UNREGISTER,
             <span style="color: #BA2121">&quot;payload&quot;</span>: {
-                <span style="color: #BA2121">&quot;name&quot;</span>: name,
+                <span style="color: #BA2121">&quot;uuid&quot;</span>: uuid,
             }
         })
         <span style="color: #008000; font-weight: bold">if</span> socket<span style="color: #666">.</span>poll(<span style="color: #666">5000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
