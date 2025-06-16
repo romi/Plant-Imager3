@@ -238,6 +238,7 @@ class Scanner(QObject):
     maxProgressChanged = Signal(int)
     readyToScanChanged = Signal(bool)
     cameraNamesChanged = Signal(list)
+    cncTypeChanged = Signal(str)
 
     def __init__(self):
         """Initialize the Scanner with default settings.
@@ -270,7 +271,7 @@ class Scanner(QObject):
         self.uploader: DataUploader | None = None  # Data uploader
         self.fileset = "images"  # Default fileset name
 
-    @Property(str)
+    @Property(str, notify=cncTypeChanged)
     def cnc_type(self) -> str:
         """Get the type of the CNC controller."""
         return "DummyCNC" if isinstance(self.cnc, DummyCNC) else "GRBL CNC"
