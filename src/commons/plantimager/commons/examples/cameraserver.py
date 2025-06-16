@@ -1,10 +1,28 @@
+import matplotlib.pyplot as plt
 import zmq
+from scipy import ndimage
 from simplejpeg import encode_jpeg
 import numpy as np
 import scipy
 
 from plantimager.commons.RPC import RPCServer, RPCProperty
 from plantimager.commons.cameradevice import Camera, CameraMode
+
+def block_mean(ar, fact):
+    assert isinstance(fact, int), type(fact)
+    sx, sy, *others = ar.shape
+    assert len(others) <= 1, f"no more than 3 dimensions are allowed, got {len(others)+2}"
+    X, Y = np.ogrid[0:sx, 0:sy]
+    regions = sy//fact * (X//fact) + Y//fact
+    if others:
+        max_ = regions.max()
+        regions = np.expand_dims(regions, axis=2).repeat(others[0], axis=2)
+        regions *= others[0]
+        for i in range(1, others[0]):
+            regions[:, :, i] += i
+    res = ndimage.mean(ar, labels=regions, index=np.arange(regions.max() + 1))
+    res.shape = (sx//fact, sy//fact, *others)
+    return res
 
 
 class DummyCamera(Camera, RPCServer):
@@ -18,8 +36,10 @@ class DummyCamera(Camera, RPCServer):
     def get_image(self) -> (memoryview, dict):
         if self.mode != CameraMode.STILL:
             self.mode = CameraMode.STILL
-        image: np.ndarray[np.uint8] = scipy.datasets.face()
-        image = np.clip(image.astype(int) + np.random.randint(-50, 50, image.shape, dtype=int), 0, 255)
+        image: np.ndarray[..., np.uint8] = scipy.datasets.face()
+        image = plt.imread("/home/arthur/Images/RDPiades_2023/camera2/DSC_0139.JPG")
+        image = block_mean(image, 5)
+        #image = np.clip(image.astype(int) + np.round(np.random.normal(0.0, 0.5, image.shape)), 0, 255)
         buffer = encode_jpeg(image.astype(np.uint8), quality=95, colorsubsampling="420", fastdct=True)
         return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape}
 

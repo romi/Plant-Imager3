@@ -1,3 +1,4 @@
+import os.path
 import sys
 from enum import StrEnum
 from typing import Literal
@@ -62,6 +63,7 @@ class CameraBridge(QObject):
         self._address = address
         self._video_source = ""
         self._image_source = ""
+        self._focusHighlight = None
         if name == "empty" or address == "":
             self._status = States.INVALID
             self.camera = None
@@ -120,7 +122,7 @@ class CameraBridge(QObject):
     @Slot(memoryview, dict)
     def _newImage(self, buffer: memoryview, buffer_info: dict):
         imageProvider.addImageFromBuffer(f"{self._name}-{self._i}", buffer, buffer_info)
-        self._image_source = f"image://provider/{self._name}-{self._i}"
+        self._image_source = f"image://provider/focus-{self._name}-{self._i}"
         self.imageSourceChanged.emit(self._image_source)
         self._i  = (self._i + 1) % 2
 
@@ -146,6 +148,10 @@ class CameraBridge(QObject):
 
     @Property(str, notify=imageSourceChanged)
     def imageSource(self) -> str:
+        if not self._image_source:
+            return ""
+        if self._focusHighlight:
+            return os.path.split(self._image_source)[0] + "/focus-" + os.path.split(self._image_source)[1]
         return self._image_source
 
     @Slot(int)
@@ -161,3 +167,9 @@ class CameraBridge(QObject):
     def rotation(self, value: int):
         if self.camera:
             self.camera.rotation = value % 360
+
+    @Slot(bool)
+    def setFocusHighlight(self, value: bool):
+        if self._focusHighlight != value:
+            self._focusHighlight = value
+            self.imageSourceChanged.emit(self.imageSource)

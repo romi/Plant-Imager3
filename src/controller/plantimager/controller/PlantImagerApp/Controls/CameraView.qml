@@ -152,9 +152,10 @@ Control {
         Button {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            text: "Rotation (" + bridge.rotation.toString() + ") +10°"
-            onClicked: {
-                bridge.rotation += 10
+            checkable: true
+            text: "Focus highlight"
+            onCheckedChanged: {
+                bridge.setFocusHighlight(checked)
             }
         }
 
