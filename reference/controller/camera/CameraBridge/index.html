@@ -2144,7 +2144,8 @@ statusClass</p>
 
                   <details class="quote">
                     <summary>Source code in <code>plantimager/controller/camera/CameraBridge.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">61</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">62</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">63</span>
@@ -2166,15 +2167,12 @@ statusClass</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">81</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">84</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, name: <span style="color: #008000">str</span>, address: <span style="color: #008000">str</span>, context: zmq<span style="color: #666">.</span>Context, parent: QObject <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, name: <span style="color: #008000">str</span>, address: <span style="color: #008000">str</span>, context: zmq<span style="color: #666">.</span>Context, parent: QObject <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>(parent)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_name <span style="color: #666">=</span> name
     <span style="color: #008000">self</span><span style="color: #666">.</span>_address <span style="color: #666">=</span> address
     <span style="color: #008000">self</span><span style="color: #666">.</span>_video_source <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_image_source <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_focusHighlight <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
     <span style="color: #008000; font-weight: bold">if</span> name <span style="color: #666">==</span> <span style="color: #BA2121">&quot;empty&quot;</span> <span style="color: #A2F; font-weight: bold">or</span> address <span style="color: #666">==</span> <span style="color: #BA2121">&quot;&quot;</span>:
         <span style="color: #008000">self</span><span style="color: #666">.</span>_status <span style="color: #666">=</span> States<span style="color: #666">.</span>INVALID
         <span style="color: #008000">self</span><span style="color: #666">.</span>camera <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
