@@ -24,6 +24,7 @@ $ python app.py --host http://example-server --port 5000
 import argparse
 from threading import Thread
 
+import dash
 import dash_bootstrap_components as dbc
 import zmq
 from dash import Dash
@@ -31,13 +32,12 @@ from dash import dcc
 from dash import html
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-
 from plantimager.webui.config import plantdb_cfg_modal
 from plantimager.webui.controller_proxy import RPCController
 from plantimager.webui.login import login_modal
 from plantimager.webui.nav import navbar_layout
 from plantimager.webui.new_user import new_user_modal
-from plantimager.webui.scan import scan_layout
+from plantimager.webui.carousel import caroussel_modal
 
 REST_API_URL = "127.0.0.1"
 REST_API_PORT = 5000
@@ -115,6 +115,9 @@ def setup_web_app(url: str, port: int, proxy=False, url_base_pathname: str = '/w
         title="Plant Imager",
         external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
         url_base_pathname=url_base_pathname,
+        use_pages=True,
+        pages_folder="src/webui/plantimager/webui/pages",
+        assets_folder="src/webui/plantimager/webui/assets",
     )
 
     if proxy:
@@ -136,15 +139,23 @@ def setup_web_app(url: str, port: int, proxy=False, url_base_pathname: str = '/w
         dcc.Store(id='logged-fullname', data=None),
         dcc.Store(id='dataset-list', data=[]),
         dcc.Store(id='dataset-id', data=None),
+        dcc.Store(id='dataset-dict', data={}),
+        dcc.Store(id='view-dataset', data=None),
         # Navigation and modal components
         html.Div(children=[
             navbar_layout,
             plantdb_cfg_modal,
             login_modal,
             new_user_modal,
+            caroussel_modal,
         ]),
         # Main content container
-        html.Div(children=[scan_layout], style={"margin": 20}),
+        # html.Div(children=[scan_layout], style={"margin": 20}),
+        dcc.Location(id='url', refresh=False),
+        html.Div(id='page-content',
+                 children=[dash.page_container],
+                 style={"margin": 20},
+                 ),
     ])
 
     return app

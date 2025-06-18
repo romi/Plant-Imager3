@@ -7,10 +7,15 @@ name = "plantimager.webui"
 version = "0.0.1"
 dependencies = [
     "bcrypt",
+    "plantimager.commons",
+    "tomli",
+    # Dash & Dash third-party components
     "dash",
     "dash-bootstrap-components<2.0",
-    "plantimager.commons",
-    "tomli"
+    "dash-ag-grid",
+    "dash-iconify",
+    "pandas",
+    "plotly>= 5.21.0",
 ]
 description = "A Dash-based web interface, served by the Raspberry PI 4/5 main controller, to setup and run acquisitions with the ROMI Plant Imager."
 readme = "README.md"

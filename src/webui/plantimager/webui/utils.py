@@ -33,6 +33,29 @@ from plantdb.client.rest_api import base_url
 from plantdb.client.rest_api import list_scan_names
 from plantdb.client.rest_api import parse_scans_info
 
+FONT_FAMILY = '"Nunito Sans", sans-serif'
+
+TASKS = [
+    "PointCloud",
+    "TriangleMesh",
+    "CurveSkeleton",
+    "TreeGraph",
+    "AnglesAndInternodes",
+]
+
+TASK_OBJECTS = [
+    "PointCloud",
+    "TriangleMesh",
+    "TreeGraph",
+    "FruitDirection",
+    "StemDirection",
+]
+
+IMAGE_TASKS = [
+    'images',
+    'Undistorted',
+    'Masks',
+]
 
 def get_dataset_dict(host: str, port: str) -> dict[str, Any] | None:
     """Returns the dataset dictionary for the PlantDB REST API at given host url and port.
