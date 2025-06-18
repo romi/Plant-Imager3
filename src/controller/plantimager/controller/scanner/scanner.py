@@ -38,7 +38,7 @@ from concurrent.futures import wait
 from io import BytesIO
 from weakref import finalize
 
-from PySide6.QtCore import Property
+from PySide6.QtCore import Property, QTimer
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
@@ -270,6 +270,24 @@ class Scanner(QObject):
         self.db_client: PlantDBClient | None = None  # Database client
         self.uploader: DataUploader | None = None  # Data uploader
         self.fileset = "images"  # Default fileset name
+
+        self._cnc_connection_timer = QTimer()
+        self._cnc_connection_timer.setInterval(5000)
+        self._cnc_connection_timer.timeout.connect(self._try_connect_cnc)
+        if isinstance(self.cnc, DummyCNC): self._cnc_connection_timer.start()
+
+    @Slot()
+    def _try_connect_cnc(self):
+        if isinstance(self.cnc, DummyCNC):
+            try:
+                # Try to connect to the real CNC hardware
+                self.cnc = CNC()
+                self.cnc.moveto(20, 20, 45)
+            except Exception as e:
+                pass
+            else:
+                self._cnc_connection_timer.stop()
+                self.cncTypeChanged.emit(self.cnc_type)
 
     @Property(str, notify=cncTypeChanged)
     def cnc_type(self) -> str:
