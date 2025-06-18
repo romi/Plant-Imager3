@@ -108,15 +108,13 @@ scan_card = [
                 )),
                 dbc.Row([
                     dbc.Col([
-                        dcc.Loading([
-                            dbc.Button(
-                                children=[
-                                    html.I(className="bi bi-play-fill me-2"),
-                                    'Start scan'
-                                ],
-                                id='start-scan-button'
-                            )
-                        ]),
+                        dbc.Button(
+                            children=[
+                                html.I(className="bi bi-play-fill me-2"),
+                                'Start scan'
+                            ],
+                            id='start-scan-button'
+                        ),
                     ], width=3),
                     dbc.Col([
                         dbc.Alert(
