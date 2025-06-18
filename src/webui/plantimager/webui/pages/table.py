@@ -196,7 +196,7 @@ def show_carousel_modal(cell_data, dataset_dict):
     try:
         # If using row data, you can access it through:
         row_data = cell_data.get('rowIndex', {})
-        dataset_name = dataset_dict[row_data]
+        dataset_name = list(dataset_dict.keys())[row_data]
         # Now find this dataset in your dataset_dict
         return dataset_name, True, json.dumps(cell_data)
     except Exception as e:
