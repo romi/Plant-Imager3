@@ -1626,29 +1626,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../carousel/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    carousel
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../config/" class="md-nav__link">
         
   
@@ -1741,6 +1718,24 @@
   <a href="#plantimager.webui.controller_proxy.RPCController.__new__" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__new__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.webui.controller_proxy.RPCController.camera_get_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;camera_get_image
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.webui.controller_proxy.RPCController.camera_get_last_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;camera_get_last_image
     </span>
   </a>
   
@@ -1921,108 +1916,6 @@
   
   
   
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_1_8" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../pages/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    pages
-    
-  </span>
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_3_3_1_8" id="__nav_3_3_1_8_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_3_1_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3_1_8">
-            <span class="md-nav__icon md-icon"></span>
-            pages
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../pages/home/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    home
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../pages/table/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    table
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
       <a href="../scan/" class="md-nav__link">
         
@@ -2053,29 +1946,6 @@
   
   <span class="md-ellipsis">
     utils
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../visu/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    visu
     
   </span>
   
@@ -2304,6 +2174,24 @@
   <a href="#plantimager.webui.controller_proxy.RPCController.__new__" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__new__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.webui.controller_proxy.RPCController.camera_get_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;camera_get_image
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.webui.controller_proxy.RPCController.camera_get_last_image" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;camera_get_last_image
     </span>
   </a>
   
@@ -2833,6 +2721,76 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
 <div class="doc doc-object doc-function">
 
 
+<h4 id="plantimager.webui.controller_proxy.RPCController.camera_get_image" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">camera_get_image</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
+  </span>
+
+<a href="#plantimager.webui.controller_proxy.RPCController.camera_get_image" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>camera_get_image(camera_name)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Get an image from the specified camera.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>plantimager/commons/controller_device.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@abstractmethod</span>
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">camera_get_image</span>(<span style="color: #008000">self</span>, camera_name: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>]:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Get an image from the specified camera.&quot;&quot;&quot;</span>
+    <span style="color: #008000; font-weight: bold">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="plantimager.webui.controller_proxy.RPCController.camera_get_last_image" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">camera_get_last_image</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
+  </span>
+
+<a href="#plantimager.webui.controller_proxy.RPCController.camera_get_last_image" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>camera_get_last_image(camera_name)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Get the last image from the specified camera.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>plantimager/commons/controller_device.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">45</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">47</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">48</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@abstractmethod</span>
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">camera_get_last_image</span>(<span style="color: #008000">self</span>, camera_name: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>]:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Get the last image from the specified camera.&quot;&quot;&quot;</span>
+    <span style="color: #008000; font-weight: bold">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h4 id="plantimager.webui.controller_proxy.RPCController.camera_names" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">camera_names</span>
 
@@ -2852,11 +2810,11 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/controller_device.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">61</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">62</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>cameraNamesChanged)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>cameraNamesChanged)
 <span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">camera_names</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>[<span style="color: #008000">str</span>]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return the list of camera names.&quot;&quot;&quot;</span>
@@ -2996,11 +2954,11 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/controller_device.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">47</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">48</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>maxProgressChanged)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>maxProgressChanged)
 <span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">max_progress</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return the maximum progress of the scan.&quot;&quot;&quot;</span>
@@ -3033,11 +2991,11 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/controller_device.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">44</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>progressChanged)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">54</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>progressChanged)
 <span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">progress</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return the current progress of the scan.&quot;&quot;&quot;</span>
@@ -3070,11 +3028,11 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/commons/controller_device.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">54</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">55</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>readyToScanChanged)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">62</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">63</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">64</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>readyToScanChanged)
 <span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ready_to_scan</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return whether the controller is ready to start a scan.&quot;&quot;&quot;</span>
