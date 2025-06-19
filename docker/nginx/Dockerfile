@@ -23,7 +23,7 @@ COPY ssl/key.pem /etc/nginx/ssl/
 COPY default.conf .
 
 # Substitute environment variables in the configuration file and save it
-RUN envsubst "\$SERVER_URL \$CONTROLLER_URL \$CONTROLLER_PORT" < default.conf > /etc/nginx/conf.d/default.conf
+RUN envsubst "\$SERVER_URL \$CONTROLLER_URL \$CONTROLLER_PORT \$PLANTDB_URL \$PLANTDB_PORT" < default.conf > /etc/nginx/conf.d/default.conf
 
 # Copy custom NGINX configuration to the appropriate location
 COPY nginx.conf /etc/nginx/nginx.conf
