@@ -169,6 +169,10 @@
          <lastmod>2025-06-19</lastmod>
     </url>
     <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/webui/carousel/</loc>
+         <lastmod>2025-06-19</lastmod>
+    </url>
+    <url>
          <loc>https://github.com/romi/Plant-Imager3/reference/webui/config/</loc>
          <lastmod>2025-06-19</lastmod>
     </url>
@@ -197,7 +201,23 @@
          <lastmod>2025-06-19</lastmod>
     </url>
     <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/webui/visu/</loc>
+         <lastmod>2025-06-19</lastmod>
+    </url>
+    <url>
          <loc>https://github.com/romi/Plant-Imager3/reference/webui/wsgi/</loc>
+         <lastmod>2025-06-19</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/webui/pages/</loc>
+         <lastmod>2025-06-19</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/webui/pages/home/</loc>
+         <lastmod>2025-06-19</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/webui/pages/table/</loc>
          <lastmod>2025-06-19</lastmod>
     </url>
 </urlset>
