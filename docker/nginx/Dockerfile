@@ -8,7 +8,9 @@ LABEL description="Plant Imager Proxy"
 # Define build arguments to be passed during image creation
 ARG SERVER_URL
 ARG CONTROLLER_URL
-ARG CONTROLLER_PORT
+ARG CONTROLLER_PORT="8080"
+ARG PLANTDB_URL
+ARG PLANTDB_PORT="5000"
 
 # Create directory for SSL certificates
 RUN mkdir -p /etc/nginx/ssl
