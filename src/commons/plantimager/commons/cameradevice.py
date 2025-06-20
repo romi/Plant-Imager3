@@ -15,6 +15,7 @@ class Camera(ABC):
     modeChanged = RPCSignal(str)
     videoUrlChanged = RPCSignal(str)
     rotationChanged = RPCSignal(int)
+    resolutionChanged = RPCSignal(tuple[int, int])
 
     def __init__(self):
         pass
@@ -41,3 +42,13 @@ class Camera(ABC):
     @abstractmethod
     def rotation(self) -> int:
         pass
+
+    @RPCProperty(notify=resolutionChanged)
+    @abstractmethod
+    def resolution(self) -> tuple[int, int]:
+        pass
+    @resolution.setter
+    @abstractmethod
+    def resolution(self, resolution: tuple[int, int]) -> None:
+        pass
+

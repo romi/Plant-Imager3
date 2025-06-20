@@ -9,18 +9,22 @@ tilt = 0
 radius = 350
 n_points = 36
 
-[Picamera1]
+[picamera]
+res_x = 4056
+res_y = 3040
 
-[Picamera1.offset] # top camera
+[picamera.offset] # top camera
 x = 0
 y = 0
 z = 0
 pan = 0
 tilt = 0
 
-[Picamera2]
+[picamera2]
+res_x = 4056
+res_y = 3040
 
-[Picamera2.offset] # bottom camera
+[picamera2.offset] # bottom camera
 x = 0
 y = 0
 z = -100

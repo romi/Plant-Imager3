@@ -47,6 +47,13 @@ class DummyCamera(Camera, RPCServer):
             self._rotation = value
             self.rotationChanged.emit(value)
 
+    @RPCProperty(notify=Camera.resolutionChanged)
+    def resolution(self) -> tuple[int, int]:
+        return 640, 480
+    @resolution.setter
+    def resolution(self, value: tuple[int, int]):
+        pass
+
 
 if __name__ == "__main__":
     context = zmq.Context()

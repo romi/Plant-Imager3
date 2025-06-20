@@ -463,6 +463,14 @@ class Scanner(QObject):
         self.dataset_metadata = config["Metadata"]["object"]  # Biological metadata
         self.hw_metadata = config["Metadata"]["hardware"]  # Hardware metadata
 
+        # Configure cameras
+        for camera in self.cameras:
+            if camera.name in config:
+                res = config[camera.name]["res_x"], config[camera.name]["res_y"]
+                camera.resolution = res
+
+
+
     @Property(bool, notify=readyToScanChanged)
     def ready_to_scan(self) -> bool:
         """Check if the scanner is ready to perform a scan.
@@ -531,7 +539,7 @@ class Scanner(QObject):
         logger.info(f"Moving arm to {pose}")
         # Move CNC to the specified position (only x, y, and pan are used)
         self.cnc.moveto(pose.x, pose.y, pose.pan)
-        time.sleep(1)  # Wait for movement to complete as grbl returns a bit early
+        time.sleep(2)  # Wait for movement to complete as grbl returns a bit early
 
     def set_scan_id(self, scan_id: str):
         """Set the identifier for the scan dataset.

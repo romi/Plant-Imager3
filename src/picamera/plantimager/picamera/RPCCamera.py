@@ -31,13 +31,14 @@ class RPCCamera(Camera, RPCServer):
     def __init__(self, context: zmq.Context, url: str):
         RPCServer.__init__(self, context, url)
         self.picam = Picamera2()
+        max_res = self.picam.camera_properties["PixelArraySize"]
         print(self.picam.camera_properties)
         self.video_config = self.picam.create_video_configuration(
             {"size": (640, 480), "format": "YUV420"},
             controls={'FrameRate': 15}
         )
         self.still_config = self.picam.create_still_configuration(
-            {"size": (2028, 1520), "format": "BGR888"},
+            {"size": (max_res[0]//2, max_res[1]//2), "format": "BGR888"},
             queue=False
         )
         self._mode = CameraMode.STILL
@@ -116,6 +117,18 @@ class RPCCamera(Camera, RPCServer):
     def rotation(self, value):
         if value != self._rotation:
             self._rotation = value % 360
+
+    @RPCProperty(notify=Camera.resolutionChanged)
+    def resolution(self) -> tuple[int, int]:
+        return self.still_config.get("size")
+    @resolution.setter
+    def resolution(self, value: tuple[int, int]):
+        if value != self.still_config.get("size"):
+            x_max, y_max = self.picam.camera_properties["PixelArraySize"]
+            self.still_config["main"]["size"] = max(60, min(value[0], x_max)), max(60, min(value[1], y_max))
+            if self._mode == CameraMode.STILL:
+                self.picam.switch_mode(self.still_config, wait=True)
+            self.resolutionChanged.emit(self.still_config["main"]["size"])
 
 
 
