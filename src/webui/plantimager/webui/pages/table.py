@@ -7,7 +7,6 @@
 #  license. Please see the LICENSE.md file that should have been included as
 #  part of this package.
 # ------------------------------------------------------------------------------
-import json
 
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
@@ -60,10 +59,11 @@ layout = html.Div([
         style={"width": "100%", 'display': 'flex', 'justifyContent': 'flex-end',
                'margin-bottom': '5px', 'gap': '10px'},
     ),
-    html.Div(id="dbc-btn-simple-value-changed"),
     dcc.Loading(children=[
-        dcc.Store(id='dataset-dict', data=None, storage_type='session'),
-        html.Div(id="dataset-table", style={"width": "100%", "height": "84vh"})
+        html.Div(
+            id="dataset-table",
+            style={"width": "80%", "height": "84vh", 'justifyContent': 'center'}
+        )
     ], target_components={"dataset-dict": "data", "dataset-table": "children"}),
 ])
 
@@ -92,8 +92,9 @@ def _column_defs(col_name):
           Input('refresh-table-button', 'n_clicks'),
           State('rest-api-host', 'data'),
           State('rest-api-port', 'data'),
+          State('rest-api-prefix', 'data'),
           State('dataset-dict', 'data'))
-def update_stored_db(url, n_clicks, host, port, dataset_dict):
+def update_stored_db(url, n_clicks, host, port, prefix, dataset_dict):
     """Update the stored dataset dictionary.
 
     This is done upon landing on home (/) or this (/table) page or clicking the refresh button.
@@ -119,7 +120,7 @@ def update_stored_db(url, n_clicks, host, port, dataset_dict):
         Always `0` to re-initialize the number of clicks made on the refresh button.
     """
     if n_clicks > 0 or (url in ["/", '/table'] and dataset_dict is not None):
-        dataset_dict = get_dataset_dict(host, port)
+        dataset_dict = get_dataset_dict(host=host, port=port, prefix=prefix)
     else:
         dataset_dict = None
     return dataset_dict, 0
@@ -169,13 +170,13 @@ def update_table(dataset_dict, url, port):
             columnDefs=[_column_defs(col) for col in df.columns],
             getRowId="params.data.Name",
             dashGridOptions={
-                "rowHeight": '100', "animateRows": False,
+                "rowHeight": '150', "animateRows": False,
                 "pagination": True, "paginationAutoPageSize": True,
             },
             persistence=True,
             persisted_props=["filterModel"],
             columnSize="autoSize",
-            style={"height": 48 + thumb_size * n_rows + 48, "width": "100%"},
+            style={"height": thumb_size * n_rows, "width": "100%"},
         )
     else:
         table = "No dataset loaded yet!"
@@ -185,22 +186,17 @@ def update_table(dataset_dict, url, port):
 @callback(
     Output("view-dataset", "data"),
     Output("carousel-modal", "is_open"),
-    Output("dbc-btn-simple-value-changed", "children"),
+    Output("carousel-modal-title", "children"),
     Input("plantdb-dag", "cellRendererData"),
-    State("dataset-dict", "data"),
 )
-def show_carousel_modal(cell_data, dataset_dict):
+def show_carousel_modal(cell_data):
     if cell_data is None:
-        return None, False
+        return None, False, "Carousel"
 
     try:
         # If using row data, you can access it through:
-        row_data = cell_data.get('rowIndex', {})
-        dataset_name = list(dataset_dict.keys())[row_data]
-        # Now find this dataset in your dataset_dict
-        return dataset_name, True, json.dumps(cell_data)
+        dataset_name = cell_data.get('rowId', None)
+        return dataset_name, True, f"Carousel - {dataset_name}"
     except Exception as e:
         print(f"Error in show_carousel_modal: {e}")
-        return None, False, json.dumps(cell_data)
-
-
+        return None, False, "Carousel"

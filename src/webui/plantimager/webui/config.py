@@ -20,13 +20,29 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import html
-from requests import RequestException
-
+from plantdb.client.plantdb_client import PlantDBClient
 from plantdb.client.rest_api import REST_API_PORT
 from plantdb.client.rest_api import REST_API_URL
 from plantdb.client.rest_api import base_url
 from plantdb.client.rest_api import list_scan_names
-from plantdb.client.rest_api import test_host_port_availability
+from plantdb.client.rest_api import test_availability
+from requests import RequestException
+
+
+def _connected_status(dataset_list):
+    status = dbc.Alert(children=[
+        html.I(className="bi bi-check-circle-fill me-2"),
+        f"Loaded {len(dataset_list)} dataset.",
+    ], color="success")
+    return status
+
+
+def _unconnected_status():
+    status = dbc.Alert([
+        html.I(className="bi bi-x-octagon-fill me-2"),
+        f"Could not load any dataset!",
+    ], color="danger")
+    return status
 
 
 def dataset_cfg_status(is_connected: bool) -> html.I:
@@ -93,6 +109,7 @@ def create_dataset_cfg_icon(is_connected: bool = False, dataset_list: list | Non
         style={'color': "#f3f3f3"},
     )
 
+
 # Create PlantDB REST API configuration button component for the navigation bar
 cfg_button = create_dataset_cfg_icon()
 cfg_tooltip = dbc.Tooltip(
@@ -116,14 +133,20 @@ plantdb_cfg_modal = html.Div(children=[
             # URL input field for REST API endpoint
             html.Div(children=[
                 dbc.Label([html.I(className="bi bi-link-45deg me-2"), "REST API URL:"]),
-                dbc.Input(id="ip-address", type="url"),
+                dbc.Input(id="api-address", type="url"),
                 dbc.FormText(f"Use '{REST_API_URL}' for a local database.", color="secondary"),
             ]),
             # Port number input for REST API
             html.Div(children=[
                 dbc.Label([html.I(className="bi bi-hdd-network me-2"), "REST API port:"]),
-                dbc.Input(id="ip-port", type="text"),
+                dbc.Input(id="api-port", type="text"),
                 dbc.FormText(f"Should be '{REST_API_PORT}' by default.", color="secondary"),
+            ]),
+            # URL prefix for REST API
+            html.Div(children=[
+                dbc.Label([html.I(className="bi bi-hdd-network me-2"), "REST API prefix:"]),
+                dbc.Input(id="api-prefix", type="text"),
+                dbc.FormText(f"Should be '' by default. Use if behind a proxy.", color="secondary"),
             ]),
             html.Br(),
             dbc.Row(children=[
@@ -193,12 +216,12 @@ def toggle_plantdb_cfg_modal(n_clicks: int, is_open: bool) -> bool | None:
 
 
 @callback(
-    Output("ip-address", "value"),
+    Output("api-address", "value"),
     Input("plantdb-cfg-modal", "is_open"),
     State("rest-api-host", "data")
 )
-def update_ip_address(modal_is_open: bool, stored_host: str | None) -> str:
-    """Callback updating the value of the IP address field when opening the PlantDB configuration modal.
+def show_api_address(modal_is_open: bool, stored_host: str | None) -> str:
+    """Callback updating the value of the 'api-address' field with stored data when opening the PlantDB configuration modal.
 
     Parameters
     ----------
@@ -220,12 +243,12 @@ def update_ip_address(modal_is_open: bool, stored_host: str | None) -> str:
 
 # Callback to update IP port from a stored value
 @callback(
-    Output("ip-port", "value"),
+    Output("api-port", "value"),
     Input("plantdb-cfg-modal", "is_open"),
     State("rest-api-port", "data")
 )
-def update_ip_port(modal_is_open: bool, stored_port: int | None) -> int | str:
-    """Callback updating the value of the port field for IP address when opening the PlantDB configuration modal.
+def show_api_port(modal_is_open: bool, stored_port: int | None) -> int | str:
+    """Callback updating the value of the 'api-port' field with stored data when opening the PlantDB configuration modal.
 
     Parameters
     ----------
@@ -237,7 +260,7 @@ def update_ip_port(modal_is_open: bool, stored_port: int | None) -> int | str:
     Returns
     -------
     str
-        Value to be set for the "ip-port" input field, either the stored port value or the ``REST_API_PORT`` constant.
+        Value to be set for the "api-port" input field, either the stored port value or the ``REST_API_PORT`` constant.
     """
     if modal_is_open:
         return stored_port if stored_port is not None else REST_API_PORT
@@ -245,13 +268,41 @@ def update_ip_port(modal_is_open: bool, stored_port: int | None) -> int | str:
         return stored_port
 
 
+# Callback to update IP port from a stored value
+@callback(
+    Output("api-prefix", "value"),
+    Input("plantdb-cfg-modal", "is_open"),
+    State("rest-api-prefix", "data")
+)
+def show_api_prefix(modal_is_open: bool, stored_prefix: str | None) -> int | str:
+    """Callback updating the value of the 'api-prefix' field with stored data when opening the PlantDB configuration modal.
+
+    Parameters
+    ----------
+    modal_is_open : bool
+        Boolean indicating whether the configuration modal is open or closed.
+    stored_prefix : str or None
+        Stored prefix value retrieved from the state. Can be ``None`` if not specified.
+
+    Returns
+    -------
+    str
+        Value to be set for the "api-prefix" input field.
+    """
+    if modal_is_open:
+        return stored_prefix if stored_prefix is not None else ""
+    else:
+        return stored_prefix
+
+
 @callback(
     Output("plantdb-status-form", "children"),
     Input("connected", "data"),
     State("rest-api-host", "data"),
     State("rest-api-port", "data"),
+    State("rest-api-prefix", "data"),
 )
-def show_plantdb_status(status: bool | None, host: str, port: int) -> dbc.Alert:
+def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str) -> dbc.Alert:
     """Display the connection status of the PlantDB server in a Bootstrap alert component.
 
     This callback function generates a styled alert component that shows whether the
@@ -262,13 +313,15 @@ def show_plantdb_status(status: bool | None, host: str, port: int) -> dbc.Alert:
     ----------
     status : bool or None
         Connection status of the PlantDB server:
-        - None: status unknown
-        - True: server is available
-        - False: server is unavailable
+        - ``None``: status unknown
+        - ``True``: server is available
+        - ``False``: server is unavailable
     host : str
         Hostname or IP address of the PlantDB server
     port : int
         Port number of the PlantDB server
+    prefix : str
+        URL prefix of the PlantDB server
 
     Returns
     -------
@@ -286,11 +339,11 @@ def show_plantdb_status(status: bool | None, host: str, port: int) -> dbc.Alert:
         ], color="info")
     elif status:
         status_form = dbc.Alert(children=[
-            html.I(className="bi bi-check-circle-fill me-2"), f"Server {host}:{port} available.",
+            html.I(className="bi bi-check-circle-fill me-2"), f"Server {host}:{port}{prefix} available.",
         ], color="success")
     else:
         status_form = dbc.Alert(children=[
-            html.I(className="bi bi-x-octagon-fill me-2"), f"Server {host}:{port} unavailable!",
+            html.I(className="bi bi-x-octagon-fill me-2"), f"Server {host}:{port}{prefix} unavailable!",
         ], color="danger")
     return status_form
 
@@ -301,18 +354,23 @@ def show_plantdb_status(status: bool | None, host: str, port: int) -> dbc.Alert:
     Output('load-plantdb-button', 'disabled'),
     Output('rest-api-host', 'data'),
     Output('rest-api-port', 'data'),
+    Output('rest-api-prefix', 'data'),
     Input('connect-plantdb-button', 'n_clicks'),
-    State('ip-address', 'value'),
-    State('ip-port', 'value'),
+    State('api-address', 'value'),
+    State('api-port', 'value'),
+    State('api-prefix', 'value'),
     State('rest-api-host', 'data'),
-    State('rest-api-port', 'data')
+    State('rest-api-port', 'data'),
+    State('rest-api-prefix', 'data'),
 )
 def check_server_availability(
-    _: int, 
-    host: str | None, 
-    port: int | str | None, 
-    stored_host: str | None, 
-    stored_port: int | str | None
+        _: int,
+        host: str | None,
+        port: int | str | None,
+        prefix: str | None,
+        stored_host: str | None,
+        stored_port: int | str | None,
+        stored_prefix: str | None,
 ) -> tuple[bool, bool, str, int | str]:
     """Checks the availability of a server based on the provided host and port and updates the UI accordingly.
 
@@ -344,22 +402,24 @@ def check_server_availability(
         host = stored_host
     if port is None:
         port = stored_port
+    if prefix is None:
+        prefix = stored_prefix
     if host.startswith("http://"):
         host = host[7:]
     elif host.startswith("https://"):
         host = host[8:]
 
     try:
-        test_host_port_availability(base_url(host, port))
+        test_availability(base_url(host, port))
     except:
         is_available = False
     else:
         is_available = True
 
     if is_available:
-        return True, False, host, port
+        return True, False, host, port, prefix
     else:
-        return False, True, host, port
+        return False, True, host, port, prefix
 
 
 @callback(
@@ -402,13 +462,15 @@ def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) ->
     Input('connected', 'data'),
     State('rest-api-host', 'data'),
     State('rest-api-port', 'data'),
+    State('rest-api-prefix', 'data'),
     prevent_initial_call=True,
 )
 def update_dataset_list(
-    n_clicks: int, 
-    connected: bool | None, 
-    host: str, 
-    port: int | str
+        n_clicks: int,
+        connected: bool | None,
+        host: str,
+        port: int | str,
+        prefix: str,
 ) -> tuple[dbc.Alert, list[str]]:
     """Callback updating the dataset list and displaying the load status when a user clicks the load button.
 
@@ -430,21 +492,18 @@ def update_dataset_list(
     list of str
         A list of dataset names retrieved from the server.
     """
+    if not connected:
+        return _unconnected_status(), []
+
     try:
-        dataset_list = list_scan_names(host, port)
+        dataset_list = list_scan_names(host=host, port=port, prefix=prefix)
     except RequestException:
         dataset_list = []
 
     if dataset_list:
-        status = dbc.Alert(children=[
-            html.I(className="bi bi-check-circle-fill me-2"),
-            f"Loaded {len(dataset_list)} dataset.",
-        ], color="success")
+        status = _connected_status(dataset_list)
     else:
-        status = dbc.Alert([
-            html.I(className="bi bi-x-octagon-fill me-2"),
-            f"Could not load any dataset!",
-        ], color="danger")
+        status = _unconnected_status()
 
     return status, dataset_list
 

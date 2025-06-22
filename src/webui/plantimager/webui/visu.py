@@ -3,7 +3,7 @@
 
 
 import numpy as np
-
+import dash_bootstrap_components as dbc
 
 def plotly_image_carousel(images, height=900, width=900, title="Carousel", layout_kwargs=None):
     """An image carousel based on Plotly.
@@ -51,3 +51,13 @@ def plotly_image_carousel(images, height=900, width=900, title="Carousel", layou
     fig.update_scenes(aspectmode='data')
 
     return fig
+
+
+def dash_boostrap_carousel(images):
+    carousel = dbc.Carousel(
+        items=[{"key": idx, "src": img} for idx, img in enumerate(images)],
+        controls=True,
+        indicators=True,
+        class_name="carousel-fade",
+    )
+    return carousel

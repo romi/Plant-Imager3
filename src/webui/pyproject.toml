@@ -36,8 +36,7 @@ keywords = [
     "Robotics for Microfarms",
     "ROMI",
     "Plant Phenotyping",
-    "GRBL",
-    "PyQt6",
+    "Dash",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
