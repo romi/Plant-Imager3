@@ -76,7 +76,15 @@ sudo docker build \
 
 > **Note**:
 > Replace the placeholder URLs and port with your actual values.
-> If they run in containers, you may ba able to use the container name in place of the URL.
+> If they run in containers, you may be able to use the container name in place of the URL if they are on the same network.
+
+## Create a network
+
+To communicate between containers, connect them to the same user-defined network:
+``` bash
+# Create a network if you don't have one
+docker network create romi-network
+```
 
 ## Run a container
 
@@ -84,6 +92,7 @@ After building the image, you can run the container with:
 
 ```shell
 sudo docker run -d --name plantimager_nginx \
+  --network=romi-network \
   -p 443:443 -p 8080:8080 -p 80:80 \
   roboticsmicrofarms/plantimager_nginx:latest
 ```
@@ -92,6 +101,7 @@ This command:
 
 - Runs the container in detached mode (`-d`)
 - Names the container `plantimager_nginx`
+- Connect the container to the network `romi-network` (to access the plantdb container, also on the same network)
 - Maps the following ports:
     - Host port 80 → container port 80 (HTTP)
     - Host port 443 → container port 443 (HTTPS)
