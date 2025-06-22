@@ -1855,6 +1855,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../webui/carousel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    carousel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../webui/config/" class="md-nav__link">
         
   
@@ -1969,6 +1992,108 @@
   
   
   
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_1_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../webui/pages/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    pages
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3_1_8" id="__nav_3_3_1_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3_1_8">
+            <span class="md-nav__icon md-icon"></span>
+            pages
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../webui/pages/home/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../webui/pages/table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    table
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../../webui/scan/" class="md-nav__link">
         
@@ -1999,6 +2124,29 @@
   
   <span class="md-ellipsis">
     utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../webui/visu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    visu
     
   </span>
   
@@ -3477,13 +3625,7 @@ controller if the connection fails.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">462</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">464</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">465</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">466</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">467</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">468</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">469</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">470</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">configure_scan</span>(<span style="color: #008000">self</span>, config: <span style="color: #008000">dict</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">464</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">configure_scan</span>(<span style="color: #008000">self</span>, config: <span style="color: #008000">dict</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Configure the scan from a configuration dictionary.</span>
 
 <span style="color: #BA2121; font-style: italic">    Sets up the scanning process by configuring:</span>
@@ -3543,12 +3685,6 @@ controller if the connection fails.</p>
     <span style="color: #3D7B7B; font-style: italic"># Store metadata for the scan</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>dataset_metadata <span style="color: #666">=</span> config[<span style="color: #BA2121">&quot;Metadata&quot;</span>][<span style="color: #BA2121">&quot;object&quot;</span>]  <span style="color: #3D7B7B; font-style: italic"># Biological metadata</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>hw_metadata <span style="color: #666">=</span> config[<span style="color: #BA2121">&quot;Metadata&quot;</span>][<span style="color: #BA2121">&quot;hardware&quot;</span>]  <span style="color: #3D7B7B; font-style: italic"># Hardware metadata</span>
-
-    <span style="color: #3D7B7B; font-style: italic"># Configure cameras</span>
-    <span style="color: #008000; font-weight: bold">for</span> camera <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>cameras:
-        <span style="color: #008000; font-weight: bold">if</span> camera<span style="color: #666">.</span>name <span style="color: #A2F; font-weight: bold">in</span> config:
-            res <span style="color: #666">=</span> config[camera<span style="color: #666">.</span>name][<span style="color: #BA2121">&quot;res_x&quot;</span>], config[camera<span style="color: #666">.</span>name][<span style="color: #BA2121">&quot;res_y&quot;</span>]
-            camera<span style="color: #666">.</span>resolution <span style="color: #666">=</span> res
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3602,7 +3738,15 @@ supports 3D movement (X, Y, and pan rotation).</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">503</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">495</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">497</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">498</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">499</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">500</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">501</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">502</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">503</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">504</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">505</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">506</span>
@@ -3611,15 +3755,7 @@ supports 3D movement (X, Y, and pan rotation).</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">509</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">510</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">511</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">512</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">513</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">514</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">515</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">516</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">517</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">518</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">519</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">520</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_position</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> Pose:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">512</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_position</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> Pose:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Get the current position of the scanner.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
@@ -3724,7 +3860,15 @@ value for that coordinate is used instead.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">612</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">604</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">605</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">606</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">607</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">608</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">609</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">610</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">611</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">612</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">613</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">614</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">615</span>
@@ -3752,15 +3896,7 @@ value for that coordinate is used instead.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">637</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">638</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">639</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">640</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">641</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">642</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">643</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">644</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">645</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">646</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">647</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">648</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_target_pose</span>(<span style="color: #008000">self</span>, x: PathElement) <span style="color: #666">-&gt;</span> Pose:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">640</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_target_pose</span>(<span style="color: #008000">self</span>, x: PathElement) <span style="color: #666">-&gt;</span> Pose:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Calculate the target pose from a path element.</span>
 
 <span style="color: #BA2121; font-style: italic">    This method creates a target pose by combining the current position</span>
@@ -3924,7 +4060,15 @@ creates a DataItem, and uploads it to the database.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">563</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">555</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">556</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">557</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">558</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">559</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">560</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">561</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">562</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">563</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">564</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">565</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">566</span>
@@ -3962,15 +4106,7 @@ creates a DataItem, and uploads it to the database.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">598</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">599</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">600</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">601</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">602</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">603</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">604</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">605</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">606</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">607</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">608</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">609</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">grab</span>(<span style="color: #008000">self</span>, idx: <span style="color: #008000">int</span>, metadata: <span style="color: #008000">dict</span>, camera: PiCameraComm) <span style="color: #666">-&gt;</span> DataItem:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">601</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">grab</span>(<span style="color: #008000">self</span>, idx: <span style="color: #008000">int</span>, metadata: <span style="color: #008000">dict</span>, camera: PiCameraComm) <span style="color: #666">-&gt;</span> DataItem:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Capture an image from a camera and upload it to the database.</span>
 
 <span style="color: #BA2121; font-style: italic">    This method captures an image from the specified camera, adds metadata,</span>
@@ -4235,7 +4371,15 @@ creates a DataItem, and uploads it to the database.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">474</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">466</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">467</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">468</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">469</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">470</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">471</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">472</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">473</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">474</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">475</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">476</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">477</span>
@@ -4254,15 +4398,7 @@ creates a DataItem, and uploads it to the database.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">490</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">491</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">492</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">494</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">495</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">497</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">498</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">499</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">500</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">501</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Property</span>(<span style="color: #008000">bool</span>, notify<span style="color: #666">=</span>readyToScanChanged)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Property</span>(<span style="color: #008000">bool</span>, notify<span style="color: #666">=</span>readyToScanChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ready_to_scan</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Check if the scanner is ready to perform a scan.</span>
 
@@ -4487,7 +4623,15 @@ creates a DataItem, and uploads it to the database.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">650</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">642</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">643</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">644</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">645</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">646</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">647</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">648</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">649</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">650</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">651</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">652</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">653</span>
@@ -4596,15 +4740,7 @@ creates a DataItem, and uploads it to the database.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">756</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">757</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">758</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">759</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">760</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">761</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">762</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">763</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">764</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">765</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">766</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">767</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">scan</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">759</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">scan</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Execute the complete scanning process.</span>
 
 <span style="color: #BA2121; font-style: italic">    This method performs a full scan by:</span>
@@ -4899,7 +5035,15 @@ Emits readyToScanChanged signal if the URL changes.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">522</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">514</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">515</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">516</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">517</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">518</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">519</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">520</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">521</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">522</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">523</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">524</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">525</span>
@@ -4911,15 +5055,7 @@ Emits readyToScanChanged signal if the URL changes.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">531</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">532</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">533</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">534</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">535</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">536</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">537</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">538</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">539</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">540</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">541</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">542</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_position</span>(<span style="color: #008000">self</span>, pose: Pose) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">534</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_position</span>(<span style="color: #008000">self</span>, pose: Pose) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the position of the scanner from a 5D Pose.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -4939,7 +5075,7 @@ Emits readyToScanChanged signal if the URL changes.</p>
     logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f&quot;Moving arm to </span><span style="color: #A45A77; font-weight: bold">{</span>pose<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
     <span style="color: #3D7B7B; font-style: italic"># Move CNC to the specified position (only x, y, and pan are used)</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>cnc<span style="color: #666">.</span>moveto(pose<span style="color: #666">.</span>x, pose<span style="color: #666">.</span>y, pose<span style="color: #666">.</span>pan)
-    time<span style="color: #666">.</span>sleep(<span style="color: #666">2</span>)  <span style="color: #3D7B7B; font-style: italic"># Wait for movement to complete as grbl returns a bit early</span>
+    time<span style="color: #666">.</span>sleep(<span style="color: #666">1</span>)  <span style="color: #3D7B7B; font-style: italic"># Wait for movement to complete as grbl returns a bit early</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -5006,7 +5142,15 @@ when uploading files.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">544</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">536</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">537</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">538</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">539</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">540</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">541</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">542</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">543</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">544</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">545</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">546</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">547</span>
@@ -5015,15 +5159,7 @@ when uploading files.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">550</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">551</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">552</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">553</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">554</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">555</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">556</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">557</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">558</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">559</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">560</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">561</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_scan_id</span>(<span style="color: #008000">self</span>, scan_id: <span style="color: #008000">str</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">553</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_scan_id</span>(<span style="color: #008000">self</span>, scan_id: <span style="color: #008000">str</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the identifier for the scan dataset.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>

@@ -18,7 +18,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../config/">
+        <link rel="next" href="../carousel/">
       
       
       <link rel="icon" href="../../../assets/images/ROMI_ICON_green.png">
@@ -1724,6 +1724,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../carousel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    carousel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../config/" class="md-nav__link">
         
   
@@ -1838,6 +1861,108 @@
   
   
   
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_1_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../pages/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    pages
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3_1_8" id="__nav_3_3_1_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3_1_8">
+            <span class="md-nav__icon md-icon"></span>
+            pages
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pages/home/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pages/table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    table
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../scan/" class="md-nav__link">
         
@@ -1868,6 +1993,29 @@
   
   <span class="md-ellipsis">
     utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../visu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    visu
     
   </span>
   
@@ -2234,32 +2382,32 @@
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/app.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">153</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">154</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">155</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">156</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">159</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">161</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">162</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">163</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">164</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">165</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">171</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">172</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">174</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">175</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">176</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">177</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">178</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">178</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">179</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">180</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">181</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">182</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">183</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">184</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">186</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">187</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">188</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">189</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">190</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">191</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">192</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Run the Plant Imager Web Interface application.</span>
 
 <span style="color: #BA2121; font-style: italic">    This function serves as the entry point for the Plant Imager Web UI. It:</span>
@@ -2283,7 +2431,7 @@
     controller_thread<span style="color: #666">.</span>start()
 
     <span style="color: #3D7B7B; font-style: italic"># - Start the Dash app:</span>
-    app <span style="color: #666">=</span> setup_web_app(args<span style="color: #666">.</span>host, args<span style="color: #666">.</span>port, args<span style="color: #666">.</span>proxy)
+    app <span style="color: #666">=</span> setup_web_app(args<span style="color: #666">.</span>host, args<span style="color: #666">.</span>port, args<span style="color: #666">.</span>prefix, args<span style="color: #666">.</span>proxy)
     app<span style="color: #666">.</span>run(host<span style="color: #666">=</span><span style="color: #BA2121">&quot;0.0.0.0&quot;</span>, debug<span style="color: #666">=</span>args<span style="color: #666">.</span>debug, port<span style="color: #666">=8080</span>)
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2333,19 +2481,17 @@ including host address and port options.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="language-pycon highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>parser <span style="color: #666">=</span> parsing()
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>args <span style="color: #666">=</span> parser<span style="color: #666">.</span>parse_args([<span style="color: #BA2121">&#39;--host&#39;</span>, <span style="color: #BA2121">&#39;192.168.1.100&#39;</span>, <span style="color: #BA2121">&#39;--port&#39;</span>, <span style="color: #BA2121">&#39;5001&#39;</span>])
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000">print</span>(args<span style="color: #666">.</span>host, args<span style="color: #666">.</span>port)
-<span style="color: #717171">192.168.1.100 5001</span>
+    <div class="language-pycon highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.webui.app</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> parsing
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>parser <span style="color: #666">=</span> parsing()
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>args <span style="color: #666">=</span> parser<span style="color: #666">.</span>parse_args([<span style="color: #BA2121">&#39;--host&#39;</span>, <span style="color: #BA2121">&#39;192.168.1.100&#39;</span>, <span style="color: #BA2121">&#39;--port&#39;</span>, <span style="color: #BA2121">&#39;5001&#39;</span>, <span style="color: #BA2121">&#39;--prefix&#39;</span>, <span style="color: #BA2121">&#39;/plantdb&#39;</span>])
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;https://</span><span style="color: #A45A77; font-weight: bold">{</span>args<span style="color: #666">.</span>host<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>args<span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}{</span>args<span style="color: #666">.</span>prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+<span style="color: #717171">https://192.168.1.100:5001/plantdb</span>
 </code></pre></div>
 
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/app.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">47</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">48</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
@@ -2373,7 +2519,13 @@ including host address and port options.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">74</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">75</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">76</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">77</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parsing</span>() <span style="color: #666">-&gt;</span> argparse<span style="color: #666">.</span>ArgumentParser:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">77</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">78</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">81</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parsing</span>() <span style="color: #666">-&gt;</span> argparse<span style="color: #666">.</span>ArgumentParser:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create and configure the command-line argument parser for the Plant Imager WebUI.</span>
 
 <span style="color: #BA2121; font-style: italic">    Sets up command-line arguments for configuring the connection to the PlantDB REST API,</span>
@@ -2386,10 +2538,11 @@ including host address and port options.</p>
 
 <span style="color: #BA2121; font-style: italic">    Examples</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; from plantimager.webui.app import parsing</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; parser = parsing()</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; args = parser.parse_args([&#39;--host&#39;, &#39;192.168.1.100&#39;, &#39;--port&#39;, &#39;5001&#39;])</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; print(args.host, args.port)</span>
-<span style="color: #BA2121; font-style: italic">    192.168.1.100 5001</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; args = parser.parse_args([&#39;--host&#39;, &#39;192.168.1.100&#39;, &#39;--port&#39;, &#39;5001&#39;, &#39;--prefix&#39;, &#39;/plantdb&#39;])</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; print(f&quot;https://{args.host}:{args.port}{args.prefix}&quot;)</span>
+<span style="color: #BA2121; font-style: italic">    https://192.168.1.100:5001/plantdb</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     parser <span style="color: #666">=</span> argparse<span style="color: #666">.</span>ArgumentParser(description<span style="color: #666">=</span><span style="color: #BA2121">&quot;PlantImager WebUI.&quot;</span>)
 
@@ -2398,6 +2551,8 @@ including host address and port options.</p>
                           help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Host address of the PlantDB REST API.&quot;</span>)
     app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--port&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">int</span>, default<span style="color: #666">=</span>REST_API_PORT,
                           help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Port of the PlantDB REST API.&quot;</span>)
+    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--prefix&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span>api_prefix(),
+                          help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Prefix of the PlantDB REST API.&quot;</span>)
     app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--proxy&#39;</span>, action<span style="color: #666">=</span><span style="color: #BA2121">&#39;store_true&#39;</span>,
                           help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Activate if the server is behind a reverse proxy&quot;</span>)
     app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--url-base-pathname&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span><span style="color: #BA2121">&#39;/webui/&#39;</span>,
@@ -2419,7 +2574,7 @@ including host address and port options.</p>
 
 
 <a href="#plantimager.webui.app.setup_web_app" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>setup_web_app(url, port, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_base_pathname<span style="color: #666">=</span><span style="color: #BA2121">&#39;/webui/&#39;</span>)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>setup_web_app(url, port, prefix, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_base_pathname<span style="color: #666">=</span><span style="color: #BA2121">&#39;/webui/&#39;</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2492,6 +2647,22 @@ user authentication, and dataset management.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>prefix</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>URL prefix of the PlantDB server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>url_base_pathname</code>
             </td>
             <td>
@@ -2544,13 +2715,7 @@ user authentication, and dataset management.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/app.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 80</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 81</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 82</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 83</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 84</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 85</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 86</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 86</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 87</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 88</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 89</span>
@@ -2614,7 +2779,27 @@ user authentication, and dataset management.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">147</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">149</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(url: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span>, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_base_pathname: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&#39;/webui/&#39;</span>) <span style="color: #666">-&gt;</span> Dash:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">151</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">152</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">153</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">154</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">155</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">156</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">159</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">161</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">162</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">163</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">164</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">165</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(url: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span>, prefix: <span style="color: #008000">str</span>, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_base_pathname: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&#39;/webui/&#39;</span>) <span style="color: #666">-&gt;</span> Dash:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Initialize and configure the Plant Imager Dash web application.</span>
 
 <span style="color: #BA2121; font-style: italic">    Creates a Dash application instance with Bootstrap styling and sets up the main</span>
@@ -2630,6 +2815,8 @@ user authentication, and dataset management.</p>
 <span style="color: #BA2121; font-style: italic">        The port number for the REST API server connection</span>
 <span style="color: #BA2121; font-style: italic">    proxy : bool, optional</span>
 <span style="color: #BA2121; font-style: italic">        Boolean flag indicating whether the application is behind a reverse proxy, by default ``False``.</span>
+<span style="color: #BA2121; font-style: italic">    prefix : str, optional</span>
+<span style="color: #BA2121; font-style: italic">        URL prefix of the PlantDB server.</span>
 <span style="color: #BA2121; font-style: italic">    url_base_pathname : str</span>
 <span style="color: #BA2121; font-style: italic">        The base URL path where the application is served (should match Nginx location)</span>
 
@@ -2648,10 +2835,13 @@ user authentication, and dataset management.</p>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
 
     app <span style="color: #666">=</span> Dash(
-        name<span style="color: #666">=</span><span style="color: #BA2121">&quot;PlantImager_WebUI&quot;</span>,
+        name<span style="color: #666">=</span><span style="color: #BA2121">&quot;plantimager.webui&quot;</span>,
         title<span style="color: #666">=</span><span style="color: #BA2121">&quot;Plant Imager&quot;</span>,
         external_stylesheets<span style="color: #666">=</span>[dbc<span style="color: #666">.</span>themes<span style="color: #666">.</span>BOOTSTRAP, dbc<span style="color: #666">.</span>icons<span style="color: #666">.</span>BOOTSTRAP],
         url_base_pathname<span style="color: #666">=</span>url_base_pathname,
+        use_pages<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
+        pages_folder<span style="color: #666">=</span><span style="color: #BA2121">&quot;pages&quot;</span>,
+        assets_folder<span style="color: #666">=</span><span style="color: #BA2121">&quot;assets&quot;</span>,
     )
 
     <span style="color: #008000; font-weight: bold">if</span> proxy:
@@ -2666,22 +2856,31 @@ user authentication, and dataset management.</p>
     <span style="color: #3D7B7B; font-style: italic"># Main application layout definition</span>
     app<span style="color: #666">.</span>layout <span style="color: #666">=</span> html<span style="color: #666">.</span>Div([
         <span style="color: #3D7B7B; font-style: italic"># Global state storage</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-host&#39;</span>, data<span style="color: #666">=</span>url),
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-port&#39;</span>, data<span style="color: #666">=</span>port),
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;connected&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;logged-username&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;logged-fullname&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-list&#39;</span>, data<span style="color: #666">=</span>[]),
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-id&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-host&#39;</span>, data<span style="color: #666">=</span>url, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API URL</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-port&#39;</span>, data<span style="color: #666">=</span>port, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API port</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, data<span style="color: #666">=</span>prefix, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API prefix</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;connected&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># boolean flag indicating if connected to the database or not</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;logged-username&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># id of the logger user</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;logged-fullname&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># real name of the logged user</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-list&#39;</span>, data<span style="color: #666">=</span>[]),  <span style="color: #3D7B7B; font-style: italic"># list of datasets known to the database</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-id&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># name of the dataset to create (scan operation)</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-dict&#39;</span>, data<span style="color: #666">=</span>{}, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># dictionary of dataset information, used for AG grid table</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;view-dataset&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># name of the dataset to visualize (plotly carousel)</span>
         <span style="color: #3D7B7B; font-style: italic"># Navigation and modal components</span>
         html<span style="color: #666">.</span>Div(children<span style="color: #666">=</span>[
             navbar_layout,
             plantdb_cfg_modal,
             login_modal,
             new_user_modal,
+            caroussel_modal,
         ]),
         <span style="color: #3D7B7B; font-style: italic"># Main content container</span>
-        html<span style="color: #666">.</span>Div(children<span style="color: #666">=</span>[scan_layout], style<span style="color: #666">=</span>{<span style="color: #BA2121">&quot;margin&quot;</span>: <span style="color: #666">20</span>}),
+        <span style="color: #3D7B7B; font-style: italic"># html.Div(children=[scan_layout], style={&quot;margin&quot;: 20}),</span>
+        dcc<span style="color: #666">.</span>Location(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;url&#39;</span>, refresh<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>),
+        html<span style="color: #666">.</span>Div(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;page-content&#39;</span>,
+                 children<span style="color: #666">=</span>[dash<span style="color: #666">.</span>page_container],
+                 style<span style="color: #666">=</span>{<span style="color: #BA2121">&quot;margin&quot;</span>: <span style="color: #666">20</span>},
+                 ),
     ])
 
     <span style="color: #008000; font-weight: bold">return</span> app
