@@ -14,6 +14,10 @@ Key Features
 """
 
 import dash_bootstrap_components as dbc
+from dash import Input
+from dash import Output
+from dash import callback
+from dash import get_relative_path
 from dash import html
 
 from plantimager.webui.config import cfg_button
@@ -40,11 +44,65 @@ tutorial_tooltip: dbc.Tooltip = dbc.Tooltip(
     placement="bottom",
 )
 
+#: Link component pointing to the home (page
+scan_link: dbc.NavLink = dbc.NavLink(
+    children=html.I(className="bi bi-camera fs-3"),
+    id="scan-link",
+    href="",  # Use get_relative_path to handle prefixes,
+    n_clicks=0,
+    style={'color': "#f3f3f3"},
+)
+
+#: Tooltip component providing help text for the tutorial link
+scan_tooltip: dbc.Tooltip = dbc.Tooltip(
+    children="Access dataset acquisition page.",
+    target="scan-link",
+    placement="bottom",
+)
+
+#: Link component providing a tutorial link to the Plant Imager documentation page, with a tooltip for user guidance
+dataset_table_link: dbc.NavLink = dbc.NavLink(
+    children=html.I(className="bi bi-table fs-3"),
+    id="dataset-table-link",
+    href="",  # Use get_relative_path to handle prefixes,
+    n_clicks=0,
+    style={'color': "#f3f3f3"},
+)
+
+#: Tooltip component providing help text for the tutorial link
+dataset_table_tooltip: dbc.Tooltip = dbc.Tooltip(
+    children="Access dataset table page.",
+    target="dataset-table-link",
+    placement="bottom",
+)
+
+
+# Then update the href through a callback when the app starts
+@callback(
+    Output("scan-link", "href"),
+    Input('url', 'pathname')
+)
+def update_scan_link_href(_):
+    home_path = get_relative_path("/")
+    return home_path, home_path
+
+
+# Then update the href of the dataset table page through a callback when the app starts
+@callback(
+    Output("dataset-table-link", "href"),
+    Input('url', 'pathname')
+)
+def update_table_link_href(_):
+    return get_relative_path("/table")
+
+
 #: Define main navigation items including scan, database, and documentation links
 nav_items: list = [
     dbc.NavItem(children=[tutorial_link, tutorial_tooltip]),
-    dbc.NavItem(children=[cfg_button, cfg_tooltip]),
     dbc.NavItem(children=[login_button, login_button_tooltip]),
+    dbc.NavItem(children=[scan_link, scan_tooltip]),
+    dbc.NavItem(children=[dataset_table_link, dataset_table_tooltip]),
+    dbc.NavItem(children=[cfg_button, cfg_tooltip]),
 ]
 
 #: Construct a responsive navigation bar with ROMI logo and branding
