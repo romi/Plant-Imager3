@@ -37,11 +37,11 @@ python src/webui/plantimager/webui/wsgi.py
 ```
 Should then be accessible under: https://localhost:8080/webui/
 """
-
 from threading import Thread
 
 import zmq
 
+from plantdb.commons import api_prefix
 from plantimager.webui.app import setup_web_app
 from plantimager.webui.controller_proxy import RPCController
 
@@ -52,12 +52,13 @@ controller_thread.daemon = True
 controller_thread.start()
 
 # Get the Dash application
-dash_app = setup_web_app("localhost", 8080, proxy=True)
+dash_app = setup_web_app("localhost", 8080, api_prefix(), proxy=True)
 # Use the Flask server attribute of the Dash application
 application = dash_app.server
 
 if __name__ == "__main__":
     from werkzeug.serving import run_simple
+
     # SSL context for development testing
     ssl_context = ('docker/nginx/ssl/cert.pem', 'docker/nginx/ssl/key.pem')
     run_simple('localhost', 8080, application, ssl_context=ssl_context)

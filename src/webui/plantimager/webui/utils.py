@@ -33,8 +33,31 @@ from plantdb.client.rest_api import base_url
 from plantdb.client.rest_api import list_scan_names
 from plantdb.client.rest_api import parse_scans_info
 
+FONT_FAMILY = '"Nunito Sans", sans-serif'
 
-def get_dataset_dict(host: str, port: str) -> dict[str, Any] | None:
+TASKS = [
+    "PointCloud",
+    "TriangleMesh",
+    "CurveSkeleton",
+    "TreeGraph",
+    "AnglesAndInternodes",
+]
+
+TASK_OBJECTS = [
+    "PointCloud",
+    "TriangleMesh",
+    "TreeGraph",
+    "FruitDirection",
+    "StemDirection",
+]
+
+IMAGE_TASKS = [
+    'images',
+    'Undistorted',
+    'Masks',
+]
+
+def get_dataset_dict(host: str, port: str, prefix: str) -> dict[str, Any] | None:
     """Returns the dataset dictionary for the PlantDB REST API at given host url and port.
 
     Parameters
@@ -55,15 +78,15 @@ def get_dataset_dict(host: str, port: str) -> dict[str, Any] | None:
     plantdb.rest_api_client.list_scan_names
     plantdb.rest_api_client.parse_scans_info
     """
-    scans_list = list_scan_names(host, port)
+    scans_list = list_scan_names(host=host, port=port, prefix=prefix)
     if len(scans_list) > 0:
-        dataset_dict = parse_scans_info(host, port)
+        dataset_dict = parse_scans_info(host=host, port=port, prefix=prefix)
     else:
         dataset_dict = None
     return dataset_dict
 
 
-def pipeline_cfg_url(host: str, port: str, scan_id: str) -> str:
+def pipeline_cfg_url(host: str, port: str, prefix: str, scan_id: str) -> str:
     """Get the URL corresponding to the 'pipeline.toml' backup file for the given scan ID in a PlantDB REST API.
 
     Parameters
@@ -80,10 +103,10 @@ def pipeline_cfg_url(host: str, port: str, scan_id: str) -> str:
     str
         The URL corresponding to the 'pipeline.toml' backup file for the given scan ID.
     """
-    return f"{base_url(host, port)}/files/{scan_id}/pipeline.toml"
+    return f"{base_url(host, port, prefix)}/files/{scan_id}/pipeline.toml"
 
 
-def get_pipeline_cfg(host: str, port: str, scan_id: str) -> dict[str, Any]:
+def get_pipeline_cfg(host: str, port: str, prefix: str, scan_id: str) -> dict[str, Any]:
     """Get the backup configuration file of the reconstruction pipeline for the given scan ID.
 
     Parameters
@@ -108,13 +131,13 @@ def get_pipeline_cfg(host: str, port: str, scan_id: str) -> dict[str, Any]:
     {}
     >>> cfg = get_pipeline_cfg('127.0.0.1','5000','real_plant_analyzed')
     """
-    if has_pipeline_cfg(host, port, scan_id):
-        return toml.loads(requests.get(pipeline_cfg_url(host, port, scan_id)).content.decode())
+    if has_pipeline_cfg(host, port, prefix, scan_id):
+        return toml.loads(requests.get(pipeline_cfg_url(host, port, prefix, scan_id)).content.decode())
     else:
         return {}
 
 
-def has_pipeline_cfg(host: str, port: str, scan_id: str) -> bool:
+def has_pipeline_cfg(host: str, port: str, prefix: str, scan_id: str) -> bool:
     """Test if a named dataset has a reconstruction pipeline.
 
     Reconstruction pipeline is named 'pipeline.toml', so we test if the request from the file ressource is ok.
@@ -141,7 +164,7 @@ def has_pipeline_cfg(host: str, port: str, scan_id: str) -> bool:
     >>> has_pipeline_cfg('127.0.0.1','5000','real_plant_analyzed')
     True
     """
-    return requests.get(pipeline_cfg_url(host, port, scan_id)).ok
+    return requests.get(pipeline_cfg_url(host, port, prefix, scan_id)).ok
 
 
 def config_upload() -> dcc.Upload:
