@@ -9,7 +9,7 @@ dagcomponentfuncs.DBC_Dual_Buttons = function (props) {
 
     function onClickVisit() {
         // Open URL in new tab
-        window.open(`https://mellitus.ens-lyon.fr/p3dx/viewer/${props.data.Name}`, '_blank');
+        window.open(`https://mellitus.biologie.ens-lyon.fr/p3dx/viewer/${props.data.Name}`, '_blank');
     }
 
     return React.createElement(
