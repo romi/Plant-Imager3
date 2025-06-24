@@ -47,7 +47,7 @@ Control {
         anchors.left: parent.left
         anchors.leftMargin: P.Style.mediumMargin
         height: P.Style.bannerHeight
-        text: bridge ? bridge.name : "Invalid"
+        text: bridge ? (bridge.name ? bridge.name : "No Camera connected" ): "Invalid"
         font: P.Style.fonts.header
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignLeft

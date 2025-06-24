@@ -28,6 +28,7 @@ length_mm = NewType("length_mm", float)
 # Velocity units
 #: Velocity in millimeters per second.
 velocity_mm_p_s = NewType("velocity_mm_p_s", float)
+velocity_deg_p_s = NewType("velocity_deg_p_s", float)
 
 # Time units
 #: Time in seconds.
