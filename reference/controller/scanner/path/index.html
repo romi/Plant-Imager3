@@ -2566,12 +2566,7 @@ Let x0, y0 &amp; z0 be the first <code>ElementPath</code> xyz position, then:
 
                   <details class="quote">
                     <summary>Source code in <code>plantimager/controller/scanner/path.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">474</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">475</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">476</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">477</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">478</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">479</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">479</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">480</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">481</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">482</span>
@@ -2588,7 +2583,12 @@ Let x0, y0 &amp; z0 be the first <code>ElementPath</code> xyz position, then:
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">494</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">495</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, path, n_points_line):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">497</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">498</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">499</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">500</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">501</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, path, n_points_line):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -2829,7 +2829,12 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">244</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">245</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">246</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, center_x, center_y, z, tilt, radius, n_points):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">248</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, center_x, center_y, z, tilt, radius, n_points):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -2849,6 +2854,11 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     x, y, pan <span style="color: #666">=</span> circle(center_x, center_y, radius, n_points)
+
+    <span style="color: #008000">self</span><span style="color: #666">.</span>center_x <span style="color: #666">=</span> center_x
+    <span style="color: #008000">self</span><span style="color: #666">.</span>center_y <span style="color: #666">=</span> center_y
+    <span style="color: #008000">self</span><span style="color: #666">.</span>radius <span style="color: #666">=</span> radius
+    <span style="color: #008000">self</span><span style="color: #666">.</span>n_points <span style="color: #666">=</span> n_points
 
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(tilt, Iterable):
         tilt <span style="color: #666">=</span> [tilt]
@@ -3055,12 +3065,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 
                   <details class="quote">
                     <summary>Source code in <code>plantimager/controller/scanner/path.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">274</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">275</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">276</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">277</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">278</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">279</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">279</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">280</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">281</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">282</span>
@@ -3082,7 +3087,12 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">298</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">299</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">300</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">301</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, center_x, center_y, z_range, tilt, radius, n_points, n_circles<span style="color: #666">=2</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">301</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">302</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">303</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">304</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">305</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">306</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, center_x, center_y, z_range, tilt, radius, n_points, n_circles<span style="color: #666">=2</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -3331,12 +3341,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 
                   <details class="quote">
                     <summary>Source code in <code>plantimager/controller/scanner/path.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">386</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">387</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">388</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">389</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">390</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">391</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">391</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">392</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">393</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">394</span>
@@ -3367,7 +3372,12 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">419</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">420</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">421</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">422</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, x_0, y_0, z_0, x_1, y_1, z_1, pan, tilt, n_points):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">422</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">423</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">424</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">425</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">426</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, x_0, y_0, z_0, x_1, y_1, z_1, pan, tilt, n_points):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -4250,12 +4260,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 
             <details class="quote">
               <summary>Source code in <code>plantimager/controller/scanner/path.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">304</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">305</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">306</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">307</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">308</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">309</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">309</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">310</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">311</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">312</span>
@@ -4274,7 +4279,12 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">325</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">326</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">327</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">328</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">line1d</span>(start, stop, n_points):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">328</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">329</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">330</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">331</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">332</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">333</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">line1d</span>(start, stop, n_points):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a 1D line of N points between start and stop position (included).</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -4502,12 +4512,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 
             <details class="quote">
               <summary>Source code in <code>plantimager/controller/scanner/path.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">331</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">332</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">333</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">334</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">335</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">336</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">336</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">337</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">338</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">339</span>
@@ -4540,7 +4545,12 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">366</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">367</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">368</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">369</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">line3d</span>(x_0, y_0, z_0, x_1, y_1, z_1, n_points):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">369</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">370</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">371</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">372</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">373</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">374</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">line3d</span>(x_0, y_0, z_0, x_1, y_1, z_1, n_points):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a 3D line of N points between start and stop position (included).</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
