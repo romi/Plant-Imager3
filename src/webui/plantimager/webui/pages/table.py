@@ -97,18 +97,16 @@ def _column_defs(col_name):
         'alignItems': 'center',  # Vertical centering
         'height': '100%'  # Ensure the cell takes full height
     }
-    # Enable markdown rendering to include images and icons:
-    # if col_name in ["Thumbnail"]:
-    #     cdef["field"] = "img"
-    #     cdef["cellRenderer"] = "ImgThumbnail"
-    #     cdef["width"] = 100
+
     if col_name in ["Thumbnail"]:
         cdef["cellRenderer"] = "markdown"
         cdef["cellStyle"] |= {
             'justifyContent': 'center',  # horizontal centering
         }
     elif col_name == "Action":
-        cdef["cellRenderer"] = "DBC_Button_Simple"  # defined in assets/dashAgGridComponentFunctions.js
+        cdef["cellRenderer"] = "DBC_Dual_Buttons"  # Use the new dual button renderer
+        # Add extra width to accommodate two buttons
+        cdef["width"] = 200
 
     return cdef
 

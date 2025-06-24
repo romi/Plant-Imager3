@@ -1,17 +1,44 @@
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
-dagcomponentfuncs.DBC_Button_Simple = function (props) {
+dagcomponentfuncs.DBC_Dual_Buttons = function (props) {
     const {setData, data} = props;
 
-    function onClick() {
+    function onClickOpen() {
         setData();
     }
+
+    function onClickVisit() {
+        // Open URL in new tab
+        window.open(`https://mellitus.ens-lyon.fr/p3dx/viewer/${props.data.Name}`, '_blank');
+    }
+
     return React.createElement(
-        window.dash_bootstrap_components.Button,
+        'div',
         {
-            onClick,
-            color: props.color,
+            style: {
+                display: 'flex',
+                gap: '5px'
+            }
         },
-        props.value
+        [
+            React.createElement(
+                window.dash_bootstrap_components.Button,
+                {
+                    onClick: onClickOpen,
+                    color: props.color || 'primary',
+                    key: 'open-button'
+                },
+                props.value || 'Open'
+            ),
+            React.createElement(
+                window.dash_bootstrap_components.Button,
+                {
+                    onClick: onClickVisit,
+                    color: 'secondary',
+                    key: 'visit-button'
+                },
+                'P3DX'
+            )
+        ]
     );
 };
