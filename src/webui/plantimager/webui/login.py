@@ -27,8 +27,8 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import html
-
 from plantdb.client.rest_api import base_url
+
 from plantimager.webui.new_user import new_user_button
 
 
@@ -264,9 +264,11 @@ def toggle_login_modal(_: int, is_open: bool) -> bool | None:
     Input('username-input', 'value'),
     State('login-modal', 'is_open'),
     State('rest-api-host', 'data'),
-    State('rest-api-port', 'data')
+    State('rest-api-port', 'data'),
+    State('rest-api-prefix', 'data'),
 )
-def validate_username(username: str | None, is_modal_open: bool, host: str, port: int | str) -> tuple[bool, bool]:
+def validate_username(username: str | None, is_modal_open: bool, host: str, port: int | str, prefix: str) -> tuple[
+    bool, bool]:
     """Validate a username by checking if it exists in the database.
 
     Parameters
@@ -276,9 +278,11 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
     is_modal_open : bool
         Whether the login modal is currently open
     host : str
-        The REST API host address
-    port : int or str
-        The REST API port number
+       The hostname or IP address of the PlantDB REST API server.
+    port : int
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
 
     Returns
     -------
@@ -294,7 +298,7 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
         return False, False
     # Make request to the login API endpoint
     try:
-        response = requests.get(urljoin(base_url(host, port), f'/login?username={username}'))
+        response = requests.get(urljoin(base_url(host, port, prefix), f'login?username={username}'))
         user_exists = response.json().get('exists', False)
         if user_exists:
             return True, False  # Valid username
@@ -315,15 +319,17 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
           State('password-input', 'value'),
           State('rest-api-host', 'data'),
           State('rest-api-port', 'data'),
+          State('rest-api-prefix', 'data'),
           prevent_initial_call=True)
 def login(
-    username_submit: int, 
-    password_submit: int, 
-    n_clicks: int, 
-    username: str, 
-    password: str, 
-    host: str, 
-    port: int | str
+        username_submit: int,
+        password_submit: int,
+        n_clicks: int,
+        username: str,
+        password: str,
+        host: str,
+        port: int | str,
+        prefix: str,
 ) -> tuple[str | None, str | None, dict, dbc.Alert]:
     """Handle user authentication through the REST API.
 
@@ -344,9 +350,11 @@ def login(
     password : str
         Password entered in the login form.
     host : str
-        REST API host address.
+       The hostname or IP address of the PlantDB REST API server.
     port : int
-        REST API port number.
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
 
     Returns
     -------
@@ -375,7 +383,7 @@ def login(
     try:
         # Send login request to REST API endpoint
         response = requests.post(
-            urljoin(base_url(host, port), '/login'),
+            urljoin(base_url(host, port, prefix), 'login'),
             data=json.dumps({'username': username, 'password': password}),
             headers={'Content-Type': 'application/json'}
         )
@@ -574,7 +582,7 @@ def logout(_: int) -> tuple[None, None, str]:
     None
         Clears the logged full name.
     str
-        Empty string for login attempt message.
+        Empty string for a login attempt message.
     """
     return None, None, ""
 
