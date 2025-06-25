@@ -39,24 +39,35 @@ TASKS = [
     "AnglesAndInternodes",
 ]
 
+# Main container for the table view
 layout = html.Div([
+    # Navigation bar containing the back button, refresh button, and help
     html.Div([
+        # Back button with the left arrow icon
         dbc.Button([html.I(className="bi bi-arrow-left me-2"), "Back"],
                    id='back-button', color="secondary", outline=True, n_clicks=0, href=""),
+        # Container for refresh and help buttons
         html.Div([
+            # Refresh button with a rotating arrow icon
             dbc.Button([html.I(className="bi bi-arrow-clockwise me-2"), "Refresh"],
                        id='refresh-table-button', color="primary", outline=True, n_clicks=0),
+            # Help button with a question mark icon
             dbc.Button([html.I(className="bi bi-question-lg")],
                        id='home-table-help', color="secondary", outline=True, n_clicks=0),
+            # Help popover that appears when the help button is clicked
             dbc.Popover([
                 dbc.PopoverHeader("Help!"),
                 dbc.PopoverBody([
+                    # Sorting instructions
                     html.P(["You may sort the table by clicking on a column header."]),
+                    # Filtering instructions
                     html.P(["Except for the 'Thumbnail' & 'Action' columns,",
                             "you can filter the displayed data by columns using the ",
                             html.I(className="bi bi-list"),
                             " icon that appears on hover and typing a query."]),
+                    # Task filter specifics
                     html.P(["Note that the tasks column filters are `Yes` or `No`."]),
+                    # Column reordering instruction
                     html.P(["You can drag the columns to reorder them."])
                 ])
             ], target="home-table-help", trigger='legacy'),
@@ -65,11 +76,14 @@ layout = html.Div([
         style={"width": "100%", 'display': 'flex', 'justifyContent': 'space-between',
                'margin-bottom': '5px', 'alignItems': 'center'},
     ),
+
+    # Loading component that shows the spinner while data is being fetched
     dcc.Loading(children=[
+        # Container for the dataset table
         html.Div(
             id="dataset-table",
             children=[
-                # Add an empty div with the ID that will be updated later
+                # Hidden div for storing DAG data that will be populated dynamically
                 html.Div(id="plantdb-dag", style={"display": "none"}),
             ],
             style={"margin-left": "auto", "margin-right": "auto",
@@ -79,12 +93,12 @@ layout = html.Div([
 ])
 
 
-# Add this callback to handle the back button href
 @callback(
     Output("back-button", "href"),
     Input('url', 'pathname')
 )
 def update_back_button_href(_):
+    """Update the href of the back button."""
     return get_relative_path("/")
 
 
@@ -122,6 +136,21 @@ def _column_defs(col_name):
     prevent_initial_call=True
 )
 def refresh_table_data(n_clicks, host, port, prefix):
+    """Refresh the dataset dictionary.
+
+    Parameters
+    ----------
+    n_clicks : int
+        The number of times the button has been clicked.
+    url : str
+        The URL of the page.
+    host : str
+       The hostname or IP address of the PlantDB REST API server.
+    port : int
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
+    """
     if n_clicks > 0:
         dataset_dict = get_dataset_dict(host=host, port=port, prefix=prefix)
         return dataset_dict, 0
@@ -137,6 +166,19 @@ def refresh_table_data(n_clicks, host, port, prefix):
     State('rest-api-prefix', 'data')
 )
 def update_on_url_change(url, host, port, prefix):
+    """Update the dataset dictionary when the URL changes.
+
+    Parameters
+    ----------
+    url : str
+        The URL of the page.
+    host : str
+       The hostname or IP address of the PlantDB REST API server.
+    port : int
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
+    """
     if url.endswith('/table'):
         return get_dataset_dict(host=host, port=port, prefix=prefix)
     return dash.no_update
@@ -145,8 +187,9 @@ def update_on_url_change(url, host, port, prefix):
 @callback(Output('dataset-table', 'children'),
           Input('dataset-dict', 'data'),
           State('rest-api-host', 'data'),
-          State('rest-api-port', 'data'))
-def update_table(dataset_dict, url, port):
+          State('rest-api-port', 'data'),
+          State('rest-api-prefix', 'data'))
+def update_table(dataset_dict, url, port, prefix):
     """Update the AG Grid table.
 
     Parameters
@@ -154,9 +197,11 @@ def update_table(dataset_dict, url, port):
     dataset_dict : dict
         The currently stored dataset dictionary.
     host : str
-       The IP address of the PlantDB REST API.
+       The hostname or IP address of the PlantDB REST API server.
     port : int
-        The port of the PlantDB REST API.
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
 
     Returns
     -------
@@ -166,7 +211,7 @@ def update_table(dataset_dict, url, port):
     thumb_size = 150  # max width or height
     if dataset_dict is not None:
         table_dict = {col: [] for col in ["Thumbnail", "Name", "Action", "Date", "Species", "Images"]}
-        plantdb_url = base_url(url, port)
+        plantdb_url = base_url(url, port, prefix)
 
         for ds_id, md in dataset_dict.items():
             thumbnail_url = md["thumbnailUri"].replace('thumb', f'{thumb_size}')
@@ -207,6 +252,29 @@ def update_table(dataset_dict, url, port):
     Input("plantdb-dag", "cellRendererData"),
 )
 def show_carousel_modal(cell_data):
+    """
+    Display a carousel modal dialog based on cell data from a plantdb-dag component.
+
+    This callback function manages the visibility and content of a carousel modal
+    dialog that displays dataset information. It processes cell renderer data
+    from a plantdb-dag component to extract dataset information and controls
+    the modal's state.
+
+    Parameters
+    ----------
+    cell_data : dict or None
+        Cell renderer data from the plantdb-dag component. Expected to contain
+        a 'rowId' key with the dataset name. If None, the modal will be closed.
+
+    Returns
+    -------
+    str or None
+        The name of the dataset to be displayed
+    bool
+        Boolean flag indicating whether the modal should be open (True) or closed (False)
+    str
+        The title to be displayed in the modal header
+    """
     if cell_data is None:
         return None, False, "Carousel"
 
