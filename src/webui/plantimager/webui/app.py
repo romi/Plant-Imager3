@@ -68,11 +68,11 @@ def parsing() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="PlantImager WebUI.")
 
     app_args = parser.add_argument_group("Dash app options")
-    app_args.add_argument('--host', type=str, default=REST_API_URL,
+    app_args.add_argument('--api_host', type=str, default=REST_API_URL,
                           help="Host address of the PlantDB REST API.")
-    app_args.add_argument('--port', type=int, default=REST_API_PORT,
+    app_args.add_argument('--api_port', type=int, default=REST_API_PORT,
                           help="Port of the PlantDB REST API.")
-    app_args.add_argument('--prefix', type=str, default=api_prefix(),
+    app_args.add_argument('--api_prefix', type=str, default=api_prefix(),
                           help="Prefix of the PlantDB REST API.")
     app_args.add_argument('--proxy', action='store_true',
                           help="Activate if the server is behind a reverse proxy")
@@ -83,7 +83,7 @@ def parsing() -> argparse.ArgumentParser:
     return parser
 
 
-def setup_web_app(url: str, port: int, prefix: str, proxy=False, url_base_pathname: str = '/webui/') -> Dash:
+def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url_base_pathname: str = '/webui/') -> Dash:
     """Initialize and configure the Plant Imager Dash web application.
 
     Creates a Dash application instance with Bootstrap styling and sets up the main
@@ -93,14 +93,14 @@ def setup_web_app(url: str, port: int, prefix: str, proxy=False, url_base_pathna
 
     Parameters
     ----------
-    url : str
-        The base URL for the REST API server (e.g., 'http://localhost')
-    port : int
-        The port number for the REST API server connection
+    api_url : str
+        The base URL for the PlantDB REST API server (e.g., 'http://localhost')
+    api_port : int
+        The port number for the PlantDB REST API server connection
+    api_prefix : str, optional
+        URL prefix of the PlantDB REST API server.
     proxy : bool, optional
         Boolean flag indicating whether the application is behind a reverse proxy, by default ``False``.
-    prefix : str, optional
-        URL prefix of the PlantDB server.
     url_base_pathname : str
         The base URL path where the application is served (should match Nginx location)
 
@@ -140,9 +140,9 @@ def setup_web_app(url: str, port: int, prefix: str, proxy=False, url_base_pathna
     # Main application layout definition
     app.layout = html.Div([
         # Global state storage
-        dcc.Store(id='rest-api-host', data=url, storage_type='session'),  # PlantDB REST API URL
-        dcc.Store(id='rest-api-port', data=port, storage_type='session'),  # PlantDB REST API port
-        dcc.Store(id='rest-api-prefix', data=prefix, storage_type='session'),  # PlantDB REST API prefix
+        dcc.Store(id='rest-api-host', data=api_url, storage_type='session'),  # PlantDB REST API URL
+        dcc.Store(id='rest-api-port', data=api_port, storage_type='session'),  # PlantDB REST API port
+        dcc.Store(id='rest-api-prefix', data=api_prefix, storage_type='session'),  # PlantDB REST API prefix
         dcc.Store(id='connected', data=None),  # boolean flag indicating if connected to the database or not
         dcc.Store(id='logged-username', data=None, storage_type='session'),  # id of the logger user
         dcc.Store(id='logged-fullname', data=None, storage_type='session'),  # real name of the logged user
@@ -194,7 +194,7 @@ def main() -> None:
     controller_thread.start()
 
     # - Start the Dash app:
-    app = setup_web_app(args.host, args.port, args.prefix, args.proxy)
+    app = setup_web_app(args.api_host, args.api_port, args.api_prefix, args.proxy)
     app.run(host="0.0.0.0", debug=args.debug, port=8080)
 
 
