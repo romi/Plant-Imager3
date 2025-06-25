@@ -339,11 +339,11 @@ def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str) 
         ], color="info")
     elif status:
         status_form = dbc.Alert(children=[
-            html.I(className="bi bi-check-circle-fill me-2"), f"Server {host}:{port}{prefix} available.",
+            html.I(className="bi bi-check-circle-fill me-2"), f"Server {base_url(host, port, prefix)} available.",
         ], color="success")
     else:
         status_form = dbc.Alert(children=[
-            html.I(className="bi bi-x-octagon-fill me-2"), f"Server {host}:{port}{prefix} unavailable!",
+            html.I(className="bi bi-x-octagon-fill me-2"), f"Server {base_url(host, port, prefix)} unavailable!",
         ], color="danger")
     return status_form
 
@@ -410,7 +410,7 @@ def check_server_availability(
         host = host[8:]
 
     try:
-        test_availability(base_url(host, port))
+        test_availability({base_url(host, port, prefix)})
     except:
         is_available = False
     else:
@@ -481,9 +481,11 @@ def update_dataset_list(
     connected : bool
         The connection status of the PlantDB REST API server.
     host : str
-        The IP address of the server to connect to for retrieving dataset names.
-    port : str
-        The port number of the server to use for the connection.
+       The hostname or IP address of the PlantDB REST API server.
+    port : int
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
 
     Returns
     -------
