@@ -2750,7 +2750,7 @@ and managing datasets within the Plant Imager web interface.</p>
         host <span style="color: #666">=</span> host[<span style="color: #666">8</span>:]
 
     <span style="color: #008000; font-weight: bold">try</span>:
-        test_availability(base_url(host, port))
+        test_availability({base_url(host, port, prefix)})
     <span style="color: #008000; font-weight: bold">except</span>:
         is_available <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #008000; font-weight: bold">else</span>:
@@ -3714,11 +3714,11 @@ the connection status:
         ], color<span style="color: #666">=</span><span style="color: #BA2121">&quot;info&quot;</span>)
     <span style="color: #008000; font-weight: bold">elif</span> status:
         status_form <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(children<span style="color: #666">=</span>[
-            html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">&quot;bi bi-check-circle-fill me-2&quot;</span>), <span style="color: #BA2121">f&quot;Server </span><span style="color: #A45A77; font-weight: bold">{</span>host<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}{</span>prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> available.&quot;</span>,
+            html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">&quot;bi bi-check-circle-fill me-2&quot;</span>), <span style="color: #BA2121">f&quot;Server </span><span style="color: #A45A77; font-weight: bold">{</span>base_url(host,<span style="color: #BBB"> </span>port,<span style="color: #BBB"> </span>prefix)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> available.&quot;</span>,
         ], color<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>)
     <span style="color: #008000; font-weight: bold">else</span>:
         status_form <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(children<span style="color: #666">=</span>[
-            html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">&quot;bi bi-x-octagon-fill me-2&quot;</span>), <span style="color: #BA2121">f&quot;Server </span><span style="color: #A45A77; font-weight: bold">{</span>host<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}{</span>prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> unavailable!&quot;</span>,
+            html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">&quot;bi bi-x-octagon-fill me-2&quot;</span>), <span style="color: #BA2121">f&quot;Server </span><span style="color: #A45A77; font-weight: bold">{</span>base_url(host,<span style="color: #BBB"> </span>port,<span style="color: #BBB"> </span>prefix)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> unavailable!&quot;</span>,
         ], color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>)
     <span style="color: #008000; font-weight: bold">return</span> status_form
 </code></pre></div></td></tr></table></div>
@@ -3954,9 +3954,7 @@ of the dataset list to a string for display.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">511</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">512</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">513</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">513</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">514</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">515</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">516</span>
@@ -3975,7 +3973,9 @@ of the dataset list to a string for display.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">529</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">530</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">531</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">532</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">532</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">533</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">534</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;dataset-count-badge&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
     Input(<span style="color: #BA2121">&quot;dataset-list&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)  <span style="color: #3D7B7B; font-style: italic"># Assuming you have a dataset list stored in dcc.Store</span>
 )
@@ -4071,7 +4071,7 @@ of the dataset list to a string for display.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The IP address of the server to connect to for retrieving dataset names.</p>
+                <p>The hostname or IP address of the PlantDB REST API server.</p>
               </div>
             </td>
             <td>
@@ -4083,11 +4083,27 @@ of the dataset list to a string for display.</p>
                 <code>port</code>
             </td>
             <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The port number of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>prefix</code>
+            </td>
+            <td>
                   <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The port number of the server to use for the connection.</p>
+                <p>The prefix of the PlantDB REST API server.</p>
               </div>
             </td>
             <td>
@@ -4183,7 +4199,9 @@ of the dataset list to a string for display.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">505</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">506</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">507</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">508</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">508</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">509</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">510</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;load-status-form&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
     Output(<span style="color: #BA2121">&#39;dataset-list&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     Input(<span style="color: #BA2121">&#39;load-plantdb-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
@@ -4209,9 +4227,11 @@ of the dataset list to a string for display.</p>
 <span style="color: #BA2121; font-style: italic">    connected : bool</span>
 <span style="color: #BA2121; font-style: italic">        The connection status of the PlantDB REST API server.</span>
 <span style="color: #BA2121; font-style: italic">    host : str</span>
-<span style="color: #BA2121; font-style: italic">        The IP address of the server to connect to for retrieving dataset names.</span>
-<span style="color: #BA2121; font-style: italic">    port : str</span>
-<span style="color: #BA2121; font-style: italic">        The port number of the server to use for the connection.</span>
+<span style="color: #BA2121; font-style: italic">       The hostname or IP address of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    port : int</span>
+<span style="color: #BA2121; font-style: italic">        The port number of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    prefix : str</span>
+<span style="color: #BA2121; font-style: italic">        The prefix of the PlantDB REST API server.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>

@@ -1678,6 +1678,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" carousel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.webui.carousel.images_carousel" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;images_carousel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.webui.carousel.update_image_task_dropdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;update_image_task_dropdown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2176,6 +2200,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" carousel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.webui.carousel.images_carousel" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;images_carousel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.webui.carousel.update_image_task_dropdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;update_image_task_dropdown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2228,6 +2276,493 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="plantimager.webui.carousel.images_carousel" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">images_carousel</span>
+
+
+<a href="#plantimager.webui.carousel.images_carousel" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>images_carousel(open_modal, image_task, dataset_id, host, port, prefix)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Create a Dash carousel component displaying images from a specified dataset task.</p>
+<p>This callback function generates a Bootstrap-styled carousel component for displaying
+images associated with a specific task in a dataset. The carousel is only generated
+when the modal is open and a valid dataset ID is provided.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>open_modal</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Flag indicating whether the carousel modal is open</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>image_task</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Name of the image processing task to display images from</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>dataset_id</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Identifier of the dataset to retrieve images from</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>host</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The hostname or IP address of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>port</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The port number of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>prefix</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The prefix of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dash_bootstrap_components.Carousel">Carousel</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A Bootstrap carousel component containing the task images if conditions are met,
+None if the modal is closed or dataset_id is invalid</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>plantimager/webui/carousel.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 60</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 61</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 62</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 63</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 64</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 65</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 66</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 67</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 68</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 72</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 73</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 74</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 75</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 76</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 77</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 78</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 79</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 80</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 81</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 82</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 83</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 84</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 85</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 86</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 87</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 88</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 89</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 90</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 91</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 92</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 93</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 94</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 95</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 96</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 97</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 98</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 99</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">100</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">101</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">103</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">104</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">105</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">106</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&#39;carousel&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
+          <span style="color: #3D7B7B; font-style: italic"># Output(&#39;carousel&#39;, &#39;figure&#39;),</span>
+          Input(<span style="color: #BA2121">&quot;carousel-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
+          Input(<span style="color: #BA2121">&quot;select-image-task&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
+          State(<span style="color: #BA2121">&#39;view-dataset&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+          State(<span style="color: #BA2121">&#39;rest-api-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+          State(<span style="color: #BA2121">&#39;rest-api-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+          State(<span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+          )
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">images_carousel</span>(open_modal, image_task, dataset_id, host, port, prefix):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a Dash carousel component displaying images from a specified dataset task.</span>
+
+<span style="color: #BA2121; font-style: italic">    This callback function generates a Bootstrap-styled carousel component for displaying</span>
+<span style="color: #BA2121; font-style: italic">    images associated with a specific task in a dataset. The carousel is only generated</span>
+<span style="color: #BA2121; font-style: italic">    when the modal is open and a valid dataset ID is provided.</span>
+
+<span style="color: #BA2121; font-style: italic">    Parameters</span>
+<span style="color: #BA2121; font-style: italic">    ----------</span>
+<span style="color: #BA2121; font-style: italic">    open_modal : bool</span>
+<span style="color: #BA2121; font-style: italic">        Flag indicating whether the carousel modal is open</span>
+<span style="color: #BA2121; font-style: italic">    image_task : str</span>
+<span style="color: #BA2121; font-style: italic">        Name of the image processing task to display images from</span>
+<span style="color: #BA2121; font-style: italic">    dataset_id : str</span>
+<span style="color: #BA2121; font-style: italic">        Identifier of the dataset to retrieve images from</span>
+<span style="color: #BA2121; font-style: italic">    host : str</span>
+<span style="color: #BA2121; font-style: italic">       The hostname or IP address of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    port : int</span>
+<span style="color: #BA2121; font-style: italic">        The port number of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    prefix : str</span>
+<span style="color: #BA2121; font-style: italic">        The prefix of the PlantDB REST API server.</span>
+
+<span style="color: #BA2121; font-style: italic">    Returns</span>
+<span style="color: #BA2121; font-style: italic">    -------</span>
+<span style="color: #BA2121; font-style: italic">    dash_bootstrap_components.Carousel or None</span>
+<span style="color: #BA2121; font-style: italic">        A Bootstrap carousel component containing the task images if conditions are met,</span>
+<span style="color: #BA2121; font-style: italic">        None if the modal is closed or dataset_id is invalid</span>
+<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> open_modal <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #666">==</span> <span style="color: #BA2121">&#39;&#39;</span>:
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>
+
+    images <span style="color: #666">=</span> list_task_images_uri(dataset_id, task_name<span style="color: #666">=</span>image_task, size<span style="color: #666">=</span><span style="color: #BA2121">&#39;orig&#39;</span>, host<span style="color: #666">=</span>host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
+
+    <span style="color: #3D7B7B; font-style: italic"># fig_layout_kwargs = {&#39;font_family&#39;: FONT_FAMILY, &#39;paper_bgcolor&#39;: &quot;#F3F3F3&quot;,</span>
+    <span style="color: #3D7B7B; font-style: italic">#                      &#39;autosize&#39;: True, &#39;margin&#39;: {&#39;t&#39;: 25, &#39;b&#39;: 5}, &#39;width&#39;: None, &#39;height&#39;: None}</span>
+    <span style="color: #3D7B7B; font-style: italic"># fig = plotly_image_carousel(images, title=dataset_id, layout_kwargs=fig_layout_kwargs)</span>
+    <span style="color: #3D7B7B; font-style: italic"># fig.update_layout(uirevision=&#39;value&#39;)</span>
+    <span style="color: #3D7B7B; font-style: italic"># # Remove the axis ticks and labels:</span>
+    <span style="color: #3D7B7B; font-style: italic"># fig.update_layout(xaxis={&#39;visible&#39;: False}, yaxis={&#39;visible&#39;: False})</span>
+    <span style="color: #3D7B7B; font-style: italic"># return fig</span>
+    <span style="color: #008000; font-weight: bold">return</span> dash_boostrap_carousel(images)
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="plantimager.webui.carousel.update_image_task_dropdown" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">update_image_task_dropdown</span>
+
+
+<a href="#plantimager.webui.carousel.update_image_task_dropdown" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>update_image_task_dropdown(open_modal, dataset_id, host, port, prefix)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Updates the dropdown options for image tasks based on the dataset and API configuration.</p>
+<p>This callback function is triggered when the carousel modal is opened or closed. It fetches
+the available tasks for a given dataset from the API and filters them against predefined
+IMAGE_TASKS to provide relevant options for the dropdown.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>open_modal</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>State of the carousel modal (True if open, False if closed).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>dataset_id</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Identifier of the selected dataset. Can be None or empty string if no dataset is selected.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>host</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The hostname or IP address of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>port</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The port number of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>prefix</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The prefix of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>list of str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of available image task options. Returns ['images'] if the modal is closed
+or no dataset is selected. Otherwise returns the intersection of IMAGE_TASKS and
+the tasks available for the selected dataset.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>plantimager/webui/carousel.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">18</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">19</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">20</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">24</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">25</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">26</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">27</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">28</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">29</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">30</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">31</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">32</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">33</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">34</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">35</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">36</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">37</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">38</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">44</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">45</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">47</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">48</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">54</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">55</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+    Output(<span style="color: #BA2121">&#39;select-image-task&#39;</span>, <span style="color: #BA2121">&#39;options&#39;</span>),
+    Input(<span style="color: #BA2121">&quot;carousel-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
+    State(<span style="color: #BA2121">&#39;view-dataset&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    State(<span style="color: #BA2121">&#39;rest-api-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    State(<span style="color: #BA2121">&#39;rest-api-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    State(<span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+)
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_image_task_dropdown</span>(open_modal, dataset_id, host, port, prefix):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Updates the dropdown options for image tasks based on the dataset and API configuration.</span>
+
+<span style="color: #BA2121; font-style: italic">    This callback function is triggered when the carousel modal is opened or closed. It fetches</span>
+<span style="color: #BA2121; font-style: italic">    the available tasks for a given dataset from the API and filters them against predefined</span>
+<span style="color: #BA2121; font-style: italic">    IMAGE_TASKS to provide relevant options for the dropdown.</span>
+
+<span style="color: #BA2121; font-style: italic">    Parameters</span>
+<span style="color: #BA2121; font-style: italic">    ----------</span>
+<span style="color: #BA2121; font-style: italic">    open_modal : bool</span>
+<span style="color: #BA2121; font-style: italic">        State of the carousel modal (True if open, False if closed).</span>
+<span style="color: #BA2121; font-style: italic">    dataset_id : str or None</span>
+<span style="color: #BA2121; font-style: italic">        Identifier of the selected dataset. Can be None or empty string if no dataset is selected.</span>
+<span style="color: #BA2121; font-style: italic">    host : str</span>
+<span style="color: #BA2121; font-style: italic">       The hostname or IP address of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    port : int</span>
+<span style="color: #BA2121; font-style: italic">        The port number of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    prefix : str</span>
+<span style="color: #BA2121; font-style: italic">        The prefix of the PlantDB REST API server.</span>
+
+<span style="color: #BA2121; font-style: italic">    Returns</span>
+<span style="color: #BA2121; font-style: italic">    -------</span>
+<span style="color: #BA2121; font-style: italic">    list of str</span>
+<span style="color: #BA2121; font-style: italic">        List of available image task options. Returns [&#39;images&#39;] if the modal is closed</span>
+<span style="color: #BA2121; font-style: italic">        or no dataset is selected. Otherwise returns the intersection of IMAGE_TASKS and</span>
+<span style="color: #BA2121; font-style: italic">        the tasks available for the selected dataset.</span>
+
+<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> open_modal <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #666">==</span> <span style="color: #BA2121">&#39;&#39;</span>:
+        <span style="color: #008000; font-weight: bold">return</span> [<span style="color: #BA2121">&#39;images&#39;</span>]
+    tasks_fileset <span style="color: #666">=</span> get_tasks_fileset_from_api(dataset_id, host<span style="color: #666">=</span>host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
+    <span style="color: #008000; font-weight: bold">return</span> [task <span style="color: #008000; font-weight: bold">for</span> task <span style="color: #A2F; font-weight: bold">in</span> IMAGE_TASKS <span style="color: #008000; font-weight: bold">if</span> task <span style="color: #A2F; font-weight: bold">in</span> tasks_fileset]
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 

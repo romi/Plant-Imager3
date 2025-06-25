@@ -2431,7 +2431,7 @@
     controller_thread<span style="color: #666">.</span>start()
 
     <span style="color: #3D7B7B; font-style: italic"># - Start the Dash app:</span>
-    app <span style="color: #666">=</span> setup_web_app(args<span style="color: #666">.</span>host, args<span style="color: #666">.</span>port, args<span style="color: #666">.</span>prefix, args<span style="color: #666">.</span>proxy)
+    app <span style="color: #666">=</span> setup_web_app(args<span style="color: #666">.</span>api_host, args<span style="color: #666">.</span>api_port, args<span style="color: #666">.</span>api_prefix, args<span style="color: #666">.</span>proxy)
     app<span style="color: #666">.</span>run(host<span style="color: #666">=</span><span style="color: #BA2121">&quot;0.0.0.0&quot;</span>, debug<span style="color: #666">=</span>args<span style="color: #666">.</span>debug, port<span style="color: #666">=8080</span>)
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2547,11 +2547,11 @@ including host address and port options.</p>
     parser <span style="color: #666">=</span> argparse<span style="color: #666">.</span>ArgumentParser(description<span style="color: #666">=</span><span style="color: #BA2121">&quot;PlantImager WebUI.&quot;</span>)
 
     app_args <span style="color: #666">=</span> parser<span style="color: #666">.</span>add_argument_group(<span style="color: #BA2121">&quot;Dash app options&quot;</span>)
-    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--host&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span>REST_API_URL,
+    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--api_host&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span>REST_API_URL,
                           help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Host address of the PlantDB REST API.&quot;</span>)
-    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--port&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">int</span>, default<span style="color: #666">=</span>REST_API_PORT,
+    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--api_port&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">int</span>, default<span style="color: #666">=</span>REST_API_PORT,
                           help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Port of the PlantDB REST API.&quot;</span>)
-    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--prefix&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span>api_prefix(),
+    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--api_prefix&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span>api_prefix(),
                           help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Prefix of the PlantDB REST API.&quot;</span>)
     app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--proxy&#39;</span>, action<span style="color: #666">=</span><span style="color: #BA2121">&#39;store_true&#39;</span>,
                           help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Activate if the server is behind a reverse proxy&quot;</span>)
@@ -2574,7 +2574,7 @@ including host address and port options.</p>
 
 
 <a href="#plantimager.webui.app.setup_web_app" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>setup_web_app(url, port, prefix, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_base_pathname<span style="color: #666">=</span><span style="color: #BA2121">&#39;/webui/&#39;</span>)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>setup_web_app(api_url, api_port, api_prefix, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_base_pathname<span style="color: #666">=</span><span style="color: #BA2121">&#39;/webui/&#39;</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2599,14 +2599,14 @@ user authentication, and dataset management.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>url</code>
+                <code>api_url</code>
             </td>
             <td>
                   <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The base URL for the REST API server (e.g., 'http://localhost')</p>
+                <p>The base URL for the PlantDB REST API server (e.g., 'http://localhost')</p>
               </div>
             </td>
             <td>
@@ -2615,14 +2615,30 @@ user authentication, and dataset management.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>port</code>
+                <code>api_port</code>
             </td>
             <td>
                   <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The port number for the REST API server connection</p>
+                <p>The port number for the PlantDB REST API server connection</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>api_prefix</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>URL prefix of the PlantDB REST API server.</p>
               </div>
             </td>
             <td>
@@ -2643,22 +2659,6 @@ user authentication, and dataset management.</p>
             </td>
             <td>
                   <code>False</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>prefix</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>URL prefix of the PlantDB server.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -2799,7 +2799,7 @@ user authentication, and dataset management.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(url: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span>, prefix: <span style="color: #008000">str</span>, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_base_pathname: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&#39;/webui/&#39;</span>) <span style="color: #666">-&gt;</span> Dash:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(api_url: <span style="color: #008000">str</span>, api_port: <span style="color: #008000">int</span>, api_prefix: <span style="color: #008000">str</span>, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_base_pathname: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&#39;/webui/&#39;</span>) <span style="color: #666">-&gt;</span> Dash:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Initialize and configure the Plant Imager Dash web application.</span>
 
 <span style="color: #BA2121; font-style: italic">    Creates a Dash application instance with Bootstrap styling and sets up the main</span>
@@ -2809,14 +2809,14 @@ user authentication, and dataset management.</p>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
-<span style="color: #BA2121; font-style: italic">    url : str</span>
-<span style="color: #BA2121; font-style: italic">        The base URL for the REST API server (e.g., &#39;http://localhost&#39;)</span>
-<span style="color: #BA2121; font-style: italic">    port : int</span>
-<span style="color: #BA2121; font-style: italic">        The port number for the REST API server connection</span>
+<span style="color: #BA2121; font-style: italic">    api_url : str</span>
+<span style="color: #BA2121; font-style: italic">        The base URL for the PlantDB REST API server (e.g., &#39;http://localhost&#39;)</span>
+<span style="color: #BA2121; font-style: italic">    api_port : int</span>
+<span style="color: #BA2121; font-style: italic">        The port number for the PlantDB REST API server connection</span>
+<span style="color: #BA2121; font-style: italic">    api_prefix : str, optional</span>
+<span style="color: #BA2121; font-style: italic">        URL prefix of the PlantDB REST API server.</span>
 <span style="color: #BA2121; font-style: italic">    proxy : bool, optional</span>
 <span style="color: #BA2121; font-style: italic">        Boolean flag indicating whether the application is behind a reverse proxy, by default ``False``.</span>
-<span style="color: #BA2121; font-style: italic">    prefix : str, optional</span>
-<span style="color: #BA2121; font-style: italic">        URL prefix of the PlantDB server.</span>
 <span style="color: #BA2121; font-style: italic">    url_base_pathname : str</span>
 <span style="color: #BA2121; font-style: italic">        The base URL path where the application is served (should match Nginx location)</span>
 
@@ -2856,9 +2856,9 @@ user authentication, and dataset management.</p>
     <span style="color: #3D7B7B; font-style: italic"># Main application layout definition</span>
     app<span style="color: #666">.</span>layout <span style="color: #666">=</span> html<span style="color: #666">.</span>Div([
         <span style="color: #3D7B7B; font-style: italic"># Global state storage</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-host&#39;</span>, data<span style="color: #666">=</span>url, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API URL</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-port&#39;</span>, data<span style="color: #666">=</span>port, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API port</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, data<span style="color: #666">=</span>prefix, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API prefix</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-host&#39;</span>, data<span style="color: #666">=</span>api_url, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API URL</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-port&#39;</span>, data<span style="color: #666">=</span>api_port, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API port</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, data<span style="color: #666">=</span>api_prefix, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API prefix</span>
         dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;connected&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># boolean flag indicating if connected to the database or not</span>
         dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;logged-username&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># id of the logger user</span>
         dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;logged-fullname&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># real name of the logged user</span>

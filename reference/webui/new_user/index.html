@@ -2336,7 +2336,7 @@ new user accounts in the Plant Imager system.</p>
 
 
 <a href="#plantimager.webui.new_user.register_user" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>register_user(n_clicks, username, fullname, password, confirm_password, host, port)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>register_user(n_clicks, username, fullname, password, confirm_password, host, port, prefix)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2446,7 +2446,7 @@ validation, password matching, and account creation through the backend API.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The host address of the REST API server.</p>
+                <p>The hostname or IP address of the PlantDB REST API server.</p>
               </div>
             </td>
             <td>
@@ -2458,11 +2458,27 @@ validation, password matching, and account creation through the backend API.</p>
                 <code>port</code>
             </td>
             <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The port number of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>prefix</code>
+            </td>
+            <td>
                   <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The port number of the REST API server.</p>
+                <p>The prefix of the PlantDB REST API server.</p>
               </div>
             </td>
             <td>
@@ -2542,12 +2558,7 @@ validation, password matching, and account creation through the backend API.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/new_user.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">268</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">270</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">271</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">272</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">273</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">273</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">274</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">275</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">276</span>
@@ -2635,7 +2646,15 @@ validation, password matching, and account creation through the backend API.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">358</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">359</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">360</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">361</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">361</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">362</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">363</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">364</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">365</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">366</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">367</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">368</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">369</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;registration-message&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
     [Input(<span style="color: #BA2121">&quot;register-button&quot;</span>, <span style="color: #BA2121">&quot;n_clicks&quot;</span>)],
     [State(<span style="color: #BA2121">&quot;new-username-input&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
@@ -2643,11 +2662,12 @@ validation, password matching, and account creation through the backend API.</p>
      State(<span style="color: #BA2121">&quot;new-password-input&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
      State(<span style="color: #BA2121">&quot;confirm-password-input&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
      State(<span style="color: #BA2121">&quot;rest-api-host&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
-     State(<span style="color: #BA2121">&quot;rest-api-port&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)],
+     State(<span style="color: #BA2121">&quot;rest-api-port&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
+     State(<span style="color: #BA2121">&quot;rest-api-prefix&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)],
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_user</span>(n_clicks: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, username: <span style="color: #008000">str</span>, fullname: <span style="color: #008000">str</span>, password: <span style="color: #008000">str</span>, 
-               confirm_password: <span style="color: #008000">str</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span> <span style="color: #666">|</span> dbc<span style="color: #666">.</span>Alert:
+               confirm_password: <span style="color: #008000">str</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">str</span>, prefix:<span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span> <span style="color: #666">|</span> dbc<span style="color: #666">.</span>Alert:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Process user registration by validating inputs and creating a new account.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback handles the complete user registration process, including input</span>
@@ -2666,9 +2686,11 @@ validation, password matching, and account creation through the backend API.</p>
 <span style="color: #BA2121; font-style: italic">    confirm_password : str</span>
 <span style="color: #BA2121; font-style: italic">        Password confirmation entry.</span>
 <span style="color: #BA2121; font-style: italic">    host : str</span>
-<span style="color: #BA2121; font-style: italic">        The host address of the REST API server.</span>
-<span style="color: #BA2121; font-style: italic">    port : str</span>
-<span style="color: #BA2121; font-style: italic">        The port number of the REST API server.</span>
+<span style="color: #BA2121; font-style: italic">       The hostname or IP address of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    port : int</span>
+<span style="color: #BA2121; font-style: italic">        The port number of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    prefix : str</span>
+<span style="color: #BA2121; font-style: italic">        The prefix of the PlantDB REST API server.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
@@ -2695,7 +2717,7 @@ validation, password matching, and account creation through the backend API.</p>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> n_clicks:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;&quot;</span>
 
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> _validate_new_username(username, host, port):
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> _validate_new_username(username, host, port, prefix):
         <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Username &#39;</span><span style="color: #A45A77; font-weight: bold">{</span>username<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&#39; is unavailable!&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
 
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">all</span>([username, fullname, password, confirm_password]):
@@ -2706,7 +2728,7 @@ validation, password matching, and account creation through the backend API.</p>
 
     <span style="color: #008000; font-weight: bold">try</span>:
         response <span style="color: #666">=</span> requests<span style="color: #666">.</span>post(
-            urljoin(base_url(host, port), <span style="color: #BA2121">&#39;/register&#39;</span>),
+            urljoin(base_url(host, port, prefix), <span style="color: #BA2121">&#39;register&#39;</span>),
             data<span style="color: #666">=</span>json<span style="color: #666">.</span>dumps({
                 <span style="color: #BA2121">&#39;username&#39;</span>: username,
                 <span style="color: #BA2121">&#39;fullname&#39;</span>: fullname,
@@ -2895,7 +2917,7 @@ was clicked.</p>
 
 
 <a href="#plantimager.webui.new_user.validate_new_username" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>validate_new_username(new_username, is_modal_open, host, port)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>validate_new_username(new_username, is_modal_open, host, port, prefix)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2957,7 +2979,7 @@ Updates the validation state of the username input field accordingly.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The host address of the REST API server.</p>
+                <p>The hostname or IP address of the PlantDB REST API server.</p>
               </div>
             </td>
             <td>
@@ -2969,11 +2991,27 @@ Updates the validation state of the username input field accordingly.</p>
                 <code>port</code>
             </td>
             <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The port number of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>prefix</code>
+            </td>
+            <td>
                   <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The port number of the REST API server.</p>
+                <p>The prefix of the PlantDB REST API server.</p>
               </div>
             </td>
             <td>
@@ -3034,9 +3072,7 @@ Updates the validation state of the username input field accordingly.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/new_user.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">171</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">172</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">174</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">175</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">176</span>
@@ -3074,15 +3110,21 @@ Updates the validation state of the username input field accordingly.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">209</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">210</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">211</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">211</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">212</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">213</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">215</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">216</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;new-username-input&#39;</span>, <span style="color: #BA2121">&#39;valid&#39;</span>),
     Output(<span style="color: #BA2121">&#39;new-username-input&#39;</span>, <span style="color: #BA2121">&#39;invalid&#39;</span>),
     Input(<span style="color: #BA2121">&#39;new-username-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
     State(<span style="color: #BA2121">&#39;new-user-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
     State(<span style="color: #BA2121">&#39;rest-api-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;rest-api-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>)
+    State(<span style="color: #BA2121">&#39;rest-api-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    State(<span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
 )
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">validate_new_username</span>(new_username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, is_modal_open: <span style="color: #008000">bool</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>]:
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">validate_new_username</span>(new_username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, is_modal_open: <span style="color: #008000">bool</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">str</span>, prefix:<span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Validate if the entered username is available for registration.</span>
 
 <span style="color: #BA2121; font-style: italic">    Makes an API request to check if the username already exists in the system.</span>
@@ -3095,9 +3137,11 @@ Updates the validation state of the username input field accordingly.</p>
 <span style="color: #BA2121; font-style: italic">    is_modal_open : bool</span>
 <span style="color: #BA2121; font-style: italic">        Current state of the registration modal.</span>
 <span style="color: #BA2121; font-style: italic">    host : str</span>
-<span style="color: #BA2121; font-style: italic">        The host address of the REST API server.</span>
-<span style="color: #BA2121; font-style: italic">    port : str</span>
-<span style="color: #BA2121; font-style: italic">        The port number of the REST API server.</span>
+<span style="color: #BA2121; font-style: italic">       The hostname or IP address of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    port : int</span>
+<span style="color: #BA2121; font-style: italic">        The port number of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    prefix : str</span>
+<span style="color: #BA2121; font-style: italic">        The prefix of the PlantDB REST API server.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
@@ -3113,7 +3157,7 @@ Updates the validation state of the username input field accordingly.</p>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> is_modal_open <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> new_username:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #008000; font-weight: bold">False</span>
-    valid_username <span style="color: #666">=</span> _validate_new_username(new_username, host, port)
+    valid_username <span style="color: #666">=</span> _validate_new_username(new_username, host, port, prefix)
     <span style="color: #008000; font-weight: bold">return</span> valid_username, <span style="color: #666">~</span>valid_username
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3220,12 +3264,7 @@ ensuring they contain identical values.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/new_user.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">215</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">216</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">217</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">218</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">220</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">221</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">222</span>
@@ -3271,7 +3310,12 @@ ensuring they contain identical values.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">263</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">268</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">270</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     [
         Output(<span style="color: #BA2121">&quot;new-password-input&quot;</span>, <span style="color: #BA2121">&quot;valid&quot;</span>),
         Output(<span style="color: #BA2121">&quot;new-password-input&quot;</span>, <span style="color: #BA2121">&quot;invalid&quot;</span>),
