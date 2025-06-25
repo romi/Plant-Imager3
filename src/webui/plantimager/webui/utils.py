@@ -26,8 +26,6 @@ Usage Examples
 
 from typing import Any
 
-import requests
-import toml
 from dash import dcc
 from plantdb.client.rest_api import base_url
 from plantdb.client.rest_api import list_scan_names
@@ -57,6 +55,7 @@ IMAGE_TASKS = [
     'Masks',
 ]
 
+
 def get_dataset_dict(host: str, port: str, prefix: str) -> dict[str, Any] | None:
     """Returns the dataset dictionary for the PlantDB REST API at given host url and port.
 
@@ -84,87 +83,6 @@ def get_dataset_dict(host: str, port: str, prefix: str) -> dict[str, Any] | None
     else:
         dataset_dict = None
     return dataset_dict
-
-
-def pipeline_cfg_url(host: str, port: str, prefix: str, scan_id: str) -> str:
-    """Get the URL corresponding to the 'pipeline.toml' backup file for the given scan ID in a PlantDB REST API.
-
-    Parameters
-    ----------
-    host : str
-        The hostname or IP address of the PlantDB REST API server.
-    port : str
-        The port number of the PlantDB REST API server.
-    scan_id : str
-        The name of the dataset to test for the reconstruction pipeline.
-
-    Returns
-    -------
-    str
-        The URL corresponding to the 'pipeline.toml' backup file for the given scan ID.
-    """
-    return f"{base_url(host, port, prefix)}/files/{scan_id}/pipeline.toml"
-
-
-def get_pipeline_cfg(host: str, port: str, prefix: str, scan_id: str) -> dict[str, Any]:
-    """Get the backup configuration file of the reconstruction pipeline for the given scan ID.
-
-    Parameters
-    ----------
-    host : str
-        The hostname or IP address of the PlantDB REST API server.
-    port : str
-        The port number of the PlantDB REST API server.
-    scan_id : str
-        The name of the dataset to test for the reconstruction pipeline.
-
-    Returns
-    -------
-    dict[str, Any]
-        The backup configuration for the reconstruction pipeline for the given scan ID.
-        Returns an empty dictionary if no pipeline configuration is found.
-
-    Examples
-    --------
-    >>> from plantimager.webui.utils import get_pipeline_cfg
-    >>> get_pipeline_cfg('127.0.0.1','5000','real_plant')
-    {}
-    >>> cfg = get_pipeline_cfg('127.0.0.1','5000','real_plant_analyzed')
-    """
-    if has_pipeline_cfg(host, port, prefix, scan_id):
-        return toml.loads(requests.get(pipeline_cfg_url(host, port, prefix, scan_id)).content.decode())
-    else:
-        return {}
-
-
-def has_pipeline_cfg(host: str, port: str, prefix: str, scan_id: str) -> bool:
-    """Test if a named dataset has a reconstruction pipeline.
-
-    Reconstruction pipeline is named 'pipeline.toml', so we test if the request from the file ressource is ok.
-
-    Parameters
-    ----------
-    host : str
-        The hostname or IP address of the PlantDB REST API server.
-    port : str
-        The port number of the PlantDB REST API server.
-    scan_id : str
-        The name of the dataset to test for the reconstruction pipeline.
-
-    Returns
-    -------
-    bool
-        Indicates if a reconstruction pipeline is found.
-
-    Examples
-    --------
-    >>> from plantimager.webui.utils import has_pipeline_cfg
-    >>> has_pipeline_cfg('127.0.0.1','5000','real_plant')
-    False
-    >>> has_pipeline_cfg('127.0.0.1','5000','real_plant_analyzed')
-    True
-    """
-    return requests.get(pipeline_cfg_url(host, port, prefix, scan_id)).ok
 
 
 def config_upload() -> dcc.Upload:
