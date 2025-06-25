@@ -18,7 +18,7 @@ Usage Examples
 $ python app.py
 
 # Connect to a specific REST API server
-$ python app.py --host http://example-server --port 5000
+$ python app.py --api_host http://example-server --api_port 5000
 """
 
 import argparse
@@ -61,8 +61,8 @@ def parsing() -> argparse.ArgumentParser:
     --------
     >>> from plantimager.webui.app import parsing
     >>> parser = parsing()
-    >>> args = parser.parse_args(['--host', '192.168.1.100', '--port', '5001', '--prefix', '/plantdb'])
-    >>> print(f"https://{args.host}:{args.port}{args.prefix}")
+    >>> args = parser.parse_args(['--api_host', '192.168.1.100', '--api_port', '5001', '--api_prefix', '/plantdb'])
+    >>> print(f"https://{args.api_host}:{args.api_port}{args.api_prefix}")
     https://192.168.1.100:5001/plantdb
     """
     parser = argparse.ArgumentParser(description="PlantImager WebUI.")
