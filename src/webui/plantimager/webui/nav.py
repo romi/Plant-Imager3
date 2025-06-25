@@ -83,8 +83,7 @@ dataset_table_tooltip: dbc.Tooltip = dbc.Tooltip(
     Input('url', 'pathname')
 )
 def update_scan_link_href(_):
-    home_path = get_relative_path("/")
-    return home_path, home_path
+    return get_relative_path("/")
 
 
 # Then update the href of the dataset table page through a callback when the app starts
