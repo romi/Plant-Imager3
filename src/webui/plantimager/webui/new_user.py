@@ -140,7 +140,7 @@ def toggle_register_modal(new_user_clicks: int | None, is_open: bool) -> bool:
     return is_open
 
 
-def _validate_new_username(new_username: str, host: str, port: str) -> bool:
+def _validate_new_username(new_username: str, host: str, port: str, prefix: str) -> bool:
     """Check if a username is available for registration.
 
     Parameters
@@ -148,9 +148,11 @@ def _validate_new_username(new_username: str, host: str, port: str) -> bool:
     new_username : str
         The username to check for availability.
     host : str
-        The hostname or IP address of the REST API server.
-    port : str
-        The port number of the REST API server.
+       The hostname or IP address of the PlantDB REST API server.
+    port : int
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
 
     Returns
     -------
@@ -158,7 +160,7 @@ def _validate_new_username(new_username: str, host: str, port: str) -> bool:
         ``True`` if the username is available, ``False`` if it already exists or there was an error.
     """
     try:
-        response = requests.get(urljoin(base_url(host, port), f'/login?username={new_username}'))
+        response = requests.get(urljoin(base_url(host, port, prefix), f'login?username={new_username}'))
         user_exists = response.json().get('exists', False)
         if user_exists:
             return False  # Unavailable username
@@ -174,9 +176,10 @@ def _validate_new_username(new_username: str, host: str, port: str) -> bool:
     Input('new-username-input', 'value'),
     State('new-user-modal', 'is_open'),
     State('rest-api-host', 'data'),
-    State('rest-api-port', 'data')
+    State('rest-api-port', 'data'),
+    State('rest-api-prefix', 'data'),
 )
-def validate_new_username(new_username: str | None, is_modal_open: bool, host: str, port: str) -> tuple[bool, bool]:
+def validate_new_username(new_username: str | None, is_modal_open: bool, host: str, port: str, prefix:str) -> tuple[bool, bool]:
     """Validate if the entered username is available for registration.
 
     Makes an API request to check if the username already exists in the system.
@@ -189,9 +192,11 @@ def validate_new_username(new_username: str | None, is_modal_open: bool, host: s
     is_modal_open : bool
         Current state of the registration modal.
     host : str
-        The host address of the REST API server.
-    port : str
-        The port number of the REST API server.
+       The hostname or IP address of the PlantDB REST API server.
+    port : int
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
 
     Returns
     -------
@@ -207,7 +212,7 @@ def validate_new_username(new_username: str | None, is_modal_open: bool, host: s
     """
     if not is_modal_open or not new_username:
         return False, False
-    valid_username = _validate_new_username(new_username, host, port)
+    valid_username = _validate_new_username(new_username, host, port, prefix)
     return valid_username, ~valid_username
 
 
@@ -273,11 +278,12 @@ def validate_password_match(password: str | None, confirm_password: str | None) 
      State("new-password-input", "value"),
      State("confirm-password-input", "value"),
      State("rest-api-host", "data"),
-     State("rest-api-port", "data")],
+     State("rest-api-port", "data"),
+     State("rest-api-prefix", "data")],
     prevent_initial_call=True
 )
 def register_user(n_clicks: int | None, username: str, fullname: str, password: str, 
-               confirm_password: str, host: str, port: str) -> str | dbc.Alert:
+               confirm_password: str, host: str, port: str, prefix:str) -> str | dbc.Alert:
     """Process user registration by validating inputs and creating a new account.
 
     This callback handles the complete user registration process, including input
@@ -296,9 +302,11 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
     confirm_password : str
         Password confirmation entry.
     host : str
-        The host address of the REST API server.
-    port : str
-        The port number of the REST API server.
+       The hostname or IP address of the PlantDB REST API server.
+    port : int
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
 
     Returns
     -------
@@ -325,7 +333,7 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
     if not n_clicks:
         return ""
 
-    if not _validate_new_username(username, host, port):
+    if not _validate_new_username(username, host, port, prefix):
         return dbc.Alert(f"Username '{username}' is unavailable!", color="danger", class_name="mb-0")
 
     if not all([username, fullname, password, confirm_password]):
@@ -336,7 +344,7 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
 
     try:
         response = requests.post(
-            urljoin(base_url(host, port), '/register'),
+            urljoin(base_url(host, port, prefix), 'register'),
             data=json.dumps({
                 'username': username,
                 'fullname': fullname,
