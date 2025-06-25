@@ -95,6 +95,7 @@ Control {
                 }
                 P.NumericKeyboardPopup {
                     id: keyboard_popup
+                    anchors.centerIn: Overlay.overlay
                     onClosed: {
                         pos_edit.text = input.toString()
                     }

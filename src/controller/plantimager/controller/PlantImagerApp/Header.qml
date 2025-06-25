@@ -47,8 +47,7 @@ Control {
     Popup {
         id: _shutdown_popup
         modal: true
-        x: window.width/2 - width/2
-        y: window.height/2 - height/2
+        anchors.centerIn: Overlay.overlay
         ColumnLayout {
             anchors.fill: parent
             Button {
