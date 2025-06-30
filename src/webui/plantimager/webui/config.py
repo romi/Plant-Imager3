@@ -410,7 +410,7 @@ def check_server_availability(
         host = host[8:]
 
     try:
-        test_availability({base_url(host, port, prefix)})
+        test_availability(base_url(host, port, prefix))
     except:
         is_available = False
     else:
