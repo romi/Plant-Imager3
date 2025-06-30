@@ -1222,6 +1222,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" CameraBridge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.camera.CameraBridge.CameraBridge.getImage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;getImage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.camera.CameraBridge.CameraBridge.getLoresImage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;getLoresImage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -2203,6 +2227,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" CameraBridge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.camera.CameraBridge.CameraBridge.getImage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;getImage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.camera.CameraBridge.CameraBridge.getLoresImage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;getLoresImage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -2353,6 +2401,72 @@ statusClass</p>
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="plantimager.controller.camera.CameraBridge.CameraBridge.getImage" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">getImage</span>
+
+
+<a href="#plantimager.controller.camera.CameraBridge.CameraBridge.getImage" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>getImage()
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Gets a high-resolution image from the camera</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>plantimager/controller/camera/CameraBridge.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">95</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">96</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">97</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">98</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">99</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getImage</span>(<span style="color: #008000">self</span>):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Gets a high-resolution image from the camera&quot;&quot;&quot;</span>
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>camera:
+        <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>getImage()
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="plantimager.controller.camera.CameraBridge.CameraBridge.getLoresImage" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">getLoresImage</span>
+
+
+<a href="#plantimager.controller.camera.CameraBridge.CameraBridge.getLoresImage" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>getLoresImage()
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Gets a low-resolution image from the camera</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>plantimager/controller/camera/CameraBridge.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">101</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">103</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">104</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">105</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getLoresImage</span>(<span style="color: #008000">self</span>):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Gets a low-resolution image from the camera&quot;&quot;&quot;</span>
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>camera:
+        <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>getImage(lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 

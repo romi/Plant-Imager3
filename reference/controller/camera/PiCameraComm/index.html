@@ -2359,12 +2359,12 @@
 
 
 <a href="#plantimager.controller.camera.PiCameraComm.PiCameraComm.getImage" class="headerlink" title="Permanent link">Link</a></h4>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>getImage()
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>getImage(lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Submit call to camera.get_image() and returns a future representing the pending result.
+        <p>Submits a call to camera.get_image() and returns a future representing the pending result.
 When camera.get_image() returns and the result is available, the signal imageReady is emitted.</p>
 
 
@@ -2412,10 +2412,10 @@ When camera.get_image() returns and the result is available, the signal imageRea
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">64</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getImage</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> Future[<span style="color: #008000">tuple</span>[<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>]]:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">bool</span>, result<span style="color: #666">=</span>Future)
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getImage</span>(<span style="color: #008000">self</span>, lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> Future[<span style="color: #008000">tuple</span>[<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>]]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
-<span style="color: #BA2121; font-style: italic">    Submit call to camera.get_image() and returns a future representing the pending result.</span>
+<span style="color: #BA2121; font-style: italic">    Submits a call to camera.get_image() and returns a future representing the pending result.</span>
 <span style="color: #BA2121; font-style: italic">    When camera.get_image() returns and the result is available, the signal imageReady is emitted.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
@@ -2429,7 +2429,7 @@ When camera.get_image() returns and the result is available, the signal imageRea
         <span style="color: #008000; font-weight: bold">if</span> res:
             buffer, buffer_info <span style="color: #666">=</span> res
             <span style="color: #008000">self</span><span style="color: #666">.</span>imageReady<span style="color: #666">.</span>emit(buffer, buffer_info)
-    ft <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_thread_pool<span style="color: #666">.</span>submit(<span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>get_image)
+    ft <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_thread_pool<span style="color: #666">.</span>submit(<span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>get_image, lores<span style="color: #666">=</span>lores)
     ft<span style="color: #666">.</span>add_done_callback(_callback)
     <span style="color: #008000; font-weight: bold">return</span> ft
 </code></pre></div></td></tr></table></div>

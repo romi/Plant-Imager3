@@ -4268,7 +4268,7 @@ creates a DataItem, and uploads it to the database.</p>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; data_item = scanner.grab(1, metadata, camera)</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #3D7B7B; font-style: italic"># Capture image from camera</span>
-    image_future <span style="color: #666">=</span> camera<span style="color: #666">.</span>getImage()
+    image_future <span style="color: #666">=</span> camera<span style="color: #666">.</span>getImage(lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>)
     buffer, buffer_info <span style="color: #666">=</span> image_future<span style="color: #666">.</span>result()  <span style="color: #3D7B7B; font-style: italic"># Wait for image capture to complete</span>
 
     <span style="color: #3D7B7B; font-style: italic"># Update metadata with image information from camera</span>
