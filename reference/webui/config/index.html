@@ -2750,7 +2750,7 @@ and managing datasets within the Plant Imager web interface.</p>
         host <span style="color: #666">=</span> host[<span style="color: #666">8</span>:]
 
     <span style="color: #008000; font-weight: bold">try</span>:
-        test_availability({base_url(host, port, prefix)})
+        test_availability(base_url(host, port, prefix))
     <span style="color: #008000; font-weight: bold">except</span>:
         is_available <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #008000; font-weight: bold">else</span>:
