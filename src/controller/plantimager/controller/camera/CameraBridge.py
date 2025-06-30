@@ -94,8 +94,15 @@ class CameraBridge(QObject):
 
     @Slot()
     def getImage(self):
+        """Gets a high-resolution image from the camera"""
         if self.camera:
             self.camera.getImage()
+
+    @Slot()
+    def getLoresImage(self):
+        """Gets a low-resolution image from the camera"""
+        if self.camera:
+            self.camera.getImage(lores=True)
 
     @Property(str, notify=modeChanged)
     def mode(self):

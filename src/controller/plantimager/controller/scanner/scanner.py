@@ -618,7 +618,7 @@ class Scanner(QObject):
         >>> data_item = scanner.grab(1, metadata, camera)
         """
         # Capture image from camera
-        image_future = camera.getImage()
+        image_future = camera.getImage(lores=False)
         buffer, buffer_info = image_future.result()  # Wait for image capture to complete
 
         # Update metadata with image information from camera

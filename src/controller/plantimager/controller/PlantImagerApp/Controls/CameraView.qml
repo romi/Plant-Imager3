@@ -182,7 +182,7 @@ Control {
             Layout.fillHeight: true
             text: "Take Picture"
             onClicked: {
-                bridge.getImage()
+                bridge.getLoresImage()
             }
         }
     }

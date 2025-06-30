@@ -15,7 +15,7 @@ class DummyCamera(Camera, RPCServer):
         self._rotation = 0
 
     @RPCServer.register_method_buffer(timeout=10000)
-    def get_image(self) -> (memoryview, dict):
+    def get_image(self, lores=False) -> (memoryview, dict):
         if self.mode != CameraMode.STILL:
             self.mode = CameraMode.STILL
         image: np.ndarray[np.uint8] = scipy.datasets.face()

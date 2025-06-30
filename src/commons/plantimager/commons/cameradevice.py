@@ -21,7 +21,7 @@ class Camera(ABC):
         pass
 
     @abstractmethod
-    def get_image(self) -> tuple[memoryview, dict]:
+    def get_image(self, lores=False) -> tuple[memoryview, dict]:
         pass
 
     @RPCProperty(notify=modeChanged)

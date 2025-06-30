@@ -45,10 +45,10 @@ class PiCameraComm(QObject):
         self._thread_pool.shutdown(cancel_futures=True)
         self.camera.stop_server()
 
-    @Slot()
-    def getImage(self) -> Future[tuple[memoryview, dict]]:
+    @Slot(bool, result=Future)
+    def getImage(self, lores=False) -> Future[tuple[memoryview, dict]]:
         """
-        Submit call to camera.get_image() and returns a future representing the pending result.
+        Submits a call to camera.get_image() and returns a future representing the pending result.
         When camera.get_image() returns and the result is available, the signal imageReady is emitted.
 
         Returns
@@ -62,7 +62,7 @@ class PiCameraComm(QObject):
             if res:
                 buffer, buffer_info = res
                 self.imageReady.emit(buffer, buffer_info)
-        ft = self._thread_pool.submit(self.camera.get_image)
+        ft = self._thread_pool.submit(self.camera.get_image, lores=lores)
         ft.add_done_callback(_callback)
         return ft
 
