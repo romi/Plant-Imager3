@@ -58,6 +58,7 @@ def dash_boostrap_carousel(images):
         items=[{"key": idx, "src": img} for idx, img in enumerate(images)],
         controls=True,
         indicators=True,
+        slide=False,
         class_name="carousel-fade",
     )
     return carousel
