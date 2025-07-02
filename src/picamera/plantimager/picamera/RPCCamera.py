@@ -103,7 +103,7 @@ class RPCCamera(Camera, RPCServer):
             image: np.ndarray = self.picam.capture_array()
             buffer = encode_jpeg(image, quality=95, colorsubsampling="420", fastdct=True)
         # buffer = jpegxl_encode(image, lossless=True, effort=2)
-        return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape}
+        return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape, "channel": "rgb"}
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self):
