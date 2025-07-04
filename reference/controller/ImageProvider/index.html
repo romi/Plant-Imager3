@@ -947,6 +947,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.ImageProvider.compute_focus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;compute_focus
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.ImageProvider.focus_highlight" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;focus_highlight
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2203,6 +2221,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.ImageProvider.compute_focus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;compute_focus
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.ImageProvider.focus_highlight" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;focus_highlight
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2285,9 +2321,9 @@
 
                   <details class="quote">
                     <summary>Source code in <code>plantimager/controller/ImageProvider.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">15</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">16</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">17</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>):
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">127</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">128</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">129</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>):
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>(QQmlImageProviderBase<span style="color: #666">.</span>ImageType<span style="color: #666">.</span>Image)
     <span style="color: #008000">self</span><span style="color: #666">.</span>images: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, QImage] <span style="color: #666">=</span> {}
 </code></pre></div></td></tr></table></div>
@@ -2313,6 +2349,324 @@
 
 </div>
 
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="plantimager.controller.ImageProvider.compute_focus" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">compute_focus</span>
+
+
+<a href="#plantimager.controller.ImageProvider.compute_focus" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>compute_focus(image)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Computes the focus measure of an image using the Sobel filter.</p>
+<p>This function calculates the gradient magnitude of an input image in the
+x and y directions, combining the results to estimate focus. The computed
+focus measure highlights edges and areas of high intensity change, which
+are often indicative of regions in focus.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>image</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A 2D array representing the input grayscale image whose focus measure is to be
+computed.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A 2D array representing the gradient magnitude of the input image,
+where higher values correspond to more focused regions.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>plantimager/controller/ImageProvider.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">44</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">45</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">47</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">48</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">54</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">55</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">61</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">62</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">63</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">64</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">73</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">74</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">compute_focus</span>(image: np<span style="color: #666">.</span>ndarray, <span style="color: #666">/</span>,):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    Computes the focus measure of an image using the Sobel filter.</span>
+
+<span style="color: #BA2121; font-style: italic">    This function calculates the gradient magnitude of an input image in the</span>
+<span style="color: #BA2121; font-style: italic">    x and y directions, combining the results to estimate focus. The computed</span>
+<span style="color: #BA2121; font-style: italic">    focus measure highlights edges and areas of high intensity change, which</span>
+<span style="color: #BA2121; font-style: italic">    are often indicative of regions in focus.</span>
+
+<span style="color: #BA2121; font-style: italic">    Parameters</span>
+<span style="color: #BA2121; font-style: italic">    ----------</span>
+<span style="color: #BA2121; font-style: italic">    image : np.ndarray</span>
+<span style="color: #BA2121; font-style: italic">        A 2D array representing the input grayscale image whose focus measure is to be</span>
+<span style="color: #BA2121; font-style: italic">        computed.</span>
+
+<span style="color: #BA2121; font-style: italic">    Returns</span>
+<span style="color: #BA2121; font-style: italic">    -------</span>
+<span style="color: #BA2121; font-style: italic">    np.ndarray</span>
+<span style="color: #BA2121; font-style: italic">        A 2D array representing the gradient magnitude of the input image,</span>
+<span style="color: #BA2121; font-style: italic">        where higher values correspond to more focused regions.</span>
+<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+    downscaled <span style="color: #666">=</span> skimage<span style="color: #666">.</span>transform<span style="color: #666">.</span>downscale_local_mean(image, <span style="color: #666">2</span>)<span style="color: #666">.</span>astype(np<span style="color: #666">.</span>uint8)
+    grad_x <span style="color: #666">=</span> skimage<span style="color: #666">.</span>filters<span style="color: #666">.</span>sobel(downscaled, axis<span style="color: #666">=0</span>)
+    grad_y <span style="color: #666">=</span> skimage<span style="color: #666">.</span>filters<span style="color: #666">.</span>sobel(downscaled, axis<span style="color: #666">=1</span>)
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(downscaled, title=&quot;downscaled&quot;)</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(grad_x, title=&quot;grad_x&quot;, vmin=grad_x.min(), vmax=grad_x.max())</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(grad_y, title=&quot;grad_y&quot;, vmin=grad_y.min(), vmax=grad_y.max())</span>
+    magnitude <span style="color: #666">=</span> np<span style="color: #666">.</span>sqrt(grad_x<span style="color: #666">**2</span> <span style="color: #666">+</span> grad_y<span style="color: #666">**2</span>)
+    magnitude <span style="color: #666">=</span> np<span style="color: #666">.</span>astype((magnitude<span style="color: #666">-</span>magnitude<span style="color: #666">.</span>min())<span style="color: #666">/</span>magnitude<span style="color: #666">.</span>max()<span style="color: #666">*255</span>, np<span style="color: #666">.</span>uint8)
+    <span style="color: #3D7B7B; font-style: italic">#smoothed = scipy.ndimage.gaussian_filter(magnitude, sigma=1)</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(smoothed, title=&quot;smoothed&quot;)</span>
+    <span style="color: #3D7B7B; font-style: italic">#magnitude = scipy.ndimage.grey_opening(magnitude, size=(3,3))</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(magnitude, title=&quot;magnitude after opening&quot;)</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(np.floor(magnitude/magnitude.max()*255))</span>
+    <span style="color: #008000; font-weight: bold">return</span> skimage<span style="color: #666">.</span>transform<span style="color: #666">.</span>resize(magnitude, image<span style="color: #666">.</span>shape, anti_aliasing<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, mode<span style="color: #666">=</span><span style="color: #BA2121">&#39;constant&#39;</span>)
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="plantimager.controller.ImageProvider.focus_highlight" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">focus_highlight</span>
+
+
+<a href="#plantimager.controller.ImageProvider.focus_highlight" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>focus_highlight(image, percentile)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Enhances the focus areas of an image by adding a red highlight to regions of
+the image that have a focus value greater than a specified percentile.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>image</code>
+            </td>
+            <td>
+                  <code><span title="PySide6.QtGui.QImage">QImage</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The input image to be processed. Must be in the QImage format.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>percentile</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The percentile threshold for selecting focus areas. Focus values above
+this percentile will be highlighted.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="PySide6.QtGui.QImage">QImage</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A new image with highlighted focus areas in red.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>plantimager/controller/ImageProvider.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 85</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 86</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 87</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 88</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 89</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 90</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 91</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 92</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 93</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 94</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 95</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 96</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 97</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 98</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 99</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">100</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">101</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">103</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">104</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">105</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">106</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">116</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">focus_highlight</span>(image: QImage, percentile: <span style="color: #008000">float</span>) <span style="color: #666">-&gt;</span> QImage:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    Enhances the focus areas of an image by adding a red highlight to regions of</span>
+<span style="color: #BA2121; font-style: italic">    the image that have a focus value greater than a specified percentile.</span>
+
+<span style="color: #BA2121; font-style: italic">    Parameters</span>
+<span style="color: #BA2121; font-style: italic">    ----------</span>
+<span style="color: #BA2121; font-style: italic">    image : QImage</span>
+<span style="color: #BA2121; font-style: italic">        The input image to be processed. Must be in the QImage format.</span>
+<span style="color: #BA2121; font-style: italic">    percentile : float</span>
+<span style="color: #BA2121; font-style: italic">        The percentile threshold for selecting focus areas. Focus values above</span>
+<span style="color: #BA2121; font-style: italic">        this percentile will be highlighted.</span>
+
+<span style="color: #BA2121; font-style: italic">    Returns</span>
+<span style="color: #BA2121; font-style: italic">    -------</span>
+<span style="color: #BA2121; font-style: italic">    QImage</span>
+<span style="color: #BA2121; font-style: italic">        A new image with highlighted focus areas in red.</span>
+<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+    image_array <span style="color: #666">=</span> qimage_to_ndarray_rgb(image)
+    image_grayscale <span style="color: #666">=</span> qimage_to_ndarray_gray(image)
+    focus_array <span style="color: #666">=</span> compute_focus(image_grayscale)
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(focus_array, vmin=focus_array.min(), vmax=focus_array.max())</span>
+    highlight_mask <span style="color: #666">=</span> focus_array <span style="color: #666">&gt;</span> np<span style="color: #666">.</span>percentile(focus_array<span style="color: #666">.</span>astype(np<span style="color: #666">.</span>float32), percentile, overwrite_input<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+    highlight_image <span style="color: #666">=</span> image_array<span style="color: #666">.</span>copy()
+    new_mask <span style="color: #666">=</span> np<span style="color: #666">.</span>zeros_like(highlight_image, dtype<span style="color: #666">=</span><span style="color: #008000">bool</span>)
+    new_mask[:,:,<span style="color: #666">1</span>] <span style="color: #666">=</span> highlight_mask
+    <span style="color: #3D7B7B; font-style: italic">#new_mask[:,:,2] = highlight_mask</span>
+    <span style="color: #3D7B7B; font-style: italic">#highlight_image[highlight_mask] = 255 - highlight_image[highlight_mask]</span>
+    highlight_image[new_mask] <span style="color: #666">=</span> <span style="color: #666">255</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(255*highlight_mask.astype(np.uint8))</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(highlight_image)</span>
+    <span style="color: #008000; font-weight: bold">return</span> ndarray_to_qimage(
+        highlight_image,
+        QImage<span style="color: #666">.</span>Format<span style="color: #666">.</span>Format_RGB888,
+    )
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
