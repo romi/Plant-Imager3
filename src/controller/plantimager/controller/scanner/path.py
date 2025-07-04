@@ -239,6 +239,11 @@ class Circle(Path):
         super().__init__()
         x, y, pan = circle(center_x, center_y, radius, n_points)
 
+        self.center_x = center_x
+        self.center_y = center_y
+        self.radius = radius
+        self.n_points = n_points
+
         if not isinstance(tilt, Iterable):
             tilt = [tilt]
 

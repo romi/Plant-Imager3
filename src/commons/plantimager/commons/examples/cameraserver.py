@@ -33,7 +33,7 @@ class DummyCamera(Camera, RPCServer):
         self._rotation = 0
 
     @RPCServer.register_method_buffer(timeout=10000)
-    def get_image(self) -> (memoryview, dict):
+    def get_image(self, lores=False) -> (memoryview, dict):
         if self.mode != CameraMode.STILL:
             self.mode = CameraMode.STILL
         image: np.ndarray[..., np.uint8] = scipy.datasets.face()
@@ -66,6 +66,13 @@ class DummyCamera(Camera, RPCServer):
         if value != self._rotation:
             self._rotation = value
             self.rotationChanged.emit(value)
+
+    @RPCProperty(notify=Camera.resolutionChanged)
+    def resolution(self) -> tuple[int, int]:
+        return 640, 480
+    @resolution.setter
+    def resolution(self, value: tuple[int, int]):
+        pass
 
 
 if __name__ == "__main__":

@@ -4,3 +4,4 @@ ff02::1		ip6-allnodes
 ff02::2		ip6-allrouters
 
 10.10.10.1	plant-imager
+192.168.14.18   mellitus mellitus.biologie.ens-lyon.fr

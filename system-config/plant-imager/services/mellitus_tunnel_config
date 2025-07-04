@@ -1,0 +1,9 @@
+# Configuration file for the socks5 proxy via mellitus using ssh. Put in /home/romi/.ssh/
+
+Host mellitus-tunnel
+    HostName 192.168.14.18
+    User romi
+    IdentityFile /home/romi/.ssh/id_ed25519
+    BatchMode yes
+    ExitOnForwardFailure yes
+    ServerAliveInterval 60

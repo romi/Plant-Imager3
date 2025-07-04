@@ -108,15 +108,22 @@ scan_card = [
                 )),
                 dbc.Row([
                     dbc.Col([
-                        dcc.Loading([
-                            dbc.Button(
-                                children=[
-                                    html.I(className="bi bi-play-fill me-2"),
-                                    'Start scan'
-                                ],
-                                id='start-scan-button'
-                            )
-                        ]),
+                        dbc.Button(
+                            children=[
+                                html.I(className="bi bi-play-fill me-2"),
+                                'Start scan'
+                            ],
+                            id='start-scan-button'
+                        ),
+                    ], width=3),
+                    dbc.Col([
+                        dbc.Button(
+                            children=[
+                                html.I(className="bi bi-play-fill me-2"),
+                                'Configure Scanner'
+                            ],
+                            id='config-scan-button'
+                        ),
                     ], width=3),
                     dbc.Col([
                         dbc.Alert(
@@ -346,11 +353,12 @@ def check_dataset_name_uniqueness(dataset_name: str, existing_datasets: list[str
 
 @callback(
     Output('start-scan-button', 'disabled'),
+    Output('config-scan-button', 'disabled'),
     Input('dataset-input-name', 'valid'),
     Input('main-interval', 'n_intervals'),
     State('start-scan-button', 'disabled')
 )
-def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> bool:
+def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> tuple[bool, bool]:
     """Disables the 'Start scanning' button based on dataset validation status and if scanner is connected.
 
     This callback function determines whether the 'start-scan-button' element
@@ -377,15 +385,15 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     except RuntimeError as e:
         if previous_state:
             raise PreventUpdate
-        return True
+        return True, True
     if previous_state == (not valid):
         raise PreventUpdate
-    return not valid
+    return not valid, not valid
 
 
 @callback(
     Output('scan-response', 'children'),
-    Output('scan-output', 'children'),
+    Output('scan-output', 'children', allow_duplicate=True),
     Input('start-scan-button', 'n_clicks'),
     State('rest-api-host', 'data'),
     State('rest-api-port', 'data'),
@@ -393,7 +401,8 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     State('dataset-input-name', 'value'),
     prevent_initial_call=True,
     running=[
-        (Output('start-scan-button', 'disabled'), True, False),
+        (Output('start-scan-button', 'disabled', allow_duplicate=True), True, False),
+        (Output('config-scan-button', 'disabled'), True, False),
         (Output('scan-progress-interval', 'disabled'), False, True),
         (Output('scan-response', 'children'), 'Scan in progress', ""),
         (Output('scan-output', 'children'), 'Scan in progress', ""),
@@ -447,6 +456,58 @@ def run_scan(_, url: str, port: str, cfg: str, dataset_name: str):
     controller.run_scan()
 
     return "Scan finished", "Scan complete"
+
+
+@callback(
+    Output('scan-response', 'children', allow_duplicate=True),
+    Output('scan-output', 'children', allow_duplicate=True),
+    Input('config-scan-button', 'n_clicks'),
+    State('rest-api-host', 'data'),
+    State('rest-api-port', 'data'),
+    State('scan-cfg-toml', 'value'),
+    State('dataset-input-name', 'value'),
+    prevent_initial_call=True,
+)
+def config_scan(_, url: str, port: str, cfg: str, dataset_name: str):
+    """Configure a plant scan with the specified configuration.
+
+    Parameters
+    ----------
+    _ : Any
+        Unused parameter (n_clicks from the button).
+    url : str
+        The hostname or IP address of the PlantDB REST API server.
+    port : str
+        The port number of the PlantDB REST API server.
+    cfg : str
+        The TOML configuration string for the scan.
+    dataset_name : str
+        The name to use for the dataset that will be created.
+
+    Returns
+    -------
+    Tuple[str, str]
+        A tuple containing two status messages:
+        - First message: Short status for the alert component
+        - Second message: Detailed status for the output component
+
+    Raises
+    ------
+    RuntimeError
+        If the Raspberry Pi Controller is not initialized.
+    """
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return f"Error: Raspberry Pi Controller not initialized!", str(e)
+
+
+    controller.set_db_url(f"http://{url}:{port}")
+    controller.set_dataset_name(dataset_name)
+    print(tomllib.loads(cfg))
+    controller.set_config(tomllib.loads(cfg))
+
+    return "Scan configured", "Scan configured, ready to start"
 
 
 @callback(

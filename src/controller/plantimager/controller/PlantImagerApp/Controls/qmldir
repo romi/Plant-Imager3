@@ -1,8 +1,10 @@
 module PlantImagerApp.Controls
 
-Icon 1.0 Icon.qml
-IconButton 1.0 IconButton.qml
-CameraDelegate 1.0 CameraDelegate.qml
-CameraView 1.0 CameraView.qml
-Scanner 1.0 Scanner.qml
-ProgressBar 1.0 ProgressBar.qml
+Icon                 1.0 Icon.qml
+IconButton           1.0 IconButton.qml
+CameraDelegate       1.0 CameraDelegate.qml
+CameraView           1.0 CameraView.qml
+Scanner              1.0 Scanner.qml
+ProgressBar          1.0 ProgressBar.qml
+NumericKeyboardPopup 1.0 NumericKeyboardPopup.qml
+CncPanel             1.0 CncPanel.qml

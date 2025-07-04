@@ -9,10 +9,11 @@ import PlantImagerApp as P
 Control {
     id: self_
     property var scanner: P.AppBridge.scanner
+    signal switchToCncPanel()
 
     Label {
         id: cnc_type
-        anchors.top: pareant.top
+        anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
 
@@ -23,6 +24,19 @@ Control {
         leftPadding: P.Style.largeMargin
 
         font: P.Style.fonts.header
+
+    }
+
+    Button {
+        id: cnc_panel_open_button
+        anchors.top: cnc_type.bottom
+        anchors.left: parent.left
+        anchors.margins: P.Style.mediumMargin
+
+        text: "CNC Panel"
+        enabled: scanner.cnc_type === "GRBL CNC" && !scanner.scanInProgress || true
+
+        onClicked: switchToCncPanel()
 
     }
 

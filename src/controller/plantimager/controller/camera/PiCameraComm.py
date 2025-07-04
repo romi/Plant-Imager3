@@ -20,6 +20,8 @@ class PiCameraComm(QObject):
     """
     Object that will handle communication with the picamera. Meant to live in a separate thread.
 
+    Serves as a bridge between Qt and the picamera.
+
     After init use moveToThread() to change the execution context.
     """
 
@@ -27,6 +29,7 @@ class PiCameraComm(QObject):
     modeChanged = Signal(str)
     videoUrlChanged = Signal(str)
     rotationChanged = Signal(int)
+    resolutionChanged = Signal(int, int)
 
     def __init__(self, context: zmq.Context, url: str, parent: QObject = None):
         QObject.__init__(self, parent)
@@ -35,16 +38,17 @@ class PiCameraComm(QObject):
         self.camera.modeChanged.connect(lambda *args: self.modeChanged.emit(*args))
         self.camera.videoUrlChanged.connect(lambda *args: self.videoUrlChanged.emit(*args))
         self.camera.rotationChanged.connect(lambda *args: self.rotationChanged.emit(*args))
+        self.camera.resolutionChanged.connect(lambda res: self.resolutionChanged.emit(*res))
         finalize(self, self._finalize)
 
     def _finalize(self):
         self._thread_pool.shutdown(cancel_futures=True)
         self.camera.stop_server()
 
-    @Slot()
-    def getImage(self) -> Future[tuple[memoryview, dict]]:
+    @Slot(bool, result=Future)
+    def getImage(self, lores=False) -> Future[tuple[memoryview, dict]]:
         """
-        Submit call to camera.get_image() and returns a future representing the pending result.
+        Submits a call to camera.get_image() and returns a future representing the pending result.
         When camera.get_image() returns and the result is available, the signal imageReady is emitted.
 
         Returns
@@ -58,7 +62,7 @@ class PiCameraComm(QObject):
             if res:
                 buffer, buffer_info = res
                 self.imageReady.emit(buffer, buffer_info)
-        ft = self._thread_pool.submit(self.camera.get_image)
+        ft = self._thread_pool.submit(self.camera.get_image, lores=lores)
         ft.add_done_callback(_callback)
         return ft
 
@@ -83,3 +87,10 @@ class PiCameraComm(QObject):
     @Property(str)
     def name(self):
         return self.camera.name
+
+    @Property(int, notify=resolutionChanged)
+    def resolution(self):
+        return self.camera.resolution
+    @resolution.setter
+    def resolution(self, value: tuple[int, int]):
+        self._thread_pool.submit(lambda : setattr(self.camera, "resolution", value))

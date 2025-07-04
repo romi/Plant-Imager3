@@ -32,11 +32,12 @@ import time
 import traceback
 from weakref import finalize
 
+import numpy as np
 import serial
 
 from plantimager.commons.logging import create_logger
 from .hal import AbstractCNC
-from .units import deg
+from .units import deg, time_s
 from .units import length_mm
 
 logger = create_logger(__name__)
@@ -90,6 +91,15 @@ def angle_min_travel(current_angle: deg, desired_angle: deg) -> deg:
         return current_angle - 360 + (desired_angle - current_angle) % 360
     else:
         return current_angle + (desired_angle - current_angle) % 360
+
+def angle_min_travel_distance(current_angle: deg, desired_angle: deg) -> deg:
+    """Calculate the minimal angle the machine has to turn to achieve a desired angle with minimal travel.
+    Minimal travel means that machine_order-current_angle is in [-180, 180]
+    """
+    if (desired_angle - current_angle) % 360 > 180:
+        return - 360 + (desired_angle - current_angle) % 360
+    else:
+        return (desired_angle - current_angle) % 360
 
 class CNC(AbstractCNC):
     """A concrete implementation of CNC machine control using GRBL firmware.
@@ -247,6 +257,35 @@ class CNC(AbstractCNC):
         """
         if self.has_started:
             self.serial_port.close()
+
+    def compute_move_time(self, x: length_mm, y: length_mm, z: deg) -> time_s:
+        """Compute the estimated time required to move the CNC machine to the specified coordinates."""
+        pos = self.get_position() # [mm, mm, deg]
+        logger.debug(f"position: {pos}, desired position: ({x}, {y}, {z})")
+        dist = np.array(pos) - np.array([x, y, z]) # [mm, mm, deg]
+        dist[2] = angle_min_travel_distance(z, pos[2])
+        dist = np.abs(dist)
+        logger.debug(f"distance: {dist}")
+        #dist[2] = angle_min_travel(pos[2], z)
+        max_speed = np.array([self.grbl_settings["$110"], self.grbl_settings["$111"], self.grbl_settings["$112"]])/60 # mm/s, mm/s, deg/s
+        max_speed *= 0.8
+        acceleration = np.array([self.grbl_settings["$120"], self.grbl_settings["$121"], self.grbl_settings["$122"]])
+
+        # compute the time it would take to reach maximum speed on each axis
+        acceleration_to_max_speed_time = max_speed / acceleration #  [s, s, s]
+
+        # compute max speed as if the maximum speed is not reached (accelerate for half the time then decelerate for the other half)
+        t_acc = np.sqrt(dist/acceleration) #  [s, s, s]
+        v_max = np.zeros(3)
+        v_max[t_acc!=0] = dist[t_acc!=0]/t_acc[t_acc!=0]
+        times = t_acc*2
+
+        # if v_max > than maximum speed of the machine then compute corrected times
+        times2 = (dist - acceleration_to_max_speed_time*max_speed)/max_speed
+        times[v_max>max_speed] = times2[v_max>max_speed]
+
+        logger.debug(f"estimated travel times {times}")
+        return times.max()
 
     def get_position(self) -> tuple[length_mm, length_mm, deg]:
         """Get the current XYZ position of the CNC machine by querying GRBL controller.
@@ -467,9 +506,28 @@ class CNC(AbstractCNC):
         - Units are in millimeters (``G21`` mode)
         - The method will block until the movement is complete
         """
-        response = self.moveto_async(x, y, z)
+        # Validate that the target coordinates are within machine limits
+        self._check_move(x, y, z)
+
+        z = angle_min_travel(self.z, z)
+        travel_time = self.compute_move_time(x, y, z)
+        travel_time += min(travel_time * 0.1, 1)
+
+        # Apply axis inversions based on machine configuration
+        # Convert coordinates to integers for GRBL compatibility
+        x = int(-x) if self.invert_x else int(x)
+        y = int(-y) if self.invert_y else int(y)
+        z = int(-z) if self.invert_z else int(z)
+
+
+        t0 = time.time()
+        # Send G0 rapid positioning command with target coordinates
+        # G0 moves at maximum speed in a straight line
+        response = self.send_cmd(f"g0 x{x} y{y} z{z}", wait=True, timeout=int(travel_time*2))
         if not response:
             self.wait(timeout=30)
+        if time.time() - t0 < travel_time:
+            time.sleep(travel_time - (time.time() - t0))
 
     def moveto_async(self, x: length_mm, y: length_mm, z: deg) -> bytes:
         """Asynchronously move the CNC machine to specified coordinates using G0 rapid positioning.

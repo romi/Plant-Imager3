@@ -9,7 +9,7 @@ import zmq
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
 from picamera2.outputs import PyavOutput
-from simplejpeg import encode_jpeg
+from simplejpeg import encode_jpeg, encode_jpeg_yuv_planes
 
 from plantimager.commons.RPC import RPCServer, RPCProperty
 from plantimager.commons.cameradevice import Camera, CameraMode
@@ -31,13 +31,14 @@ class RPCCamera(Camera, RPCServer):
     def __init__(self, context: zmq.Context, url: str):
         RPCServer.__init__(self, context, url)
         self.picam = Picamera2()
+        max_res = self.picam.camera_properties["PixelArraySize"]
         print(self.picam.camera_properties)
         self.video_config = self.picam.create_video_configuration(
             {"size": (640, 480), "format": "YUV420"},
             controls={'FrameRate': 15}
         )
         self.still_config = self.picam.create_still_configuration(
-            {"size": (2028, 1520), "format": "BGR888"},
+            {"size": (max_res[0]//2, max_res[1]//2), "format": "BGR888"}, lores={"size": (640, 480)},
             queue=False
         )
         self._mode = CameraMode.STILL
@@ -83,13 +84,26 @@ class RPCCamera(Camera, RPCServer):
         return "VIDEO STOPPED"
 
     @RPCServer.register_method_buffer(timeout=None)
-    def get_image(self) -> (memoryview, dict):
+    def get_image(self, lores=False) -> (memoryview, dict):
         if self._mode != CameraMode.STILL:
             self.mode = CameraMode.STILL
-        image: np.ndarray = self.picam.capture_array()
+        if lores:
+            height, width = self.still_config["lores"]["size"]
+            image: np.ndarray = self.picam.capture_array("lores")
+            padding = image.shape[1] - height
+            Y = image[:width, :height]
+            U = np.zeros((width//2, height//2), dtype=np.uint8)
+            V = np.zeros((width//2, height//2), dtype=np.uint8)
+            U[::2, :] = image[width:width+width//4, :height//2]
+            U[1::2, :] = image[width:width+width//4, height//2+padding//2:height+padding//2]
+            V[::2, :] = image[width+width//4:, :height//2]
+            V[1::2, :] = image[width+width//4:, height//2+padding//2:height+padding//2]
+            buffer = encode_jpeg_yuv_planes(Y, U, V, quality=95, fastdct=True)
+        else:
+            image: np.ndarray = self.picam.capture_array()
+            buffer = encode_jpeg(image, quality=95, colorsubsampling="420", fastdct=True)
         # buffer = jpegxl_encode(image, lossless=True, effort=2)
-        buffer = encode_jpeg(image, quality=95, colorsubsampling="420", fastdct=True)
-        return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape}
+        return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape, "channel": "rgb"}
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self):
@@ -116,6 +130,18 @@ class RPCCamera(Camera, RPCServer):
     def rotation(self, value):
         if value != self._rotation:
             self._rotation = value % 360
+
+    @RPCProperty(notify=Camera.resolutionChanged)
+    def resolution(self) -> tuple[int, int]:
+        return self.still_config.get("size")
+    @resolution.setter
+    def resolution(self, value: tuple[int, int]):
+        if value != self.still_config.get("size"):
+            x_max, y_max = self.picam.camera_properties["PixelArraySize"]
+            self.still_config["main"]["size"] = max(60, min(value[0], x_max)), max(60, min(value[1], y_max))
+            if self._mode == CameraMode.STILL:
+                self.picam.switch_mode(self.still_config, wait=True)
+            self.resolutionChanged.emit(self.still_config["main"]["size"])
 
 
 

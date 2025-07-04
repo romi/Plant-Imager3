@@ -36,9 +36,10 @@ from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import wait
 from io import BytesIO
+from typing import Literal
 from weakref import finalize
 
-from PySide6.QtCore import Property
+from PySide6.QtCore import Property, QTimer
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
@@ -52,7 +53,7 @@ from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.scanner.dummy_cnc import DummyCNC
 from plantimager.controller.scanner.grbl import CNC
 from plantimager.controller.scanner.hal import DataItem
-from plantimager.controller.scanner.path import Path
+from plantimager.controller.scanner.path import Path, Circle
 from plantimager.controller.scanner.path import PathElement
 from plantimager.controller.scanner.path import Pose
 
@@ -239,6 +240,9 @@ class Scanner(QObject):
     readyToScanChanged = Signal(bool)
     cameraNamesChanged = Signal(list)
     cncTypeChanged = Signal(str)
+    scanInProgressChanged = Signal(bool)
+    scannerWorkingChanged = Signal(bool)
+    pathInfoChanged = Signal(str)
 
     def __init__(self):
         """Initialize the Scanner with default settings.
@@ -250,6 +254,9 @@ class Scanner(QObject):
         """
         super().__init__()
         self.config = {}  # Configuration dictionary
+
+        self._scan_in_progress = False
+        self._scanner_working = False
         try:
             # Try to connect to the real CNC hardware
             self.cnc = CNC()
@@ -271,10 +278,38 @@ class Scanner(QObject):
         self.uploader: DataUploader | None = None  # Data uploader
         self.fileset = "images"  # Default fileset name
 
+        self._cnc_connection_timer = QTimer()
+        self._cnc_connection_timer.setInterval(5000)
+        self._cnc_connection_timer.timeout.connect(self._try_connect_cnc)
+        if isinstance(self.cnc, DummyCNC): self._cnc_connection_timer.start()
+
+    @Slot()
+    def _try_connect_cnc(self):
+        if isinstance(self.cnc, DummyCNC):
+            try:
+                # Try to connect to the real CNC hardware
+                self.cnc = CNC()
+                self.cnc.moveto(20, 20, 45)
+            except Exception as e:
+                pass
+            else:
+                self._cnc_connection_timer.stop()
+                self.cncTypeChanged.emit(self.cnc_type)
+
     @Property(str, notify=cncTypeChanged)
-    def cnc_type(self) -> str:
+    def cnc_type(self) -> Literal["DummyCNC", "GRBL CNC"]:
         """Get the type of the CNC controller."""
         return "DummyCNC" if isinstance(self.cnc, DummyCNC) else "GRBL CNC"
+
+    @Property(bool, notify=scanInProgressChanged)
+    def scan_in_progress(self) -> bool:
+        """Check if the scanner is currently scanning."""
+        return self._scan_in_progress
+
+    @Property(bool, notify=scannerWorkingChanged)
+    def scanner_working(self) -> bool:
+        """Check if the scanner is currently working."""
+        return self._scanner_working or self._scan_in_progress
 
     @Slot(QObject)
     def add_camera(self, camera: PiCameraComm):
@@ -436,6 +471,7 @@ class Scanner(QObject):
         path_module = importlib.import_module("plantimager.controller.scanner.path")
         path_cfg = config["Path"]
         self.scan_path = getattr(path_module, path_cfg["name"])(**path_cfg["kwargs"])
+        self.pathInfoChanged.emit(self.path_info)
 
         # Update progress tracking based on path length
         self._max_progress = len(self.scan_path)
@@ -444,6 +480,13 @@ class Scanner(QObject):
         # Store metadata for the scan
         self.dataset_metadata = config["Metadata"]["object"]  # Biological metadata
         self.hw_metadata = config["Metadata"]["hardware"]  # Hardware metadata
+
+        # Configure cameras
+        for camera in self.cameras:
+            if camera.name in config:
+                res = config[camera.name]["res_x"], config[camera.name]["res_y"]
+                camera.resolution = res
+
 
     @Property(bool, notify=readyToScanChanged)
     def ready_to_scan(self) -> bool:
@@ -470,7 +513,9 @@ class Scanner(QObject):
         # Check if all required components are available
         if (self.cnc and self.scan_path and self.cameras and
                 self.uploader and self.db_client and
-                hasattr(self, 'scan_id') and self.scan_id and self.fileset):
+                hasattr(self, 'scan_id') and self.scan_id and self.fileset and
+                not self._scan_in_progress and not self._scanner_working
+            ):
             return True
         return False
 
@@ -511,9 +556,14 @@ class Scanner(QObject):
         >>> scanner.set_position(pose)
         """
         logger.info(f"Moving arm to {pose}")
+        self._scanner_working = True
+        self.scannerWorkingChanged.emit(self.scanner_working)
         # Move CNC to the specified position (only x, y, and pan are used)
         self.cnc.moveto(pose.x, pose.y, pose.pan)
-        time.sleep(1)  # Wait for movement to complete as grbl returns a bit early
+        time.sleep(0.1)  # Wait for movement to complete as grbl returns a bit early
+
+        self._scanner_working = False
+        self.scannerWorkingChanged.emit(self.scanner_working)
 
     def set_scan_id(self, scan_id: str):
         """Set the identifier for the scan dataset.
@@ -568,7 +618,7 @@ class Scanner(QObject):
         >>> data_item = scanner.grab(1, metadata, camera)
         """
         # Capture image from camera
-        image_future = camera.getImage()
+        image_future = camera.getImage(lores=False)
         buffer, buffer_info = image_future.result()  # Wait for image capture to complete
 
         # Update metadata with image information from camera
@@ -665,6 +715,9 @@ class Scanner(QObject):
         if isinstance(self.cnc, DummyCNC):
             self.hw_metadata["name"] = "DummyCNC"
 
+        self._scan_in_progress = True
+        self.scanInProgressChanged.emit(self.scan_in_progress)
+
         # Create the scan on the remote database
         try:
             # Combine dataset and hardware metadata
@@ -736,6 +789,38 @@ class Scanner(QObject):
         #self.cnc.moveto(10, 10,-10)
         time.sleep(1)
         #self.cnc.home()
-        self.cnc.moveto(20, 20, 45)
-
+        self.move_arm(20, 20, 45)
+        self._scan_in_progress = False
+        self.scanInProgressChanged.emit(self.scan_in_progress)
         logger.info(f"Scan completed")  # Log completion
+
+    @Slot(float, float, float)
+    def move_arm(self, x: float, y: float, z: float):
+        """Move the arm to the specified position."""
+        self.set_position(Pose(x=x, y=y, z=0, pan=z, tilt=0))
+
+    @Slot()
+    def move_to_center(self):
+        """Move the arm to the center"""
+        if self.scan_path and isinstance(self.scan_path, Circle):
+            self.move_arm(self.scan_path.center_x, self.scan_path.center_y, 0)
+        else:
+            x, y, z = (self.cnc.x_lims[0] + self.cnc.x_lims[1])/2, (self.cnc.y_lims[0] + self.cnc.y_lims[1])/2, self.cnc.z
+            self.move_arm(x, y, z)
+
+    @Slot(int)
+    def move_to_position_in_path(self, i: int):
+        """Move the arm to the i-th position of the scan path."""
+        if not self.scan_path:
+            return
+        pos = self.scan_path[i]
+        self.set_position(self.get_target_pose(pos))
+
+    @Property(str, notify=pathInfoChanged)
+    def path_info(self) -> str:
+        """Get information about the scan path."""
+        if not self.scan_path:
+            return "No path configured"
+        if isinstance(self.scan_path, Circle):
+            return f"{type(self.scan_path).__name__}: center {self.scan_path.center_x:g}, {self.scan_path.center_y:g}, radius {self.scan_path.radius:g} - {len(self.scan_path)} steps"
+        return f"{type(self.scan_path).__name__}: {len(self.scan_path)} steps"
