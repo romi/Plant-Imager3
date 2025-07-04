@@ -53,7 +53,8 @@ def plotly_image_carousel(images, height=900, width=900, title="Carousel", layou
     return fig
 
 
-def dash_boostrap_carousel(images):
+def dash_boostrap_carousel(images: list[str]):
+    images.sort()
     carousel = dbc.Carousel(
         items=[{"key": idx, "src": img} for idx, img in enumerate(images)],
         controls=True,
