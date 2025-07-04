@@ -22,6 +22,7 @@ Control {
                 video_button.checked = true
             }
         }
+        focus_highlight_button.checked = bridge.focusHighlight ? bridge.focusHighlight : false
     }
 
     Connections {
@@ -150,12 +151,15 @@ Control {
         }
 
         Button {
+            id: focus_highlight_button
             Layout.fillWidth: true
             Layout.fillHeight: true
             checkable: true
             text: "Focus highlight"
             onCheckedChanged: {
-                bridge.setFocusHighlight(checked)
+                if(bridge) {
+                    bridge.focusHighlight = checked
+                }
             }
         }
 

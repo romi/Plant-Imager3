@@ -46,6 +46,8 @@ def compute_focus(image: np.ndarray, /,):
     focus measure highlights edges and areas of high intensity change, which
     are often indicative of regions in focus.
 
+    see https://blog.roboflow.com/computer-vision-camera-focus-guide/#tenengrad-function
+
     Parameters
     ----------
     image : np.ndarray
@@ -103,14 +105,16 @@ def focus_highlight(image: QImage, percentile: float) -> QImage:
     image_array = qimage_to_ndarray_rgb(image)
     image_grayscale = qimage_to_ndarray_gray(image)
     focus_array = compute_focus(image_grayscale)
+    focus_array = np.astype((focus_array-focus_array.min())/focus_array.max()*255, np.uint8)
     #plt_imshow(focus_array, vmin=focus_array.min(), vmax=focus_array.max())
     highlight_mask = focus_array > np.percentile(focus_array.astype(np.float32), percentile, overwrite_input=True)
     highlight_image = image_array.copy()
+    highlight_image[:, :, :] = focus_array[:, :, None]
     new_mask = np.zeros_like(highlight_image, dtype=bool)
-    new_mask[:,:,1] = highlight_mask
-    #new_mask[:,:,2] = highlight_mask
+    #new_mask[:,:,1] = highlight_mask
+    new_mask[:,:,0] = highlight_mask
     #highlight_image[highlight_mask] = 255 - highlight_image[highlight_mask]
-    highlight_image[new_mask] = 255
+    #highlight_image[new_mask] = 255
     #plt_imshow(255*highlight_mask.astype(np.uint8))
     #plt_imshow(highlight_image)
     return ndarray_to_qimage(
