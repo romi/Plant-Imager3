@@ -38,7 +38,7 @@ class RPCCamera(Camera, RPCServer):
             controls={'FrameRate': 15}
         )
         self.still_config = self.picam.create_still_configuration(
-            {"size": (max_res[0]//2, max_res[1]//2), "format": "BGR888"}, lores={"size": (640, 480)},
+            {"size": (max_res[0]//2, max_res[1]//2), "format": "BGR888"}, lores={"size": (3*640, 3*480)},
             queue=False
         )
         self._mode = CameraMode.STILL
@@ -98,7 +98,7 @@ class RPCCamera(Camera, RPCServer):
             U[1::2, :] = image[width:width+width//4, height//2+padding//2:height+padding//2]
             V[::2, :] = image[width+width//4:, :height//2]
             V[1::2, :] = image[width+width//4:, height//2+padding//2:height+padding//2]
-            buffer = encode_jpeg_yuv_planes(Y, U, V, quality=95, fastdct=True)
+            buffer = encode_jpeg_yuv_planes(Y, U, V, quality=80, fastdct=True)
         else:
             image: np.ndarray = self.picam.capture_array()
             buffer = encode_jpeg(image, quality=95, colorsubsampling="420", fastdct=True)

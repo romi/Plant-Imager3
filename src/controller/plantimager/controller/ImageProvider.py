@@ -3,6 +3,7 @@ from PySide6.QtCore import QSize, Qt
 from PySide6.QtQml import QQmlImageProviderBase
 from PySide6.QtQuick import QQuickImageProvider
 from PySide6.QtGui import QImage, QTransform
+from math import ceil
 
 import scipy
 import skimage
@@ -155,6 +156,32 @@ class ImageProvider(QQuickImageProvider):
             size.setWidth(image.width())
             size.setHeight(image.height())
             return image
+        elif id.removeprefix("zoomed-") in self.images:
+            image: QImage = self.images[id.removeprefix("zoomed-")]
+            w, h = image.width(), image.height()
+            zoomed_image = image.copy(w//3, h//3, w//3, h//3)
+            size.setWidth(zoomed_image.width())
+            size.setHeight(zoomed_image.height())
+            return zoomed_image
+        elif id.removeprefix("align-") in self.images:
+            display_width, display_height = 640, 480
+            target_line_width = 1 #  pixel
+            image: QImage = self.images[id.removeprefix("align-")]
+            nd_image = qimage_to_ndarray_rgb(image)
+            shape = nd_image.shape
+            width, height = shape[0], shape[1]
+            if shape[0] > shape[1]:
+                width_margin = ceil((width*target_line_width/display_width - 1)/2)
+                height_margin = ceil((height*target_line_width/display_height - 1)/2)
+            else:
+                width_margin = ceil((width*target_line_width/display_height - 1)/2) # assuming a rotation
+                height_margin = ceil((height*target_line_width/display_width - 1)/2)
+            nd_image[shape[0]//2-width_margin:shape[0]//2+width_margin, :] = np.array([255, 0, 0])
+            nd_image[:, shape[1]//2-height_margin:shape[1]//2+height_margin] = np.array([255, 0, 0])
+            aligned_image = ndarray_to_qimage(nd_image, QImage.Format.Format_RGB888)
+            size.setWidth(aligned_image.width())
+            size.setHeight(aligned_image.height())
+            return aligned_image
         else:
             return QImage()
 
@@ -181,9 +208,9 @@ def block_mean(ar: np.ndarray, fact: int) -> np.ndarray:
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
-    image = plt.imread("/home/arthur/Images/RDPiades_2023/camera2/DSC_0100.JPG")
+    image_ = plt.imread("/home/arthur/Images/RDPiades_2023/camera2/DSC_0100.JPG")
     #image = block_mean(image, 1)
-    image_qt = ndarray_to_qimage(image, QImage.Format.Format_RGB888)
+    image_qt = ndarray_to_qimage(image_, QImage.Format.Format_RGB888)
     image_qt = focus_highlight(image_qt, 60)
 
 

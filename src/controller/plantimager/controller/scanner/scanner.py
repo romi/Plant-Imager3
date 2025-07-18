@@ -721,7 +721,7 @@ class Scanner(QObject):
         # Create the scan on the remote database
         try:
             # Combine dataset and hardware metadata
-            self.db_client.create_scan(self.scan_id, metadata=self.dataset_metadata | self.hw_metadata)
+            self.db_client.create_scan(self.scan_id, metadata=self.config)
         except RequestException as e:
             logger.error(f"{e}")
         except ValueError as e:

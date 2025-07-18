@@ -34,6 +34,12 @@ STATE_TO_CLASS = {
     States.CONNECTED: StatusClass.OK,
 }
 
+class DisplayMode(StrEnum):
+    NORMAL = "normal"
+    FOCUS = "focus"
+    ZOOMED = "zoomed"
+    ALIGN = "align"
+
 @QmlElement
 @QmlUncreatable("Camera bridge cannot be created from QML")
 class CameraBridge(QObject):
@@ -56,7 +62,7 @@ class CameraBridge(QObject):
     videoReady = Signal()
     modeChanged = Signal(str)
     rotationChanged = Signal(int)
-    focusHighlightChanged = Signal(bool)
+    displayModeChanged = Signal(str)
 
     def __init__(self, name: str, address: str, context: zmq.Context, parent: QObject = None):
         super().__init__(parent)
@@ -64,7 +70,7 @@ class CameraBridge(QObject):
         self._address = address
         self._video_source = ""
         self._image_source = ""
-        self._focusHighlight = False
+        self._displayMode = DisplayMode.NORMAL
         if name == "empty" or address == "":
             self._status = States.INVALID
             self.camera = None
@@ -159,10 +165,15 @@ class CameraBridge(QObject):
         if not self._image_source:
             logger.debug("no image source")
             return ""
-        if self._focusHighlight:
+        if self._displayMode == DisplayMode.FOCUS:
             path = os.path.split(self._image_source)[0] + "/focus-" + os.path.split(self._image_source)[1]
-            return path
-        return self._image_source
+        elif self._displayMode == DisplayMode.ZOOMED:
+            path = os.path.split(self._image_source)[0] + "/zoomed-" + os.path.split(self._image_source)[1]
+        elif self._displayMode == DisplayMode.ALIGN:
+            path = os.path.split(self._image_source)[0] + "/align-" + os.path.split(self._image_source)[1]
+        else:
+            path = self._image_source
+        return path
 
     @Slot(int)
     def _camera_rotation_change_handler(self, value: int):
@@ -178,12 +189,28 @@ class CameraBridge(QObject):
         if self.camera:
             self.camera.rotation = value % 360
 
-    @Property(bool, notify=focusHighlightChanged)
-    def focusHighlight(self) -> bool:
-        return self._focusHighlight
-    @focusHighlight.setter
-    def focusHighlight(self, value: bool):
-        if self._focusHighlight != value:
-            self._focusHighlight = value
-            self.focusHighlightChanged.emit(self._focusHighlight)
+    @Property(str, notify=displayModeChanged)
+    def displayMode(self) -> DisplayMode:
+        return self._displayMode
+    @displayMode.setter
+    def displayMode(self, value: DisplayMode):
+        if self._displayMode != value:
+            self._displayMode = value
+            logger.debug(f"display mode changed to {self._displayMode}")
+            self.displayModeChanged.emit(self._displayMode)
             self.imageSourceChanged.emit(self.imageSource)
+
+    @Slot()
+    def nextDisplayMode(self):
+        if self._displayMode == DisplayMode.NORMAL:
+            self.displayMode = DisplayMode.FOCUS
+            return
+        elif self._displayMode == DisplayMode.FOCUS:
+            self.displayMode = DisplayMode.ZOOMED
+            return
+        elif self._displayMode == DisplayMode.ZOOMED:
+            self.displayMode = DisplayMode.ALIGN
+            return
+        elif self._displayMode == DisplayMode.ALIGN:
+            self.displayMode = DisplayMode.NORMAL
+            return

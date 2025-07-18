@@ -22,7 +22,7 @@ Control {
                 video_button.checked = true
             }
         }
-        focus_highlight_button.checked = bridge.focusHighlight ? bridge.focusHighlight : false
+        //focus_highlight_button.text = bridge.displayMode ? bridge.displayMode : " "
     }
 
     Connections {
@@ -154,11 +154,11 @@ Control {
             id: focus_highlight_button
             Layout.fillWidth: true
             Layout.fillHeight: true
-            checkable: true
-            text: "Focus highlight"
-            onCheckedChanged: {
+            //enabled: bridge
+            text: bridge ? bridge.displayMode : ""
+            onClicked: {
                 if(bridge) {
-                    bridge.focusHighlight = checked
+                    bridge.nextDisplayMode()
                 }
             }
         }
