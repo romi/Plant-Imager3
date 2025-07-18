@@ -196,7 +196,6 @@ class CameraBridge(QObject):
     def displayMode(self, value: DisplayMode):
         if self._displayMode != value:
             self._displayMode = value
-            logger.debug(f"display mode changed to {self._displayMode}")
             self.displayModeChanged.emit(self._displayMode)
             self.imageSourceChanged.emit(self.imageSource)
 

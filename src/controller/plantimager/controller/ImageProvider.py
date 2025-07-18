@@ -165,7 +165,7 @@ class ImageProvider(QQuickImageProvider):
             return zoomed_image
         elif id.removeprefix("align-") in self.images:
             display_width, display_height = 640, 480
-            target_line_width = 1 #  pixel
+            target_line_width = 3 #  pixel
             image: QImage = self.images[id.removeprefix("align-")]
             nd_image = qimage_to_ndarray_rgb(image)
             shape = nd_image.shape
@@ -174,10 +174,11 @@ class ImageProvider(QQuickImageProvider):
                 width_margin = ceil((width*target_line_width/display_width - 1)/2)
                 height_margin = ceil((height*target_line_width/display_height - 1)/2)
             else:
-                width_margin = ceil((width*target_line_width/display_height - 1)/2) # assuming a rotation
+                width_margin = ceil((width*target_line_width/display_height - 1)/2) # assuming a rotation, doesn't work :(
                 height_margin = ceil((height*target_line_width/display_width - 1)/2)
-            nd_image[shape[0]//2-width_margin:shape[0]//2+width_margin, :] = np.array([255, 0, 0])
-            nd_image[:, shape[1]//2-height_margin:shape[1]//2+height_margin] = np.array([255, 0, 0])
+            margin = max(width_margin, height_margin)
+            nd_image[shape[0]//2-margin:shape[0]//2+margin, :] = np.array([255, 0, 0])
+            nd_image[:, shape[1]//2-margin:shape[1]//2+margin] = np.array([255, 0, 0])
             aligned_image = ndarray_to_qimage(nd_image, QImage.Format.Format_RGB888)
             size.setWidth(aligned_image.width())
             size.setHeight(aligned_image.height())
