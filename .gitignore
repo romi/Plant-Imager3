@@ -168,3 +168,12 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/.gitignore
+/.idea/git_toolbox_blame.xml
+/.idea/git_toolbox_prj.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/Plant-Imager3.iml
+/.idea/vcs.xml
