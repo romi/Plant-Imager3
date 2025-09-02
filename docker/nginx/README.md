@@ -60,6 +60,12 @@ To build the Docker image, you need to specify the following build arguments:
 - `SERVER_URL`: the URL of the NGINX server;
 - `CONTROLLER_URL`: the URL of the controller (serving the WebUI);
 - `CONTROLLER_PORT`: the port of the controller.
+- `PLANTDB_URL`: the URL of the PlantDB REST API (serving the dataset);
+- `PLANTDB_PORT`: the port of the PlantDB REST API.
+- `P3DV_URL`: the URL of the WebTerm (plant-3d-vision reconstruction and analysis tools);
+- `P3DV_PORT`: the port of the WebTerm.
+- `P3DX_URL`: the URL of the plant 3D explorer (dedicated viewer);
+- `P3DX_PORT`: the port of the plant 3D explorer.
 
 Use the following command:
 
@@ -71,6 +77,10 @@ sudo docker build \
   --build-arg CONTROLLER_PORT='8080' \
   --build-arg PLANTDB_URL='plantdb_url.com' \
   --build-arg PLANTDB_PORT='5000' \
+  --build-arg P3DV_URL='p3dv_url.com' \
+  --build-arg P3DV_PORT='8081' \
+  --build-arg P3DX_URL='p3dx_url.com' \
+  --build-arg P3DX_PORT='80' \
   -t roboticsmicrofarms/plantimager_nginx:latest .
 ```
 
