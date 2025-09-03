@@ -41,7 +41,7 @@ from threading import Thread
 
 import zmq
 
-from plantdb.commons import api_prefix
+from plantdb.client.plantdb_client import api_prefix
 from plantimager.webui.app import setup_web_app
 from plantimager.webui.controller_proxy import RPCController
 
