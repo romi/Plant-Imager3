@@ -14,6 +14,7 @@ nav:
     - developer/documentation.md
     - developer/architecture.md
     - developer/RPC.md
+    - developer/nginx_openssl.md
 
 
 theme:
