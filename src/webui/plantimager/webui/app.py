@@ -32,7 +32,8 @@ from dash import dcc
 from dash import html
 from plantdb.client.plantdb_client import PlantDBClient
 from plantdb.client.rest_api import base_url
-from plantdb.commons import api_prefix
+from plantdb.client.rest_api import configure_requests_with_certificate
+from plantdb.client.plantdb_client import api_prefix
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from plantimager.webui.carousel import caroussel_modal
@@ -44,6 +45,7 @@ from plantimager.webui.new_user import new_user_modal
 
 REST_API_URL = "127.0.0.1"
 REST_API_PORT = 5000
+REST_API_PREFIX = ""
 
 
 def parsing() -> argparse.ArgumentParser:
@@ -68,17 +70,23 @@ def parsing() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="PlantImager WebUI.")
 
     app_args = parser.add_argument_group("Dash app options")
-    app_args.add_argument('--api_host', type=str, default=REST_API_URL,
-                          help="Host address of the PlantDB REST API.")
-    app_args.add_argument('--api_port', type=int, default=REST_API_PORT,
-                          help="Port of the PlantDB REST API.")
-    app_args.add_argument('--api_prefix', type=str, default=api_prefix(),
-                          help="Prefix of the PlantDB REST API.")
     app_args.add_argument('--proxy', action='store_true',
                           help="Activate if the server is behind a reverse proxy")
     app_args.add_argument('--url-base-pathname', type=str, default='/webui/',
                           help="Base URL path for the application (should match Nginx location).")
-    app_args.add_argument('--debug', action='store_true',
+
+    api_args = parser.add_argument_group("PlantDB REST API options")
+    api_args.add_argument('--api_host', type=str, default=REST_API_URL,
+                          help="Host address of the PlantDB REST API.")
+    api_args.add_argument('--api_port', type=int, default=REST_API_PORT,
+                          help="Port of the PlantDB REST API.")
+    api_args.add_argument('--api_prefix', type=str, default=REST_API_PREFIX,
+                          help="Prefix of the PlantDB REST API.")
+    api_args.add_argument('--api_cert', type=str, default=None,
+                          help="Path to the certificate file for the PlantDB REST API.")
+
+    misc_args = parser.add_argument_group("Miscellaneous options")
+    misc_args.add_argument('--debug', action='store_true',
                           help="Enable/disable all the dev tools.")
     return parser
 
@@ -112,7 +120,8 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
     Notes
     -----
     The application layout includes several components:
-    - Global state management using dcc.Store components
+
+    - Global state management using `dcc.Store` components
     - Navigation bar with ROMI branding
     - Configuration and authentication modals
     - Main content area for scan management
@@ -143,6 +152,7 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
         dcc.Store(id='rest-api-host', data=api_url, storage_type='session'),  # PlantDB REST API URL
         dcc.Store(id='rest-api-port', data=api_port, storage_type='session'),  # PlantDB REST API port
         dcc.Store(id='rest-api-prefix', data=api_prefix, storage_type='session'),  # PlantDB REST API prefix
+        dcc.Store(id='rest-api-ssl', data=False, storage_type='session'),  # PlantDB REST API prefix
         dcc.Store(id='connected', data=None),  # boolean flag indicating if connected to the database or not
         dcc.Store(id='logged-username', data=None, storage_type='session'),  # id of the logger user
         dcc.Store(id='logged-fullname', data=None, storage_type='session'),  # real name of the logged user
@@ -192,6 +202,9 @@ def main() -> None:
     controller_thread = Thread(target=lambda ctx: RPCController(ctx, "tcp://localhost:14567"), args=(context,))
     controller_thread.daemon = True
     controller_thread.start()
+
+    if args.api_cert:
+        configure_requests_with_certificate(args.api_cert)
 
     # - Start the Dash app:
     app = setup_web_app(args.api_host, args.api_port, args.api_prefix, args.proxy)
