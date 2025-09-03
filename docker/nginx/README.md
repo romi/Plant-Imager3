@@ -32,22 +32,66 @@ sudo apt-get install openssl
 
 ### Generate Private Key and Certificate
 
-Generate self-signed certificates with:
+First create an `ssl` folder in the `docker/nginx` directory of the cloned sources.
+It will receive the `openssl.cnf`, `key.pem` and `cert.pem` files created hereafter and used by the server (`key.pem` + `cert.pem`) and clients (`cert.pem`). 
 
-``` bash
-# Create an ssl directory
-cd docker/nginx
-mkdir ssl
+#### 1. Create a Configuration File
+Then, create an OpenSSL configuration file (e.g., `openssl.cnf`) that includes all the hostnames your certificate should be valid for:
+``` 
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+default_bits = 2048
+default_md = sha256
 
-# Generate a private key
-openssl genpkey -algorithm RSA -out ssl/key.pem
+[ca]
+default_days = 365
 
-# Generate a self-signed certificate using the private key
-openssl req -new -x509 -key ssl/key.pem -out ssl/cert.pem -days 365
+[req_distinguished_name]
+C = FR
+ST = Your-State
+L = Your-City
+O = Your-Organization
+OU = Your-Department
+CN = personal.server.fr
+
+[v3_req]
+basicConstraints = CA:FALSE
+keyUsage = keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = personal.server.fr
+DNS.2 = personal
+DNS.3 = server.fr
+# Add any additional hostnames or IP addresses here
+# IP.1 = 192.168.1.1
 ```
 
-During the process, you will be prompted to enter information such as Country, State, Organization, etc.
-You can fill this in with your details.
+#### 2. Generate the Certificate and Private Key
+Run the following command to generate a self-signed certificate with the configuration:
+
+``` bash
+# Generate a self-signed certificate and the private key
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/key.pem -out ssl/cert.pem -config ssl/openssl.cnf -extensions v3_req
+```
+
+This command:
+- Creates a self-signed X.509 certificate
+- Valid for 365 days
+- Using a 2048-bit RSA key
+- Private key in `key.pem`
+- Certificate in `cert.pem`
+- Uses the configuration file `openssl.cnf`
+- Includes the extensions (like SAN)
+
+#### 3. Verify the Certificate
+Check that the certificate includes the correct Subject Alternative Names:
+``` bash
+openssl x509 -in ssl/cert.pem -text -noout | grep DNS
+```
 
 > **Note**:
 > For production environments, consider using certificates from a trusted Certificate Authority.
