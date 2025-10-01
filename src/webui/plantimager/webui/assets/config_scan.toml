@@ -1,9 +1,9 @@
-[Path]
-name = "Circle"
+[ScanPath]
+class_name = "Circle"
 
-[Path.kwargs]
-center_x = 370
-center_y = 370
+[ScanPath.kwargs]
+center_x = 375
+center_y = 375
 z = 0
 tilt = 0
 radius = 350

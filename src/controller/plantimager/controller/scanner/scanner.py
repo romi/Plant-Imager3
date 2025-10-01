@@ -141,7 +141,7 @@ class DataUploader():
         try:
             # Upload the file to the database with metadata
             response = self.db_client.create_file(
-                buffer, file_id=f"{data.metadata['camera_name']}-{data.idx}", ext=data.image_ext,
+                buffer, file_id=f"{data.metadata['camera_name']}-{data.idx:0>5}", ext=data.image_ext,
                 scan_id=scan_id, fileset_id=fileset, metadata=data.metadata
             )
         except Exception as e:
@@ -432,8 +432,8 @@ class Scanner(QObject):
         config : dict
             Configuration dictionary with the following structure:
             {
-                "Path": {
-                    "name": str,  # Name of the path class
+                "ScanPath": {
+                    "class_name": str,  # Name of the path class
                     "kwargs": dict  # Arguments for path constructor
                 },
                 "Metadata": {
@@ -456,7 +456,7 @@ class Scanner(QObject):
         Examples
         --------
         >>> config = {
-        ...     "Path": {"name": "CirclePath", "kwargs": {"radius": 100}},
+        ...     "ScanPath": {"class_name": "CirclePath", "kwargs": {"radius": 100}},
         ...     "Metadata": {
         ...         "object": {"species": "Arabidopsis thaliana"},
         ...         "hardware": {"scanner_version": "1.0"}
@@ -469,8 +469,8 @@ class Scanner(QObject):
 
         # Dynamically import and instantiate the path class
         path_module = importlib.import_module("plantimager.controller.scanner.path")
-        path_cfg = config["Path"]
-        self.scan_path = getattr(path_module, path_cfg["name"])(**path_cfg["kwargs"])
+        path_cfg = config["ScanPath"]
+        self.scan_path = getattr(path_module, path_cfg["class_name"])(**path_cfg["kwargs"])
         self.pathInfoChanged.emit(self.path_info)
 
         # Update progress tracking based on path length
