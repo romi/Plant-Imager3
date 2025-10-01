@@ -30,9 +30,8 @@ import zmq
 from dash import Dash
 from dash import dcc
 from dash import html
-from plantdb.client.plantdb_client import PlantDBClient
+from plantdb.client.plantdb_client import PlantDBClient, api_prefix
 from plantdb.client.rest_api import base_url
-from plantdb.commons import api_prefix
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from plantimager.webui.carousel import caroussel_modal
