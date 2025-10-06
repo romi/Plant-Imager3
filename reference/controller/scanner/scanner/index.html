@@ -2374,6 +2374,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developer/nginx_openssl.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    None
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3638,8 +3661,8 @@ controller if the connection fails.</p>
               <div class="doc-md-description">
                 <p>Configuration dictionary with the following structure:
 {
-    "ScanPath": {
-        "class_name": str,  # Name of the path class
+    "Path": {
+        "name": str,  # Name of the path class
         "kwargs": dict  # Arguments for path constructor
     },
     "Metadata": {
@@ -3673,7 +3696,7 @@ controller if the connection fails.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>config <span style="color: #666">=</span> {
-<span style="color: #000080; font-weight: bold">... </span>    <span style="color: #BA2121">&quot;ScanPath&quot;</span>: {<span style="color: #BA2121">&quot;class_name&quot;</span>: <span style="color: #BA2121">&quot;CirclePath&quot;</span>, <span style="color: #BA2121">&quot;kwargs&quot;</span>: {<span style="color: #BA2121">&quot;radius&quot;</span>: <span style="color: #666">100</span>}},
+<span style="color: #000080; font-weight: bold">... </span>    <span style="color: #BA2121">&quot;Path&quot;</span>: {<span style="color: #BA2121">&quot;name&quot;</span>: <span style="color: #BA2121">&quot;CirclePath&quot;</span>, <span style="color: #BA2121">&quot;kwargs&quot;</span>: {<span style="color: #BA2121">&quot;radius&quot;</span>: <span style="color: #666">100</span>}},
 <span style="color: #000080; font-weight: bold">... </span>    <span style="color: #BA2121">&quot;Metadata&quot;</span>: {
 <span style="color: #000080; font-weight: bold">... </span>        <span style="color: #BA2121">&quot;object&quot;</span>: {<span style="color: #BA2121">&quot;species&quot;</span>: <span style="color: #BA2121">&quot;Arabidopsis thaliana&quot;</span>},
 <span style="color: #000080; font-weight: bold">... </span>        <span style="color: #BA2121">&quot;hardware&quot;</span>: {<span style="color: #BA2121">&quot;scanner_version&quot;</span>: <span style="color: #BA2121">&quot;1.0&quot;</span>}
@@ -3765,8 +3788,8 @@ controller if the connection fails.</p>
 <span style="color: #BA2121; font-style: italic">    config : dict</span>
 <span style="color: #BA2121; font-style: italic">        Configuration dictionary with the following structure:</span>
 <span style="color: #BA2121; font-style: italic">        {</span>
-<span style="color: #BA2121; font-style: italic">            &quot;ScanPath&quot;: {</span>
-<span style="color: #BA2121; font-style: italic">                &quot;class_name&quot;: str,  # Name of the path class</span>
+<span style="color: #BA2121; font-style: italic">            &quot;Path&quot;: {</span>
+<span style="color: #BA2121; font-style: italic">                &quot;name&quot;: str,  # Name of the path class</span>
 <span style="color: #BA2121; font-style: italic">                &quot;kwargs&quot;: dict  # Arguments for path constructor</span>
 <span style="color: #BA2121; font-style: italic">            },</span>
 <span style="color: #BA2121; font-style: italic">            &quot;Metadata&quot;: {</span>
@@ -3789,7 +3812,7 @@ controller if the connection fails.</p>
 <span style="color: #BA2121; font-style: italic">    Examples</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; config = {</span>
-<span style="color: #BA2121; font-style: italic">    ...     &quot;ScanPath&quot;: {&quot;class_name&quot;: &quot;CirclePath&quot;, &quot;kwargs&quot;: {&quot;radius&quot;: 100}},</span>
+<span style="color: #BA2121; font-style: italic">    ...     &quot;Path&quot;: {&quot;name&quot;: &quot;CirclePath&quot;, &quot;kwargs&quot;: {&quot;radius&quot;: 100}},</span>
 <span style="color: #BA2121; font-style: italic">    ...     &quot;Metadata&quot;: {</span>
 <span style="color: #BA2121; font-style: italic">    ...         &quot;object&quot;: {&quot;species&quot;: &quot;Arabidopsis thaliana&quot;},</span>
 <span style="color: #BA2121; font-style: italic">    ...         &quot;hardware&quot;: {&quot;scanner_version&quot;: &quot;1.0&quot;}</span>
@@ -3802,8 +3825,8 @@ controller if the connection fails.</p>
 
     <span style="color: #3D7B7B; font-style: italic"># Dynamically import and instantiate the path class</span>
     path_module <span style="color: #666">=</span> importlib<span style="color: #666">.</span>import_module(<span style="color: #BA2121">&quot;plantimager.controller.scanner.path&quot;</span>)
-    path_cfg <span style="color: #666">=</span> config[<span style="color: #BA2121">&quot;ScanPath&quot;</span>]
-    <span style="color: #008000">self</span><span style="color: #666">.</span>scan_path <span style="color: #666">=</span> <span style="color: #008000">getattr</span>(path_module, path_cfg[<span style="color: #BA2121">&quot;class_name&quot;</span>])(<span style="color: #666">**</span>path_cfg[<span style="color: #BA2121">&quot;kwargs&quot;</span>])
+    path_cfg <span style="color: #666">=</span> config[<span style="color: #BA2121">&quot;Path&quot;</span>]
+    <span style="color: #008000">self</span><span style="color: #666">.</span>scan_path <span style="color: #666">=</span> <span style="color: #008000">getattr</span>(path_module, path_cfg[<span style="color: #BA2121">&quot;name&quot;</span>])(<span style="color: #666">**</span>path_cfg[<span style="color: #BA2121">&quot;kwargs&quot;</span>])
     <span style="color: #008000">self</span><span style="color: #666">.</span>pathInfoChanged<span style="color: #666">.</span>emit(<span style="color: #008000">self</span><span style="color: #666">.</span>path_info)
 
     <span style="color: #3D7B7B; font-style: italic"># Update progress tracking based on path length</span>
