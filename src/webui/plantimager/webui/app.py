@@ -92,7 +92,7 @@ def parsing() -> argparse.ArgumentParser:
     return parser
 
 
-def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url_base_pathname: str = '/webui/') -> Dash:
+def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url_prefix: str = '/webui') -> Dash:
     """Initialize and configure the Plant Imager Dash web application.
 
     Creates a Dash application instance with Bootstrap styling and sets up the main
@@ -110,7 +110,7 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
         URL prefix of the PlantDB REST API server.
     proxy : bool, optional
         Boolean flag indicating whether the application is behind a reverse proxy, by default ``False``.
-    url_base_pathname : str
+    url_prefix : str
         The base URL path where the application is served (should match Nginx location)
 
     Returns
@@ -127,12 +127,15 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
     - Configuration and authentication modals
     - Main content area for scan management
     """
+    # Ensure `url_prefix` ends with a trailing slash (as required by Dash)
+    if url_prefix and not url_prefix.endswith('/'):
+        url_prefix += '/'
 
     app = Dash(
         name="plantimager.webui",
         title="Plant Imager",
         external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
-        url_base_pathname=url_base_pathname,
+        url_base_pathname=url_prefix,
         use_pages=True,
         pages_folder=str(Path(__file__).parent / "pages"),
         assets_folder=str(Path(__file__).parent / "assets"),
@@ -143,8 +146,9 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
         app.server.wsgi_app = ProxyFix(app.server.wsgi_app, x_for=1, x_host=1, x_proto=1)
         # Set secure cookies
         app.server.config.update(
-            SESSION_COOKIE_SECURE=True,
-            SESSION_COOKIE_SAMESITE='Lax'
+            SESSION_COOKIE_SECURE=True,  # Only send cookies over HTTPS
+            SESSION_COOKIE_HTTPONLY=True,  # Prevent JavaScript access
+            SESSION_COOKIE_SAMESITE='Strict'  # CSRF protection
         )
 
     # Main application layout definition
