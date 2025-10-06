@@ -112,6 +112,43 @@ uwsgi --http :8080 --module plantimager.webui.wsgi:application --callable applic
 3. **Set up auto-renewal** - Let's Encrypt certificates expire after 90 days
 4. **Use strong SSL settings** - As included in the configuration
 
+## Docker
+
+### Build Image
+To build the `roboticsmicrofarms/plantimager_webui` docker image, you may use the convenience `build.sh` script.
+This will create a Docker image with everything needed to run the web UI.
+
+1. Open your terminal.
+2. Run the following command:
+   ```shell
+   ./docker/webui/build.sh -t latest
+   ```
+
+This command uses the build script located in the `./docker/webui/` directory to create the Docker image and tags it as "latest".
+
+### Start a Container
+
+Once you've built the Docker image, you can run it as a container. This will start the web UI application.
+
+1. Open your terminal.
+2. Run the following command:
+    ```shell
+    docker run -it --rm --name plantimager_webui -p 8080:8080 roboticsmicrofarms/plantimager_webui:latest "uwsgi --http :8080 --module plantimager.webui.wsgi:application --callable application --master  --processes 4 --threads 2 --thunder-lock"
+    ```
+
+Let's break down what this command does:
+- `docker run`: This starts a new Docker container.
+- `-it`: This runs the container in interactive mode with a terminal attached.
+- `--rm`: This automatically removes the container when it stops.
+- `--name plantimager_webui`: This gives your container a name, making it easier to manage.
+- `-p 8080:8080`: This maps port 8080 on your local machine to port 8080 in the Docker container, so you can access the web UI.
+- `roboticsmicrofarms/plantimager_webui:latest`: This specifies which Docker image to use (the one we built earlier).
+- `"uwsgi --http :8080 --module plantimager.webui.wsgi:application --callable application --master"`: These are the parameters that start the web server inside the container.
+
+After running this command, you should be able to access the web UI by opening your browser and navigating to `http://localhost:8080/webui`.
+
+If you encounter any issues or need further assistance, please refer to the [Docker documentation](https://docs.docker.com/) for more details.
+
 
 ## Let's Encrypt Certificates
 
