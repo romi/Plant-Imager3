@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "plantimager.webui"
 version = "0.0.1"
 dependencies = [
-    "bcrypt",
+    "plantdb.client",
     "plantimager.commons",
     "tomli",
     # Dash & Dash third-party components
@@ -56,3 +56,9 @@ issues = "https://github.com/romi/Plant-Imager3/issues"
 
 [project.scripts]
 plant-imager-webui = "plantimager.webui.app:main"
+
+[tool.setuptools.package-data]
+"plantimager.webui" = [
+    "assets/*.toml",
+    "assets/*.js",
+]
