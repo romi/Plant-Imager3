@@ -37,11 +37,11 @@ python src/webui/plantimager/webui/wsgi.py
 ```
 Should then be accessible under: https://localhost:8080/webui/
 """
+import os
 from threading import Thread
 
 import zmq
 
-from plantdb.client.plantdb_client import api_prefix
 from plantimager.webui.app import setup_web_app
 from plantimager.webui.controller_proxy import RPCController
 
@@ -51,8 +51,17 @@ controller_thread = Thread(target=lambda ctx: RPCController(ctx, "tcp://localhos
 controller_thread.daemon = True
 controller_thread.start()
 
+# Get configuration from environment variables
+app_config = {
+    'api_url': os.environ.get('PLANTDB_URL', 'localhost'),
+    'api_port': int(os.environ.get('PLANTDB_PORT', 8080)),
+    'api_prefix': os.environ.get('PLANTDB_PREFIX', '').lower(),
+    'proxy': os.environ.get('WEBUI_PROXY', 'false').lower() == 'true',
+    'url_prefix': os.environ.get('WEBUI_PROXY', '/webui'),
+}
+
 # Get the Dash application
-dash_app = setup_web_app("localhost", 8080, api_prefix(), proxy=True)
+dash_app = setup_web_app(**app_config)
 # Use the Flask server attribute of the Dash application
 application = dash_app.server
 
