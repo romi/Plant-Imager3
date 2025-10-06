@@ -22,6 +22,7 @@ $ python app.py --api_host http://example-server --api_port 5000
 """
 
 import argparse
+from pathlib import Path
 from threading import Thread
 
 import dash
@@ -133,8 +134,8 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
         external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
         url_base_pathname=url_base_pathname,
         use_pages=True,
-        pages_folder="pages",
-        assets_folder="assets",
+        pages_folder=str(Path(__file__).parent / "pages"),
+        assets_folder=str(Path(__file__).parent / "assets"),
     )
 
     if proxy:

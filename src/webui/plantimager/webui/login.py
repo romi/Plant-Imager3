@@ -359,9 +359,9 @@ def login(
     Returns
     -------
     str or None
-        The authenticated username if login successful, None otherwise.
+        The authenticated username if login successful, ``None`` otherwise.
     str or None
-        The user's full name if login successful, None otherwise.
+        The user's full name if login successful, ``None`` otherwise.
     dict
         CSS style dictionary for the message display.
     dash_bootstrap_components.Alert
