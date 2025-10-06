@@ -2407,11 +2407,7 @@
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/app.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">184</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">186</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">187</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">188</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">188</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">189</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">190</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">191</span>
@@ -2435,7 +2431,11 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">209</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">210</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">211</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">212</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">212</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">213</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">215</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">216</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Run the Plant Imager Web Interface application.</span>
 
 <span style="color: #BA2121; font-style: italic">    This function serves as the entry point for the Plant Imager Web UI. It:</span>
@@ -2617,7 +2617,7 @@ including host address and port options.</p>
 
 
 <a href="#plantimager.webui.app.setup_web_app" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>setup_web_app(api_url, api_port, api_prefix, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_base_pathname<span style="color: #666">=</span><span style="color: #BA2121">&#39;/webui/&#39;</span>)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>setup_web_app(api_url, api_port, api_prefix, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_prefix<span style="color: #666">=</span><span style="color: #BA2121">&#39;/webui&#39;</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2706,7 +2706,7 @@ user authentication, and dataset management.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>url_base_pathname</code>
+                <code>url_prefix</code>
             </td>
             <td>
                   <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
@@ -2717,7 +2717,7 @@ user authentication, and dataset management.</p>
               </div>
             </td>
             <td>
-                  <code>&#39;/webui/&#39;</code>
+                  <code>&#39;/webui&#39;</code>
             </td>
           </tr>
       </tbody>
@@ -2846,7 +2846,11 @@ user authentication, and dataset management.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">178</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">179</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">180</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">181</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(api_url: <span style="color: #008000">str</span>, api_port: <span style="color: #008000">int</span>, api_prefix: <span style="color: #008000">str</span>, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_base_pathname: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&#39;/webui/&#39;</span>) <span style="color: #666">-&gt;</span> Dash:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">181</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">182</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">183</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">184</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(api_url: <span style="color: #008000">str</span>, api_port: <span style="color: #008000">int</span>, api_prefix: <span style="color: #008000">str</span>, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_prefix: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&#39;/webui&#39;</span>) <span style="color: #666">-&gt;</span> Dash:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Initialize and configure the Plant Imager Dash web application.</span>
 
 <span style="color: #BA2121; font-style: italic">    Creates a Dash application instance with Bootstrap styling and sets up the main</span>
@@ -2864,7 +2868,7 @@ user authentication, and dataset management.</p>
 <span style="color: #BA2121; font-style: italic">        URL prefix of the PlantDB REST API server.</span>
 <span style="color: #BA2121; font-style: italic">    proxy : bool, optional</span>
 <span style="color: #BA2121; font-style: italic">        Boolean flag indicating whether the application is behind a reverse proxy, by default ``False``.</span>
-<span style="color: #BA2121; font-style: italic">    url_base_pathname : str</span>
+<span style="color: #BA2121; font-style: italic">    url_prefix : str</span>
 <span style="color: #BA2121; font-style: italic">        The base URL path where the application is served (should match Nginx location)</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
@@ -2881,12 +2885,15 @@ user authentication, and dataset management.</p>
 <span style="color: #BA2121; font-style: italic">    - Configuration and authentication modals</span>
 <span style="color: #BA2121; font-style: italic">    - Main content area for scan management</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+    <span style="color: #3D7B7B; font-style: italic"># Ensure `url_prefix` ends with a trailing slash (as required by Dash)</span>
+    <span style="color: #008000; font-weight: bold">if</span> url_prefix <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #A2F; font-weight: bold">not</span> url_prefix<span style="color: #666">.</span>endswith(<span style="color: #BA2121">&#39;/&#39;</span>):
+        url_prefix <span style="color: #666">+=</span> <span style="color: #BA2121">&#39;/&#39;</span>
 
     app <span style="color: #666">=</span> Dash(
         name<span style="color: #666">=</span><span style="color: #BA2121">&quot;plantimager.webui&quot;</span>,
         title<span style="color: #666">=</span><span style="color: #BA2121">&quot;Plant Imager&quot;</span>,
         external_stylesheets<span style="color: #666">=</span>[dbc<span style="color: #666">.</span>themes<span style="color: #666">.</span>BOOTSTRAP, dbc<span style="color: #666">.</span>icons<span style="color: #666">.</span>BOOTSTRAP],
-        url_base_pathname<span style="color: #666">=</span>url_base_pathname,
+        url_base_pathname<span style="color: #666">=</span>url_prefix,
         use_pages<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
         pages_folder<span style="color: #666">=</span><span style="color: #008000">str</span>(Path(<span style="color: #19177C">__file__</span>)<span style="color: #666">.</span>parent <span style="color: #666">/</span> <span style="color: #BA2121">&quot;pages&quot;</span>),
         assets_folder<span style="color: #666">=</span><span style="color: #008000">str</span>(Path(<span style="color: #19177C">__file__</span>)<span style="color: #666">.</span>parent <span style="color: #666">/</span> <span style="color: #BA2121">&quot;assets&quot;</span>),
@@ -2897,8 +2904,9 @@ user authentication, and dataset management.</p>
         app<span style="color: #666">.</span>server<span style="color: #666">.</span>wsgi_app <span style="color: #666">=</span> ProxyFix(app<span style="color: #666">.</span>server<span style="color: #666">.</span>wsgi_app, x_for<span style="color: #666">=1</span>, x_host<span style="color: #666">=1</span>, x_proto<span style="color: #666">=1</span>)
         <span style="color: #3D7B7B; font-style: italic"># Set secure cookies</span>
         app<span style="color: #666">.</span>server<span style="color: #666">.</span>config<span style="color: #666">.</span>update(
-            SESSION_COOKIE_SECURE<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
-            SESSION_COOKIE_SAMESITE<span style="color: #666">=</span><span style="color: #BA2121">&#39;Lax&#39;</span>
+            SESSION_COOKIE_SECURE<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,  <span style="color: #3D7B7B; font-style: italic"># Only send cookies over HTTPS</span>
+            SESSION_COOKIE_HTTPONLY<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,  <span style="color: #3D7B7B; font-style: italic"># Prevent JavaScript access</span>
+            SESSION_COOKIE_SAMESITE<span style="color: #666">=</span><span style="color: #BA2121">&#39;Strict&#39;</span>  <span style="color: #3D7B7B; font-style: italic"># CSRF protection</span>
         )
 
     <span style="color: #3D7B7B; font-style: italic"># Main application layout definition</span>
