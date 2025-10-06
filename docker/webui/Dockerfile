@@ -89,20 +89,19 @@ WORKDIR /home/${USER_NAME}
 # Copy the source files (repository):
 COPY --chown=${USER_NAME} src/commons/ commons/
 COPY --chown=${USER_NAME} src/webui/ webui/
+COPY --chown=${USER_NAME} docker/webui/entrypoint.sh /home/${USER_NAME}/entrypoint.sh
 
 RUN echo "\n\n# Create a virtual environment..." && \
     python3 -m venv /home/${USER_NAME}/venv && \
     # Activate the virtual environment and install packages
     . /home/${USER_NAME}/venv/bin/activate && \
     echo "\n\n# Upgrade pip & setuptools to latest versions..." && \
-    pip install --upgrade pip setuptools && \
+    python3 -m pip install --upgrade pip setuptools && \
     echo "\n\n# Install 'plantimager.commons' from sources..." && \
     python3 -m pip install --no-cache-dir commons/. && \
     echo "\n\n# Install 'plantimager.webui' from sources..." && \
     python3 -m pip install --no-cache-dir webui/. && \
     # Clean pip cache:
     python3 -m pip cache purge
-
-COPY --chown=${USER_NAME} ./docker/webui/entrypoint.sh /home/${USER_NAME}/entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
