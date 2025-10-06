@@ -5,6 +5,8 @@ FROM ubuntu:24.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 ENV PYTHONUNBUFFERED=1
+# Variables required by `pip`:
+ENV PATH="/root/.local/bin:${PATH}"
 
 # Install build dependencies
 RUN apt-get update && \
@@ -12,21 +14,19 @@ RUN apt-get update && \
         # Install python3.12 & pip
         python3 python3-pip python3-venv \
         # Install 'gcc', 'libc6-dev' & 'python3-dev' to be able to build uwsgi
-        gcc libc6-dev python3-dev && \
-    apt-get clean -y && \
-    rm -rf /var/lib/apt/lists/*
+        gcc libc6-dev python3-dev
 
-RUN echo "Building uWSGI..." && \
+RUN echo "Building uwsgi..." && \
     # Create a virtual environment
-    python3 -m venv /home/${USER_NAME}/venv && \
+    python3 -m venv /home/root/venv && \
     # Activate the virtual environment and install packages
-    . /home/${USER_NAME}/venv/bin/activate && \
-    # Upgrade pip & setuptools to latest versions
-    pip install --upgrade pip setuptools wheel && \
+    . /home/root/venv/bin/activate && \
+    # Update required tools to build uwsgi
+    python3 -m pip install --no-cache-dir \
+        wheel setuptools pip --upgrade && \
     # Build uwsgi
-    python3 -m pip install --no-cache-dir uwsgi && \
-    # Copy the built file(s) to access them in runtime stage
-    cp /home/${USER_NAME}/venv/bin/uwsgi /usr/local/bin/
+    python3 -m pip install --no-cache-dir \
+        uwsgi
 
 # ============= Final stage =============
 FROM ubuntu:24.04 AS runtime
@@ -51,11 +51,6 @@ ENV PYTHONUNBUFFERED=1
 # Variables required by `pip`:
 ENV PATH="${PATH}:/home/${USER_NAME}/.local/bin"
 
-# URI prefix to use when behind a reverse proxy (NGINX)
-ENV URL_PREFIX=""
-ENV SERVER_PORT="8080"
-EXPOSE ${SERVER_PORT}
-
 # Change Shell to 'bash', default is 'sh':
 SHELL ["/bin/bash", "-c"]
 
@@ -72,26 +67,33 @@ RUN apt-get update && \
     # Clean package manager:
     apt-get clean -y && \
     apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/* && \
+    # Cleanup package manager and temp files
+    rm -rf /var/lib/apt/lists/* 2>/dev/null || true && \
+    rm -rf /tmp/* /var/tmp/* 2>/dev/null || true && \
+    rm -rf /var/cache/apt/archives/*.deb 2>/dev/null || true && \
+    # Remove man pages and docs
+    find /usr/share/man /usr/share/doc /usr/share/info -delete 2>/dev/null || true && \
+    # Keep only C.UTF-8 locale
+    cd /usr/share/locale/ && \
+    find . -mindepth 1 -maxdepth 1 ! -name 'C.UTF-8' -exec rm -rf {} + 2>/dev/null || true && \
     # Create a non-root user and create a "home" folder for it:
     adduser --disabled-password --gecos '' --uid ${USER_ID} ${USER_NAME} && \
     chown -R ${USER_NAME}: /home/${USER_NAME}
 
 # Copy uwsgi from builder stage
-COPY --from=builder /usr/local/bin/uwsgi /usr/local/bin/
-COPY --from=builder /usr/local/lib/python3.12/dist-packages/ /usr/local/lib/python3.12/dist-packages/
+COPY --from=builder --chown=${USER_NAME} /home/root/venv/bin/uwsgi /home/${USER_NAME}/venv/bin/
+COPY --from=builder --chown=${USER_NAME} /home/root/venv/lib/python3.12/site-packages/ /home/${USER_NAME}/venv/lib/python3.12/site-packages/
 
 # Change to the non-root user
 USER ${USER_NAME}
 # Change working directory
 WORKDIR /home/${USER_NAME}
-
 # Copy the source files (repository):
 COPY --chown=${USER_NAME} src/commons/ commons/
 COPY --chown=${USER_NAME} src/webui/ webui/
-COPY --chown=${USER_NAME} docker/webui/entrypoint.sh /home/${USER_NAME}/entrypoint.sh
 
 RUN echo "\n\n# Create a virtual environment..." && \
+    # Create a virtual environment
     python3 -m venv /home/${USER_NAME}/venv && \
     # Activate the virtual environment and install packages
     . /home/${USER_NAME}/venv/bin/activate && \
@@ -104,4 +106,5 @@ RUN echo "\n\n# Create a virtual environment..." && \
     # Clean pip cache:
     python3 -m pip cache purge
 
+COPY --chown=${USER_NAME} docker/webui/entrypoint.sh .
 ENTRYPOINT ["./entrypoint.sh"]
