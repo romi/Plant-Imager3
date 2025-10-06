@@ -101,30 +101,38 @@ openssl x509 -in ssl/cert.pem -text -noout | grep DNS
 
 To build the Docker image, you need to specify the following build arguments:
 
-- `SERVER_URL`: the URL of the NGINX server;
+- `SERVER_URL`: the URL of the NGINX server acting as reverse proxy;
 - `CONTROLLER_URL`: the URL of the controller (serving the WebUI);
 - `CONTROLLER_PORT`: the port of the controller.
+- `CONTROLLER_PREFIX`: the URL prefix redirecting to the controller service.
 - `PLANTDB_URL`: the URL of the PlantDB REST API (serving the dataset);
 - `PLANTDB_PORT`: the port of the PlantDB REST API.
+- `PLANTDB_PREFIX`: the URL prefix redirecting to the PlantDB REST API service.
 - `P3DV_URL`: the URL of the WebTerm (plant-3d-vision reconstruction and analysis tools);
 - `P3DV_PORT`: the port of the WebTerm.
+- `P3DV_PREFIX`: the URL prefix redirecting to the WebTerm service.
 - `P3DX_URL`: the URL of the plant 3D explorer (dedicated viewer);
 - `P3DX_PORT`: the port of the plant 3D explorer.
+- `P3DX_PREFIX`: the URL prefix redirecting to the plant 3D explorer service.
 
 Use the following command:
 
 ```shell
 cd docker/nginx
 sudo docker build \
-  --build-arg SERVER_URL='server_url.com' \
-  --build-arg CONTROLLER_URL='controller_url.com' \
+  --build-arg SERVER_URL='localhost' \
+  --build-arg CONTROLLER_URL='localhost' \
   --build-arg CONTROLLER_PORT='8080' \
-  --build-arg PLANTDB_URL='plantdb_url.com' \
+  --build-arg CONTROLLER_PREFIX='/webui' \
+  --build-arg PLANTDB_URL='localhost' \
   --build-arg PLANTDB_PORT='5000' \
-  --build-arg P3DV_URL='p3dv_url.com' \
+  --build-arg PLANTDB_PREFIX='/plantdb' \
+  --build-arg P3DV_URL='localhost' \
   --build-arg P3DV_PORT='8081' \
-  --build-arg P3DX_URL='p3dx_url.com' \
+  --build-arg P3DV_PREFIX='/p3dv' \
+  --build-arg P3DX_URL='localhost' \
   --build-arg P3DX_PORT='80' \
+  --build-arg P3DX_PREFIX='/p3dx' \
   -t roboticsmicrofarms/plantimager_nginx:latest .
 ```
 
