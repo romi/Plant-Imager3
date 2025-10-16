@@ -50,7 +50,7 @@ class Pose(object):
 
     """
 
-    def __init__(self, x=None, y=None, z=None, pan=None, tilt=None):
+    def __init__(self, x=0., y=0., z=0., pan=0., tilt=0.):
         """Pose constructor.
 
         Parameters
@@ -499,3 +499,69 @@ class CalibrationPath(Path):
         y_max = path[np.argmax([pelt.y - el0.y for pelt in path])].y
         self.extend(Line(el0.x, el0.y, el0.z, x_max // 2, el0.y, el0.z, el0.pan, el0.tilt, n_points_line))
         self.extend(Line(el0.x, el0.y, el0.z, el0.x, y_max, el0.z, el0.pan, el0.tilt, n_points_line))
+
+
+class CalibrationPath2(Path):
+    """Creates a calibration path for the scanner.
+
+    This path is meant to take images of a calibration pattern putting this pattern in various positions in the images.
+
+    """
+
+    def __init__(self, center_x: length_mm, center_y: length_mm, radius: length_mm, z: length_mm, tilt: length_mm, n_points_line: int):
+        """
+        # TODO: remake later, target too much on the side or not visible
+        """
+        super().__init__()
+        self.center_x = center_x
+        self.center_y = center_y
+        self.radius = radius
+        x0, xn = center_x - radius, center_x + radius
+        y0, yn = center_y - radius, center_y + radius
+        self.extend(Line(x0, y0, z, x0, yn, z, 0., tilt, n_points_line))
+        self.extend(Line(x0, yn, z, center_x, yn, z, 0., tilt, n_points_line//2))
+        self.extend(Line(center_x, yn, z, x0, center_y, z, -45, tilt, n_points_line//2))
+        for pan in np.arange(-30, 30, n_points_line//2):
+            self.append(Pose(x0, center_y, z, pan, tilt))
+
+
+class CustomPath(Path):
+    """Creates a custom path for the scanner."""
+
+    def __init__(self, waypoints: list[list[float]], scheme=("x", "y", "z", "pan", "tilt")):
+        """
+        Initialize a PoseList object with given waypoints and a scheme.
+
+        This constructor creates a list of `Pose` objects by mapping the provided
+        waypoints to the specified scheme. It ensures that each waypoint matches the
+        length of the scheme and appends the resulting `Pose` objects to the PoseList.
+
+        Parameters
+        ----------
+        waypoints : list of list of float
+            A list containing waypoints, where each waypoint is a list of floats
+            representing positional and orientational values.
+        scheme : tuple of str, optional
+            A tuple of strings specifying the names of the coordinates or attributes
+            in the waypoints. The length of the scheme must match the length of each
+            waypoint. By default, it is `("x", "y", "z", "pan", "tilt")`.
+
+        Raises
+        ------
+        AssertionError
+            If any of the waypoints do not match the length of the provided scheme.
+
+        Notes
+        -----
+        Each `waypoint` is converted into a dictionary by zipping the `shceme` with
+        the waypoint values, and then passed as keyword arguments to the `Pose` class
+        constructor. It is essential that the `shceme` matches the keys expected by
+        the `Pose` class.
+        """
+        super().__init__()
+        for waypoint in waypoints:
+            assert len(waypoint) == len(scheme)
+            kwargs = dict(zip(scheme, waypoint))
+            self.append(Pose(**kwargs))
+
+
