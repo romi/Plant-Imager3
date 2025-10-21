@@ -161,6 +161,7 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
         dcc.Store(id='connected', data=None),  # boolean flag indicating if connected to the database or not
         dcc.Store(id='logged-username', data=None, storage_type='session'),  # id of the logger user
         dcc.Store(id='logged-fullname', data=None, storage_type='session'),  # real name of the logged user
+        dcc.Store(id='session-token', data=None, storage_type='session'),  # real name of the logged user
         dcc.Store(id='dataset-list', data=[]),  # list of datasets known to the database
         dcc.Store(id='dataset-id', data=None),  # name of the dataset to create (scan operation)
         dcc.Store(id='dataset-dict', data={}, storage_type='session'),  # dictionary of dataset information, used for AG grid table

@@ -310,6 +310,7 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
 
 @callback(Output('logged-username', 'data', allow_duplicate=True),
           Output('logged-fullname', 'data', allow_duplicate=True),
+          Output('session-token', 'data', allow_duplicate=True),
           Output('login-attempt-message', 'style'),
           Output('login-attempt-message', 'children'),
           Input('username-input', 'n_submit'),
@@ -330,7 +331,7 @@ def login(
         host: str,
         port: int | str,
         prefix: str,
-) -> tuple[str | None, str | None, dict, dbc.Alert]:
+) -> tuple[str | None, str | None, str | None, dict, dbc.Alert]:
     """Handle user authentication through the REST API.
 
     This callback function processes login attempts by sending credentials to a REST API endpoint
@@ -362,6 +363,8 @@ def login(
         The authenticated username if login successful, ``None`` otherwise.
     str or None
         The user's full name if login successful, ``None`` otherwise.
+    str or None
+        The session token if login successful, ``None`` otherwise.
     dict
         CSS style dictionary for the message display.
     dash_bootstrap_components.Alert
@@ -390,14 +393,15 @@ def login(
 
         if response.ok:
             # Parse successful response
-            loggin_attempt = response.json()
-            is_logged_in = loggin_attempt['authenticated']
-            fullname = loggin_attempt['fullname']
-            login_msg = loggin_attempt['message']
+            loggin_data = response.json()
+            is_logged_in = loggin_data['authenticated']
+            fullname = loggin_data['fullname']
+            session_token = loggin_data['access_token']
+            login_msg = loggin_data['message']
             if is_logged_in:
                 # Setup success message display
                 alert = dbc.Alert(login_msg, color="success", class_name="mb-0")
-                return username, fullname, message_style, alert
+                return username, fullname, session_token, message_style, alert
 
         # Handle failed login attempts
         error_msg = "Login failed. Please check your credentials."
@@ -412,12 +416,12 @@ def login(
                 error_msg = response.text
 
         alert = dbc.Alert(error_msg, color="danger", class_name="mb-0")
-        return None, None, message_style, alert
+        return None, None, None, message_style, alert
 
     except requests.exceptions.RequestException as e:
         # Handle connection errors (network issues, server down, etc.)
         alert = dbc.Alert(f"Connection error: {str(e)}", color="danger", class_name="mb-0")
-        return None, None, message_style, alert
+        return None, None, None, message_style, alert
 
 
 @callback(
@@ -561,11 +565,18 @@ def timeout_modal(username: str | None) -> bool:
 @callback(
     Output('logged-username', 'data', allow_duplicate=True),
     Output('logged-fullname', 'data', allow_duplicate=True),
+    Output('session_token', "data", allow_duplicate=True),
+    Output('login-attempt-message', 'style', allow_duplicate=True),
     Output("login-attempt-message", "children", allow_duplicate=True),
     Input('logout-button', 'n_clicks'),
-    prevent_initial_call=True
+    State('rest-api-host', 'data'),
+    State('rest-api-port', 'data'),
+    State('rest-api-prefix', 'data'),
+    State('session_token', 'data'),
+    prevent_initial_call=True,
 )
-def logout(_: int) -> tuple[None, None, str]:
+def logout(_: int, host: str, port: int | str, prefix: str, session_token: str) -> tuple[
+    str | None, str | None, str | None, dict, dbc.Alert]:
     """Handle user logout functionality.
 
     This callback clears the user session data when the logout button is clicked.
@@ -574,6 +585,14 @@ def logout(_: int) -> tuple[None, None, str]:
     ----------
     _ : int
         Placeholder for the click event of the 'logout-button' (unused).
+    host : str
+       The hostname or IP address of the PlantDB REST API server.
+    port : int
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
+    session_token
+        The PlantDB REST API session token.
 
     Returns
     -------
@@ -581,10 +600,42 @@ def logout(_: int) -> tuple[None, None, str]:
         Clears the logged username.
     None
         Clears the logged full name.
-    str
-        Empty string for a login attempt message.
+    None
+        Clears the session token.
+    dict
+        CSS style dictionary for the message display.
+    dash_bootstrap_components.Alert
+        Bootstrap alert component containing success or error message.
     """
-    return None, None, ""
+    message_style = {'display': 'block', 'margin-top': '10px'}
+
+    headers = {}
+    if session_token:
+        headers['Authorization'] = f"Bearer {session_token}"
+    else:
+        alert = dbc.Alert(f"Missing session token, you need to login first!", color="danger", className="mb-0")
+        return None, None, None, message_style, alert
+
+    try:
+        # Send login request to REST API endpoint
+        response = requests.post(
+            urljoin(base_url(host, port, prefix), 'login'),
+            headers=headers
+        )
+
+    except requests.exceptions.RequestException as e:
+        # Handle connection errors (network issues, server down, etc.)
+        alert = dbc.Alert(f"Connection error: {str(e)}", color="danger", class_name="mb-0")
+        return None, None, None, message_style, alert
+
+    logout_msg = response.json().get('message')
+    if response.ok:
+        # Parse successful response
+        alert = dbc.Alert(logout_msg, color="success", class_name="mb-0")
+        return None, None, None, message_style, alert
+    else:
+        alert = dbc.Alert(logout_msg, color="warning", class_name="mb-0")
+        return None, None, None, message_style, alert
 
 
 @callback(
