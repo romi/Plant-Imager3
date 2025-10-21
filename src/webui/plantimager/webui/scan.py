@@ -28,6 +28,7 @@ from dash import callback
 from dash import dcc
 from dash import html
 from dash.exceptions import PreventUpdate
+from plantdb.client.rest_api import base_url
 
 from plantimager.webui.utils import config_upload
 from plantimager.webui.controller_proxy import RPCController
@@ -397,6 +398,8 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     Input('start-scan-button', 'n_clicks'),
     State('rest-api-host', 'data'),
     State('rest-api-port', 'data'),
+    State('rest-api-prefix', 'data'),
+    State('rest-api-ssl', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
     prevent_initial_call=True,
@@ -408,7 +411,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
         (Output('scan-output', 'children'), 'Scan in progress', ""),
     ]
 )
-def run_scan(_, url: str, port: str, cfg: str, dataset_name: str):
+def run_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
 
     Parameters
@@ -419,6 +422,10 @@ def run_scan(_, url: str, port: str, cfg: str, dataset_name: str):
         The hostname or IP address of the PlantDB REST API server.
     port : str
         The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL.
     cfg : str
         The TOML configuration string for the scan.
     dataset_name : str
@@ -449,7 +456,7 @@ def run_scan(_, url: str, port: str, cfg: str, dataset_name: str):
     update_progress(controller.progress)
     update_max_progress(controller.max_progress)
 
-    controller.set_db_url(f"http://{url}:{port}")
+    controller.set_db_url(base_url(host=url, port=port, prefix=prefix, ssl=ssl))
     controller.set_dataset_name(dataset_name)
     print(tomllib.loads(cfg))
     controller.set_config(tomllib.loads(cfg))

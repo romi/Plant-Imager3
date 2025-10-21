@@ -27,7 +27,7 @@ from plantdb.client.rest_api import REST_API_PORT
 from plantdb.client.rest_api import REST_API_URL
 from plantdb.client.rest_api import base_url
 from plantdb.client.rest_api import list_scan_names
-from plantdb.client.rest_api import test_availability
+from plantdb.client.url import is_server_available
 from requests import RequestException
 
 
@@ -247,21 +247,22 @@ def toggle_plantdb_cfg_modal(
     # Identify which button was clicked using context
     triggered_id = ctx.triggered_id
 
-    # Configuration button was clicked - toggle modal
+    # The configuration button was clicked - toggle modal
     if triggered_id == 'plantdb-cfg-button':
         return not is_open
 
-    # Connect button was clicked - check connection before closing
+    # The connect button was clicked - check the connection before closing
     elif triggered_id == 'connect-plantdb-button':
         # Only attempt to close if the modal is open
         if is_open:
             try:
-                test_availability(base_url(host, port, prefix, ssl=ssl))
-                # Close the modal only if connection is successful
-                return False
+                is_available = is_server_available(base_url(host, port, prefix, ssl=ssl))
             except:
                 # Keep modal open if connection fails
                 return True
+            else:
+                # Close the modal only if the connection is successful
+                return not is_available
 
     # Return no_update if no relevant button was clicked
     return no_update
@@ -508,7 +509,7 @@ def check_server_availability(
     if ssl is None:
         ssl = stored_ssl
 
-    # Handle URLs that include protocol prefix
+    # Handle URLs that include a protocol prefix
     if host and isinstance(host, str):
         if host.startswith("http://"):
             host = host[7:]
@@ -518,7 +519,7 @@ def check_server_availability(
             ssl = True
 
     try:
-        test_availability(base_url(host, port, prefix, ssl=ssl))
+        is_server_available(base_url(host, port, prefix, ssl=ssl))
     except:
         is_available = False
     else:
