@@ -19,7 +19,7 @@ This setup allows you to access different components of your application through
 ## Generating Self-Signed SSL Certificates
 
 For secure HTTPS connections, you'll need SSL certificates.
-Follow these steps to generate self-signed certificates for development/testing.
+Follow these steps to generate **self-signed** certificates for development/testing.
 
 ### Install OpenSSL
 
@@ -36,7 +36,7 @@ First create an `ssl` folder in the `docker/nginx` directory of the cloned sourc
 It will receive the `openssl.cnf`, `key.pem` and `cert.pem` files created hereafter and used by the server (`key.pem` + `cert.pem`) and clients (`cert.pem`). 
 
 #### 1. Create a Configuration File
-Then, create an OpenSSL configuration file (e.g., `openssl.cnf`) that includes all the hostnames your certificate should be valid for:
+Then, create an OpenSSL configuration file (e.g., `openssl.cnf`) as follows:
 ``` 
 [req]
 distinguished_name = req_distinguished_name
@@ -49,12 +49,12 @@ default_md = sha256
 default_days = 365
 
 [req_distinguished_name]
-C = FR
-ST = Your-State
-L = Your-City
-O = Your-Organization
-OU = Your-Department
-CN = personal.server.fr
+C = <FR>
+ST = <Your-State>
+L = <Your-City>
+O = <Your-Organization>
+OU = <Your-Department>
+CN = <personal.server.fr>
 
 [v3_req]
 basicConstraints = CA:FALSE
@@ -63,12 +63,14 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = personal.server.fr
-DNS.2 = personal
-DNS.3 = server.fr
+DNS.1 = <personal.server.fr>
+DNS.2 = <personal>
+DNS.3 = <server.fr>
 # Add any additional hostnames or IP addresses here
 # IP.1 = 192.168.1.1
 ```
+
+You will to replace all parameters within angle brackets `<>` to suits your needs. 
 
 #### 2. Generate the Certificate and Private Key
 Run the following command to generate a self-signed certificate with the configuration:
@@ -88,6 +90,7 @@ This command:
 - Includes the extensions (like SAN)
 
 #### 3. Verify the Certificate
+
 Check that the certificate includes the correct Subject Alternative Names:
 ``` bash
 openssl x509 -in ssl/cert.pem -text -noout | grep DNS
@@ -97,9 +100,9 @@ openssl x509 -in ssl/cert.pem -text -noout | grep DNS
 > For production environments, consider using certificates from a trusted Certificate Authority.
 > This requires a registered domain name pointing to your server AND port 80 or 443 open to the internet for domain validation.
 
-## Build the docker image
+## Build the NGINX docker image
 
-To build the Docker image, you need to specify the following build arguments:
+To build the NGINX Docker image, you need to specify the following build arguments:
 
 - `SERVER_URL`: the URL of the NGINX server acting as reverse proxy;
 - `CONTROLLER_URL`: the URL of the controller (serving the WebUI);
