@@ -2937,31 +2937,31 @@ a user is currently logged in.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/login.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">590</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">591</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">592</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">593</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">594</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">595</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">596</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">597</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">598</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">599</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">600</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">601</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">602</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">603</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">604</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">605</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">606</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">607</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">608</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">609</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">610</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">611</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">612</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">613</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">614</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">641</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">642</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">643</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">644</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">645</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">646</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">647</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">648</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">649</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">650</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">651</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">652</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">653</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">654</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">655</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">656</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">657</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">658</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">659</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">660</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">661</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">662</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">663</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">664</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">665</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;logout-button&quot;</span>, <span style="color: #BA2121">&quot;disabled&quot;</span>),
     Input(<span style="color: #BA2121">&quot;logged-username&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
 
@@ -3185,6 +3185,16 @@ including various error conditions.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The session token if login successful, <code>None</code> otherwise.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                   <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></code>
             </td>
             <td>
@@ -3356,8 +3366,13 @@ including various error conditions.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">417</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">418</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">419</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">420</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">420</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">421</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">422</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">423</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">424</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
           Output(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+          Output(<span style="color: #BA2121">&#39;session-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
           Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;style&#39;</span>),
           Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
           Input(<span style="color: #BA2121">&#39;username-input&#39;</span>, <span style="color: #BA2121">&#39;n_submit&#39;</span>),
@@ -3378,7 +3393,7 @@ including various error conditions.</p>
         host: <span style="color: #008000">str</span>,
         port: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span>,
         prefix: <span style="color: #008000">str</span>,
-) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">dict</span>, dbc<span style="color: #666">.</span>Alert]:
+) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">dict</span>, dbc<span style="color: #666">.</span>Alert]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Handle user authentication through the REST API.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback function processes login attempts by sending credentials to a REST API endpoint</span>
@@ -3410,6 +3425,8 @@ including various error conditions.</p>
 <span style="color: #BA2121; font-style: italic">        The authenticated username if login successful, ``None`` otherwise.</span>
 <span style="color: #BA2121; font-style: italic">    str or None</span>
 <span style="color: #BA2121; font-style: italic">        The user&#39;s full name if login successful, ``None`` otherwise.</span>
+<span style="color: #BA2121; font-style: italic">    str or None</span>
+<span style="color: #BA2121; font-style: italic">        The session token if login successful, ``None`` otherwise.</span>
 <span style="color: #BA2121; font-style: italic">    dict</span>
 <span style="color: #BA2121; font-style: italic">        CSS style dictionary for the message display.</span>
 <span style="color: #BA2121; font-style: italic">    dash_bootstrap_components.Alert</span>
@@ -3438,14 +3455,15 @@ including various error conditions.</p>
 
         <span style="color: #008000; font-weight: bold">if</span> response<span style="color: #666">.</span>ok:
             <span style="color: #3D7B7B; font-style: italic"># Parse successful response</span>
-            loggin_attempt <span style="color: #666">=</span> response<span style="color: #666">.</span>json()
-            is_logged_in <span style="color: #666">=</span> loggin_attempt[<span style="color: #BA2121">&#39;authenticated&#39;</span>]
-            fullname <span style="color: #666">=</span> loggin_attempt[<span style="color: #BA2121">&#39;fullname&#39;</span>]
-            login_msg <span style="color: #666">=</span> loggin_attempt[<span style="color: #BA2121">&#39;message&#39;</span>]
+            loggin_data <span style="color: #666">=</span> response<span style="color: #666">.</span>json()
+            is_logged_in <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">&#39;authenticated&#39;</span>]
+            fullname <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">&#39;fullname&#39;</span>]
+            session_token <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">&#39;access_token&#39;</span>]
+            login_msg <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">&#39;message&#39;</span>]
             <span style="color: #008000; font-weight: bold">if</span> is_logged_in:
                 <span style="color: #3D7B7B; font-style: italic"># Setup success message display</span>
                 alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(login_msg, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
-                <span style="color: #008000; font-weight: bold">return</span> username, fullname, message_style, alert
+                <span style="color: #008000; font-weight: bold">return</span> username, fullname, session_token, message_style, alert
 
         <span style="color: #3D7B7B; font-style: italic"># Handle failed login attempts</span>
         error_msg <span style="color: #666">=</span> <span style="color: #BA2121">&quot;Login failed. Please check your credentials.&quot;</span>
@@ -3460,12 +3478,12 @@ including various error conditions.</p>
                 error_msg <span style="color: #666">=</span> response<span style="color: #666">.</span>text
 
         alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(error_msg, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
 
     <span style="color: #008000; font-weight: bold">except</span> requests<span style="color: #666">.</span>exceptions<span style="color: #666">.</span>RequestException <span style="color: #008000; font-weight: bold">as</span> e:
         <span style="color: #3D7B7B; font-style: italic"># Handle connection errors (network issues, server down, etc.)</span>
         alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Connection error: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">str</span>(e)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3616,7 +3634,7 @@ or a default login icon and text</p>
 
 
 <a href="#plantimager.webui.login.logout" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>logout(_)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>logout(_, host, port, prefix, session_token)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3646,6 +3664,70 @@ or a default login icon and text</p>
             <td>
               <div class="doc-md-description">
                 <p>Placeholder for the click event of the 'logout-button' (unused).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>host</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The hostname or IP address of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>port</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The port number of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>prefix</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The prefix of the PlantDB REST API server.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>session_token</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The PlantDB REST API session token.</p>
               </div>
             </td>
             <td>
@@ -3687,11 +3769,31 @@ or a default login icon and text</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+                  <code>None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Empty string for a login attempt message.</p>
+                <p>Clears the session token.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>CSS style dictionary for the message display.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dash_bootstrap_components.Alert">Alert</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Bootstrap alert component containing success or error message.</p>
               </div>
             </td>
           </tr>
@@ -3701,11 +3803,7 @@ or a default login icon and text</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/login.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">561</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">562</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">563</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">564</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">565</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">565</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">566</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">567</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">568</span>
@@ -3727,14 +3825,72 @@ or a default login icon and text</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">584</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">585</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">586</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">587</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">587</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">588</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">589</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">590</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">591</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">592</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">593</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">594</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">595</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">596</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">597</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">598</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">599</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">600</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">601</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">602</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">603</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">604</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">605</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">606</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">607</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">608</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">609</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">610</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">611</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">612</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">613</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">614</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">615</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">616</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">617</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">618</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">619</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">620</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">621</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">622</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">623</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">624</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">625</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">626</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">627</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">628</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">629</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">630</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">631</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">632</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">633</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">634</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">635</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">636</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">637</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">638</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">&#39;session_token&#39;</span>, <span style="color: #BA2121">&quot;data&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;style&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">&quot;login-attempt-message&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">&#39;logout-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
-    prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>
+    State(<span style="color: #BA2121">&#39;rest-api-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    State(<span style="color: #BA2121">&#39;rest-api-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    State(<span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    State(<span style="color: #BA2121">&#39;session_token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
 )
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">logout</span>(_: <span style="color: #008000">int</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span>]:
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">logout</span>(_: <span style="color: #008000">int</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>, session_token: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[
+    <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">dict</span>, dbc<span style="color: #666">.</span>Alert]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Handle user logout functionality.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback clears the user session data when the logout button is clicked.</span>
@@ -3743,6 +3899,14 @@ or a default login icon and text</p>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    _ : int</span>
 <span style="color: #BA2121; font-style: italic">        Placeholder for the click event of the &#39;logout-button&#39; (unused).</span>
+<span style="color: #BA2121; font-style: italic">    host : str</span>
+<span style="color: #BA2121; font-style: italic">       The hostname or IP address of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    port : int</span>
+<span style="color: #BA2121; font-style: italic">        The port number of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    prefix : str</span>
+<span style="color: #BA2121; font-style: italic">        The prefix of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    session_token</span>
+<span style="color: #BA2121; font-style: italic">        The PlantDB REST API session token.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
@@ -3750,10 +3914,42 @@ or a default login icon and text</p>
 <span style="color: #BA2121; font-style: italic">        Clears the logged username.</span>
 <span style="color: #BA2121; font-style: italic">    None</span>
 <span style="color: #BA2121; font-style: italic">        Clears the logged full name.</span>
-<span style="color: #BA2121; font-style: italic">    str</span>
-<span style="color: #BA2121; font-style: italic">        Empty string for a login attempt message.</span>
+<span style="color: #BA2121; font-style: italic">    None</span>
+<span style="color: #BA2121; font-style: italic">        Clears the session token.</span>
+<span style="color: #BA2121; font-style: italic">    dict</span>
+<span style="color: #BA2121; font-style: italic">        CSS style dictionary for the message display.</span>
+<span style="color: #BA2121; font-style: italic">    dash_bootstrap_components.Alert</span>
+<span style="color: #BA2121; font-style: italic">        Bootstrap alert component containing success or error message.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #BA2121">&quot;&quot;</span>
+    message_style <span style="color: #666">=</span> {<span style="color: #BA2121">&#39;display&#39;</span>: <span style="color: #BA2121">&#39;block&#39;</span>, <span style="color: #BA2121">&#39;margin-top&#39;</span>: <span style="color: #BA2121">&#39;10px&#39;</span>}
+
+    headers <span style="color: #666">=</span> {}
+    <span style="color: #008000; font-weight: bold">if</span> session_token:
+        headers[<span style="color: #BA2121">&#39;Authorization&#39;</span>] <span style="color: #666">=</span> <span style="color: #BA2121">f&quot;Bearer </span><span style="color: #A45A77; font-weight: bold">{</span>session_token<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
+    <span style="color: #008000; font-weight: bold">else</span>:
+        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Missing session token, you need to login first!&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, className<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
+
+    <span style="color: #008000; font-weight: bold">try</span>:
+        <span style="color: #3D7B7B; font-style: italic"># Send login request to REST API endpoint</span>
+        response <span style="color: #666">=</span> requests<span style="color: #666">.</span>post(
+            urljoin(base_url(host, port, prefix), <span style="color: #BA2121">&#39;login&#39;</span>),
+            headers<span style="color: #666">=</span>headers
+        )
+
+    <span style="color: #008000; font-weight: bold">except</span> requests<span style="color: #666">.</span>exceptions<span style="color: #666">.</span>RequestException <span style="color: #008000; font-weight: bold">as</span> e:
+        <span style="color: #3D7B7B; font-style: italic"># Handle connection errors (network issues, server down, etc.)</span>
+        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Connection error: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">str</span>(e)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
+
+    logout_msg <span style="color: #666">=</span> response<span style="color: #666">.</span>json()<span style="color: #666">.</span>get(<span style="color: #BA2121">&#39;message&#39;</span>)
+    <span style="color: #008000; font-weight: bold">if</span> response<span style="color: #666">.</span>ok:
+        <span style="color: #3D7B7B; font-style: italic"># Parse successful response</span>
+        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(logout_msg, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
+    <span style="color: #008000; font-weight: bold">else</span>:
+        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(logout_msg, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;warning&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3839,11 +4035,7 @@ when a user successfully logs in.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/login.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">529</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">530</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">531</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">532</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">533</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">533</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">534</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">535</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">536</span>
@@ -3868,7 +4060,11 @@ when a user successfully logs in.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">555</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">556</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">557</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">558</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">558</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">559</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">560</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">561</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">562</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;login-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">&quot;logged-username&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
@@ -4140,11 +4336,7 @@ The content varies based on login status.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/login.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">423</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">424</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">425</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">426</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">428</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">429</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">430</span>
@@ -4171,7 +4363,11 @@ The content varies based on login status.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">451</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">452</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">453</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">454</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">454</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">455</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">456</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">457</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">458</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;login-avatar-button&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
     Input(<span style="color: #BA2121">&quot;logged-fullname&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)
 )
@@ -4311,11 +4507,7 @@ as well as any login attempt messages, based on whether a user is logged in.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/login.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">490</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">491</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">492</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">494</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">494</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">495</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">497</span>
@@ -4347,7 +4539,11 @@ as well as any login attempt messages, based on whether a user is logged in.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">523</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">524</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">525</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">526</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">526</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">527</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">528</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">529</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">530</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;username-input-group&quot;</span>, <span style="color: #BA2121">&quot;style&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">&quot;password-input-group&quot;</span>, <span style="color: #BA2121">&quot;style&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">&quot;login-attempt-message&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
@@ -4486,11 +4682,7 @@ if no user information is provided.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/login.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">457</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">458</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">459</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">462</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">464</span>
@@ -4516,7 +4708,11 @@ if no user information is provided.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">484</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">485</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">486</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">488</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">489</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">490</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">491</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;login-modal-title&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
     Input(<span style="color: #BA2121">&quot;logged-fullname&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
     Input(<span style="color: #BA2121">&quot;logged-username&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
