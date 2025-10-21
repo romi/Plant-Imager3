@@ -133,7 +133,7 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
 
     app = Dash(
         name="plantimager.webui",
-        title="Plant Imager",
+        title="Plant Imager WebUI",
         external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
         url_base_pathname=url_prefix,
         use_pages=True,

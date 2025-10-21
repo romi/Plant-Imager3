@@ -54,10 +54,10 @@ controller_thread.start()
 # Get configuration from environment variables
 app_config = {
     'api_url': os.environ.get('PLANTDB_URL', 'localhost'),
-    'api_port': int(os.environ.get('PLANTDB_PORT', 8080)),
+    'api_port': int(os.environ.get('PLANTDB_PORT', 5000)),
     'api_prefix': os.environ.get('PLANTDB_PREFIX', '').lower(),
     'proxy': os.environ.get('WEBUI_PROXY', 'false').lower() == 'true',
-    'url_prefix': os.environ.get('WEBUI_PROXY', '/webui'),
+    'url_prefix': os.environ.get('WEBUI_PREFIX', '/webui'),
 }
 
 # Get the Dash application
@@ -68,6 +68,11 @@ application = dash_app.server
 if __name__ == "__main__":
     from werkzeug.serving import run_simple
 
-    # SSL context for development testing
-    ssl_context = ('docker/nginx/ssl/cert.pem', 'docker/nginx/ssl/key.pem')
-    run_simple('localhost', 8080, application, ssl_context=ssl_context)
+    run_config = {
+        'hostname': os.environ.get('WEBUI_HOST', '0.0.0.0'),
+        'port': int(os.environ.get('WEBUI_PORT', 8080)),
+        'application': application,
+        'ssl_context': int(os.environ.get('WEBUI_SSL', ('/etc/nginx/ssl/cert.pem', '/etc/nginx/ssl/key.pem'))),
+        'debug': bool(os.environ.get('WEBUI_DEBUG', False)),
+    }
+    run_simple(**run_config)
