@@ -53,9 +53,10 @@ controller_thread.start()
 
 # Get configuration from environment variables
 app_config = {
-    'api_url': os.environ.get('PLANTDB_URL', 'localhost'),
-    'api_port': int(os.environ.get('PLANTDB_PORT', 5000)),
-    'api_prefix': os.environ.get('PLANTDB_PREFIX', '').lower(),
+    'plantdb_host': os.environ.get('PLANTDB_URL', 'localhost'),
+    'plantdb_port': int(os.environ.get('PLANTDB_PORT', 5000)),
+    'plantdb_prefix': os.environ.get('PLANTDB_PREFIX', '').lower(),
+    'plantdb_ssl': os.environ.get('PLANTDB_SSL', 'false').lower() == 'true',
     'proxy': os.environ.get('WEBUI_PROXY', 'false').lower() == 'true',
     'url_prefix': os.environ.get('WEBUI_PREFIX', '/webui'),
 }
@@ -72,7 +73,7 @@ if __name__ == "__main__":
         'hostname': os.environ.get('WEBUI_HOST', '0.0.0.0'),
         'port': int(os.environ.get('WEBUI_PORT', 8080)),
         'application': application,
-        'ssl_context': int(os.environ.get('WEBUI_SSL', ('/etc/nginx/ssl/cert.pem', '/etc/nginx/ssl/key.pem'))),
-        'debug': bool(os.environ.get('WEBUI_DEBUG', False)),
+        # 'ssl_context': int(os.environ.get('WEBUI_SSL', ('/etc/nginx/ssl/cert.pem', '/etc/nginx/ssl/key.pem'))),
+        'use_debugger': bool(os.environ.get('WEBUI_DEBUG', False)),
     }
     run_simple(**run_config)
