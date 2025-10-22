@@ -24,10 +24,10 @@ ARG P3DV_PREFIX="/p3dv"
 RUN mkdir -p /etc/nginx/ssl /tmp
 
 # Copy the default configuration file to NGINX directory
-COPY default.conf /etc/nginx/conf.d/.
+COPY default.conf .
 
 # Substitute environment variables in the configuration file and save it
-RUN envsubst "\$SERVER_URL \$CONTROLLER_URL \$CONTROLLER_PORT \$CONTROLLER_PREFIX \$PLANTDB_URL \$PLANTDB_PORT \$PLANTDB_PREFIX \$P3DX_URL \$P3DX_PORT \$P3DX_PREFIX \$P3DV_URL \$P3DV_PORT \$P3DV_PREFIX" < /etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf
+RUN envsubst "\$SERVER_URL \$CONTROLLER_URL \$CONTROLLER_PORT \$CONTROLLER_PREFIX \$PLANTDB_URL \$PLANTDB_PORT \$PLANTDB_PREFIX \$P3DX_URL \$P3DX_PORT \$P3DX_PREFIX \$P3DV_URL \$P3DV_PORT \$P3DV_PREFIX" < default.conf > /etc/nginx/conf.d/default.conf
 
 # Copy custom NGINX configuration to the appropriate location
 COPY nginx.conf /etc/nginx/nginx.conf
