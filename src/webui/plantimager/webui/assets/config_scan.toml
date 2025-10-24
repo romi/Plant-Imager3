@@ -10,7 +10,7 @@ radius = 350
 n_points = 36
 
 #[ScanPath]
-#name = "CustomPath"
+#class_name = "CustomPath"
 #
 #[ScanPath.kwargs]
 #scheme = ["x", "y", "pan"] # a combination of ["x", "y", "z", "pan", "tilt"]
