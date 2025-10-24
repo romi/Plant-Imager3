@@ -57,6 +57,10 @@
          <lastmod>2025-10-24</lastmod>
     </url>
     <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/commons/utils/</loc>
+         <lastmod>2025-10-24</lastmod>
+    </url>
+    <url>
          <loc>https://github.com/romi/Plant-Imager3/reference/commons/examples/</loc>
          <lastmod>2025-10-24</lastmod>
     </url>
@@ -130,10 +134,6 @@
     </url>
     <url>
          <loc>https://github.com/romi/Plant-Imager3/reference/controller/scanner/</loc>
-         <lastmod>2025-10-24</lastmod>
-    </url>
-    <url>
-         <loc>https://github.com/romi/Plant-Imager3/reference/controller/scanner/calibrate/</loc>
          <lastmod>2025-10-24</lastmod>
     </url>
     <url>
