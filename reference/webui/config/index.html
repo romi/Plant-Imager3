@@ -1325,6 +1325,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../controller/scanner/calibrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    calibrate
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../controller/scanner/dummy_cnc/" class="md-nav__link">
         
   
@@ -1753,15 +1776,6 @@
   <a href="#plantimager.webui.config.show_api_prefix" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;show_api_prefix
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plantimager.webui.config.show_api_ssl" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;show_api_ssl
     </span>
   </a>
   
@@ -2252,29 +2266,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../developer/nginx_openssl.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    None
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -2365,15 +2356,6 @@
   <a href="#plantimager.webui.config.show_api_prefix" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;show_api_prefix
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plantimager.webui.config.show_api_ssl" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;show_api_ssl
     </span>
   </a>
   
@@ -2504,7 +2486,7 @@ and managing datasets within the Plant Imager web interface.</p>
 
 
 <a href="#plantimager.webui.config.check_server_availability" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>check_server_availability(_, host, port, prefix, ssl, stored_host, stored_port, stored_prefix, stored_ssl)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>check_server_availability(_, host, port, prefix, stored_host, stored_port, stored_prefix)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2573,38 +2555,6 @@ and managing datasets within the Plant Imager web interface.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>prefix</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The URL prefix of the server to test.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>ssl</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Flag indicating whether SSL (HTTPS) is enabled.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
                 <code>stored_host</code>
             </td>
             <td>
@@ -2629,38 +2579,6 @@ and managing datasets within the Plant Imager web interface.</p>
             <td>
               <div class="doc-md-description">
                 <p>The previously stored server port value, used if the connection test fails.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>stored_prefix</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The previously stored server prefix value, used if the connection test fails.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>stored_ssl</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The previously stored server SSL flag, used if the connection test fails.</p>
               </div>
             </td>
             <td>
@@ -2720,154 +2638,105 @@ and managing datasets within the Plant Imager web interface.</p>
               </div>
             </td>
           </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The updated server prefix value to store.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The updated server SSL flag value to store.</p>
-              </div>
-            </td>
-          </tr>
       </tbody>
     </table>
 
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">437</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">438</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">439</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">440</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">441</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">442</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">443</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">444</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">445</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">446</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">447</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">448</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">449</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">450</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">451</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">452</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">453</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">454</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">455</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">456</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">457</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">458</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">459</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">462</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">464</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">465</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">466</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">467</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">468</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">469</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">470</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">471</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">472</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">473</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">474</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">475</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">476</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">477</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">478</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">479</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">480</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">481</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">482</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">483</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">484</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">485</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">486</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">488</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">489</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">490</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">491</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">492</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">494</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">495</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">497</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">498</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">499</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">500</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">501</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">502</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">503</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">504</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">505</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">506</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">507</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">508</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">509</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">510</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">511</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">512</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">513</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">514</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">515</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">516</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">517</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">518</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">519</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">520</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">521</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">522</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">523</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">524</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">525</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">526</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">527</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">528</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">529</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">530</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">531</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">352</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">353</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">354</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">355</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">356</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">357</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">358</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">359</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">360</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">361</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">362</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">363</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">364</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">365</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">366</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">367</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">368</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">369</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">370</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">371</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">372</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">373</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">374</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">375</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">376</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">377</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">378</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">379</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">380</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">381</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">382</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">383</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">384</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">385</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">386</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">387</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">388</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">389</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">390</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">391</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">392</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">393</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">394</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">395</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">396</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">397</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">398</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">399</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">400</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">401</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">402</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">403</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">404</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">405</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">406</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">407</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">408</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">409</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">410</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">411</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">412</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">413</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">414</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">415</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">416</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">417</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">418</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">419</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">420</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">421</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">422</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;connected&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     Output(<span style="color: #BA2121">&#39;load-plantdb-button&#39;</span>, <span style="color: #BA2121">&#39;disabled&#39;</span>),
     Output(<span style="color: #BA2121">&#39;rest-api-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     Output(<span style="color: #BA2121">&#39;rest-api-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     Output(<span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    Output(<span style="color: #BA2121">&#39;rest-api-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     Input(<span style="color: #BA2121">&#39;connect-plantdb-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
     State(<span style="color: #BA2121">&#39;api-address&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
     State(<span style="color: #BA2121">&#39;api-port&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
     State(<span style="color: #BA2121">&#39;api-prefix&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-    State(<span style="color: #BA2121">&#39;api-ssl&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
     State(<span style="color: #BA2121">&#39;rest-api-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     State(<span style="color: #BA2121">&#39;rest-api-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     State(<span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;rest-api-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">check_server_availability</span>(
         _: <span style="color: #008000">int</span>,
         host: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
         port: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
         prefix: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
-        ssl: <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
         stored_host: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
         stored_port: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
         stored_prefix: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
-        stored_ssl: <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
-) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>, <span style="color: #008000">str</span>, <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span>, <span style="color: #008000">str</span>, <span style="color: #008000">bool</span>]:
+) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>, <span style="color: #008000">str</span>, <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span>]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Checks the availability of a server based on the provided host and port and updates the UI accordingly.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -2878,18 +2747,10 @@ and managing datasets within the Plant Imager web interface.</p>
 <span style="color: #BA2121; font-style: italic">        The IP address or hostname of the server to test.</span>
 <span style="color: #BA2121; font-style: italic">    port : int</span>
 <span style="color: #BA2121; font-style: italic">        The port number of the server to test.</span>
-<span style="color: #BA2121; font-style: italic">    prefix : str</span>
-<span style="color: #BA2121; font-style: italic">        The URL prefix of the server to test.</span>
-<span style="color: #BA2121; font-style: italic">    ssl : bool</span>
-<span style="color: #BA2121; font-style: italic">        Flag indicating whether SSL (HTTPS) is enabled.</span>
 <span style="color: #BA2121; font-style: italic">    stored_host : str</span>
 <span style="color: #BA2121; font-style: italic">        The previously stored server host value, used if the connection test fails.</span>
 <span style="color: #BA2121; font-style: italic">    stored_port : int</span>
 <span style="color: #BA2121; font-style: italic">        The previously stored server port value, used if the connection test fails.</span>
-<span style="color: #BA2121; font-style: italic">    stored_prefix : str</span>
-<span style="color: #BA2121; font-style: italic">        The previously stored server prefix value, used if the connection test fails.</span>
-<span style="color: #BA2121; font-style: italic">    stored_ssl : bool</span>
-<span style="color: #BA2121; font-style: italic">        The previously stored server SSL flag, used if the connection test fails.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
@@ -2901,10 +2762,6 @@ and managing datasets within the Plant Imager web interface.</p>
 <span style="color: #BA2121; font-style: italic">        The updated server host value to store.</span>
 <span style="color: #BA2121; font-style: italic">    int</span>
 <span style="color: #BA2121; font-style: italic">        The updated server port value to store.</span>
-<span style="color: #BA2121; font-style: italic">    str</span>
-<span style="color: #BA2121; font-style: italic">        The updated server prefix value to store.</span>
-<span style="color: #BA2121; font-style: italic">    bool</span>
-<span style="color: #BA2121; font-style: italic">        The updated server SSL flag value to store.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">if</span> host <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
         host <span style="color: #666">=</span> stored_host
@@ -2912,29 +2769,22 @@ and managing datasets within the Plant Imager web interface.</p>
         port <span style="color: #666">=</span> stored_port
     <span style="color: #008000; font-weight: bold">if</span> prefix <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
         prefix <span style="color: #666">=</span> stored_prefix
-    <span style="color: #008000; font-weight: bold">if</span> ssl <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
-        ssl <span style="color: #666">=</span> stored_ssl
-
-    <span style="color: #3D7B7B; font-style: italic"># Handle URLs that include a protocol prefix</span>
-    <span style="color: #008000; font-weight: bold">if</span> host <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">isinstance</span>(host, <span style="color: #008000">str</span>):
-        <span style="color: #008000; font-weight: bold">if</span> host<span style="color: #666">.</span>startswith(<span style="color: #BA2121">&quot;http://&quot;</span>):
-            host <span style="color: #666">=</span> host[<span style="color: #666">7</span>:]
-            ssl <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
-        <span style="color: #008000; font-weight: bold">elif</span> host<span style="color: #666">.</span>startswith(<span style="color: #BA2121">&quot;https://&quot;</span>):
-            host <span style="color: #666">=</span> host[<span style="color: #666">8</span>:]
-            ssl <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
+    <span style="color: #008000; font-weight: bold">if</span> host<span style="color: #666">.</span>startswith(<span style="color: #BA2121">&quot;http://&quot;</span>):
+        host <span style="color: #666">=</span> host[<span style="color: #666">7</span>:]
+    <span style="color: #008000; font-weight: bold">elif</span> host<span style="color: #666">.</span>startswith(<span style="color: #BA2121">&quot;https://&quot;</span>):
+        host <span style="color: #666">=</span> host[<span style="color: #666">8</span>:]
 
     <span style="color: #008000; font-weight: bold">try</span>:
-        is_server_available(base_url(host, port, prefix, ssl<span style="color: #666">=</span>ssl))
+        test_availability(base_url(host, port, prefix))
     <span style="color: #008000; font-weight: bold">except</span>:
         is_available <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #008000; font-weight: bold">else</span>:
         is_available <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
 
     <span style="color: #008000; font-weight: bold">if</span> is_available:
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>, <span style="color: #008000; font-weight: bold">False</span>, host, port, prefix, ssl
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>, <span style="color: #008000; font-weight: bold">False</span>, host, port, prefix
     <span style="color: #008000; font-weight: bold">else</span>:
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #008000; font-weight: bold">True</span>, host, port, prefix, ssl
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #008000; font-weight: bold">True</span>, host, port, prefix
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3036,7 +2886,9 @@ The NavLink is styled and positioned according to the application's design.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 72</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 72</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 73</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 74</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 75</span>
@@ -3074,9 +2926,7 @@ The NavLink is styled and positioned according to the application's design.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">create_dataset_cfg_icon</span>(is_connected: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>, dataset_list: <span style="color: #008000">list</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> dbc<span style="color: #666">.</span>NavLink:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">create_dataset_cfg_icon</span>(is_connected: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>, dataset_list: <span style="color: #008000">list</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> dbc<span style="color: #666">.</span>NavLink:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a navigation link with the database status icon and dataset counter badge.</span>
 
 <span style="color: #BA2121; font-style: italic">    Creates a Bootstrap NavLink component that displays a database status icon and</span>
@@ -3197,7 +3047,9 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">48</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
@@ -3214,9 +3066,7 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">64</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">dataset_cfg_status</span>(is_connected: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> html<span style="color: #666">.</span>I:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">dataset_cfg_status</span>(is_connected: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> html<span style="color: #666">.</span>I:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Generate a database status icon based on the connection state.</span>
 
 <span style="color: #BA2121; font-style: italic">    Creates a Bootstrap icon element representing the database connection status.</span>
@@ -3330,30 +3180,30 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">271</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">272</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">273</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">274</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">275</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">276</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">277</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">278</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">279</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">280</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">281</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">282</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">283</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">284</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">285</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">286</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">287</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">288</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">289</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">290</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">291</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">292</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">294</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">218</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">220</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">221</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">222</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">223</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">224</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">226</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">227</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">228</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">229</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">230</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">231</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">232</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">233</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">234</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">235</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">236</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">237</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">238</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">239</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">240</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">241</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;api-address&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
     Input(<span style="color: #BA2121">&quot;plantdb-cfg-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
     State(<span style="color: #BA2121">&quot;rest-api-host&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)
@@ -3471,30 +3321,30 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">298</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">299</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">300</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">301</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">302</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">303</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">304</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">305</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">306</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">307</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">308</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">309</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">310</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">311</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">312</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">313</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">314</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">315</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">316</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">317</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">318</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">319</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">320</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">321</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">245</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">246</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">248</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">253</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">254</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">255</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">257</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">263</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">268</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;api-port&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
     Input(<span style="color: #BA2121">&quot;plantdb-cfg-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
     State(<span style="color: #BA2121">&quot;rest-api-port&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)
@@ -3612,30 +3462,30 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">325</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">326</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">327</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">328</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">329</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">330</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">331</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">332</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">333</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">334</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">335</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">336</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">337</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">338</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">339</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">340</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">341</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">342</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">343</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">344</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">345</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">346</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">347</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">348</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">272</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">273</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">274</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">275</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">276</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">277</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">278</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">279</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">280</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">281</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">282</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">283</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">284</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">285</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">286</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">287</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">288</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">289</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">290</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">291</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">292</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">294</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">295</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;api-prefix&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
     Input(<span style="color: #BA2121">&quot;plantdb-cfg-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
     State(<span style="color: #BA2121">&quot;rest-api-prefix&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)
@@ -3668,153 +3518,12 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="plantimager.webui.config.show_api_ssl" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">show_api_ssl</span>
-
-
-<a href="#plantimager.webui.config.show_api_ssl" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>show_api_ssl(modal_is_open, stored_ssl)
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Callback updating the value of the 'api-ssl' checkbox with stored data when opening the PlantDB configuration modal.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>modal_is_open</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Boolean indicating whether the configuration modal is open or closed.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>stored_ssl</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Stored SSL flag retrieved from the state. Can be <code>None</code> if not specified.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Value to be set for the "api-ssl" checkbox.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="quote">
-              <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">352</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">353</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">354</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">355</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">356</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">357</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">358</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">359</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">360</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">361</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">362</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">363</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">364</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">365</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">366</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">367</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">368</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">369</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">370</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">371</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">372</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">373</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">374</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">375</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&quot;api-ssl&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
-    Input(<span style="color: #BA2121">&quot;plantdb-cfg-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
-    State(<span style="color: #BA2121">&quot;rest-api-ssl&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)
-)
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">show_api_ssl</span>(modal_is_open: <span style="color: #008000">bool</span>, stored_ssl: <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Callback updating the value of the &#39;api-ssl&#39; checkbox with stored data when opening the PlantDB configuration modal.</span>
-
-<span style="color: #BA2121; font-style: italic">    Parameters</span>
-<span style="color: #BA2121; font-style: italic">    ----------</span>
-<span style="color: #BA2121; font-style: italic">    modal_is_open : bool</span>
-<span style="color: #BA2121; font-style: italic">        Boolean indicating whether the configuration modal is open or closed.</span>
-<span style="color: #BA2121; font-style: italic">    stored_ssl : bool or None</span>
-<span style="color: #BA2121; font-style: italic">        Stored SSL flag retrieved from the state. Can be ``None`` if not specified.</span>
-
-<span style="color: #BA2121; font-style: italic">    Returns</span>
-<span style="color: #BA2121; font-style: italic">    -------</span>
-<span style="color: #BA2121; font-style: italic">    bool</span>
-<span style="color: #BA2121; font-style: italic">        Value to be set for the &quot;api-ssl&quot; checkbox.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    <span style="color: #008000; font-weight: bold">if</span> modal_is_open:
-        <span style="color: #008000; font-weight: bold">return</span> stored_ssl <span style="color: #008000; font-weight: bold">if</span> stored_ssl <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #008000; font-weight: bold">else</span> <span style="color: #008000; font-weight: bold">False</span>
-    <span style="color: #008000; font-weight: bold">else</span>:
-        <span style="color: #008000; font-weight: bold">return</span> stored_ssl
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
 <h3 id="plantimager.webui.config.show_plantdb_status" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">show_plantdb_status</span>
 
 
 <a href="#plantimager.webui.config.show_plantdb_status" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>show_plantdb_status(status, host, port, prefix, ssl)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>show_plantdb_status(status, host, port, prefix)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3903,22 +3612,6 @@ with the server's host and port information when applicable.</p>
                 <em>required</em>
             </td>
           </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>ssl</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Flag indicating whether SSL (HTTPS) is enabled</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
       </tbody>
     </table>
 
@@ -3952,70 +3645,64 @@ the connection status:
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">378</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">379</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">380</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">381</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">382</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">383</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">384</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">385</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">386</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">387</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">388</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">389</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">390</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">391</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">392</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">393</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">394</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">395</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">396</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">397</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">398</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">399</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">400</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">401</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">402</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">403</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">404</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">405</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">406</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">407</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">408</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">409</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">410</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">411</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">412</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">413</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">414</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">415</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">416</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">417</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">418</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">419</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">420</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">421</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">422</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">423</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">424</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">425</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">426</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">428</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">429</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">430</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">431</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">432</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">433</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">298</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">299</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">300</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">301</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">302</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">303</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">304</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">305</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">306</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">307</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">308</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">309</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">310</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">311</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">312</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">313</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">314</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">315</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">316</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">317</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">318</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">319</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">320</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">321</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">322</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">323</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">324</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">325</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">326</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">327</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">328</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">329</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">330</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">331</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">332</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">333</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">334</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">335</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">336</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">337</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">338</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">339</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">340</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">341</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">342</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">343</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">344</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">345</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">346</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">347</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">348</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;plantdb-status-form&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
     Input(<span style="color: #BA2121">&quot;connected&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
     State(<span style="color: #BA2121">&quot;rest-api-host&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
     State(<span style="color: #BA2121">&quot;rest-api-port&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
     State(<span style="color: #BA2121">&quot;rest-api-prefix&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
-    State(<span style="color: #BA2121">&quot;rest-api-ssl&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
 )
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">show_plantdb_status</span>(status: <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span>, prefix: <span style="color: #008000">str</span>, ssl: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> dbc<span style="color: #666">.</span>Alert:
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">show_plantdb_status</span>(status: <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span>, prefix: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> dbc<span style="color: #666">.</span>Alert:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Display the connection status of the PlantDB server in a Bootstrap alert component.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback function generates a styled alert component that shows whether the</span>
@@ -4035,8 +3722,6 @@ the connection status:
 <span style="color: #BA2121; font-style: italic">        Port number of the PlantDB server</span>
 <span style="color: #BA2121; font-style: italic">    prefix : str</span>
 <span style="color: #BA2121; font-style: italic">        URL prefix of the PlantDB server</span>
-<span style="color: #BA2121; font-style: italic">    ssl : bool</span>
-<span style="color: #BA2121; font-style: italic">        Flag indicating whether SSL (HTTPS) is enabled</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
@@ -4054,13 +3739,11 @@ the connection status:
         ], color<span style="color: #666">=</span><span style="color: #BA2121">&quot;info&quot;</span>)
     <span style="color: #008000; font-weight: bold">elif</span> status:
         status_form <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(children<span style="color: #666">=</span>[
-            html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">&quot;bi bi-check-circle-fill me-2&quot;</span>),
-            <span style="color: #BA2121">f&quot;Server </span><span style="color: #A45A77; font-weight: bold">{</span>base_url(host,<span style="color: #BBB"> </span>port,<span style="color: #BBB"> </span>prefix,<span style="color: #BBB"> </span>ssl<span style="color: #666">=</span>ssl)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> available.&quot;</span>,
+            html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">&quot;bi bi-check-circle-fill me-2&quot;</span>), <span style="color: #BA2121">f&quot;Server </span><span style="color: #A45A77; font-weight: bold">{</span>base_url(host,<span style="color: #BBB"> </span>port,<span style="color: #BBB"> </span>prefix)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> available.&quot;</span>,
         ], color<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>)
     <span style="color: #008000; font-weight: bold">else</span>:
         status_form <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(children<span style="color: #666">=</span>[
-            html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">&quot;bi bi-x-octagon-fill me-2&quot;</span>),
-            <span style="color: #BA2121">f&quot;Server </span><span style="color: #A45A77; font-weight: bold">{</span>base_url(host,<span style="color: #BBB"> </span>port,<span style="color: #BBB"> </span>prefix,<span style="color: #BBB"> </span>ssl<span style="color: #666">=</span>ssl)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> unavailable!&quot;</span>,
+            html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">&quot;bi bi-x-octagon-fill me-2&quot;</span>), <span style="color: #BA2121">f&quot;Server </span><span style="color: #A45A77; font-weight: bold">{</span>base_url(host,<span style="color: #BBB"> </span>port,<span style="color: #BBB"> </span>prefix)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> unavailable!&quot;</span>,
         ], color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>)
     <span style="color: #008000; font-weight: bold">return</span> status_form
 </code></pre></div></td></tr></table></div>
@@ -4077,16 +3760,15 @@ the connection status:
 
 
 <a href="#plantimager.webui.config.toggle_plantdb_cfg_modal" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>toggle_plantdb_cfg_modal(cfg_clicks, connect_clicks, host, port, prefix, ssl, is_open)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>toggle_plantdb_cfg_modal(n_clicks, is_open)
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Toggle the visibility state of the PlantDB configuration modal.</p>
 <p>This callback function controls the opening and closing of the PlantDB configuration
-modal dialog. It is triggered by clicking on either:
-1. The configuration button (opens modal)
-2. The connect button (closes modal only if connection successful)</p>
+modal dialog. It is triggered by clicking on the configuration button and toggles
+the modal's visibility state.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4102,94 +3784,15 @@ modal dialog. It is triggered by clicking on either:
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>cfg_clicks</code>
+                <code>n_clicks</code>
             </td>
             <td>
                   <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Number of times the plantdb-cfg-button has been clicked.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>connect_clicks</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of times the connect-plantdb-button has been clicked.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>host</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The host value from the form.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>port</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a> or <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The port value from the form.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>prefix</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The prefix value from the form.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>ssl</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The SSL flag from the form.</p>
+                <p>Number of times the plantdb-cfg-button has been clicked. Used to determine
+when to toggle the modal state.</p>
               </div>
             </td>
             <td>
@@ -4231,7 +3834,8 @@ modal dialog. It is triggered by clicking on either:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The new visibility state of the modal.</p>
+                <p>The new visibility state of the modal. Returns the opposite of the current
+state when n_clicks &gt; 0, otherwise returns None.</p>
               </div>
             </td>
           </tr>
@@ -4241,7 +3845,18 @@ modal dialog. It is triggered by clicking on either:
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">189</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">190</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">191</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">192</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
@@ -4256,128 +3871,33 @@ modal dialog. It is triggered by clicking on either:
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">212</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">213</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">215</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">216</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">217</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">218</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">220</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">221</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">222</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">223</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">224</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">226</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">227</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">228</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">229</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">230</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">231</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">232</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">233</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">234</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">235</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">236</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">237</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">238</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">239</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">240</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">241</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">242</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">243</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">244</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">245</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">246</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">248</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">253</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">254</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">255</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">257</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">263</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">268</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&quot;plantdb-cfg-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">215</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&quot;plantdb-cfg-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
           Input(<span style="color: #BA2121">&#39;plantdb-cfg-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
-          Input(<span style="color: #BA2121">&#39;connect-plantdb-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
-          State(<span style="color: #BA2121">&#39;api-address&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-          State(<span style="color: #BA2121">&#39;api-port&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-          State(<span style="color: #BA2121">&#39;api-prefix&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-          State(<span style="color: #BA2121">&#39;api-ssl&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
           State(<span style="color: #BA2121">&#39;plantdb-cfg-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
           prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">toggle_plantdb_cfg_modal</span>(
-        cfg_clicks: <span style="color: #008000">int</span>,
-        connect_clicks: <span style="color: #008000">int</span>,
-        host: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
-        port: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
-        prefix: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
-        ssl: <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>,
-        is_open: <span style="color: #008000">bool</span>
-) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">toggle_plantdb_cfg_modal</span>(n_clicks: <span style="color: #008000">int</span>, is_open: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Toggle the visibility state of the PlantDB configuration modal.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback function controls the opening and closing of the PlantDB configuration</span>
-<span style="color: #BA2121; font-style: italic">    modal dialog. It is triggered by clicking on either:</span>
-<span style="color: #BA2121; font-style: italic">    1. The configuration button (opens modal)</span>
-<span style="color: #BA2121; font-style: italic">    2. The connect button (closes modal only if connection successful)</span>
+<span style="color: #BA2121; font-style: italic">    modal dialog. It is triggered by clicking on the configuration button and toggles</span>
+<span style="color: #BA2121; font-style: italic">    the modal&#39;s visibility state.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
-<span style="color: #BA2121; font-style: italic">    cfg_clicks : int</span>
-<span style="color: #BA2121; font-style: italic">        Number of times the plantdb-cfg-button has been clicked.</span>
-<span style="color: #BA2121; font-style: italic">    connect_clicks : int</span>
-<span style="color: #BA2121; font-style: italic">        Number of times the connect-plantdb-button has been clicked.</span>
-<span style="color: #BA2121; font-style: italic">    host : str or None</span>
-<span style="color: #BA2121; font-style: italic">        The host value from the form.</span>
-<span style="color: #BA2121; font-style: italic">    port : int or str or None</span>
-<span style="color: #BA2121; font-style: italic">        The port value from the form.</span>
-<span style="color: #BA2121; font-style: italic">    prefix : str or None</span>
-<span style="color: #BA2121; font-style: italic">        The prefix value from the form.</span>
-<span style="color: #BA2121; font-style: italic">    ssl : bool or None</span>
-<span style="color: #BA2121; font-style: italic">        The SSL flag from the form.</span>
+<span style="color: #BA2121; font-style: italic">    n_clicks : int</span>
+<span style="color: #BA2121; font-style: italic">        Number of times the plantdb-cfg-button has been clicked. Used to determine</span>
+<span style="color: #BA2121; font-style: italic">        when to toggle the modal state.</span>
 <span style="color: #BA2121; font-style: italic">    is_open : bool</span>
 <span style="color: #BA2121; font-style: italic">        Current visibility state of the modal.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    bool or None</span>
-<span style="color: #BA2121; font-style: italic">        The new visibility state of the modal.</span>
+<span style="color: #BA2121; font-style: italic">        The new visibility state of the modal. Returns the opposite of the current</span>
+<span style="color: #BA2121; font-style: italic">        state when n_clicks &gt; 0, otherwise returns None.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    <span style="color: #3D7B7B; font-style: italic"># Identify which button was clicked using context</span>
-    triggered_id <span style="color: #666">=</span> ctx<span style="color: #666">.</span>triggered_id
-
-    <span style="color: #3D7B7B; font-style: italic"># The configuration button was clicked - toggle modal</span>
-    <span style="color: #008000; font-weight: bold">if</span> triggered_id <span style="color: #666">==</span> <span style="color: #BA2121">&#39;plantdb-cfg-button&#39;</span>:
+    <span style="color: #008000; font-weight: bold">if</span> n_clicks <span style="color: #666">&gt;</span> <span style="color: #666">0</span>:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #A2F; font-weight: bold">not</span> is_open
-
-    <span style="color: #3D7B7B; font-style: italic"># The connect button was clicked - check the connection before closing</span>
-    <span style="color: #008000; font-weight: bold">elif</span> triggered_id <span style="color: #666">==</span> <span style="color: #BA2121">&#39;connect-plantdb-button&#39;</span>:
-        <span style="color: #3D7B7B; font-style: italic"># Only attempt to close if the modal is open</span>
-        <span style="color: #008000; font-weight: bold">if</span> is_open:
-            <span style="color: #008000; font-weight: bold">try</span>:
-                is_available <span style="color: #666">=</span> is_server_available(base_url(host, port, prefix, ssl<span style="color: #666">=</span>ssl))
-            <span style="color: #008000; font-weight: bold">except</span>:
-                <span style="color: #3D7B7B; font-style: italic"># Keep modal open if connection fails</span>
-                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>
-            <span style="color: #008000; font-weight: bold">else</span>:
-                <span style="color: #3D7B7B; font-style: italic"># Close the modal only if the connection is successful</span>
-                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #A2F; font-weight: bold">not</span> is_available
-
-    <span style="color: #3D7B7B; font-style: italic"># Return no_update if no relevant button was clicked</span>
-    <span style="color: #008000; font-weight: bold">return</span> no_update
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4459,28 +3979,28 @@ of the dataset list to a string for display.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">626</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">627</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">628</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">629</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">630</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">631</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">632</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">633</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">634</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">635</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">636</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">637</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">638</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">639</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">640</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">641</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">642</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">643</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">644</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">645</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">646</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">647</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">513</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">514</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">515</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">516</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">517</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">518</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">519</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">520</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">521</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">522</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">523</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">524</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">525</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">526</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">527</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">528</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">529</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">530</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">531</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">532</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">533</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">534</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;dataset-count-badge&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
     Input(<span style="color: #BA2121">&quot;dataset-list&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)  <span style="color: #3D7B7B; font-style: italic"># Assuming you have a dataset list stored in dcc.Store</span>
 )
@@ -4516,7 +4036,7 @@ of the dataset list to a string for display.</p>
 
 
 <a href="#plantimager.webui.config.update_dataset_list" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>update_dataset_list(n_clicks, connected, host, port, prefix, ssl)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>update_dataset_list(n_clicks, connected, host, port, prefix)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4615,22 +4135,6 @@ of the dataset list to a string for display.</p>
                 <em>required</em>
             </td>
           </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>ssl</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Flag indicating whether SSL (HTTPS) is enabled.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
       </tbody>
     </table>
 
@@ -4670,63 +4174,59 @@ of the dataset list to a string for display.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">567</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">568</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">569</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">570</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">571</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">572</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">573</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">574</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">575</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">576</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">577</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">578</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">579</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">580</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">581</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">582</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">583</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">584</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">585</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">586</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">587</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">588</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">589</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">590</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">591</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">592</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">593</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">594</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">595</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">596</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">597</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">598</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">599</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">600</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">601</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">602</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">603</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">604</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">605</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">606</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">607</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">608</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">609</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">610</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">611</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">612</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">613</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">614</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">615</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">616</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">617</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">618</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">619</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">620</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">621</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">622</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">623</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">458</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">459</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">462</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">464</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">465</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">466</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">467</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">468</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">469</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">470</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">471</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">472</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">473</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">474</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">475</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">476</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">477</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">478</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">479</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">480</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">481</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">482</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">483</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">484</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">485</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">486</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">488</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">489</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">490</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">491</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">492</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">494</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">495</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">497</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">498</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">499</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">500</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">501</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">502</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">503</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">504</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">505</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">506</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">507</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">508</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">509</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">510</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;load-status-form&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
     Output(<span style="color: #BA2121">&#39;dataset-list&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     Input(<span style="color: #BA2121">&#39;load-plantdb-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
@@ -4734,7 +4234,6 @@ of the dataset list to a string for display.</p>
     State(<span style="color: #BA2121">&#39;rest-api-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     State(<span style="color: #BA2121">&#39;rest-api-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     State(<span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;rest-api-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_dataset_list</span>(
@@ -4743,7 +4242,6 @@ of the dataset list to a string for display.</p>
         host: <span style="color: #008000">str</span>,
         port: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span>,
         prefix: <span style="color: #008000">str</span>,
-        ssl: <span style="color: #008000">bool</span>,
 ) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[dbc<span style="color: #666">.</span>Alert, <span style="color: #008000">list</span>[<span style="color: #008000">str</span>]]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Callback updating the dataset list and displaying the load status when a user clicks the load button.</span>
 
@@ -4759,8 +4257,6 @@ of the dataset list to a string for display.</p>
 <span style="color: #BA2121; font-style: italic">        The port number of the PlantDB REST API server.</span>
 <span style="color: #BA2121; font-style: italic">    prefix : str</span>
 <span style="color: #BA2121; font-style: italic">        The prefix of the PlantDB REST API server.</span>
-<span style="color: #BA2121; font-style: italic">    ssl : bool</span>
-<span style="color: #BA2121; font-style: italic">        Flag indicating whether SSL (HTTPS) is enabled.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
@@ -4773,7 +4269,7 @@ of the dataset list to a string for display.</p>
         <span style="color: #008000; font-weight: bold">return</span> _unconnected_status(), []
 
     <span style="color: #008000; font-weight: bold">try</span>:
-        dataset_list <span style="color: #666">=</span> list_scan_names(host<span style="color: #666">=</span>host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl)
+        dataset_list <span style="color: #666">=</span> list_scan_names(host<span style="color: #666">=</span>host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
     <span style="color: #008000; font-weight: bold">except</span> RequestException:
         dataset_list <span style="color: #666">=</span> []
 
@@ -4885,36 +4381,36 @@ with the appropriate styling based on the connection status.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">534</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">535</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">536</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">537</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">538</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">539</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">540</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">541</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">542</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">543</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">544</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">545</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">546</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">547</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">548</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">549</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">550</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">551</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">552</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">553</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">554</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">555</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">556</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">557</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">558</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">559</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">560</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">561</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">562</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">563</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">425</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">426</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">428</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">429</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">430</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">431</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">432</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">433</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">434</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">435</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">436</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">437</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">438</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">439</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">440</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">441</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">442</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">443</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">444</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">445</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">446</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">447</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">448</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">449</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">450</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">451</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">452</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">453</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">454</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;plantdb-cfg-button&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
     Input(<span style="color: #BA2121">&quot;connected&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
     State(<span style="color: #BA2121">&quot;dataset-list&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
