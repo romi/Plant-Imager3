@@ -778,11 +778,11 @@ class Scanner(QObject):
                                              camera_pose.tilt],  # Camera position
                         "shot_id": shot_id,  # Unique ID for this shot
                     }
-                    shot_id += 1
 
                     # Submit image capture job to thread pool
                     jobs.append(executor.submit(self.grab, shot_id, metadata, camera))
 
+                shot_id += 1
                 # Wait for all image captures to complete before moving to next position
                 wait(jobs, return_when=ALL_COMPLETED)
 
