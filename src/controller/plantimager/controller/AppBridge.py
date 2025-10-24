@@ -49,6 +49,13 @@ class AppBridge(QObject):
     _registryNewDevice = Signal(str, str, str)
     _registryRemoveDevice = Signal(str, str, str)
 
+    instance: "AppBridge" = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls.instance is None:
+            cls.instance = super().__new__(cls)
+        return cls.instance
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.context = zmq.Context()

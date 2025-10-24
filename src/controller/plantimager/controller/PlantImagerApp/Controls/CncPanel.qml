@@ -21,6 +21,52 @@ Control {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
             Button {
+                id: calibFastButton
+
+                Layout.preferredHeight: P.Style.mediumHeight
+                text: "Fast Calib"
+
+                onClicked: {
+                    scanner.fast_calibrate()
+                }
+                enabled: !scanner.scanner_working
+            }
+            Button {
+                id: calibrationButton
+
+                Layout.preferredHeight: P.Style.mediumHeight
+                text: "Calibration"
+
+                onClicked: {
+                    scanner.calibrate()
+                }
+                enabled: !scanner.scanner_working
+            }
+        }
+
+        TableView {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
+            Layout.fillHeight: true
+            columnSpacing: 1
+            rowSpacing: 1
+            clip: true
+
+            model: scanner.calibrationModel
+
+            delegate: Rectangle {
+                implicitWidth: 100
+                implicitHeight: 50
+                Text {
+                    text: display
+                }
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
+            Button {
                 id: moveToCenterButton
 
                 Layout.preferredHeight: P.Style.mediumHeight

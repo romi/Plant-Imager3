@@ -1,6 +1,7 @@
 import sys
 from os.path import dirname
 import signal
+from typing import Optional
 
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QGuiApplication, QFont
@@ -17,6 +18,10 @@ from plantimager.controller.AppBridge import AppBridge
 from plantimager.controller.PlantImagerApp import rc_style
 from plantimager.controller.PlantImagerApp.ttf import rc_ttf
 
+engine: Optional[QQmlApplicationEngine] = None
+app: Optional[QGuiApplication] = None
+
+
 
 def sigint_handler(sig, frame):
     """Handle SIGINT (ctrl+c)"""
@@ -24,6 +29,7 @@ def sigint_handler(sig, frame):
 
 
 def main():
+    global engine, app
     app = QGuiApplication(sys.argv)
 
     font = QFont("Nunito Sans")

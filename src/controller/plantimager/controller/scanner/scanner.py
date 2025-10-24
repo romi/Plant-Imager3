@@ -51,6 +51,7 @@ from requests.exceptions import RequestException
 
 from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
+from plantimager.controller.scanner.calibrate import Calibrate
 from plantimager.controller.scanner.dummy_cnc import DummyCNC
 from plantimager.controller.scanner.grbl import CNC
 from plantimager.controller.scanner.hal import DataItem
@@ -244,6 +245,7 @@ class Scanner(QObject):
     scanInProgressChanged = Signal(bool)
     scannerWorkingChanged = Signal(bool)
     pathInfoChanged = Signal(str)
+    calibrationModelChanged = Signal()
 
     def __init__(self):
         """Initialize the Scanner with default settings.
@@ -284,6 +286,10 @@ class Scanner(QObject):
         self._cnc_connection_timer.timeout.connect(self._try_connect_cnc)
         if isinstance(self.cnc, DummyCNC): self._cnc_connection_timer.start()
 
+        self.calibrator = Calibrate(cnc=self.cnc, cameras=self.cameras)
+
+
+
     @Slot()
     def _try_connect_cnc(self):
         if isinstance(self.cnc, DummyCNC):
@@ -296,6 +302,7 @@ class Scanner(QObject):
             else:
                 self._cnc_connection_timer.stop()
                 self.cncTypeChanged.emit(self.cnc_type)
+                self.calibrator.cnc = self.cnc
 
     @Property(str, notify=cncTypeChanged)
     def cnc_type(self) -> Literal["DummyCNC", "GRBL CNC"]:
@@ -328,6 +335,8 @@ class Scanner(QObject):
         self.cameras.append(camera)  # Add camera to list
         self.cameraNamesChanged.emit(self.camera_names)  # Update camera names
         self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state
+        self.calibrator.add_camera(camera)
+        self.calibrationModelChanged.emit()
 
     @Slot(QObject)
     def remove_camera(self, camera: PiCameraComm):
@@ -350,6 +359,7 @@ class Scanner(QObject):
         self.cameras.remove(camera)  # Remove camera from list
         self.cameraNamesChanged.emit(self.camera_names)  # Update camera names
         self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state
+        self.calibrator.remove_camera(camera)
 
     @Property(list, notify=cameraNamesChanged)
     def camera_names(self) -> list[str]:
@@ -365,6 +375,28 @@ class Scanner(QObject):
         This property is exposed to QML and notifies via cameraNamesChanged signal.
         """
         return [cam.name for cam in self.cameras]  # Extract names from camera objects
+
+    @Property(QObject, notify=calibrationModelChanged)
+    def calibrationModel(self):
+        return self.calibrator.get_table_model()
+
+    @Slot()
+    def calibrate(self):
+        self._scanner_working = True
+        self.scannerWorkingChanged.emit(self._scanner_working)
+        self.calibrator.calibrate()
+        self.cnc.moveto(20, 20, 45)
+        self._scanner_working = False
+        self.scannerWorkingChanged.emit(self._scanner_working)
+
+    @Slot()
+    def fast_calibrate(self):
+        self._scanner_working = True
+        self.scannerWorkingChanged.emit(self._scanner_working)
+        self.calibrator.calibrate(fast=True)
+        self.cnc.moveto(20, 20, 45)
+        self._scanner_working = False
+        self.scannerWorkingChanged.emit(self._scanner_working)
 
     @Slot(str)
     def set_db_url(self, url: str):
