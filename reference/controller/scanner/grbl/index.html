@@ -744,29 +744,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../commons/utils/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    utils
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -1346,29 +1323,6 @@
             scanner
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../calibrate/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    calibrate
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -2351,6 +2305,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developer/nginx_openssl.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    None
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3226,7 +3203,7 @@ position queries, and both synchronous and asynchronous operations.</p>
     <span style="color: #3D7B7B; font-style: italic">#dist[2] = angle_min_travel(pos[2], z)</span>
     max_speed <span style="color: #666">=</span> np<span style="color: #666">.</span>array([<span style="color: #008000">self</span><span style="color: #666">.</span>grbl_settings[<span style="color: #BA2121">&quot;$110&quot;</span>], <span style="color: #008000">self</span><span style="color: #666">.</span>grbl_settings[<span style="color: #BA2121">&quot;$111&quot;</span>], <span style="color: #008000">self</span><span style="color: #666">.</span>grbl_settings[<span style="color: #BA2121">&quot;$112&quot;</span>]])<span style="color: #666">/60</span> <span style="color: #3D7B7B; font-style: italic"># mm/s, mm/s, deg/s</span>
     max_speed <span style="color: #666">*=</span> <span style="color: #666">0.8</span>
-    acceleration <span style="color: #666">=</span> np<span style="color: #666">.</span>array([<span style="color: #008000">self</span><span style="color: #666">.</span>grbl_settings[<span style="color: #BA2121">&quot;$120&quot;</span>], <span style="color: #008000">self</span><span style="color: #666">.</span>grbl_settings[<span style="color: #BA2121">&quot;$121&quot;</span>], <span style="color: #008000">self</span><span style="color: #666">.</span>grbl_settings[<span style="color: #BA2121">&quot;$122&quot;</span>]])<span style="color: #666">*0.8</span>
+    acceleration <span style="color: #666">=</span> np<span style="color: #666">.</span>array([<span style="color: #008000">self</span><span style="color: #666">.</span>grbl_settings[<span style="color: #BA2121">&quot;$120&quot;</span>], <span style="color: #008000">self</span><span style="color: #666">.</span>grbl_settings[<span style="color: #BA2121">&quot;$121&quot;</span>], <span style="color: #008000">self</span><span style="color: #666">.</span>grbl_settings[<span style="color: #BA2121">&quot;$122&quot;</span>]])
 
     <span style="color: #3D7B7B; font-style: italic"># compute the time it would take to reach maximum speed on each axis</span>
     acceleration_to_max_speed_time <span style="color: #666">=</span> max_speed <span style="color: #666">/</span> acceleration <span style="color: #3D7B7B; font-style: italic">#  [s, s, s]</span>
