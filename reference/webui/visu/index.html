@@ -1968,6 +1968,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.webui.visu.dash_boostrap_carousel" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;dash_boostrap_carousel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.webui.visu.plotly_image_carousel" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plotly_image_carousel
@@ -2218,6 +2227,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.webui.visu.dash_boostrap_carousel" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;dash_boostrap_carousel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.webui.visu.plotly_image_carousel" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;plotly_image_carousel
@@ -2283,6 +2301,168 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="plantimager.webui.visu.dash_boostrap_carousel" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">dash_boostrap_carousel</span>
+
+
+<a href="#plantimager.webui.visu.dash_boostrap_carousel" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>dash_boostrap_carousel(images)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Creates a Bootstrap Carousel component from a list of image URLs.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>images</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of image URLs to include in the carousel.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="Carousel">Carousel</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A Dash Bootstrap Components Carousel.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The image URLs are sorted alphabetically before being added to the carousel.</p>
+</details>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>None</p>
+</details>
+
+<details class="references" open>
+  <summary>References</summary>
+  <p>None</p>
+</details>
+
+            <details class="quote">
+              <summary>Source code in <code>plantimager/webui/visu.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">61</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">62</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">63</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">64</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">73</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">74</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">75</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">76</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">77</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">78</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">81</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">84</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">85</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">86</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">87</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">88</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">89</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">90</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">dash_boostrap_carousel</span>(images: <span style="color: #008000">list</span>[<span style="color: #008000">str</span>]):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    Creates a Bootstrap Carousel component from a list of image URLs.</span>
+
+<span style="color: #BA2121; font-style: italic">    Parameters</span>
+<span style="color: #BA2121; font-style: italic">    ----------</span>
+<span style="color: #BA2121; font-style: italic">    images</span>
+<span style="color: #BA2121; font-style: italic">        A list of image URLs to include in the carousel.</span>
+
+<span style="color: #BA2121; font-style: italic">    Returns</span>
+<span style="color: #BA2121; font-style: italic">    -------</span>
+<span style="color: #BA2121; font-style: italic">    Carousel</span>
+<span style="color: #BA2121; font-style: italic">        A Dash Bootstrap Components Carousel.</span>
+
+<span style="color: #BA2121; font-style: italic">    Notes</span>
+<span style="color: #BA2121; font-style: italic">    -----</span>
+<span style="color: #BA2121; font-style: italic">    The image URLs are sorted alphabetically before being added to the carousel.</span>
+
+<span style="color: #BA2121; font-style: italic">    See Also</span>
+<span style="color: #BA2121; font-style: italic">    --------</span>
+<span style="color: #BA2121; font-style: italic">    None</span>
+
+<span style="color: #BA2121; font-style: italic">    References</span>
+<span style="color: #BA2121; font-style: italic">    ----------</span>
+<span style="color: #BA2121; font-style: italic">    None</span>
+<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+    images<span style="color: #666">.</span>sort()
+    carousel <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Carousel(
+        items<span style="color: #666">=</span>[{<span style="color: #BA2121">&quot;key&quot;</span>: idx, <span style="color: #BA2121">&quot;src&quot;</span>: img} <span style="color: #008000; font-weight: bold">for</span> idx, img <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">enumerate</span>(images)],
+        controls<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
+        indicators<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
+        slide<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>,
+        class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;carousel-fade&quot;</span>,
+    )
+    <span style="color: #008000; font-weight: bold">return</span> carousel
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 

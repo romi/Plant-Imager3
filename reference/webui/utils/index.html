@@ -2509,7 +2509,7 @@ Returns <code>None</code> if no scans are found.</p>
 
 <details class="see-also" open>
   <summary>See Also</summary>
-  <p>plantdb.rest_api_client.list_scan_names
+  <p>plantdb.rest_api_client.request_scan_names_list
 plantdb.rest_api_client.parse_scans_info</p>
 </details>
 
@@ -2559,12 +2559,12 @@ plantdb.rest_api_client.parse_scans_info</p>
 
 <span style="color: #BA2121; font-style: italic">    See Also</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
-<span style="color: #BA2121; font-style: italic">    plantdb.rest_api_client.list_scan_names</span>
+<span style="color: #BA2121; font-style: italic">    plantdb.rest_api_client.request_scan_names_list</span>
 <span style="color: #BA2121; font-style: italic">    plantdb.rest_api_client.parse_scans_info</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    scans_list <span style="color: #666">=</span> list_scan_names(host<span style="color: #666">=</span>host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
+    scans_list <span style="color: #666">=</span> request_scan_names_list(host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(scans_list) <span style="color: #666">&gt;</span> <span style="color: #666">0</span>:
-        dataset_dict <span style="color: #666">=</span> parse_scans_info(host<span style="color: #666">=</span>host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
+        dataset_dict <span style="color: #666">=</span> parse_scans_info(host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
     <span style="color: #008000; font-weight: bold">else</span>:
         dataset_dict <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
     <span style="color: #008000; font-weight: bold">return</span> dataset_dict

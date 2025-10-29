@@ -2361,7 +2361,7 @@ new user accounts in the Plant Imager system.</p>
 
 
 <a href="#plantimager.webui.new_user.register_user" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>register_user(n_clicks, username, fullname, password, confirm_password, host, port, prefix)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>register_user(n_clicks, username, fullname, password, confirm_password, host, port, prefix, ssl)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2583,7 +2583,27 @@ validation, password matching, and account creation through the backend API.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/new_user.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">273</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">253</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">254</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">255</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">257</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">263</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">268</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">270</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">271</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">272</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">273</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">274</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">275</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">276</span>
@@ -2658,28 +2678,7 @@ validation, password matching, and account creation through the backend API.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">345</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">346</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">347</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">348</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">349</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">350</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">351</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">352</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">353</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">354</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">355</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">356</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">357</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">358</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">359</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">360</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">361</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">362</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">363</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">364</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">365</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">366</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">367</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">368</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">369</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">348</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;registration-message&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
     [Input(<span style="color: #BA2121">&quot;register-button&quot;</span>, <span style="color: #BA2121">&quot;n_clicks&quot;</span>)],
     [State(<span style="color: #BA2121">&quot;new-username-input&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
@@ -2688,11 +2687,13 @@ validation, password matching, and account creation through the backend API.</p>
      State(<span style="color: #BA2121">&quot;confirm-password-input&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
      State(<span style="color: #BA2121">&quot;rest-api-host&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
      State(<span style="color: #BA2121">&quot;rest-api-port&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
-     State(<span style="color: #BA2121">&quot;rest-api-prefix&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)],
+     State(<span style="color: #BA2121">&quot;rest-api-prefix&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
+     State(<span style="color: #BA2121">&quot;rest-api-ssl&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
+     ],
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>
 )
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_user</span>(n_clicks: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, username: <span style="color: #008000">str</span>, fullname: <span style="color: #008000">str</span>, password: <span style="color: #008000">str</span>, 
-               confirm_password: <span style="color: #008000">str</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">str</span>, prefix:<span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span> <span style="color: #666">|</span> dbc<span style="color: #666">.</span>Alert:
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_user</span>(n_clicks: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, username: <span style="color: #008000">str</span>, fullname: <span style="color: #008000">str</span>, password: <span style="color: #008000">str</span>,
+                  confirm_password: <span style="color: #008000">str</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>, ssl: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span> <span style="color: #666">|</span> dbc<span style="color: #666">.</span>Alert:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Process user registration by validating inputs and creating a new account.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback handles the complete user registration process, including input</span>
@@ -2742,7 +2743,10 @@ validation, password matching, and account creation through the backend API.</p>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> n_clicks:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;&quot;</span>
 
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> _validate_new_username(username, host, port, prefix):
+    <span style="color: #3D7B7B; font-style: italic"># Check if username already exists in the backend before proceeding</span>
+    res_data <span style="color: #666">=</span> request_check_username(host, username, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl)
+    user_exists <span style="color: #666">=</span> res_data<span style="color: #666">.</span>get(<span style="color: #BA2121">&#39;exists&#39;</span>, <span style="color: #008000; font-weight: bold">False</span>)  <span style="color: #3D7B7B; font-style: italic"># True if username is taken</span>
+    <span style="color: #008000; font-weight: bold">if</span> user_exists:
         <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Username &#39;</span><span style="color: #A45A77; font-weight: bold">{</span>username<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&#39; is unavailable!&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
 
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">all</span>([username, fullname, password, confirm_password]):
@@ -2752,19 +2756,13 @@ validation, password matching, and account creation through the backend API.</p>
         <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">&quot;Passwords do not match!&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
 
     <span style="color: #008000; font-weight: bold">try</span>:
-        response <span style="color: #666">=</span> requests<span style="color: #666">.</span>post(
-            urljoin(base_url(host, port, prefix), <span style="color: #BA2121">&#39;register&#39;</span>),
-            data<span style="color: #666">=</span>json<span style="color: #666">.</span>dumps({
-                <span style="color: #BA2121">&#39;username&#39;</span>: username,
-                <span style="color: #BA2121">&#39;fullname&#39;</span>: fullname,
-                <span style="color: #BA2121">&#39;password&#39;</span>: password
-            }),
-            headers<span style="color: #666">=</span>{<span style="color: #BA2121">&#39;Content-Type&#39;</span>: <span style="color: #BA2121">&#39;application/json&#39;</span>}
-        )
+        <span style="color: #3D7B7B; font-style: italic"># Create new user via REST API</span>
+        response <span style="color: #666">=</span> request_new_user(host, username, fullname, password, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
 
         <span style="color: #008000; font-weight: bold">if</span> response<span style="color: #666">.</span>ok:
             <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">&quot;Registration successful! You can now login.&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
         <span style="color: #008000; font-weight: bold">else</span>:
+            <span style="color: #3D7B7B; font-style: italic"># Extract error message from API response if possible</span>
             error_msg <span style="color: #666">=</span> <span style="color: #BA2121">&quot;Registration failed&quot;</span>
             <span style="color: #008000; font-weight: bold">try</span>:
                 error_data <span style="color: #666">=</span> response<span style="color: #666">.</span>json()
@@ -2873,9 +2871,7 @@ was clicked.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/new_user.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">116</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
@@ -2900,7 +2896,9 @@ was clicked.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">137</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">138</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">139</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">141</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">142</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&quot;new-user-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
     Input(<span style="color: #BA2121">&quot;new-user-button&quot;</span>, <span style="color: #BA2121">&quot;n_clicks&quot;</span>),
     State(<span style="color: #BA2121">&quot;new-user-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
@@ -2942,7 +2940,7 @@ was clicked.</p>
 
 
 <a href="#plantimager.webui.new_user.validate_new_username" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>validate_new_username(new_username, is_modal_open, host, port, prefix)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>validate_new_username(new_username, is_modal_open, host, port, prefix, ssl)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3043,6 +3041,22 @@ Updates the validation state of the username input field accordingly.</p>
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ssl</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Flag indicating whether SSL (HTTPS) is enabled.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -3097,7 +3111,35 @@ Updates the validation state of the username input field accordingly.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/new_user.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">145</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">146</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">147</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">149</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">151</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">152</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">153</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">154</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">155</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">156</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">159</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">161</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">162</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">163</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">164</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">165</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">171</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">172</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">174</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">175</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">176</span>
@@ -3120,27 +3162,7 @@ Updates the validation state of the username input field accordingly.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">207</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">209</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">210</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">211</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">212</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">213</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">215</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">216</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;new-username-input&#39;</span>, <span style="color: #BA2121">&#39;valid&#39;</span>),
     Output(<span style="color: #BA2121">&#39;new-username-input&#39;</span>, <span style="color: #BA2121">&#39;invalid&#39;</span>),
     Input(<span style="color: #BA2121">&#39;new-username-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
@@ -3148,8 +3170,10 @@ Updates the validation state of the username input field accordingly.</p>
     State(<span style="color: #BA2121">&#39;rest-api-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     State(<span style="color: #BA2121">&#39;rest-api-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     State(<span style="color: #BA2121">&#39;rest-api-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    State(<span style="color: #BA2121">&#39;rest-api-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
 )
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">validate_new_username</span>(new_username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, is_modal_open: <span style="color: #008000">bool</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">str</span>, prefix:<span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>]:
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">validate_new_username</span>(new_username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, is_modal_open: <span style="color: #008000">bool</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>,
+                          ssl: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> Tuple[<span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Validate if the entered username is available for registration.</span>
 
 <span style="color: #BA2121; font-style: italic">    Makes an API request to check if the username already exists in the system.</span>
@@ -3167,6 +3191,8 @@ Updates the validation state of the username input field accordingly.</p>
 <span style="color: #BA2121; font-style: italic">        The port number of the PlantDB REST API server.</span>
 <span style="color: #BA2121; font-style: italic">    prefix : str</span>
 <span style="color: #BA2121; font-style: italic">        The prefix of the PlantDB REST API server.</span>
+<span style="color: #BA2121; font-style: italic">    ssl : bool</span>
+<span style="color: #BA2121; font-style: italic">        Flag indicating whether SSL (HTTPS) is enabled.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
@@ -3182,8 +3208,12 @@ Updates the validation state of the username input field accordingly.</p>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> is_modal_open <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> new_username:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #008000; font-weight: bold">False</span>
-    valid_username <span style="color: #666">=</span> _validate_new_username(new_username, host, port, prefix)
-    <span style="color: #008000; font-weight: bold">return</span> valid_username, <span style="color: #666">~</span>valid_username
+
+    <span style="color: #3D7B7B; font-style: italic"># Check if username already exists in the backend before proceeding</span>
+    res_data <span style="color: #666">=</span> request_check_username(host, new_username, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl)
+    user_exists <span style="color: #666">=</span> res_data<span style="color: #666">.</span>get(<span style="color: #BA2121">&#39;exists&#39;</span>, <span style="color: #008000; font-weight: bold">False</span>)  <span style="color: #3D7B7B; font-style: italic"># True if username is taken</span>
+    valid_username <span style="color: #666">=</span> <span style="color: #A2F; font-weight: bold">not</span> user_exists
+    <span style="color: #008000; font-weight: bold">return</span> valid_username, <span style="color: #A2F; font-weight: bold">not</span> valid_username
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3289,7 +3319,27 @@ ensuring they contain identical values.</p>
 
             <details class="quote">
               <summary>Source code in <code>plantimager/webui/new_user.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">207</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">209</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">210</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">211</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">212</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">213</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">215</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">216</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">217</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">218</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">220</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">221</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">222</span>
@@ -3320,27 +3370,7 @@ ensuring they contain identical values.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">248</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">253</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">254</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">255</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">257</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">263</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">268</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">270</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     [
         Output(<span style="color: #BA2121">&quot;new-password-input&quot;</span>, <span style="color: #BA2121">&quot;valid&quot;</span>),
         Output(<span style="color: #BA2121">&quot;new-password-input&quot;</span>, <span style="color: #BA2121">&quot;invalid&quot;</span>),

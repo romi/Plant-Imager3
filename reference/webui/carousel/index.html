@@ -2507,7 +2507,10 @@ None if the modal is closed or dataset_id is invalid</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">106</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&#39;carousel&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&#39;carousel&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
           <span style="color: #3D7B7B; font-style: italic"># Output(&#39;carousel&#39;, &#39;figure&#39;),</span>
           Input(<span style="color: #BA2121">&quot;carousel-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
           Input(<span style="color: #BA2121">&quot;select-image-task&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
@@ -2547,7 +2550,10 @@ None if the modal is closed or dataset_id is invalid</p>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> open_modal <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #666">==</span> <span style="color: #BA2121">&#39;&#39;</span>:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>
 
-    images <span style="color: #666">=</span> list_task_images_uri(dataset_id, task_name<span style="color: #666">=</span>image_task, size<span style="color: #666">=</span><span style="color: #BA2121">&#39;orig&#39;</span>, host<span style="color: #666">=</span>host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
+    images <span style="color: #666">=</span> list_task_images_uri(host, dataset_id, task_name<span style="color: #666">=</span>image_task, size<span style="color: #666">=</span><span style="color: #BA2121">&#39;orig&#39;</span>, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
+
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(images) <span style="color: #666">==</span> <span style="color: #666">0</span>:
+        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Could not find any images for task &#39;</span><span style="color: #A45A77; font-weight: bold">{</span>image_task<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&#39; and dataset &#39;</span><span style="color: #A45A77; font-weight: bold">{</span>dataset_id<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&#39;.&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>)
 
     <span style="color: #3D7B7B; font-style: italic"># fig_layout_kwargs = {&#39;font_family&#39;: FONT_FAMILY, &#39;paper_bgcolor&#39;: &quot;#F3F3F3&quot;,</span>
     <span style="color: #3D7B7B; font-style: italic">#                      &#39;autosize&#39;: True, &#39;margin&#39;: {&#39;t&#39;: 25, &#39;b&#39;: 5}, &#39;width&#39;: None, &#39;height&#39;: None}</span>
@@ -2781,7 +2787,7 @@ the tasks available for the selected dataset.</p>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> open_modal <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #666">==</span> <span style="color: #BA2121">&#39;&#39;</span>:
         <span style="color: #008000; font-weight: bold">return</span> [<span style="color: #BA2121">&#39;images&#39;</span>]
-    tasks_fileset <span style="color: #666">=</span> get_tasks_fileset_from_api(dataset_id, host<span style="color: #666">=</span>host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
+    tasks_fileset <span style="color: #666">=</span> request_scan_tasks_fileset(host, dataset_id, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix)
     <span style="color: #008000; font-weight: bold">return</span> [task <span style="color: #008000; font-weight: bold">for</span> task <span style="color: #A2F; font-weight: bold">in</span> IMAGE_TASKS <span style="color: #008000; font-weight: bold">if</span> task <span style="color: #A2F; font-weight: bold">in</span> tasks_fileset]
 </code></pre></div></td></tr></table></div>
             </details>
