@@ -8,7 +8,7 @@ from dash import State
 from dash import callback
 from dash import dcc
 from dash import html
-from plantdb.client.rest_api import get_tasks_fileset_from_api
+from plantdb.client.rest_api import request_scan_tasks_fileset
 from plantdb.client.rest_api import list_task_images_uri
 
 from plantimager.webui.utils import IMAGE_TASKS
@@ -53,7 +53,7 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix):
     """
     if not open_modal or dataset_id is None or dataset_id == '':
         return ['images']
-    tasks_fileset = get_tasks_fileset_from_api(dataset_id, host=host, port=port, prefix=prefix)
+    tasks_fileset = request_scan_tasks_fileset(host, dataset_id, port=port, prefix=prefix)
     return [task for task in IMAGE_TASKS if task in tasks_fileset]
 
 
@@ -97,7 +97,10 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix):
     if not open_modal or dataset_id is None or dataset_id == '':
         return None
 
-    images = list_task_images_uri(dataset_id, task_name=image_task, size='orig', host=host, port=port, prefix=prefix)
+    images = list_task_images_uri(host, dataset_id, task_name=image_task, size='orig', port=port, prefix=prefix)
+
+    if len(images) == 0:
+        return dbc.Alert(f"Could not find any images for task '{image_task}' and dataset '{dataset_id}'.", color="danger")
 
     # fig_layout_kwargs = {'font_family': FONT_FAMILY, 'paper_bgcolor': "#F3F3F3",
     #                      'autosize': True, 'margin': {'t': 25, 'b': 5}, 'width': None, 'height': None}

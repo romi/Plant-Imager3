@@ -18,7 +18,6 @@ Key Features
 import hashlib
 import json
 import time
-from urllib.parse import urljoin
 
 import dash_bootstrap_components as dbc
 import requests
@@ -27,7 +26,9 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import html
-from plantdb.client.rest_api import base_url
+from plantdb.client.rest_api import request_login
+from plantdb.client.rest_api import request_logout
+from plantdb.client.rest_api import request_check_username
 
 from plantimager.webui.new_user import new_user_button
 
@@ -225,14 +226,15 @@ login_modal = dbc.Modal(children=[
                 class_name="me-2"
             )
         ])
-], id='login-modal', is_open=True)
+], id='login-modal', is_open=True, backdrop='static')
 
 
 @callback(Output("login-modal", "is_open", allow_duplicate=True),
           Input('login-avatar-button', 'n_clicks'),
           State('login-modal', 'is_open'),
+          State('logged-username', 'data'),
           prevent_initial_call=True)
-def toggle_login_modal(_: int, is_open: bool) -> bool | None:
+def toggle_login_modal(_: int, is_open: bool, username: str | None) -> bool | None:
     """Toggle the visibility of the login modal.
 
     This callback function controls the visibility of the login modal when the login avatar button is clicked.
@@ -253,9 +255,9 @@ def toggle_login_modal(_: int, is_open: bool) -> bool | None:
     -----
     The function only handles opening the modal. Closing is handled by other modal mechanisms
     """
-    if not is_open:
+    if not username:
         return True
-    return False
+    return not is_open
 
 
 @callback(
@@ -266,9 +268,10 @@ def toggle_login_modal(_: int, is_open: bool) -> bool | None:
     State('rest-api-host', 'data'),
     State('rest-api-port', 'data'),
     State('rest-api-prefix', 'data'),
+    State('rest-api-ssl', 'data'),
 )
-def validate_username(username: str | None, is_modal_open: bool, host: str, port: int | str, prefix: str) -> tuple[
-    bool, bool]:
+def validate_username(username: str | None, is_modal_open: bool, host: str, port: int | str, prefix: str, ssl: bool) -> \
+        tuple[bool, bool]:
     """Validate a username by checking if it exists in the database.
 
     Parameters
@@ -283,6 +286,8 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    ssl : bool
+        Flag indicating whether SSL (HTTPS) is enabled.
 
     Returns
     -------
@@ -296,16 +301,11 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
     """
     if not is_modal_open or not username:
         return False, False
-    # Make request to the login API endpoint
-    try:
-        response = requests.get(urljoin(base_url(host, port, prefix), f'login?username={username}'))
-        user_exists = response.json().get('exists', False)
-        if user_exists:
-            return True, False  # Valid username
-        else:
-            return False, True  # Invalid username
-    except Exception as e:
-        return False, True
+
+    # Check if username already exists in the backend before proceeding
+    res_data = request_check_username(host, username, port=port, prefix=prefix, ssl=ssl)
+    user_exists = res_data.get('exists', False)  # True if username is taken
+    return user_exists, not user_exists
 
 
 @callback(Output('logged-username', 'data', allow_duplicate=True),
@@ -321,6 +321,7 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
           State('rest-api-host', 'data'),
           State('rest-api-port', 'data'),
           State('rest-api-prefix', 'data'),
+          State('rest-api-ssl', 'data'),
           prevent_initial_call=True)
 def login(
         username_submit: int,
@@ -331,6 +332,7 @@ def login(
         host: str,
         port: int | str,
         prefix: str,
+        ssl: bool
 ) -> tuple[str | None, str | None, str | None, dict, dbc.Alert]:
     """Handle user authentication through the REST API.
 
@@ -356,6 +358,8 @@ def login(
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    ssl : bool
+        Flag indicating whether SSL (HTTPS) is enabled.
 
     Returns
     -------
@@ -385,35 +389,21 @@ def login(
 
     try:
         # Send login request to REST API endpoint
-        response = requests.post(
-            urljoin(base_url(host, port, prefix), 'login'),
-            data=json.dumps({'username': username, 'password': password}),
-            headers={'Content-Type': 'application/json'}
-        )
+        loggin_data = request_login(host, username, password, port=port, prefix=prefix, ssl=ssl)
+        login_msg = loggin_data['message']
 
-        if response.ok:
+        if 'user' in loggin_data:
             # Parse successful response
-            loggin_data = response.json()
-            is_logged_in = loggin_data['authenticated']
-            fullname = loggin_data['fullname']
+            fullname = loggin_data['user']['fullname']
             session_token = loggin_data['access_token']
-            login_msg = loggin_data['message']
-            if is_logged_in:
-                # Setup success message display
-                alert = dbc.Alert(login_msg, color="success", class_name="mb-0")
-                return username, fullname, session_token, message_style, alert
+            # Setup success message display
+            alert = dbc.Alert(login_msg, color="success", class_name="mb-0")
+            return username, fullname, session_token, message_style, alert
 
         # Handle failed login attempts
         error_msg = "Login failed. Please check your credentials."
-        if response.text:
-            try:
-                # Attempt to extract error message from response
-                error_data = response.json()
-                if 'message' in error_data:
-                    error_msg = error_data['message']
-            except json.JSONDecodeError:
-                # Use raw response text if JSON parsing fails
-                error_msg = response.text
+        if 'message' in loggin_data:
+            error_msg = login_msg
 
         alert = dbc.Alert(error_msg, color="danger", class_name="mb-0")
         return None, None, None, message_style, alert
@@ -496,9 +486,10 @@ def update_login_modal_title(fullname: str | None, username: str | None) -> list
     Output("password-input-group", "style", allow_duplicate=True),
     Output("login-attempt-message", "children", allow_duplicate=True),
     Input("logged-fullname", "data"),
+    State("login-attempt-message", "children"),
     prevent_initial_call=True,
 )
-def update_login_modal_body(fullname: str | None) -> tuple[dict, dict, str]:
+def update_login_modal_body(fullname: str | None, msg: dbc.Alert) -> tuple[dict, dict, str]:
     """Update the visibility of login modal components based on login status.
 
     This callback controls the display of username and password input groups in the login modal,
@@ -526,7 +517,7 @@ def update_login_modal_body(fullname: str | None) -> tuple[dict, dict, str]:
     ({'display': 'none'}, {'display': 'none'}, "")
     """
     if not fullname:
-        return {'display': 'flex'}, {'display': 'flex'}, ""
+        return {'display': 'flex'}, {'display': 'flex'}, msg
     return {'display': 'none'}, {'display': 'none'}, ""
 
 
@@ -565,17 +556,18 @@ def timeout_modal(username: str | None) -> bool:
 @callback(
     Output('logged-username', 'data', allow_duplicate=True),
     Output('logged-fullname', 'data', allow_duplicate=True),
-    Output('session_token', "data", allow_duplicate=True),
+    Output('session-token', "data", allow_duplicate=True),
     Output('login-attempt-message', 'style', allow_duplicate=True),
     Output("login-attempt-message", "children", allow_duplicate=True),
     Input('logout-button', 'n_clicks'),
     State('rest-api-host', 'data'),
     State('rest-api-port', 'data'),
     State('rest-api-prefix', 'data'),
-    State('session_token', 'data'),
+    State('rest-api-ssl', 'data'),
+    State('session-token', 'data'),
     prevent_initial_call=True,
 )
-def logout(_: int, host: str, port: int | str, prefix: str, session_token: str) -> tuple[
+def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, session_token: str) -> tuple[
     str | None, str | None, str | None, dict, dbc.Alert]:
     """Handle user logout functionality.
 
@@ -591,6 +583,8 @@ def logout(_: int, host: str, port: int | str, prefix: str, session_token: str) 
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    ssl : bool
+        Flag indicating whether SSL (HTTPS) is enabled.
     session_token
         The PlantDB REST API session token.
 
@@ -618,10 +612,7 @@ def logout(_: int, host: str, port: int | str, prefix: str, session_token: str) 
 
     try:
         # Send login request to REST API endpoint
-        response = requests.post(
-            urljoin(base_url(host, port, prefix), 'login'),
-            headers=headers
-        )
+        response = request_logout(host, port=port, prefix=prefix, ssl=ssl)
 
     except requests.exceptions.RequestException as e:
         # Handle connection errors (network issues, server down, etc.)

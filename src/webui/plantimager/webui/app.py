@@ -12,16 +12,22 @@ Key Features
 - User authentication and account management
 - Dataset acquisition with metadata management
 
+Environment variables
+---------------------
+- ALLOW_PRIVATE_IP: allow the use of private IPs, useful during debug, should not be set to True in production
+- CERT_PATH: specify the path to the self-signed certificates.
+
 Usage Examples
 --------------
-# Run the web interface with default REST API settings
+# Run the web interface with default PlantDB REST API settings
 $ python app.py
 
-# Connect to a specific REST API server
-$ python app.py --plantdb_host http://example-server --plantdb_port 5000
+# Connect to a specific PlantDB REST API server
+$ python app.py --plantdb-host example-server.local --plantdb-port 5000
 """
 
 import argparse
+import os
 from pathlib import Path
 from threading import Thread
 
@@ -33,7 +39,9 @@ from dash import dcc
 from dash import html
 from plantdb.client.plantdb_client import PlantDBClient
 from plantdb.client.plantdb_client import api_prefix
-from plantdb.client.rest_api import base_url
+from plantdb.client.rest_api import PLANTDB_API_HOST
+from plantdb.client.rest_api import PLANTDB_API_PORT
+from plantdb.client.rest_api import PLANTDB_API_PREFIX
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from plantimager.webui.carousel import caroussel_modal
@@ -42,13 +50,6 @@ from plantimager.webui.controller_proxy import RPCController
 from plantimager.webui.login import login_modal
 from plantimager.webui.nav import navbar_layout
 from plantimager.webui.new_user import new_user_modal
-
-#: Default hostname for the plantdb REST API
-PLANTDB_HOST = "127.0.0.1"
-#: Default port for the plantdb REST API
-PLANTDB_PORT = 5000
-#: Default URL prefix for the plantdb REST API
-PLANTDB_PREFIX = ""
 
 
 def parsing() -> argparse.ArgumentParser:
@@ -66,7 +67,7 @@ def parsing() -> argparse.ArgumentParser:
     --------
     >>> from plantimager.webui.app import parsing
     >>> parser = parsing()
-    >>> args = parser.parse_args(['--plantdb_host', '192.168.1.100', '--plantdb_port', '5001', '--plantdb_prefix', '/plantdb'])
+    >>> args = parser.parse_args(['--plantdb-host', '192.168.1.100', '--plantdb-port', '5001', '--plantdb-prefix', '/plantdb'])
     >>> print(f"https://{args.plantdb_host}:{args.plantdb_port}{args.plantdb_prefix}")
     https://192.168.1.100:5001/plantdb
     """
@@ -75,17 +76,17 @@ def parsing() -> argparse.ArgumentParser:
     app_args = parser.add_argument_group("Dash app options")
     app_args.add_argument('--proxy', action='store_true',
                           help="Defines if the application is running behind a reverse proxy.")
-    app_args.add_argument('--url-prefix', type=str, default='/webui/',
+    app_args.add_argument('--url-prefix', type=str, default='',
                           help="URL prefix for the application (e.g. should match NGINX location if behind proxy).")
 
     plantdb_args = parser.add_argument_group("PlantDB REST API options")
-    plantdb_args.add_argument('--plantdb_host', type=str, default=PLANTDB_HOST,
+    plantdb_args.add_argument('--plantdb-host', type=str, default=PLANTDB_API_HOST,
                               help="Host address of the PlantDB REST API.")
-    plantdb_args.add_argument('--plantdb_port', type=int, default=PLANTDB_PORT,
+    plantdb_args.add_argument('--plantdb-port', type=int, default=PLANTDB_API_PORT,
                               help="Port of the PlantDB REST API.")
-    plantdb_args.add_argument('--plantdb_prefix', type=str, default=PLANTDB_PREFIX,
+    plantdb_args.add_argument('--plantdb-prefix', type=str, default=PLANTDB_API_PREFIX,
                               help="URL prefix of the PlantDB REST API.")
-    plantdb_args.add_argument('--plantdb_ssl', type=bool, default=False,
+    plantdb_args.add_argument('--plantdb-ssl', type=bool, default=False,
                               help="Whether the PlantDB REST API is using SSL or not.")
 
     misc_args = parser.add_argument_group("Miscellaneous options")
@@ -135,6 +136,8 @@ def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, pla
     # Ensure `url_prefix` ends with a trailing slash (as required by Dash)
     if url_prefix and not url_prefix.endswith('/'):
         url_prefix += '/'
+    else:
+        url_prefix = None
 
     app = Dash(
         name="plantimager.webui",
@@ -202,6 +205,7 @@ def main() -> None:
 
     Notes
     -----
+    - This should be used for development purposes only, refers to the wsgi.py file for production
     - The controller connection runs in a separate daemon thread
     - The Dash application runs in debug mode on port 8000
     """
@@ -215,6 +219,7 @@ def main() -> None:
     controller_thread.daemon = True
     controller_thread.start()
 
+    os.environ["ALLOW_PRIVATE_IP"] = 'true'
     # - Start the Dash app:
     app = setup_web_app(args.plantdb_host, args.plantdb_port, args.plantdb_prefix, args.plantdb_ssl,
                         proxy=args.proxy, url_prefix=args.url_prefix)

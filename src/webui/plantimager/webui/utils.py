@@ -27,9 +27,9 @@ Usage Examples
 from typing import Any
 
 from dash import dcc
-from plantdb.client.rest_api import base_url
-from plantdb.client.rest_api import list_scan_names
 from plantdb.client.rest_api import parse_scans_info
+from plantdb.client.rest_api import request_check_username
+from plantdb.client.rest_api import request_scan_names_list
 
 FONT_FAMILY = '"Nunito Sans", sans-serif'
 
@@ -74,12 +74,12 @@ def get_dataset_dict(host: str, port: str, prefix: str) -> dict[str, Any] | None
 
     See Also
     --------
-    plantdb.rest_api_client.list_scan_names
+    plantdb.rest_api_client.request_scan_names_list
     plantdb.rest_api_client.parse_scans_info
     """
-    scans_list = list_scan_names(host=host, port=port, prefix=prefix)
+    scans_list = request_scan_names_list(host, port=port, prefix=prefix)
     if len(scans_list) > 0:
-        dataset_dict = parse_scans_info(host=host, port=port, prefix=prefix)
+        dataset_dict = parse_scans_info(host, port=port, prefix=prefix)
     else:
         dataset_dict = None
     return dataset_dict
@@ -109,3 +109,33 @@ def config_upload() -> dcc.Upload:
         # Do not allow multiple files to be uploaded
         multiple=False
     )
+
+
+def _validate_new_username(username: str, host: str, port: str, prefix: str, ssl: bool) -> bool:
+    """Check if a username exists.
+
+    Parameters
+    ----------
+    new_username : str
+        The username to check for.
+    host : str
+       The hostname or IP address of the PlantDB REST API server.
+    port : int
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
+
+    Returns
+    -------
+    bool
+        ``True`` if the username is available, ``False`` if it already exists or there was an error.
+    """
+    try:
+        res_data = request_check_username(host, username, port=port, prefix=prefix, ssl=ssl)
+        user_exists = res_data.get('exists', False)
+        if user_exists:
+            return False  # Unavailable username
+        else:
+            return True  # Available username
+    except Exception as e:
+        return False

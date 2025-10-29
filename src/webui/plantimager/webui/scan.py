@@ -28,7 +28,7 @@ from dash import callback
 from dash import dcc
 from dash import html
 from dash.exceptions import PreventUpdate
-from plantdb.client.rest_api import base_url
+from plantdb.client.rest_api import plantdb_url
 
 from plantimager.webui.utils import config_upload
 from plantimager.webui.controller_proxy import RPCController
@@ -204,7 +204,6 @@ def update_interval(n_intervals):
     -------
     str:
         Markdown message which is printed at available-cameras
-
     """
     try:
         controller = RPCController.instance()
@@ -213,7 +212,6 @@ def update_interval(n_intervals):
     if update_available_cameras not in controller.cameraNamesChanged.connections:
         controller.cameraNamesChanged.connect(update_available_cameras)
         update_available_cameras(controller.camera_names)
-
 
     if available_cameras:
         lines = []
@@ -400,6 +398,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     State('rest-api-port', 'data'),
     State('rest-api-prefix', 'data'),
     State('rest-api-ssl', 'data'),
+    State('session-token', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
     prevent_initial_call=True,
@@ -411,8 +410,77 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
         (Output('scan-output', 'children'), 'Scan in progress', ""),
     ]
 )
-def run_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, dataset_name: str):
+def run_scan(_, url: str, port: str, prefix: str, ssl: bool, session_token: str, cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
+
+    Parameters
+    ----------
+    _ : Any
+        Unused parameter (n_clicks from the button).
+    url : str
+        The hostname or IP address of the PlantDB REST API server.
+    port : str
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL.
+    session_token : str
+        The PlantDB REST API session token of the user.
+    cfg : str
+        The TOML configuration string for the scan.
+    dataset_name : str
+        The name to use for the dataset that will be created.
+
+    Returns
+    -------
+    Tuple[str, str]
+        A tuple containing two status messages:
+        - First message: Short status for the alert component
+        - Second message: Detailed status for the output component
+
+    Raises
+    ------
+    RuntimeError
+        If the Raspberry Pi Controller is not initialized.
+    """
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return f"Error: Raspberry Pi Controller not initialized!", str(e)
+
+    set_props('scan-response', {'children': "Scan started"})
+    set_props('scan-output', {'children': "Scan in progress ..."})
+
+    controller.progressChanged.connect(update_progress)
+    controller.maxProgressChanged.connect(update_max_progress)
+    update_progress(controller.progress)
+    update_max_progress(controller.max_progress)
+
+    controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
+    controller.set_dataset_name(dataset_name)
+    controller.set_session_token(session_token)
+    print(tomllib.loads(cfg))
+    controller.set_config(tomllib.loads(cfg))
+    controller.run_scan()
+
+    return "Scan finished", "Scan complete"
+
+
+@callback(
+    Output('scan-response', 'children', allow_duplicate=True),
+    Output('scan-output', 'children', allow_duplicate=True),
+    Input('config-scan-button', 'n_clicks'),
+    State('rest-api-host', 'data'),
+    State('rest-api-port', 'data'),
+    State('rest-api-prefix', 'data'),
+    State('rest-api-ssl', 'data'),
+    State('scan-cfg-toml', 'value'),
+    State('dataset-input-name', 'value'),
+    prevent_initial_call=True,
+)
+def config_scan(_, url: str, port: str, prefix: str, ssl:bool, cfg: str, dataset_name: str):
+    """Configure a plant scan with the specified configuration.
 
     Parameters
     ----------
@@ -448,68 +516,8 @@ def run_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, dataset_n
     except RuntimeError as e:
         return f"Error: Raspberry Pi Controller not initialized!", str(e)
 
-    set_props('scan-response', {'children': "Scan started"})
-    set_props('scan-output', {'children': "Scan in progress ..."})
 
-    controller.progressChanged.connect(update_progress)
-    controller.maxProgressChanged.connect(update_max_progress)
-    update_progress(controller.progress)
-    update_max_progress(controller.max_progress)
-
-    controller.set_db_url(base_url(host=url, port=port, prefix=prefix, ssl=ssl))
-    controller.set_dataset_name(dataset_name)
-    print(tomllib.loads(cfg))
-    controller.set_config(tomllib.loads(cfg))
-    controller.run_scan()
-
-    return "Scan finished", "Scan complete"
-
-
-@callback(
-    Output('scan-response', 'children', allow_duplicate=True),
-    Output('scan-output', 'children', allow_duplicate=True),
-    Input('config-scan-button', 'n_clicks'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('scan-cfg-toml', 'value'),
-    State('dataset-input-name', 'value'),
-    prevent_initial_call=True,
-)
-def config_scan(_, url: str, port: str, cfg: str, dataset_name: str):
-    """Configure a plant scan with the specified configuration.
-
-    Parameters
-    ----------
-    _ : Any
-        Unused parameter (n_clicks from the button).
-    url : str
-        The hostname or IP address of the PlantDB REST API server.
-    port : str
-        The port number of the PlantDB REST API server.
-    cfg : str
-        The TOML configuration string for the scan.
-    dataset_name : str
-        The name to use for the dataset that will be created.
-
-    Returns
-    -------
-    Tuple[str, str]
-        A tuple containing two status messages:
-        - First message: Short status for the alert component
-        - Second message: Detailed status for the output component
-
-    Raises
-    ------
-    RuntimeError
-        If the Raspberry Pi Controller is not initialized.
-    """
-    try:
-        controller = RPCController.instance()
-    except RuntimeError as e:
-        return f"Error: Raspberry Pi Controller not initialized!", str(e)
-
-
-    controller.set_db_url(f"http://{url}:{port}")
+    controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     controller.set_dataset_name(dataset_name)
     print(tomllib.loads(cfg))
     controller.set_config(tomllib.loads(cfg))

@@ -54,6 +54,31 @@ def plotly_image_carousel(images, height=900, width=900, title="Carousel", layou
 
 
 def dash_boostrap_carousel(images: list[str]):
+    """
+    Creates a Bootstrap Carousel component from a list of image URLs.
+
+    Parameters
+    ----------
+    images
+        A list of image URLs to include in the carousel.
+
+    Returns
+    -------
+    Carousel
+        A Dash Bootstrap Components Carousel.
+
+    Notes
+    -----
+    The image URLs are sorted alphabetically before being added to the carousel.
+
+    See Also
+    --------
+    None
+
+    References
+    ----------
+    None
+    """
     images.sort()
     carousel = dbc.Carousel(
         items=[{"key": idx, "src": img} for idx, img in enumerate(images)],

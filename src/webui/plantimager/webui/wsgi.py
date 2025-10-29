@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------------------------
-#  Copyright (c) 2022 Univ. Lyon, ENS de Lyon, UCB Lyon 1, CNRS, INRAe, Inria
-#  All rights reserved.
-#  This file is part of the TimageTK library, and is released under the "GPLv3"
-#  license. Please see the LICENSE.md file that should have been included as
-#  part of this package.
-# ------------------------------------------------------------------------------
+
 
 """WSGI Entry Point for Plant Imager Web Interface
 
@@ -53,7 +47,7 @@ controller_thread.start()
 
 # Get configuration from environment variables
 app_config = {
-    'plantdb_host': os.environ.get('PLANTDB_URL', 'localhost'),
+    'plantdb_host': os.environ.get('PLANTDB_HOST', 'localhost'),
     'plantdb_port': int(os.environ.get('PLANTDB_PORT', 5000)),
     'plantdb_prefix': os.environ.get('PLANTDB_PREFIX', '').lower(),
     'plantdb_ssl': os.environ.get('PLANTDB_SSL', 'false').lower() == 'true',
@@ -73,7 +67,7 @@ if __name__ == "__main__":
         'hostname': os.environ.get('WEBUI_HOST', '0.0.0.0'),
         'port': int(os.environ.get('WEBUI_PORT', 8080)),
         'application': application,
-        # 'ssl_context': int(os.environ.get('WEBUI_SSL', ('/etc/nginx/ssl/cert.pem', '/etc/nginx/ssl/key.pem'))),
+        'ssl_context': os.environ.get('CERT_PATH', '/etc/nginx/ssl/cert.pem'),
         'use_debugger': bool(os.environ.get('WEBUI_DEBUG', False)),
     }
     run_simple(**run_config)

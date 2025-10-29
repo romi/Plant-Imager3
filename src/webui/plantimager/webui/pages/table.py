@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------------------------
-#  Copyright (c) 2022 Univ. Lyon, ENS de Lyon, UCB Lyon 1, CNRS, INRAe, Inria
-#  All rights reserved.
-#  This file is part of the TimageTK library, and is released under the "GPLv3"
-#  license. Please see the LICENSE.md file that should have been included as
-#  part of this package.
-# ------------------------------------------------------------------------------
 
 import dash
 import dash_ag_grid as dag
@@ -20,7 +13,7 @@ from dash import dcc
 from dash import get_relative_path
 from dash import html
 from dash import register_page
-from plantdb.client.rest_api import base_url
+from plantdb.client.rest_api import plantdb_url
 
 from plantimager.webui.utils import get_dataset_dict
 
@@ -188,8 +181,9 @@ def update_on_url_change(url, host, port, prefix):
           Input('dataset-dict', 'data'),
           State('rest-api-host', 'data'),
           State('rest-api-port', 'data'),
-          State('rest-api-prefix', 'data'))
-def update_table(dataset_dict, url, port, prefix):
+          State('rest-api-prefix', 'data'),
+          State('rest-api-ssl', 'data'))
+def update_table(dataset_dict, host, port, prefix, ssl):
     """Update the AG Grid table.
 
     Parameters
@@ -211,12 +205,12 @@ def update_table(dataset_dict, url, port, prefix):
     thumb_size = 150  # max width or height
     if dataset_dict is not None:
         table_dict = {col: [] for col in ["Thumbnail", "Name", "Action", "Date", "Species", "Images"]}
-        plantdb_url = base_url(url, port, prefix)
+        url = plantdb_url(host, port=port, prefix=prefix, ssl=ssl)
 
         for ds_id, md in dataset_dict.items():
             thumbnail_url = md["thumbnailUri"].replace('thumb', f'{thumb_size}')
             # Include the first image thumbnail and a link to the carousel
-            table_dict["Thumbnail"].append(f"![{ds_id}]({plantdb_url}{thumbnail_url})")
+            table_dict["Thumbnail"].append(f"![{ds_id}]({url}{thumbnail_url})")
             table_dict["Name"].append(ds_id)
             table_dict["Action"].append("Open")
             table_dict["Date"].append(md["metadata"]["date"])
