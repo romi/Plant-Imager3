@@ -39,6 +39,9 @@ LABEL repository="https://github.com/romi/plant-imager"
 LABEL license="LGPL-3.0-or-later"
 LABEL description="Plant Imager WebUI"
 
+ARG PLANTDB_BRANCH=""
+ENV PLANTDB_GIT="https://github.com/romi/plantdb.git"
+
 # Set user name and id variables:
 ENV USER_NAME="romi"
 ENV USER_ID=2020
@@ -57,7 +60,8 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get update && \
     # Install system dependencies:
     apt-get install -y --no-install-recommends \
-      nano git ca-certificates rsync \
+      # Install some basic tools
+      ca-certificates curl git nano rsync \
       # Install python3.12 & pip
       python3 python3-pip python3-venv \
       # Add python3-dev to ensure libpython is available for uwsgi
@@ -103,6 +107,15 @@ RUN echo "\n\n# Create a virtual environment..." && \
     python3 -m pip install --no-cache-dir commons/. && \
     echo "\n\n# Install 'plantimager.webui' from sources..." && \
     python3 -m pip install --no-cache-dir webui/. && \
+    # Conditionally clone and install plantdb if a branch is specified
+    if [ -n "${PLANTDB_BRANCH}" ]; then \
+        echo "\n\n# Clone plantdb branch ${PLANTDB_BRANCH}..." && \
+        git clone -b "${PLANTDB_BRANCH}" "${PLANTDB_GIT}" plantdb && \
+        echo "\n\n# Install plantdb.commons from cloned repository..." && \
+        python3 -m pip install --no-cache-dir plantdb/src/commons/. && \
+        echo "\n\n# Install plantdb.client from cloned repository..." && \
+        python3 -m pip install --no-cache-dir plantdb/src/client/.; \
+    fi && \
     # Clean pip cache:
     python3 -m pip cache purge
 
