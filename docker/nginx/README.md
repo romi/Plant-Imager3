@@ -10,9 +10,14 @@ The purpose of this proxy is to route incoming requests to appropriate backend s
 
 The NGINX reverse proxy is configured to route requests as follows:
 
-- **Test endpoint**: returns a simple status message for testing purposes `/test`
-- **PlantDB service**: Requests to are proxied to `/plantdb``http://localhost:5000`
-- **WebUI service**: Requests to are proxied to the controller URL and port specified during build time `/webui`
+
+| URL Path   | Service                            |
+|------------|------------------------------------|
+| `/test`    | NGINX test route                   |
+| `/plantdb` | PlantDB REST API (backend)         |
+| `/webui`   | WebUI (frontend)                   |
+| `/p3dx`    | Plant 3D Explorer (frontend)       |
+| `/p3dv`    | Plant 3D Vision WebTerm (frontend) |
 
 This setup allows you to access different components of your application through a single entry point, improving the organization and accessibility of your services.
 
@@ -33,10 +38,13 @@ sudo apt-get install openssl
 ### Generate Private Key and Certificate
 
 First create an `ssl` folder in the `docker/nginx` directory of the cloned sources.
-It will receive the `openssl.cnf`, `key.pem` and `cert.pem` files created hereafter and used by the server (`key.pem` + `cert.pem`) and clients (`cert.pem`). 
+It will receive the `openssl.cnf`, `key.pem` and `cert.pem` files created hereafter and used by the server (`key.pem` +
+`cert.pem`) and clients (`cert.pem`).
 
 #### 1. Create a Configuration File
+
 Then, create an OpenSSL configuration file (e.g., `openssl.cnf`) as follows:
+
 ``` 
 [req]
 distinguished_name = req_distinguished_name
@@ -70,9 +78,10 @@ DNS.3 = <server.fr>
 # IP.1 = 192.168.1.1
 ```
 
-You will to replace all parameters within angle brackets `<>` to suits your needs. 
+You will to replace all parameters within angle brackets `<>` to suits your needs.
 
 #### 2. Generate the Certificate and Private Key
+
 Run the following command to generate a self-signed certificate with the configuration:
 
 ``` bash
@@ -81,6 +90,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/key.pem -out ssl
 ```
 
 This command:
+
 - Creates a self-signed X.509 certificate
 - Valid for 365 days
 - Using a 2048-bit RSA key
@@ -92,6 +102,7 @@ This command:
 #### 3. Verify the Certificate
 
 Check that the certificate includes the correct Subject Alternative Names:
+
 ``` bash
 openssl x509 -in ssl/cert.pem -text -noout | grep DNS
 ```
@@ -104,17 +115,17 @@ openssl x509 -in ssl/cert.pem -text -noout | grep DNS
 
 To build the NGINX Docker image, you need to specify the following build arguments:
 
-- `SERVER_URL`: the URL of the NGINX server acting as reverse proxy;
-- `CONTROLLER_URL`: the URL of the controller (serving the WebUI);
+- `SERVER_HOST`: the URL of the NGINX server acting as reverse proxy;
+- `CONTROLLER_HOST`: the URL of the controller (serving the WebUI);
 - `CONTROLLER_PORT`: the port of the controller.
 - `CONTROLLER_PREFIX`: the URL prefix redirecting to the controller service.
-- `PLANTDB_URL`: the URL of the PlantDB REST API (serving the dataset);
+- `PLANTDB_HOST`: the URL of the PlantDB REST API (serving the dataset);
 - `PLANTDB_PORT`: the port of the PlantDB REST API.
 - `PLANTDB_PREFIX`: the URL prefix redirecting to the PlantDB REST API service.
-- `P3DV_URL`: the URL of the WebTerm (plant-3d-vision reconstruction and analysis tools);
+- `P3DV_HOST`: the URL of the WebTerm (plant-3d-vision reconstruction and analysis tools);
 - `P3DV_PORT`: the port of the WebTerm.
 - `P3DV_PREFIX`: the URL prefix redirecting to the WebTerm service.
-- `P3DX_URL`: the URL of the plant 3D explorer (dedicated viewer);
+- `P3DX_HOST`: the URL of the plant 3D explorer (dedicated viewer);
 - `P3DX_PORT`: the port of the plant 3D explorer.
 - `P3DX_PREFIX`: the URL prefix redirecting to the plant 3D explorer service.
 
@@ -123,42 +134,34 @@ Use the following command:
 ```shell
 cd docker/nginx
 sudo docker build \
-  --build-arg SERVER_URL='localhost' \
-  --build-arg CONTROLLER_URL='localhost' \
+  --build-arg SERVER_HOST='dev.romi.local' \
+  --build-arg CONTROLLER_HOST='plantimager_webui' \
   --build-arg CONTROLLER_PORT='8080' \
   --build-arg CONTROLLER_PREFIX='/webui' \
-  --build-arg PLANTDB_URL='localhost' \
+  --build-arg PLANTDB_HOST='plantimager_plantdb' \
   --build-arg PLANTDB_PORT='5000' \
   --build-arg PLANTDB_PREFIX='/plantdb' \
-  --build-arg P3DV_URL='localhost' \
+  --build-arg P3DV_HOST='plantimager_p3dv' \
   --build-arg P3DV_PORT='8081' \
   --build-arg P3DV_PREFIX='/p3dv' \
-  --build-arg P3DX_URL='localhost' \
+  --build-arg P3DX_HOST='plantimager_p3dx' \
   --build-arg P3DX_PORT='80' \
   --build-arg P3DX_PREFIX='/p3dx' \
   -t roboticsmicrofarms/plantimager_nginx:latest .
 ```
 
 > **Note**:
-> Replace the placeholder URLs and port with your actual values.
-> If they run in containers, you may be able to use the container name in place of the URL if they are on the same network.
+> - Replace the URLs and port with your actual values.
+> - If the backend and frontend apps run in containers, you can use the container names (`plantimager_*`) as URL.
 
-## Create a network
-
-To communicate between containers, connect them to the same user-defined network:
-``` bash
-# Create a network if you don't have one
-docker network create romi-network
-```
-
-## Run a container
+## Run the Container
 
 After building the image, you can run the container with:
 
 ```shell
 sudo docker run -d --name plantimager_nginx \
-  --network=romi-network \
-  -p 443:443 -p 8080:8080 -p 80:80 \
+  -p 443:443 -p 80:80 \
+  -v /path/to/cert/ssl/:/etc/nginx/ssl/ \
   roboticsmicrofarms/plantimager_nginx:latest
 ```
 
@@ -166,11 +169,10 @@ This command:
 
 - Runs the container in detached mode (`-d`)
 - Names the container `plantimager_nginx`
-- Connect the container to the network `romi-network` (to access the plantdb container, also on the same network)
+- Bind the path whe you create your OpenSSL certificates (`/path/to/cert/ssl/`) to the location NGINX expect them to be (`/etc/nginx/ssl/`)
 - Maps the following ports:
     - Host port 80 → container port 80 (HTTP)
     - Host port 443 → container port 443 (HTTPS)
-    - Host port 8080 → container port 8080 (controller traffic)
 
 ## Stop & Clean Up
 
