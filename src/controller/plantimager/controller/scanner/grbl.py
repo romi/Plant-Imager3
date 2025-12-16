@@ -178,6 +178,7 @@ class CNC(AbstractCNC):
         self.grbl_settings = None
         self._start()
         finalize(self, self.stop)
+        self._ready, self._standby = True, True
 
     def _start(self) -> None:
         """Initialize the serial connection with Arduino and configure the GRBL-based CNC machine.
@@ -432,6 +433,8 @@ class CNC(AbstractCNC):
         - GRBL Homing Cycle: https://github.com/gnea/grbl/wiki/Grbl-v1.1-Commands#h---run-homing-cycle
         - ``G92`` Reference: http://linuxcnc.org/docs/html/gcode/g-code.html#gcode:g92
         """
+        prior_ready_state = self.ready
+        self._standby = False
         # Execute GRBL homing cycle to find machine zero
         self.send_cmd("$H", wait=True, timeout=60)
 
@@ -453,6 +456,7 @@ class CNC(AbstractCNC):
         y_init = sign_y * (y_max - pulloff) if pulloff_mask & 2 else sign_y * pulloff
         z_init = sign_z * (z_max - pulloff) if pulloff_mask & 4 else sign_z * pulloff
         self.send_cmd(f"g92 x{x_init} y{y_init} z{z_init}", wait=True, timeout=10)
+        self._standby = prior_ready_state
 
     def _check_move(self, x: float, y: float, z: float) -> None:
         """Validate that the requested movement coordinates are within the machine's axis limits.
@@ -505,6 +509,7 @@ class CNC(AbstractCNC):
         - Units are in millimeters (``G21`` mode)
         - The method will block until the movement is complete
         """
+        self._standby = False
         # Validate that the target coordinates are within machine limits
         self._check_move(x, y, z)
 
@@ -528,6 +533,7 @@ class CNC(AbstractCNC):
         if time.time() - t0 < travel_time:
             time.sleep(travel_time - (time.time() - t0))
         self.wait_until_immobile(30)
+        self._standby = True
 
     def moveto_async(self, x: length_mm, y: length_mm, z: deg) -> bytes:
         """Asynchronously move the CNC machine to specified coordinates using G0 rapid positioning.

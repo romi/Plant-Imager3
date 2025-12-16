@@ -77,7 +77,10 @@ class DummyCNC(AbstractCNC):
 
         # Simulate initialization delay
         time.sleep(0.2)
+        self._ready = True
+        self._standby = True
         logger.info("Dummy CNC initialized")
+
 
     def _check_move(self, x: float, y: float, z: float) -> None:
         """Validate that the requested movement coordinates are within the machine's axis limits.
@@ -107,6 +110,7 @@ class DummyCNC(AbstractCNC):
         Sets the current position to a starting point near the origin,
         simulating the behavior of the real CNC homing procedure.
         """
+        self._standby = False
         logger.info("Dummy CNC homing...")
         self._busy = True
         # Simulate homing time
@@ -115,6 +119,7 @@ class DummyCNC(AbstractCNC):
         self._position = (20, 20, 0)
         self._busy = False
         logger.info("Dummy CNC homing completed")
+        self._standby = True
 
     def get_position(self) -> tuple[length_mm, length_mm, deg]:
         """Get the current XYZ position of the dummy CNC machine.
@@ -156,8 +161,10 @@ class DummyCNC(AbstractCNC):
         ValueError
             If any of the target coordinates are outside the allowed limits
         """
+        self._standby = False
         self.moveto_async(x, y, z)
         self.wait()
+        self._standby = True
 
     def moveto_async(self, x: length_mm, y: length_mm, z: deg) -> None:
         """Asynchronously move the dummy CNC machine to specified coordinates.
