@@ -194,8 +194,6 @@ Let's Encrypt is a free, automated, and open Certificate Authority that provides
 #### Method 2: Using Docker Compose with Nginx and Certbot
 
 ``` yaml
-version: '3'
-
 services:
   nginx:
     image: your-nginx-image
