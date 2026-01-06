@@ -21,8 +21,10 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import ctx
+from dash import dcc
 from dash import html
 from dash import no_update
+from dash_bootstrap_components import NavLink
 from plantdb.client.rest_api import PLANTDB_API_HOST
 from plantdb.client.rest_api import PLANTDB_API_PORT
 from plantdb.client.rest_api import plantdb_url
@@ -162,7 +164,7 @@ cfg_tooltip = dbc.Tooltip(
 
 # Card component for PlantDB API configuration
 plantdb_cfg_modal = html.Div(children=[
-    dbc.Modal(id="plantdb-cfg-modal", children=[
+    dbc.Modal(id="plantdb-cfg-modal", is_open=False, children=[
         dbc.ModalHeader(
             dbc.ModalTitle(
                 children=[
@@ -234,76 +236,59 @@ plantdb_cfg_modal = html.Div(children=[
             html.Div(id="plantdb-status-form", className="w-100"),
             html.Div(id="load-status-form", className="w-100"),
         ])
-    ])
+    ]),
+    # Interval component for auto-closing modal after successful connection
+    dcc.Interval(
+        id='modal-close-interval',
+        interval=2000,  # 2 seconds
+        n_intervals=0,
+        max_intervals=1,
+        disabled=True
+    )
 ])
 
 
 @callback(Output("plantdb-cfg-modal", "is_open"),
           Input('plantdb-cfg-button', 'n_clicks'),
-          Input('connect-plantdb-button', 'n_clicks'),
-          State('api-address', 'value'),
-          State('api-port', 'value'),
-          State('api-prefix', 'value'),
-          State('api-ssl', 'value'),
+          Input('modal-close-interval', 'n_intervals'),
           State('plantdb-cfg-modal', 'is_open'),
           prevent_initial_call=True)
 def toggle_plantdb_cfg_modal(
         cfg_clicks: int,
-        connect_clicks: int,
-        host: str | None,
-        port: int | str | None,
-        prefix: str | None,
-        ssl: bool | None,
+        n_intervals: int,
         is_open: bool
-) -> bool | None:
+) -> bool:
     """Toggle the visibility state of the PlantDB configuration modal.
 
     This callback function controls the opening and closing of the PlantDB configuration
-    modal dialog. It is triggered by clicking on either:
-    1. The configuration button (opens modal)
-    2. The connect button (closes modal only if connection successful)
+    modal dialog. It is triggered by:
+    1. clicking the configuration button (opens modal)
+    2. the interval timer (closes modal after successful connection)
 
     Parameters
     ----------
     cfg_clicks : int
         Number of times the plantdb-cfg-button has been clicked.
-    connect_clicks : int
-        Number of times the connect-plantdb-button has been clicked.
-    host : str or None
-        The host value from the form.
-    port : int or str or None
-        The port value from the form.
-    prefix : str or None
-        The prefix value from the form.
-    ssl : bool or None
-        The SSL flag from the form.
+    n_intervals : int
+        Number of intervals elapsed (for auto-close after successful connection).
     is_open : bool
         Current visibility state of the modal.
 
     Returns
     -------
-    bool or None
+    bool
         The new visibility state of the modal.
     """
-    # Identify which button was clicked using context
     triggered_id = ctx.triggered_id
 
-    # The configuration button was clicked - open modal
+    # The configuration button was clicked - toggle modal
     if triggered_id == 'plantdb-cfg-button':
-        return True
+        return not is_open
 
-    # The connect button was clicked - check the connection before closing
-    elif triggered_id == 'connect-plantdb-button':
-        # Only attempt to close if the modal is open
-        if is_open:
-            if server_available(host, port, prefix, ssl):
-                # Close the modal only if the connection is successful
-                return False
-            else:
-                # Keep modal open if connection fails
-                return True
+    # The interval timer fired - close the modal (only fires after successful connection)
+    elif triggered_id == 'modal-close-interval':
+        return False
 
-    # Return no_update if no relevant button was clicked
     return no_update
 
 
@@ -480,6 +465,8 @@ def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str, 
     Output('rest-api-port', 'data'),
     Output('rest-api-prefix', 'data'),
     Output('rest-api-ssl', 'data'),
+    Output('modal-close-interval', 'disabled'),
+    Output('modal-close-interval', 'n_intervals'),
     Input('connect-plantdb-button', 'n_clicks'),
     State('api-address', 'value'),
     State('api-port', 'value'),
@@ -496,11 +483,11 @@ def check_server_availability(
         port: int | str | None,
         prefix: str | None,
         ssl: bool | None,
-        stored_host: str | None,
-        stored_port: int | str | None,
-        stored_prefix: str | None,
-        stored_ssl: bool | None,
-) -> tuple[bool, bool, str, int | str, str, bool]:
+        stored_host: str,
+        stored_port: int,
+        stored_prefix: str,
+        stored_ssl: bool,
+) -> tuple[bool, bool, str, int, str, bool, bool, int]:
     """Checks the availability of a server based on the provided host and port and updates the UI accordingly.
 
     Parameters
@@ -538,6 +525,10 @@ def check_server_availability(
         The updated server prefix value to store.
     bool
         The updated server SSL flag value to store.
+    bool
+        Whether the modal-close-interval should be disabled.
+    int
+        Reset n_intervals to 0 to restart the timer.
     """
     if host is None:
         host = stored_host
@@ -558,9 +549,11 @@ def check_server_availability(
             ssl = True
 
     if server_available(host, port, prefix, ssl):
-        return True, False, host, port, prefix, ssl
+        # Server is available: enable load button, enable interval timer
+        return True, False, host, port, prefix, ssl, False, 0
     else:
-        return False, True, host, port, prefix, ssl
+        # Server is not available: disable load button, disable interval timer
+        return False, True, host, port, prefix, ssl, True, 0
 
 
 @callback(
@@ -568,7 +561,7 @@ def check_server_availability(
     Input("connected", "data"),
     State("dataset-list", "data"),
 )
-def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) -> list:
+def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) -> NavLink:
     """Update the PlantDB configuration button's appearance based on connection status.
 
     This callback function updates the visual representation of the PlantDB configuration
@@ -588,7 +581,7 @@ def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) ->
 
     Returns
     -------
-    dash.html.Component
+    dash_bootstrap_components.NavLink
         A Dash HTML component representing the configuration button icon
         with the appropriate styling based on the connection status.
     """
