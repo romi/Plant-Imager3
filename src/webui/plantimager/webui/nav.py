@@ -97,8 +97,8 @@ def update_table_link_href(_):
 
 #: Define main navigation items including scan, database, and documentation links
 nav_items: list = [
-    dbc.NavItem(children=[tutorial_link, tutorial_tooltip]),
     dbc.NavItem(children=[login_button, login_button_tooltip]),
+    dbc.NavItem(children=[tutorial_link, tutorial_tooltip]),
     dbc.NavItem(children=[scan_link, scan_tooltip]),
     dbc.NavItem(children=[dataset_table_link, dataset_table_tooltip]),
     dbc.NavItem(children=[cfg_button, cfg_tooltip]),
