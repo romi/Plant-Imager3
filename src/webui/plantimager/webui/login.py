@@ -123,7 +123,7 @@ def create_login_button(is_logged_in: bool = False, user_fullname: str | None = 
 
 
 login_button_tooltip = dbc.Tooltip(
-    children="Login to access the Plant Imager.",
+    children="Login to the Plant Imager",
     target="login-avatar-button",
     placement="bottom",
 )

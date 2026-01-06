@@ -39,7 +39,7 @@ tutorial_link: dbc.NavLink = dbc.NavLink(
 
 #: Tooltip component providing help text for the tutorial link
 tutorial_tooltip: dbc.Tooltip = dbc.Tooltip(
-    children="Access tutorial on how to configure a scan.",
+    children="Tutorials to configure a scan",
     target="tutorial-link",
     placement="bottom",
 )
@@ -55,7 +55,7 @@ scan_link: dbc.NavLink = dbc.NavLink(
 
 #: Tooltip component providing help text for the tutorial link
 scan_tooltip: dbc.Tooltip = dbc.Tooltip(
-    children="Access dataset acquisition page.",
+    children="Dataset acquisition page",
     target="scan-link",
     placement="bottom",
 )
@@ -71,7 +71,7 @@ dataset_table_link: dbc.NavLink = dbc.NavLink(
 
 #: Tooltip component providing help text for the tutorial link
 dataset_table_tooltip: dbc.Tooltip = dbc.Tooltip(
-    children="Access dataset table page.",
+    children="Dataset table page",
     target="dataset-table-link",
     placement="bottom",
 )

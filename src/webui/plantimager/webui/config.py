@@ -23,7 +23,6 @@ from dash import callback
 from dash import ctx
 from dash import html
 from dash import no_update
-from plantdb.client.plantdb_client import PlantDBClient
 from plantdb.client.rest_api import PLANTDB_API_HOST
 from plantdb.client.rest_api import PLANTDB_API_PORT
 from plantdb.client.rest_api import plantdb_url
@@ -156,7 +155,7 @@ def create_dataset_cfg_icon(is_connected: bool = False, dataset_list: list | Non
 # Create PlantDB API configuration button component for the navigation bar
 cfg_button = create_dataset_cfg_icon()
 cfg_tooltip = dbc.Tooltip(
-    children="Configure PlantDB API connection and load dataset list.",
+    children="Configure the PlantDB API",
     target="plantdb-cfg-button",
     placement="bottom",
 )
@@ -647,7 +646,7 @@ def update_dataset_list(
 
     try:
         dataset_list = request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl,
-                                       cert_path=os.environ.get('CERT_PATH', None))
+                                               cert_path=os.environ.get('CERT_PATH', None))
     except RequestException as e:
         dataset_list = []
         error = e
