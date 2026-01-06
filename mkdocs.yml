@@ -11,10 +11,10 @@ nav:
   - 'Reference API': reference/
   - 'Developer':
     - developer/index.md
-    - developer/documentation.md
+    - developer/guidelines.md
     - developer/architecture.md
     - developer/RPC.md
-    - developer/nginx_openssl.md
+    - developer/NTP_server.md.md
 
 
 theme:
