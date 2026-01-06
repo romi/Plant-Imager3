@@ -162,10 +162,10 @@ def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, pla
     # Main application layout definition
     app.layout = html.Div([
         # Global state storage
-        dcc.Store(id='rest-api-host', data=plantdb_host, storage_type='session'),  # PlantDB REST API URL
-        dcc.Store(id='rest-api-port', data=plantdb_port, storage_type='session'),  # PlantDB REST API port
-        dcc.Store(id='rest-api-prefix', data=plantdb_prefix, storage_type='session'),  # PlantDB REST API prefix
-        dcc.Store(id='rest-api-ssl', data=plantdb_ssl, storage_type='session'),  # PlantDB REST API prefix
+        dcc.Store(id='plantdb-host', data=plantdb_host, storage_type='session'),  # PlantDB REST API URL
+        dcc.Store(id='plantdb-port', data=plantdb_port, storage_type='session'),  # PlantDB REST API port
+        dcc.Store(id='plantdb-prefix', data=plantdb_prefix, storage_type='session'),  # PlantDB REST API prefix
+        dcc.Store(id='plantdb-ssl', data=plantdb_ssl, storage_type='session'),  # PlantDB REST API prefix
         dcc.Store(id='connected', data=None),  # boolean flag indicating if connected to the database or not
         dcc.Store(id='logged-username', data=None, storage_type='session'),  # id of the logger user
         dcc.Store(id='logged-fullname', data=None, storage_type='session'),  # real name of the logged user

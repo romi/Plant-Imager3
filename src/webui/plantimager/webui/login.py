@@ -265,10 +265,10 @@ def toggle_login_modal(_: int, is_open: bool, username: str | None) -> bool | No
     Output('username-input', 'invalid'),
     Input('username-input', 'value'),
     State('login-modal', 'is_open'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
-    State('rest-api-ssl', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
 )
 def validate_username(username: str | None, is_modal_open: bool, host: str, port: int | str, prefix: str, ssl: bool) -> \
         tuple[bool, bool]:
@@ -318,10 +318,10 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
           Input('login-button', 'n_clicks'),
           State('username-input', 'value'),
           State('password-input', 'value'),
-          State('rest-api-host', 'data'),
-          State('rest-api-port', 'data'),
-          State('rest-api-prefix', 'data'),
-          State('rest-api-ssl', 'data'),
+          State('plantdb-host', 'data'),
+          State('plantdb-port', 'data'),
+          State('plantdb-prefix', 'data'),
+          State('plantdb-ssl', 'data'),
           prevent_initial_call=True)
 def login(
         username_submit: int,
@@ -560,10 +560,10 @@ def timeout_modal(username: str | None) -> bool:
     Output('login-attempt-message', 'style', allow_duplicate=True),
     Output("login-attempt-message", "children", allow_duplicate=True),
     Input('logout-button', 'n_clicks'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
-    State('rest-api-ssl', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
     State('session-token', 'data'),
     prevent_initial_call=True,
 )

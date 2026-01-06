@@ -147,10 +147,10 @@ def toggle_register_modal(new_user_clicks: int | None, is_open: bool) -> bool:
     Output('new-username-input', 'invalid'),
     Input('new-username-input', 'value'),
     State('new-user-modal', 'is_open'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
-    State('rest-api-ssl', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
 )
 def validate_new_username(new_username: str | None, is_modal_open: bool, host: str, port: str, prefix: str,
                           ssl: bool) -> Tuple[bool, bool]:
@@ -257,10 +257,10 @@ def validate_password_match(password: str | None, confirm_password: str | None) 
      State("new-fullname-input", "value"),
      State("new-password-input", "value"),
      State("confirm-password-input", "value"),
-     State("rest-api-host", "data"),
-     State("rest-api-port", "data"),
-     State("rest-api-prefix", "data"),
-     State("rest-api-ssl", "data"),
+     State("plantdb-host", "data"),
+     State("plantdb-port", "data"),
+     State("plantdb-prefix", "data"),
+     State("plantdb-ssl", "data"),
      ],
     prevent_initial_call=True
 )

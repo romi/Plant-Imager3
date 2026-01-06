@@ -19,9 +19,9 @@ from plantimager.webui.visu import dash_boostrap_carousel
     Output('select-image-task', 'options'),
     Input("carousel-modal", "is_open"),
     State('view-dataset', 'data'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
 )
 def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix):
     """Updates the dropdown options for image tasks based on the dataset and API configuration.
@@ -62,9 +62,9 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix):
           Input("carousel-modal", "is_open"),
           Input("select-image-task", "value"),
           State('view-dataset', 'data'),
-          State('rest-api-host', 'data'),
-          State('rest-api-port', 'data'),
-          State('rest-api-prefix', 'data'),
+          State('plantdb-host', 'data'),
+          State('plantdb-port', 'data'),
+          State('plantdb-prefix', 'data'),
           )
 def images_carousel(open_modal, image_task, dataset_id, host, port, prefix):
     """Create a Dash carousel component displaying images from a specified dataset task.

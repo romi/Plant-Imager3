@@ -295,7 +295,7 @@ def toggle_plantdb_cfg_modal(
 @callback(
     Output("api-address", "value"),
     Input("plantdb-cfg-modal", "is_open"),
-    State("rest-api-host", "data")
+    State("plantdb-host", "data")
 )
 def show_api_address(modal_is_open: bool, stored_host: str | None) -> str:
     """Callback updating the value of the 'api-address' field with stored data when opening the PlantDB configuration modal.
@@ -322,7 +322,7 @@ def show_api_address(modal_is_open: bool, stored_host: str | None) -> str:
 @callback(
     Output("api-port", "value"),
     Input("plantdb-cfg-modal", "is_open"),
-    State("rest-api-port", "data")
+    State("plantdb-port", "data")
 )
 def show_api_port(modal_is_open: bool, stored_port: int | None) -> int | str:
     """Callback updating the value of the 'api-port' field with stored data when opening the PlantDB configuration modal.
@@ -349,7 +349,7 @@ def show_api_port(modal_is_open: bool, stored_port: int | None) -> int | str:
 @callback(
     Output("api-prefix", "value"),
     Input("plantdb-cfg-modal", "is_open"),
-    State("rest-api-prefix", "data")
+    State("plantdb-prefix", "data")
 )
 def show_api_prefix(modal_is_open: bool, stored_prefix: str | None) -> int | str:
     """Callback updating the value of the 'api-prefix' field with stored data when opening the PlantDB configuration modal.
@@ -376,7 +376,7 @@ def show_api_prefix(modal_is_open: bool, stored_prefix: str | None) -> int | str
 @callback(
     Output("api-ssl", "value"),
     Input("plantdb-cfg-modal", "is_open"),
-    State("rest-api-ssl", "data")
+    State("plantdb-ssl", "data")
 )
 def show_api_ssl(modal_is_open: bool, stored_ssl: bool | None) -> bool:
     """Callback updating the value of the 'api-ssl' checkbox with stored data when opening the PlantDB configuration modal.
@@ -402,10 +402,10 @@ def show_api_ssl(modal_is_open: bool, stored_ssl: bool | None) -> bool:
 @callback(
     Output("plantdb-status-form", "children"),
     Input("connected", "data"),
-    State("rest-api-host", "data"),
-    State("rest-api-port", "data"),
-    State("rest-api-prefix", "data"),
-    State("rest-api-ssl", "data"),
+    State("plantdb-host", "data"),
+    State("plantdb-port", "data"),
+    State("plantdb-prefix", "data"),
+    State("plantdb-ssl", "data"),
 )
 def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str, ssl: bool) -> dbc.Alert:
     """Display the connection status of the PlantDB server in a Bootstrap alert component.
@@ -461,10 +461,10 @@ def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str, 
 @callback(
     Output('connected', 'data'),
     Output('load-plantdb-button', 'disabled'),
-    Output('rest-api-host', 'data'),
-    Output('rest-api-port', 'data'),
-    Output('rest-api-prefix', 'data'),
-    Output('rest-api-ssl', 'data'),
+    Output('plantdb-host', 'data'),
+    Output('plantdb-port', 'data'),
+    Output('plantdb-prefix', 'data'),
+    Output('plantdb-ssl', 'data'),
     Output('modal-close-interval', 'disabled'),
     Output('modal-close-interval', 'n_intervals'),
     Input('connect-plantdb-button', 'n_clicks'),
@@ -472,10 +472,10 @@ def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str, 
     State('api-port', 'value'),
     State('api-prefix', 'value'),
     State('api-ssl', 'value'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
-    State('rest-api-ssl', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
 )
 def check_server_availability(
         _: int,
@@ -594,10 +594,10 @@ def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) ->
     Output('dataset-list', 'data'),
     Input('load-plantdb-button', 'n_clicks'),
     Input('connected', 'data'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
-    State('rest-api-ssl', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
     prevent_initial_call=True,
 )
 def update_dataset_list(

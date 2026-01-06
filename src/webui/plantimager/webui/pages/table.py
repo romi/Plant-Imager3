@@ -123,9 +123,9 @@ def _column_defs(col_name):
     Output('dataset-dict', 'data', allow_duplicate=True),
     Output('refresh-table-button', 'n_clicks'),
     Input('refresh-table-button', 'n_clicks'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
     prevent_initial_call=True
 )
 def refresh_table_data(n_clicks, host, port, prefix):
@@ -154,9 +154,9 @@ def refresh_table_data(n_clicks, host, port, prefix):
 @callback(
     Output('dataset-dict', 'data'),
     Input('url', 'pathname'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data')
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data')
 )
 def update_on_url_change(url, host, port, prefix):
     """Update the dataset dictionary when the URL changes.
@@ -179,10 +179,10 @@ def update_on_url_change(url, host, port, prefix):
 
 @callback(Output('dataset-table', 'children'),
           Input('dataset-dict', 'data'),
-          State('rest-api-host', 'data'),
-          State('rest-api-port', 'data'),
-          State('rest-api-prefix', 'data'),
-          State('rest-api-ssl', 'data'))
+          State('plantdb-host', 'data'),
+          State('plantdb-port', 'data'),
+          State('plantdb-prefix', 'data'),
+          State('plantdb-ssl', 'data'))
 def update_table(dataset_dict, host, port, prefix, ssl):
     """Update the AG Grid table.
 
