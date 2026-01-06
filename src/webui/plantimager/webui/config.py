@@ -32,6 +32,46 @@ from plantdb.client.url import is_server_available
 from requests import RequestException
 
 
+def server_available(host, port, prefix, ssl):
+    """Checks the availability of a server.
+
+    Parameters
+    ----------
+    host : str
+        The IP address or hostname of the server to test.
+    port : int
+        The port number of the server to test.
+    prefix : str
+        The URL prefix of the server to test.
+    ssl : bool
+        Flag indicating whether SSL (HTTPS) is enabled.
+
+    Returns
+    -------
+    bool
+        A flag indicating whether the server is available.
+    """
+    try:
+        allow_private_ip = os.environ.get('ALLOW_PRIVATE_IP', 'false').lower() == 'true'
+        cert_path = os.environ.get('CERT_PATH', None)
+        url = plantdb_url(host, port=port, prefix=prefix, ssl=ssl)
+        print("-------------------------------------------------------")
+        print("URL:", url)
+        availability = is_server_available(url, allow_private_ip=allow_private_ip,
+                                           cert_path=cert_path, validate_host=False)
+        print("availability.ok:", availability.ok)
+        print("availability.status_code:", availability.status_code)
+        print("availability.message:", availability.message)
+        print("availability.url:", availability.url)
+        print("availability.final_url:", availability.final_url)
+        print("-------------------------------------------------------")
+    except:
+        is_available = False
+    else:
+        is_available = availability.ok
+    return is_available
+
+
 def _connected_status(dataset_list):
     status = dbc.Alert(children=[
         html.I(className="bi bi-check-circle-fill me-2"),
@@ -257,17 +297,12 @@ def toggle_plantdb_cfg_modal(
     elif triggered_id == 'connect-plantdb-button':
         # Only attempt to close if the modal is open
         if is_open:
-            try:
-                allow_private_ip = os.environ.get('ALLOW_PRIVATE_IP', 'false').lower() == 'true'
-                availability = is_server_available(plantdb_url(host, port=port, prefix=prefix, ssl=ssl),
-                                                   allow_private_ip=allow_private_ip,
-                                                   cert_path=os.environ.get('CERT_PATH', None))
-            except:
+            if server_available(host, port, prefix, ssl):
+                # Close the modal only if the connection is successful
+                return False
+            else:
                 # Keep modal open if connection fails
                 return True
-            else:
-                # Close the modal only if the connection is successful
-                return not availability.ok
 
     # Return no_update if no relevant button was clicked
     return no_update
@@ -493,7 +528,7 @@ def check_server_availability(
     Returns
     -------
     bool
-        A storer flag indicating whether the connection test was successful.
+        A flag indicating whether the server is available.
     bool
         A boolean indicating whether the load button should be disabled.
     str
@@ -523,25 +558,7 @@ def check_server_availability(
             host = host[8:]
             ssl = True
 
-    try:
-        allow_private_ip = os.environ.get('ALLOW_PRIVATE_IP', 'false').lower() == 'true'
-        cert_path = os.environ.get('CERT_PATH', None)
-        url = plantdb_url(host, port=port, prefix=prefix, ssl=ssl)
-        print("-------------------------------------------------------")
-        print("URL:", url)
-        availability = is_server_available(url, allow_private_ip=allow_private_ip, cert_path=cert_path)
-        print("availability.ok:", availability.ok)
-        print("availability.status_code:", availability.status_code)
-        print("availability.message:", availability.message)
-        print("availability.url:", availability.url)
-        print("availability.final_url:", availability.final_url)
-        print("-------------------------------------------------------")
-    except:
-        is_available = False
-    else:
-        is_available = availability.ok
-
-    if is_available:
+    if server_available(host, port, prefix, ssl):
         return True, False, host, port, prefix, ssl
     else:
         return False, True, host, port, prefix, ssl
