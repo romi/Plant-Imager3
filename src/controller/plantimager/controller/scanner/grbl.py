@@ -219,12 +219,14 @@ class CNC(AbstractCNC):
         # Clear input buffer
         self.serial_port.flushInput()
 
-        # Apply all GRBL configuration settings from a predefined dictionary
-        for code, (_, _, value) in GRBL_SETTINGS.items():
-            self.send_cmd(f"{code}={value}", wait=True, timeout=1)
-
         # Get current GRBL settings
         self.grbl_settings = self.get_grbl_settings()
+
+        # Apply all GRBL configuration settings from a predefined dictionary
+        for code, (_, _, value) in GRBL_SETTINGS.items():
+            if self.grbl_settings[code] != value:
+                self.send_cmd(f"{code}={value}", wait=True, timeout=1)
+
 
         # Parse direction port invert mask (setting $3) to determine axis inversions
         invert_mask = self.grbl_settings["$3"]
