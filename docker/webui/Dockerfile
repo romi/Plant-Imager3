@@ -9,14 +9,17 @@ ENV PYTHONUNBUFFERED=1
 ENV PATH="/root/.local/bin:${PATH}"
 
 # Install build dependencies
-RUN apt-get update && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
     apt-get install -yq --no-install-recommends \
         # Install python3.12 & pip
         python3 python3-pip python3-venv \
         # Install 'gcc', 'libc6-dev' & 'python3-dev' to be able to build uwsgi
         gcc libc6-dev python3-dev
 
-RUN echo "Building uwsgi..." && \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    echo "Building uwsgi..." && \
     # Create a virtual environment
     python3 -m venv /home/root/venv && \
     # Activate the virtual environment and install packages
@@ -57,9 +60,10 @@ ENV PATH="${PATH}:/home/${USER_NAME}/.local/bin"
 # Change Shell to 'bash', default is 'sh':
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get update && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
     # Install system dependencies:
-    apt-get install -y --no-install-recommends \
+    apt-get update && apt-get install -y --no-install-recommends \
       # Install some basic tools
       ca-certificates curl git nano rsync \
       # Install python3.12 & pip
@@ -96,8 +100,9 @@ WORKDIR /home/${USER_NAME}
 COPY --chown=${USER_NAME} src/commons/ commons/
 COPY --chown=${USER_NAME} src/webui/ webui/
 
-RUN echo "\n\n# Create a virtual environment..." && \
+RUN --mount=type=cache,target=/root/.cache/pip \
     # Create a virtual environment
+    echo "\n\n# Create a virtual environment..." && \
     python3 -m venv /home/${USER_NAME}/venv && \
     # Activate the virtual environment and install packages
     . /home/${USER_NAME}/venv/bin/activate && \
