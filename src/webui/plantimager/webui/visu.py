@@ -4,7 +4,6 @@
 
 import numpy as np
 import dash_bootstrap_components as dbc
-from plantimager.webui.pages.table import load_image_from_url
 
 
 def plotly_image_carousel(images, height=900, width=900, title="Carousel", layout_kwargs=None):
@@ -81,6 +80,8 @@ def dash_boostrap_carousel(images: list[str]):
     ----------
     None
     """
+    from plantimager.webui.utils import load_image_from_url
+
     images.sort()
     carousel = dbc.Carousel(
         items=[{"key": idx, "alt": img.split('/')[-1], "src": load_image_from_url(img)} for idx, img in enumerate(images)],
