@@ -5,23 +5,6 @@
 
 This module provides common utility functions used across the Plant Imager web interface,
 particularly for interacting with the PlantDB REST API and handling configuration files.
-
-Key Features
-------------
-- Dataset retrieval and management
-- Pipeline configuration handling
-- TOML configuration file upload component
-- REST API interaction helpers
-
-Usage Examples
---------------
-```python
->>> from plantimager.webui.utils import get_dataset_dict, has_pipeline_cfg
->>> # Get all datasets from the PlantDB server
->>> datasets = get_dataset_dict('localhost', '5000')
->>> # Check if a dataset has a pipeline configuration
->>> has_config = has_pipeline_cfg('localhost', '5000', 'my_plant_scan')
-```
 """
 import base64
 from typing import Any
@@ -76,6 +59,19 @@ def get_dataset_dict(host: str, port: str, prefix: str, ssl: bool) -> dict[str, 
     dict[str, Any] | None
         The dataset dictionary for the PlantDB REST API at given host url and port.
         Returns ``None`` if no scans are found.
+
+    Examples
+    --------
+    >>> from plantimager.webui.utils import get_dataset_dict
+    >>> from plantdb.server.test_rest_api import TestRestApiServer
+    >>> server = TestRestApiServer("/data/ROMI/shared_fsdb")
+    >>> server.start()
+    >>> dataset_dict = get_dataset_dict('localhost', port=5000, prefix='', ssl=False)
+    >>> print(list(dataset_dict))
+    ['arabidopsis000', 'real_plant', 'real_plant_analyzed', 'virtual_plant', 'virtual_plant_analyzed']
+    >>> print(list(dataset_dict['real_plant_analyzed']['metadata']))
+    ['date', 'species', 'plant', 'environment', 'nbPhotos', 'files']
+    >>> server.stop()
 
     See Also
     --------
