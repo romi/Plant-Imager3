@@ -166,7 +166,6 @@ def load_image_from_url(url):
     >>> from plantimager.webui.utils import load_image_from_url
     >>> from plantdb.server.test_rest_api import TestRestApiServer
     >>> from plantdb.client.rest_api import scan_image_url
-    >>> from plantdb.client.rest_api import request_scan_image
     >>> server = TestRestApiServer("/data/ROMI/shared_fsdb")
     >>> server.start()
     >>> # Load a very small image:
