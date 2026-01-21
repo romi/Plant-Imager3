@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import base64
 
 import dash
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import pandas as pd
+import requests
 from dash import Input
 from dash import Output
 from dash import State
@@ -183,6 +185,36 @@ def update_on_url_change(url, host, port, prefix, ssl):
         return get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl)
     return dash.no_update
 
+def load_image_from_url(url):
+    """Load an image from a given URL and encode it to a base64 data URI.
+
+    Parameters
+    ----------
+    url : str
+        The base URL to which the function will append itself in order to form
+        the full request URL.
+
+    Returns
+    -------
+    str
+        A base64‑encoded data URI containing the image, or a fallback string
+        such as "No Image" or "Error Loading" when the fetch is unsuccessful.
+    """
+    # Fetch image and convert to base64
+    try:
+        full_url = f"{url}{url}"
+        response = requests.get(full_url)
+        if response.status_code == 200:
+            content_type = response.headers.get('content-type', 'image/jpeg')
+            if not content_type.startswith('image'):
+                return "Not an image"
+            encoded_img = base64.b64encode(response.content).decode('ascii')
+            img_data = f"data:{content_type};base64,{encoded_img}"
+        else:
+            img_data = "No Image"
+    except Exception:
+        img_data = "Error Loading"
+    return img_data
 
 @callback(Output('dataset-table', 'children'),
           Input('dataset-dict', 'data'),
@@ -215,14 +247,12 @@ def update_table(dataset_dict, host, port, prefix, ssl):
     if dataset_dict is not None:
         table_dict = {col: [] for col in ["Thumbnail", "Name", "Action", "Date", "Species", "Images"]}
         url = plantdb_url(host, port=port if not prefix else None, prefix=prefix, ssl=ssl)
-        print("---------------------------------------------------------------")
-        print(f"URL: {url}")
-        print("---------------------------------------------------------------")
 
         for ds_id, md in dataset_dict.items():
             thumbnail_url = md["thumbnailUri"].replace('thumb', f'{thumb_size}')
+            img_data = load_image_from_url(thumbnail_url)
             # Include the first image thumbnail and a link to the carousel
-            table_dict["Thumbnail"].append(f"![{ds_id}]({url}{thumbnail_url})")
+            table_dict["Thumbnail"].append(f"![{ds_id}]({img_data})")
             table_dict["Name"].append(ds_id)
             table_dict["Action"].append("Open")
             table_dict["Date"].append(md["metadata"]["date"])
