@@ -126,9 +126,10 @@ def _column_defs(col_name):
     State('plantdb-host', 'data'),
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
     prevent_initial_call=True
 )
-def refresh_table_data(n_clicks, host, port, prefix):
+def refresh_table_data(n_clicks, host, port, prefix, ssl):
     """Refresh the dataset dictionary.
 
     Parameters
@@ -143,9 +144,12 @@ def refresh_table_data(n_clicks, host, port, prefix):
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL or not.
+
     """
     if n_clicks > 0:
-        dataset_dict = get_dataset_dict(host=host, port=port, prefix=prefix)
+        dataset_dict = get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl)
         return dataset_dict, 0
     return dash.no_update, 0
 
@@ -156,9 +160,10 @@ def refresh_table_data(n_clicks, host, port, prefix):
     Input('url', 'pathname'),
     State('plantdb-host', 'data'),
     State('plantdb-port', 'data'),
-    State('plantdb-prefix', 'data')
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data')
 )
-def update_on_url_change(url, host, port, prefix):
+def update_on_url_change(url, host, port, prefix, ssl):
     """Update the dataset dictionary when the URL changes.
 
     Parameters
@@ -171,9 +176,11 @@ def update_on_url_change(url, host, port, prefix):
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL or not.
     """
     if url.endswith('/table'):
-        return get_dataset_dict(host=host, port=port, prefix=prefix)
+        return get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl)
     return dash.no_update
 
 
@@ -191,11 +198,13 @@ def update_table(dataset_dict, host, port, prefix, ssl):
     dataset_dict : dict
         The currently stored dataset dictionary.
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL or not.
 
     Returns
     -------
@@ -205,7 +214,10 @@ def update_table(dataset_dict, host, port, prefix, ssl):
     thumb_size = 150  # max width or height
     if dataset_dict is not None:
         table_dict = {col: [] for col in ["Thumbnail", "Name", "Action", "Date", "Species", "Images"]}
-        url = plantdb_url(host, port=port, prefix=prefix, ssl=ssl)
+        url = plantdb_url(host, port=port if not prefix else None, prefix=prefix, ssl=ssl)
+        print("---------------------------------------------------------------")
+        print(f"URL: {url}")
+        print("---------------------------------------------------------------")
 
         for ds_id, md in dataset_dict.items():
             thumbnail_url = md["thumbnailUri"].replace('thumb', f'{thumb_size}')

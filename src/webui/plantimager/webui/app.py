@@ -110,9 +110,9 @@ def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, pla
         The hostname for the PlantDB REST API server (e.g., 'localhost', '127.0.0.1', 'example.com')
     plantdb_port : int
         The port number for the PlantDB REST API server connection
-    plantdb_prefix : str, optional
+    plantdb_prefix : str
         URL prefix of the PlantDB REST API server.
-    plantdb_ssl : bool, optional
+    plantdb_ssl : bool
         Whether the PlantDB REST API server is using SSL or not.
     proxy : bool, optional
         Boolean flag indicating whether the application is behind a reverse proxy, by default ``False``.

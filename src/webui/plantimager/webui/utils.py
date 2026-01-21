@@ -56,15 +56,19 @@ IMAGE_TASKS = [
 ]
 
 
-def get_dataset_dict(host: str, port: str, prefix: str) -> dict[str, Any] | None:
+def get_dataset_dict(host: str, port: str, prefix: str, ssl: bool) -> dict[str, Any] | None:
     """Returns the dataset dictionary for the PlantDB REST API at given host url and port.
 
     Parameters
     ----------
     host : str
         The hostname or IP address of the PlantDB REST API server.
-    port : str
+    port : int
         The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL or not.
 
     Returns
     -------
@@ -77,9 +81,9 @@ def get_dataset_dict(host: str, port: str, prefix: str) -> dict[str, Any] | None
     plantdb.rest_api_client.request_scan_names_list
     plantdb.rest_api_client.parse_scans_info
     """
-    scans_list = request_scan_names_list(host, port=port, prefix=prefix)
+    scans_list = request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl)
     if len(scans_list) > 0:
-        dataset_dict = parse_scans_info(host, port=port, prefix=prefix)
+        dataset_dict = parse_scans_info(host, port=port, prefix=prefix, ssl=ssl)
     else:
         dataset_dict = None
     return dataset_dict
