@@ -160,19 +160,31 @@ def load_image_from_url(url):
     str
         A base64‑encoded data URI containing the image, or a fallback string
         such as "No Image" or "Error Loading" when the fetch is unsuccessful.
+
+    Examples
+    --------
+    >>> from plantimager.webui.utils import load_image_from_url
+    >>> from plantdb.server.test_rest_api import TestRestApiServer
+    >>> from plantdb.client.rest_api import scan_image_url
+    >>> from plantdb.client.rest_api import request_scan_image
+    >>> server = TestRestApiServer("/data/ROMI/shared_fsdb")
+    >>> server.start()
+    >>> # Load a very small image:
+    >>> load_image_from_url(scan_image_url('localhost', "real_plant", "images", "00000_rgb", port=5000, size='10'))
+    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q=='
+    >>> server.stop()
     """
     # Fetch image and convert to base64
     try:
-        full_url = f"{url}{url}"
-        response = requests.get(full_url)
+        response = requests.get(url, timeout=5)
         if response.status_code == 200:
             content_type = response.headers.get('content-type', 'image/jpeg')
             if not content_type.startswith('image'):
-                return "Not an image"
+                return f"Not an image: {content_type}"
             encoded_img = base64.b64encode(response.content).decode('ascii')
             img_data = f"data:{content_type};base64,{encoded_img}"
         else:
-            img_data = "No Image"
-    except Exception:
-        img_data = "Error Loading"
+            img_data = f"No Image: {response.status_code}"
+    except Exception as e:
+        img_data = f"Error Loading: {e}"
     return img_data
