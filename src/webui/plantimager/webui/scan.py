@@ -192,23 +192,17 @@ def update_available_cameras(val):
     Output("available-cameras", "children"),
     Input("main-interval", "n_intervals"))
 def update_interval(n_intervals):
-    """Updates various components on a timer
-
-    Updates the camera list
-
-    Parameters
-    ----------
-    n_intervals
+    """Updates various components on a timer.
 
     Returns
     -------
-    str:
-        Markdown message which is printed at available-cameras
+    str
+        Markdown message which is printed at 'available-cameras'.
     """
     try:
         controller = RPCController.instance()
     except RuntimeError as e:
-        return f"Controller not connected", str(e)
+        return f"**Controller not connected**: {e}"
     if update_available_cameras not in controller.cameraNamesChanged.connections:
         controller.cameraNamesChanged.connect(update_available_cameras)
         update_available_cameras(controller.camera_names)
