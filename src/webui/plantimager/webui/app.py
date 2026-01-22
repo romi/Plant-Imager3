@@ -14,8 +14,9 @@ Key Features
 
 Environment variables
 ---------------------
-- ALLOW_PRIVATE_IP: allow the use of private IPs, useful during debug, should not be set to True in production
-- CERT_PATH: specify the path to the self-signed certificates.
+- ALLOW_PRIVATE_IP: if `True`, allow the use of private IPs for PlantDB REST API URL
+- CERT_PATH: specify the path to the self-signed certificates used by the PlantDB server.
+- VALIDATE_HOST: if `True`, check the PlantDB REST API URL against a blacklist
 
 Usage Examples
 --------------
@@ -27,7 +28,6 @@ $ python app.py --plantdb-host example-server.local --plantdb-port 5000
 """
 
 import argparse
-import os
 from pathlib import Path
 from threading import Thread
 
@@ -37,8 +37,7 @@ import zmq
 from dash import Dash
 from dash import dcc
 from dash import html
-from plantdb.client.plantdb_client import PlantDBClient
-from plantdb.client.plantdb_client import api_prefix
+from dotenv import load_dotenv
 from plantdb.client.rest_api import PLANTDB_API_HOST
 from plantdb.client.rest_api import PLANTDB_API_PORT
 from plantdb.client.rest_api import PLANTDB_API_PREFIX
@@ -219,7 +218,9 @@ def main() -> None:
     controller_thread.daemon = True
     controller_thread.start()
 
-    os.environ["ALLOW_PRIVATE_IP"] = 'true'
+    # Load environment variables from an `.env` file if present
+    load_dotenv()
+
     # - Start the Dash app:
     app = setup_web_app(args.plantdb_host, args.plantdb_port, args.plantdb_prefix, args.plantdb_ssl,
                         proxy=args.proxy, url_prefix=args.url_prefix)

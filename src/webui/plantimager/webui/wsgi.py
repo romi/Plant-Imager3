@@ -13,6 +13,12 @@ Key Features
 - Sets up the correct URL base path name for the application
 - Allows for custom configuration of the server host, port, and proxy settings
 
+Environment variables
+---------------------
+- ALLOW_PRIVATE_IP: if `True`, allow the use of private IPs for PlantDB REST API URL
+- CERT_PATH: specify the path to the self-signed certificates used by the PlantDB server.
+- VALIDATE_HOST: if `True`, check the PlantDB REST API URL against a blacklist
+
 Usage Examples
 --------------
 Run the web interface with default REST API settings using a WSGI server like uWSGI
@@ -35,6 +41,7 @@ import os
 from threading import Thread
 
 import zmq
+from dotenv import load_dotenv
 
 from plantimager.webui.app import setup_web_app
 from plantimager.webui.controller_proxy import RPCController
@@ -45,14 +52,17 @@ controller_thread = Thread(target=lambda ctx: RPCController(ctx, "tcp://localhos
 controller_thread.daemon = True
 controller_thread.start()
 
+# Load environment variables from an `.env` file if present
+load_dotenv()
+
 # Get configuration from environment variables
 app_config = {
-    'plantdb_host': os.environ.get('PLANTDB_HOST', 'localhost'),
-    'plantdb_port': int(os.environ.get('PLANTDB_PORT', 5000)),
-    'plantdb_prefix': os.environ.get('PLANTDB_PREFIX', '').lower(),
-    'plantdb_ssl': os.environ.get('PLANTDB_SSL', 'false').lower() == 'true',
-    'proxy': os.environ.get('WEBUI_PROXY', 'false').lower() == 'true',
-    'url_prefix': os.environ.get('WEBUI_PREFIX', '/webui'),
+    'plantdb_host': os.getenv('PLANTDB_HOST', 'localhost'),
+    'plantdb_port': int(os.getenv('PLANTDB_PORT', 5000)),
+    'plantdb_prefix': os.getenv('PLANTDB_PREFIX', '').lower(),
+    'plantdb_ssl': os.getenv('PLANTDB_SSL', 'false').lower() == 'true',
+    'proxy': os.getenv('WEBUI_PROXY', 'false').lower() == 'true',
+    'url_prefix': os.getenv('WEBUI_PREFIX', '/webui'),
 }
 
 # Get the Dash application
@@ -64,10 +74,11 @@ if __name__ == "__main__":
     from werkzeug.serving import run_simple
 
     run_config = {
-        'hostname': os.environ.get('WEBUI_HOST', '0.0.0.0'),
-        'port': int(os.environ.get('WEBUI_PORT', 8080)),
+        'hostname': os.getenv('WEBUI_HOST', '0.0.0.0'),
+        'port': int(os.getenv('WEBUI_PORT', 8080)),
         'application': application,
-        'ssl_context': os.environ.get('CERT_PATH', '/etc/nginx/ssl/cert.pem'),
-        'use_debugger': bool(os.environ.get('WEBUI_DEBUG', False)),
+        # Set an SSL context only if SSL is enabled
+        'ssl_context': os.getenv('CERT_PATH', '/etc/nginx/ssl/cert.pem') if app_config['plantdb_ssl'] else None,
+        'use_debugger': bool(os.getenv('WEBUI_DEBUG', False)),
     }
     run_simple(**run_config)

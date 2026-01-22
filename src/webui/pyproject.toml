@@ -8,6 +8,7 @@ version = "0.0.1"
 dependencies = [
     "plantdb.client",
     "plantimager.commons",
+    "python-dotenv",
     "PyJWT>=2.6.0",
     "tomli",
     # Dash & Dash third-party components
