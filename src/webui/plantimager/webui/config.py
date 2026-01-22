@@ -638,8 +638,7 @@ def update_dataset_list(
         return _unconnected_status(error=error), []
 
     try:
-        dataset_list = request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl,
-                                               cert_path=os.environ.get('CERT_PATH', None))
+        dataset_list = request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl)
     except RequestException as e:
         dataset_list = []
         error = e
