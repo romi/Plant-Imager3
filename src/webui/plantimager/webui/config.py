@@ -12,6 +12,12 @@ Key Features
 - Dataset listing and management
 - Dynamic UI components for database status visualization
 - Bootstrap-styled modals and alerts for user interaction
+
+Environment variables
+---------------------
+- ALLOW_PRIVATE_IP: if `True`, allow the use of private IPs for PlantDB REST API URL
+- CERT_PATH: specify the path to the self-signed certificates used by the PlantDB server.
+- VALIDATE_HOST: if `True`, check the PlantDB REST API URL against a blacklist
 """
 import os
 
@@ -52,20 +58,13 @@ def server_available(host, port, prefix, ssl):
     bool
         A flag indicating whether the server is available.
     """
+    allow_private_ip = os.getenv('ALLOW_PRIVATE_IP', 'false').lower() == 'true'
+    cert_path = os.getenv('CERT_PATH', None)
+    validate_host = os.getenv('VALIDATE_HOST', 'true').lower() == 'true'
     try:
-        allow_private_ip = os.environ.get('ALLOW_PRIVATE_IP', 'false').lower() == 'true'
-        cert_path = os.environ.get('CERT_PATH', None)
         url = plantdb_url(host, port=port, prefix=prefix, ssl=ssl)
-        print("-------------------------------------------------------")
-        print("URL:", url)
         availability = is_server_available(url, allow_private_ip=allow_private_ip,
-                                           cert_path=cert_path, validate_host=False)
-        print("availability.ok:", availability.ok)
-        print("availability.status_code:", availability.status_code)
-        print("availability.message:", availability.message)
-        print("availability.url:", availability.url)
-        print("availability.final_url:", availability.final_url)
-        print("-------------------------------------------------------")
+                                           cert_path=cert_path, validate_host=validate_host)
     except:
         is_available = False
     else:
