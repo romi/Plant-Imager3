@@ -25,14 +25,8 @@ StartLimitIntervalSec=30
 # Consult the documentantion for types (https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=) other options.
 Type=exec
 
-Environment="PLANTDB_HOST=localhost"
-Environment="PLANTDB_PORT=5000"
-Environment="PLANTDB_PREFIX=/plantdb"
-Environment="PLANTDB_SSL=false"
-Environment="WEBUI_PROXY=/webui"
-
 # Command with arguments to invoke when the unit is activated.
-ExecStart=/home/romi/miniconda3/envs/plant-imager/bin/uwsgi --http=:8080 --module=plantimager.webui.wsgi:application --callable=application --master --processes=4 --threads=2 --buffer-size=32768
+ExecStart=/home/romi/miniconda3/envs/plant-imager/bin/plant-imager-webui --proxy
 # Command with arguments to invoke when the unit is deactivated.
 ExecStop=
 
