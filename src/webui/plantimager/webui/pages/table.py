@@ -190,8 +190,9 @@ def update_on_url_change(url, host, port, prefix, ssl):
           State('plantdb-host', 'data'),
           State('plantdb-port', 'data'),
           State('plantdb-prefix', 'data'),
-          State('plantdb-ssl', 'data'))
-def update_table(dataset_dict, host, port, prefix, ssl):
+          State('plantdb-ssl', 'data'),
+          State('session-token', 'data'))
+def update_table(dataset_dict, host, port, prefix, ssl, session_token):
     """Update the AG Grid table.
 
     Parameters
@@ -206,6 +207,8 @@ def update_table(dataset_dict, host, port, prefix, ssl):
         The prefix of the PlantDB REST API server.
     ssl : bool
         Whether the PlantDB REST API server is using SSL or not.
+    session_token : str
+        A session token used to authenticate against PlantDB.
 
     Returns
     -------
@@ -219,7 +222,8 @@ def update_table(dataset_dict, host, port, prefix, ssl):
 
         for ds_id, md in dataset_dict.items():
             thumbnail_url = md["thumbnailUri"].replace('thumb', f'{thumb_size}')
-            img_data = load_image_from_url(thumbnail_url)
+            full_url = url.rstrip('/') + '/' + thumbnail_url
+            img_data = load_image_from_url(full_url, session_token)
             # Include the first image thumbnail and a link to the carousel
             table_dict["Thumbnail"].append(f"![{ds_id}]({img_data})")
             table_dict["Name"].append(ds_id)
