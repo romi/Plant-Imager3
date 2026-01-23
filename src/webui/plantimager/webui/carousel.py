@@ -48,7 +48,7 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl):
     -------
     list of str
         List of available image task options. Returns ['images'] if the modal is closed
-        or no dataset is selected. Otherwise returns the intersection of IMAGE_TASKS and
+        or no dataset is selected. Otherwise, returns the intersection of IMAGE_TASKS and
         the tasks available for the selected dataset.
 
     """
@@ -67,8 +67,9 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl):
           State('plantdb-port', 'data'),
           State('plantdb-prefix', 'data'),
           State('plantdb-ssl', 'data'),
+          State('session-token', 'data'),
           )
-def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl):
+def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl, session_token):
     """Create a Dash carousel component displaying images from a specified dataset task.
 
     This callback function generates a Bootstrap-styled carousel component for displaying
@@ -89,6 +90,8 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl)
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    session_token : str
+        A session token used to authenticate against PlantDB.
 
     Returns
     -------
@@ -111,7 +114,7 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl)
     # # Remove the axis ticks and labels:
     # fig.update_layout(xaxis={'visible': False}, yaxis={'visible': False})
     # return fig
-    return dash_boostrap_carousel(images)
+    return dash_boostrap_carousel(images, session_token)
 
 
 caroussel_modal = dbc.Modal(children=[
