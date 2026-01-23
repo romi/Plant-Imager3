@@ -38,9 +38,9 @@ from dash import Dash
 from dash import dcc
 from dash import html
 from dotenv import load_dotenv
-from plantdb.client.rest_api import PLANTDB_API_HOST
-from plantdb.client.rest_api import PLANTDB_API_PORT
-from plantdb.client.rest_api import PLANTDB_API_PREFIX
+from plantdb.client.rest_api import PLANTDB_HOST
+from plantdb.client.rest_api import PLANTDB_PORT
+from plantdb.client.rest_api import PLANTDB_PREFIX
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from plantimager.webui.carousel import caroussel_modal
@@ -79,11 +79,11 @@ def parsing() -> argparse.ArgumentParser:
                           help="URL prefix for the application (e.g. should match NGINX location if behind proxy).")
 
     plantdb_args = parser.add_argument_group("PlantDB REST API options")
-    plantdb_args.add_argument('--plantdb-host', type=str, default=PLANTDB_API_HOST,
+    plantdb_args.add_argument('--plantdb-host', type=str, default=PLANTDB_HOST,
                               help="Host address of the PlantDB REST API.")
-    plantdb_args.add_argument('--plantdb-port', type=int, default=PLANTDB_API_PORT,
+    plantdb_args.add_argument('--plantdb-port', type=int, default=PLANTDB_PORT,
                               help="Port of the PlantDB REST API.")
-    plantdb_args.add_argument('--plantdb-prefix', type=str, default=PLANTDB_API_PREFIX,
+    plantdb_args.add_argument('--plantdb-prefix', type=str, default=PLANTDB_PREFIX,
                               help="URL prefix of the PlantDB REST API.")
     plantdb_args.add_argument('--plantdb-ssl', type=bool, default=False,
                               help="Whether the PlantDB REST API is using SSL or not.")

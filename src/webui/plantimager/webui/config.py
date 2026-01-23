@@ -31,8 +31,8 @@ from dash import dcc
 from dash import html
 from dash import no_update
 from dash_bootstrap_components import NavLink
-from plantdb.client.rest_api import PLANTDB_API_HOST
-from plantdb.client.rest_api import PLANTDB_API_PORT
+from plantdb.client.rest_api import PLANTDB_HOST
+from plantdb.client.rest_api import PLANTDB_PORT
 from plantdb.client.rest_api import plantdb_url
 from plantdb.client.rest_api import request_scan_names_list
 from plantdb.client.url import is_server_available
@@ -177,13 +177,13 @@ plantdb_cfg_modal = html.Div(children=[
             html.Div(children=[
                 dbc.Label([html.I(className="bi bi-link-45deg me-2"), "PlantDB API hostname:"]),
                 dbc.Input(id="api-address", type="url"),
-                dbc.FormText(f"Use '{PLANTDB_API_HOST}' for a local database.", color="secondary"),
+                dbc.FormText(f"Use '{PLANTDB_HOST}' for a local database.", color="secondary"),
             ]),
             # Port number input for PlantDB API
             html.Div(children=[
                 dbc.Label([html.I(className="bi bi-hdd-network me-2"), "PlantDB API port:"]),
                 dbc.Input(id="api-port", type="text"),
-                dbc.FormText(f"Should be '{PLANTDB_API_PORT}' by default.", color="secondary"),
+                dbc.FormText(f"Should be '{PLANTDB_PORT}' by default.", color="secondary"),
             ]),
             # URL prefix for PlantDB API
             html.Div(children=[
@@ -309,10 +309,10 @@ def show_api_address(modal_is_open: bool, stored_host: str | None) -> str:
     Returns
     -------
     str
-        The IP address to be used, either the stored host value or the ``PLANTDB_API_HOST`` constant.
+        The IP address to be used, either the stored host value or the ``PLANTDB_HOST`` constant.
     """
     if modal_is_open:
-        return stored_host if stored_host is not None else PLANTDB_API_HOST
+        return stored_host if stored_host is not None else PLANTDB_HOST
     else:
         return stored_host
 
@@ -336,10 +336,10 @@ def show_api_port(modal_is_open: bool, stored_port: int | None) -> int | str:
     Returns
     -------
     str
-        Value to be set for the "api-port" input field, either the stored port value or the ``PLANTDB_API_PORT`` constant.
+        Value to be set for the "api-port" input field, either the stored port value or the ``PLANTDB_PORT`` constant.
     """
     if modal_is_open:
-        return stored_port if stored_port is not None else PLANTDB_API_PORT
+        return stored_port if stored_port is not None else PLANTDB_PORT
     else:
         return stored_port
 
