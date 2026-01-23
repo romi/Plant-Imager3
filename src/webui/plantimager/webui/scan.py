@@ -454,7 +454,6 @@ def run_scan(_, url: str, port: str, prefix: str, ssl: bool, session_token: str,
     controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     controller.set_dataset_name(dataset_name)
     controller.set_session_token(session_token)
-    print(tomllib.loads(cfg))
     controller.set_config(tomllib.loads(cfg))
     controller.run_scan()
 
@@ -513,7 +512,6 @@ def config_scan(_, url: str, port: str, prefix: str, ssl:bool, cfg: str, dataset
 
     controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     controller.set_dataset_name(dataset_name)
-    print(tomllib.loads(cfg))
     controller.set_config(tomllib.loads(cfg))
 
     return "Scan configured", "Scan configured, ready to start"
