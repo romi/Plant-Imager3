@@ -6,7 +6,11 @@
 This module provides common utility functions used across the Plant Imager web interface,
 particularly for interacting with the PlantDB REST API and handling configuration files.
 """
-import base64
+
+try:
+    import pybase64 as base64
+except ImportError:
+    import base64
 from typing import Any
 
 import requests

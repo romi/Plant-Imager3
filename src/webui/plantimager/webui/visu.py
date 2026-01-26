@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from concurrent.futures.thread import ThreadPoolExecutor
 from typing import Any
 from typing import Dict
 from typing import Optional
@@ -98,8 +99,11 @@ def dash_boostrap_carousel(images: list[str], session_token: Optional[str]) -> C
     from plantimager.webui.utils import load_image_from_url
 
     images.sort()
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        encoded_images = list(pool.map(lambda img: load_image_from_url(img, session_token), images))
     carousel = Carousel(
-        items=[{"key": idx, "alt": img.split('/')[-1], "src": load_image_from_url(img, session_token)} for idx, img in
+        items=[{"key": idx, "alt": img.split('/')[-1], "src": encoded_images[idx]} for idx, img in
                enumerate(images)],
         controls=True,
         indicators=True,
