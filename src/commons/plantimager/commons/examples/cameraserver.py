@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 import zmq
 from scipy import ndimage
@@ -7,6 +8,16 @@ import scipy
 
 from plantimager.commons.RPC import RPCServer, RPCProperty
 from plantimager.commons.cameradevice import Camera, CameraMode
+
+
+def image_provider():
+    image_path = os.getenv("PI3_CAMERASERVER_IMAGE", "/home/arthur/Documents/test_db_plantdb/tabac_20251013_1/images")
+    images = sorted(os.listdir(image_path))
+    n = len(images)
+    i = 0
+    while True:
+        yield plt.imread(os.path.join(image_path, images[i%n]))
+        i += 1
 
 def block_mean(ar, fact):
     assert isinstance(fact, int), type(fact)
@@ -31,14 +42,14 @@ class DummyCamera(Camera, RPCServer):
         self._mode = CameraMode.STILL
         self._video_url = "tcp://test_url:1234"
         self._rotation = 0
+        self._image_provider = image_provider()
 
     @RPCServer.register_method_buffer(timeout=10000)
     def get_image(self, lores=False) -> (memoryview, dict):
         if self.mode != CameraMode.STILL:
             self.mode = CameraMode.STILL
-        image: np.ndarray[..., np.uint8] = scipy.datasets.face()
-        image = plt.imread("/home/arthur/Documents/test_db_plantdb/test_plantimager3_20250718_1/images/picamera2-14.jpeg")
-        image = block_mean(image, 5)
+        image = next(self._image_provider)
+        #image = block_mean(image, 5)
         #image = np.clip(image.astype(int) + np.round(np.random.normal(0.0, 0.5, image.shape)), 0, 255)
         buffer = encode_jpeg(image.astype(np.uint8), quality=95, colorsubsampling="420", fastdct=True)
         return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape}
