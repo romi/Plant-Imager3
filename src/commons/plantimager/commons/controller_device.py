@@ -33,6 +33,10 @@ class ControllerDevice(ABC):
         pass
 
     @abstractmethod
+    def set_session_token(self, token: str):
+        pass
+
+    @abstractmethod
     def run_scan(self):
         """Start the scan."""
         pass

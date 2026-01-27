@@ -129,6 +129,17 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         """
         self.scanner.set_scan_id(name)
 
+    @RPCServer.register_method_json
+    def set_session_token(self, token: str):
+        """Set the session token for plantdb
+
+        Parameters
+        ----------
+        token : str
+            Session token
+        """
+        self.scanner.set_session_token(token)
+
     @RPCServer.register_method_json(timeout=None)
     def run_scan(self):
         """Start a scanning operation with the current configuration."""

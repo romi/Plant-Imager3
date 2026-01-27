@@ -278,6 +278,7 @@ class Scanner(QObject):
         self.db_client: PlantDBClient | None = None  # Database client
         self.uploader: DataUploader | None = None  # Data uploader
         self.fileset = "images"  # Default fileset name
+        self._session_token = ""
 
         self._cnc_connection_timer = QTimer()
         self._cnc_connection_timer.setInterval(5000)
@@ -387,6 +388,10 @@ class Scanner(QObject):
         if self.db_url != url:  # Only update if URL has changed
             self.db_url = url  # Set new URL
             self.db_client = PlantDBClient(self.db_url)  # Create new client
+            if self._session_token:
+                logger.debug("Validating PlantDB session token")
+                self.db_client.validate_session_token(self._session_token)
+                assert self._session_token == self.db_client.jwt_token
             self.uploader = DataUploader(self.db_client, 10)  # Create new uploader
             self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state
 
@@ -833,3 +838,11 @@ class Scanner(QObject):
         if isinstance(self.scan_path, CalibrationPath2):
             return f"{type(self.scan_path).__name__}: center {self.scan_path.center_x:g}, {self.scan_path.center_y:g}, radius {self.scan_path.radius:g} - {len(self.scan_path)} steps"
         return f"{type(self.scan_path).__name__}: {len(self.scan_path)} steps"
+
+    def set_session_token(self, token: str):
+        """Set the session token for plantdb"""
+        self._session_token = token
+        if self.db_client:
+            logger.debug("Validating PlantDB session token")
+            self.db_client.validate_session_token(token)
+            logger.debug("Session token valid")
