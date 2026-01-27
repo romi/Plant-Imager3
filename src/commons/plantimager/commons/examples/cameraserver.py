@@ -37,7 +37,7 @@ class DummyCamera(Camera, RPCServer):
         if self.mode != CameraMode.STILL:
             self.mode = CameraMode.STILL
         image: np.ndarray[..., np.uint8] = scipy.datasets.face()
-        image = plt.imread("/home/arthur/Images/RDPiades_2023/camera2/DSC_0139.JPG")
+        image = plt.imread("/home/arthur/Documents/test_db_plantdb/test_plantimager3_20250718_1/images/picamera2-14.jpeg")
         image = block_mean(image, 5)
         #image = np.clip(image.astype(int) + np.round(np.random.normal(0.0, 0.5, image.shape)), 0, 255)
         buffer = encode_jpeg(image.astype(np.uint8), quality=95, colorsubsampling="420", fastdct=True)

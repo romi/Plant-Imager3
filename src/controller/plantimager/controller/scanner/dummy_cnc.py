@@ -224,7 +224,7 @@ class DummyCNC(AbstractCNC):
         movement_time = 0.1 + distance * 0.005  # Base time + distance-dependent time
 
         # Sleep to simulate movement time
-        time.sleep(movement_time)
+        time.sleep(movement_time/5)
 
         # Update position
         self._position = (target_x, target_y, target_z)

@@ -39,6 +39,7 @@ from io import BytesIO
 from typing import Literal
 from weakref import finalize
 
+import numpy as np
 from PySide6.QtCore import Property, QTimer
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
@@ -53,7 +54,7 @@ from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.scanner.dummy_cnc import DummyCNC
 from plantimager.controller.scanner.grbl import CNC
 from plantimager.controller.scanner.hal import DataItem
-from plantimager.controller.scanner.path import Path, Circle
+from plantimager.controller.scanner.path import Path, Circle, CalibrationPath2, CustomPath
 from plantimager.controller.scanner.path import PathElement
 from plantimager.controller.scanner.path import Pose
 
@@ -141,7 +142,7 @@ class DataUploader():
         try:
             # Upload the file to the database with metadata
             response = self.db_client.create_file(
-                buffer, file_id=f"{data.metadata['camera_name']}-{data.idx}", ext=data.image_ext,
+                buffer, file_id=f"{data.metadata['camera_name']}-{data.idx:0>5}", ext=data.image_ext,
                 scan_id=scan_id, fileset_id=fileset, metadata=data.metadata
             )
         except Exception as e:
@@ -432,8 +433,8 @@ class Scanner(QObject):
         config : dict
             Configuration dictionary with the following structure:
             {
-                "Path": {
-                    "name": str,  # Name of the path class
+                "ScanPath": {
+                    "class_name": str,  # Name of the path class
                     "kwargs": dict  # Arguments for path constructor
                 },
                 "Metadata": {
@@ -456,7 +457,7 @@ class Scanner(QObject):
         Examples
         --------
         >>> config = {
-        ...     "Path": {"name": "CirclePath", "kwargs": {"radius": 100}},
+        ...     "ScanPath": {"class_name": "CirclePath", "kwargs": {"radius": 100}},
         ...     "Metadata": {
         ...         "object": {"species": "Arabidopsis thaliana"},
         ...         "hardware": {"scanner_version": "1.0"}
@@ -469,8 +470,8 @@ class Scanner(QObject):
 
         # Dynamically import and instantiate the path class
         path_module = importlib.import_module("plantimager.controller.scanner.path")
-        path_cfg = config["Path"]
-        self.scan_path = getattr(path_module, path_cfg["name"])(**path_cfg["kwargs"])
+        path_cfg = config["ScanPath"]
+        self.scan_path = getattr(path_module, path_cfg["class_name"])(**path_cfg["kwargs"])
         self.pathInfoChanged.emit(self.path_info)
 
         # Update progress tracking based on path length
@@ -777,11 +778,11 @@ class Scanner(QObject):
                                              camera_pose.tilt],  # Camera position
                         "shot_id": shot_id,  # Unique ID for this shot
                     }
-                    shot_id += 1
 
                     # Submit image capture job to thread pool
                     jobs.append(executor.submit(self.grab, shot_id, metadata, camera))
 
+                shot_id += 1
                 # Wait for all image captures to complete before moving to next position
                 wait(jobs, return_when=ALL_COMPLETED)
 
@@ -804,6 +805,12 @@ class Scanner(QObject):
         """Move the arm to the center"""
         if self.scan_path and isinstance(self.scan_path, Circle):
             self.move_arm(self.scan_path.center_x, self.scan_path.center_y, 0)
+        elif self.scan_path and isinstance(self.scan_path, CalibrationPath2):
+            self.move_arm(self.scan_path.center_x, self.scan_path.center_y, 0)
+        elif self.scan_path and isinstance(self.scan_path, CustomPath):
+            points = np.array(self.scan_path)
+            x, y = np.mean(points[:, 0]), np.mean(points[:, 1])
+            self.move_arm(x, y, 0)
         else:
             x, y, z = (self.cnc.x_lims[0] + self.cnc.x_lims[1])/2, (self.cnc.y_lims[0] + self.cnc.y_lims[1])/2, self.cnc.z
             self.move_arm(x, y, z)
@@ -822,5 +829,7 @@ class Scanner(QObject):
         if not self.scan_path:
             return "No path configured"
         if isinstance(self.scan_path, Circle):
+            return f"{type(self.scan_path).__name__}: center {self.scan_path.center_x:g}, {self.scan_path.center_y:g}, radius {self.scan_path.radius:g} - {len(self.scan_path)} steps"
+        if isinstance(self.scan_path, CalibrationPath2):
             return f"{type(self.scan_path).__name__}: center {self.scan_path.center_x:g}, {self.scan_path.center_y:g}, radius {self.scan_path.radius:g} - {len(self.scan_path)} steps"
         return f"{type(self.scan_path).__name__}: {len(self.scan_path)} steps"

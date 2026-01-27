@@ -1,17 +1,29 @@
-[Path]
-name = "Circle"
+[ScanPath]
+class_name = "Circle"
 
-[Path.kwargs]
-center_x = 370
-center_y = 370
+[ScanPath.kwargs]
+center_x = 375
+center_y = 375
 z = 0
 tilt = 0
 radius = 350
 n_points = 36
 
+#[ScanPath]
+#class_name = "CustomPath"
+#
+#[ScanPath.kwargs]
+#scheme = ["x", "y", "pan"] # a combination of ["x", "y", "z", "pan", "tilt"]
+#waypoints = [
+#    [25, 375, 0],
+#    [25, 475, 0],
+#    [125, 375, 0],
+#    [125, 475, 0]
+#]
+
 [picamera]
-res_x = 4056
-res_y = 3040
+res_x = 2000 # max 4056
+res_y = 1500 # max 3040
 
 [picamera.offset] # top camera
 x = 0
@@ -21,8 +33,8 @@ pan = 0
 tilt = 0
 
 [picamera2]
-res_x = 4056
-res_y = 3040
+res_x = 2000 # max 4056
+res_y = 1500 # max 3040
 
 [picamera2.offset] # bottom camera
 x = 0
