@@ -127,6 +127,7 @@ class AppBridge(QObject):
         """
         logger.debug(f"New device for {addr}: {device_type}, {name}")
         if device_type.lower() == "camera":
+            logger.debug("New camera, creating bridge and adding to scanner.")
             new_bridge = CameraBridge(name, addr, self.context)
             self.device_list.append(name)
             self.device_bridges.append(new_bridge)

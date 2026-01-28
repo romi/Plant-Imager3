@@ -329,6 +329,7 @@ class Scanner(QObject):
         -----
         Emits cameraNamesChanged and readyToScanChanged signals.
         """
+        logger.debug(f"Adding camera {camera.name} to scanner.")
         self.cameras.append(camera)  # Add camera to list
         self.cameraNamesChanged.emit(self.camera_names)  # Update camera names
         self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state

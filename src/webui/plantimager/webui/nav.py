@@ -39,7 +39,7 @@ tutorial_link: dbc.NavLink = dbc.NavLink(
 
 #: Tooltip component providing help text for the tutorial link
 tutorial_tooltip: dbc.Tooltip = dbc.Tooltip(
-    children="Tutorials to configure a scan",
+    children="Tutorials on how to configure a scan",
     target="tutorial-link",
     placement="bottom",
 )
