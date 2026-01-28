@@ -79,13 +79,12 @@ if __name__ == "__main__":
                 raise TimeoutError("Scan too long")
 
         assert "test_dataset" in db_client.list_scans(), "Dataset `test_dataset` not found in db"
-        assert "images" in db_client.list_scan_filesets("test_dataset"), "Fileset `images` not found in db"
-        assert len(db_client.list_fileset_files("test_dataset", "images")) == n_images, "No images captured"
+        assert "images" in db_client.list_scan_filesets("test_dataset")["filesets"], "Fileset `images` not found in db"
+        assert len(db_client.list_fileset_files("test_dataset", "images")["files"]) == n_images, "No images captured"
         rpc_controller.stop_server()
         print("=======================")
         print("Test Successful !!!!!!!")
         print("=======================")
-        input()
     finally:
         time.sleep(0.1)
         for cam in cameras:

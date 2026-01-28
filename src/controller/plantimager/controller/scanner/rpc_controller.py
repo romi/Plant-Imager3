@@ -131,17 +131,6 @@ class RPCControllerServer(ControllerDevice, RPCServer):
 
     @RPCServer.register_method_json
     def set_session_token(self, token: str):
-        """Set the session token for plantdb
-
-        Parameters
-        ----------
-        token : str
-            Session token
-        """
-        self.scanner.set_session_token(token)
-
-    @RPCServer.register_method_json
-    def set_session_token(self, token: str):
         """Set the session token to use for authenticated requests.
 
         Parameters
