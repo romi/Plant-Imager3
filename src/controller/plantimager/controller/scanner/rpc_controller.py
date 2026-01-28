@@ -140,6 +140,17 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         """
         self.scanner.set_session_token(token)
 
+    @RPCServer.register_method_json
+    def set_session_token(self, token: str):
+        """Set the session token to use for authenticated requests.
+
+        Parameters
+        ----------
+        token : str
+            The session token to use for authenticated requests.
+        """
+        self.scanner.set_session_token(token)
+
     @RPCServer.register_method_json(timeout=None)
     def run_scan(self):
         """Start a scanning operation with the current configuration."""

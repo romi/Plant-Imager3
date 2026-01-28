@@ -40,23 +40,26 @@ from typing import Literal
 from weakref import finalize
 
 import numpy as np
-from PySide6.QtCore import Property, QTimer
+from PySide6.QtCore import Property
 from PySide6.QtCore import QObject
+from PySide6.QtCore import QTimer
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
 from PySide6.QtQml import QmlElement
 from PySide6.QtQml import QmlUncreatable
 from plantdb.client.plantdb_client import PlantDBClient
-from requests.exceptions import RequestException
-
 from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.scanner.dummy_cnc import DummyCNC
 from plantimager.controller.scanner.grbl import CNC
 from plantimager.controller.scanner.hal import DataItem
-from plantimager.controller.scanner.path import Path, Circle, CalibrationPath2, CustomPath
+from plantimager.controller.scanner.path import CalibrationPath2
+from plantimager.controller.scanner.path import Circle
+from plantimager.controller.scanner.path import CustomPath
+from plantimager.controller.scanner.path import Path
 from plantimager.controller.scanner.path import PathElement
 from plantimager.controller.scanner.path import Pose
+from requests.exceptions import RequestException
 
 QML_IMPORT_NAME = "PlantImagerApp.Scanner"
 QML_IMPORT_MAJOR_VERSION = 1
@@ -493,7 +496,6 @@ class Scanner(QObject):
                 res = config[camera.name]["res_x"], config[camera.name]["res_y"]
                 camera.resolution = res
 
-
     @Property(bool, notify=readyToScanChanged)
     def ready_to_scan(self) -> bool:
         """Check if the scanner is ready to perform a scan.
@@ -521,7 +523,7 @@ class Scanner(QObject):
                 self.uploader and self.db_client and
                 hasattr(self, 'scan_id') and self.scan_id and self.fileset and
                 not self._scan_in_progress and not self._scanner_working
-            ):
+        ):
             return True
         return False
 
@@ -637,7 +639,6 @@ class Scanner(QObject):
         self.uploader.upload(scan_id=self.scan_id, fileset=self.fileset, data=data)
 
         return data
-
 
     def get_target_pose(self, x: PathElement) -> Pose:
         """Calculate the target pose from a path element.
@@ -792,9 +793,9 @@ class Scanner(QObject):
                 wait(jobs, return_when=ALL_COMPLETED)
 
         # Move the arm back close to origin
-        #self.cnc.moveto(10, 10,-10)
+        # self.cnc.moveto(10, 10,-10)
         time.sleep(1)
-        #self.cnc.home()
+        # self.cnc.home()
         self.move_arm(20, 20, 45)
         self._scan_in_progress = False
         self.scanInProgressChanged.emit(self.scan_in_progress)
@@ -817,7 +818,7 @@ class Scanner(QObject):
             x, y = np.mean(points[:, 0]), np.mean(points[:, 1])
             self.move_arm(x, y, 0)
         else:
-            x, y, z = (self.cnc.x_lims[0] + self.cnc.x_lims[1])/2, (self.cnc.y_lims[0] + self.cnc.y_lims[1])/2, self.cnc.z
+            x, y, z = (self.cnc.x_lims[0] + self.cnc.x_lims[1]) / 2, (self.cnc.y_lims[0] + self.cnc.y_lims[1]) / 2, self.cnc.z
             self.move_arm(x, y, z)
 
     @Slot(int)
