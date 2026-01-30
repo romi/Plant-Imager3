@@ -13,7 +13,6 @@ except ImportError:
     import base64
 from typing import Any
 
-import requests
 from dash import dcc
 from plantdb.client.rest_api import make_api_request
 from plantdb.client.rest_api import parse_scans_info
@@ -45,7 +44,7 @@ IMAGE_TASKS = [
 ]
 
 
-def get_dataset_dict(host: str, port: int, prefix: str, ssl: bool) -> dict[str, Any] | None:
+def get_dataset_dict(host: str, port: int, prefix: str, ssl: bool, session_token: str) -> dict[str, Any] | None:
     """Returns the dataset dictionary for the PlantDB REST API at a given host url and port.
 
     Parameters
@@ -58,6 +57,8 @@ def get_dataset_dict(host: str, port: int, prefix: str, ssl: bool) -> dict[str, 
         The prefix of the PlantDB REST API server.
     ssl : bool
         Whether the PlantDB REST API server is using SSL or not.
+    session_token
+        The PlantDB REST API session token.
 
     Returns
     -------
@@ -83,9 +84,10 @@ def get_dataset_dict(host: str, port: int, prefix: str, ssl: bool) -> dict[str, 
     plantdb.rest_api_client.request_scan_names_list
     plantdb.rest_api_client.parse_scans_info
     """
-    scans_list = request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl)
+    scans_list = sorted(request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl,
+                                                session_token=session_token).json())
     if len(scans_list) > 0:
-        dataset_dict = parse_scans_info(host, port=port, prefix=prefix, ssl=ssl)
+        dataset_dict = parse_scans_info(host, port=port, prefix=prefix, ssl=ssl, session_token=session_token)
     else:
         dataset_dict = None
     return dataset_dict
