@@ -261,11 +261,13 @@ def validate_password_match(password: str | None, confirm_password: str | None) 
      State("plantdb-port", "data"),
      State("plantdb-prefix", "data"),
      State("plantdb-ssl", "data"),
+     State("session-token", "data"),
      ],
     prevent_initial_call=True
 )
 def register_user(n_clicks: int | None, username: str, fullname: str, password: str,
-                  confirm_password: str, host: str, port: str, prefix: str, ssl: bool) -> str | dbc.Alert:
+                  confirm_password: str, host: str, port: str, prefix: str, ssl: bool,
+                  session_token: str) -> str | dbc.Alert:
     """Process user registration by validating inputs and creating a new account.
 
     This callback handles the complete user registration process, including input
@@ -289,6 +291,8 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    session_token : str
+        The session token to authenticate against the PlantDB REST API server.
 
     Returns
     -------
@@ -315,7 +319,7 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
     if not n_clicks:
         return ""
 
-    # Check if username already exists in the backend before proceeding
+    # Check if a username already exists in the backend before proceeding
     res_data = request_check_username(host, username, port=port, prefix=prefix, ssl=ssl)
     user_exists = res_data.get('exists', False)  # True if username is taken
     if user_exists:
@@ -329,7 +333,8 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
 
     try:
         # Create new user via REST API
-        response = request_new_user(host, username, fullname, password, port=port, prefix=prefix)
+        response = request_new_user(host, username, password, fullname, port=port, prefix=prefix, ssl=ssl,
+                                    session_token=session_token)
 
         if response.ok:
             return dbc.Alert("Registration successful! You can now login.", color="success", class_name="mb-0")
