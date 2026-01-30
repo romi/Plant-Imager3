@@ -16,7 +16,6 @@ Key Features
 """
 
 import hashlib
-import json
 import time
 
 import dash_bootstrap_components as dbc
@@ -26,9 +25,9 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import html
+from plantdb.client.rest_api import request_check_username
 from plantdb.client.rest_api import request_login
 from plantdb.client.rest_api import request_logout
-from plantdb.client.rest_api import request_check_username
 
 from plantimager.webui.new_user import new_user_button
 
