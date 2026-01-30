@@ -331,8 +331,11 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
     if password != confirm_password:
         return dbc.Alert("Passwords do not match!", color="danger", class_name="mb-0")
 
+    if not session_token:
+        return dbc.Alert(f"Missing session token, you need to login first!", color="danger", className="mb-0")
+
     try:
-        # Create new user via REST API
+        # Create a new user via REST API
         response = request_new_user(host, username, password, fullname, port=port, prefix=prefix, ssl=ssl,
                                     session_token=session_token)
 
