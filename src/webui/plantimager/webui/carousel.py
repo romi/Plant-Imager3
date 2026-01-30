@@ -23,8 +23,9 @@ from plantimager.webui.visu import dash_boostrap_carousel
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
     State('plantdb-ssl', 'data'),
+          State('session-token', 'data'),
 )
-def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl):
+def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl, session_token):
     """Updates the dropdown options for image tasks based on the dataset and API configuration.
 
     This callback function is triggered when the carousel modal is opened or closed. It fetches
@@ -54,7 +55,8 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl):
     """
     if not open_modal or dataset_id is None or dataset_id == '':
         return ['images']
-    tasks_fileset = request_scan_tasks_fileset(host, dataset_id, port=port, prefix=prefix, ssl=ssl)
+    tasks_fileset = request_scan_tasks_fileset(host, dataset_id, port=port, prefix=prefix, ssl=ssl,
+                                               session_token=session_token)
     return [task for task in IMAGE_TASKS if task in tasks_fileset]
 
 
@@ -102,7 +104,8 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl,
     if not open_modal or dataset_id is None or dataset_id == '':
         return None
 
-    images = list_task_images_uri(host, dataset_id, task_name=image_task, size='orig', port=port, prefix=prefix, ssl=ssl)
+    images = list_task_images_uri(host, dataset_id, task_name=image_task, size='orig',
+                                  port=port, prefix=prefix, ssl=ssl, session_token=session_token)
 
     if len(images) == 0:
         return dbc.Alert(f"Could not find any images for task '{image_task}' and dataset '{dataset_id}'.", color="danger")

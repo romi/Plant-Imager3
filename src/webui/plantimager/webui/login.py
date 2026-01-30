@@ -302,7 +302,7 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
         return False, False
 
     # Check if username already exists in the backend before proceeding
-    res_data = request_check_username(host, username, port=port, prefix=prefix, ssl=ssl)
+    res_data = request_check_username(host, username, port=port, prefix=prefix, ssl=ssl).json()
     user_exists = res_data.get('exists', False)  # True if username is taken
     return user_exists, not user_exists
 
@@ -388,7 +388,7 @@ def login(
 
     try:
         # Send login request to REST API endpoint
-        loggin_data = request_login(host, username, password, port=port, prefix=prefix, ssl=ssl)
+        loggin_data = request_login(host, username, password, port=port, prefix=prefix, ssl=ssl).json()
         login_msg = loggin_data['message']
 
         if 'user' in loggin_data:
@@ -602,16 +602,13 @@ def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, session_t
     """
     message_style = {'display': 'block', 'margin-top': '10px'}
 
-    headers = {}
-    if session_token:
-        headers['Authorization'] = f"Bearer {session_token}"
-    else:
+    if not session_token:
         alert = dbc.Alert(f"Missing session token, you need to login first!", color="danger", className="mb-0")
         return None, None, None, message_style, alert
 
     try:
         # Send login request to REST API endpoint
-        response = request_logout(host, port=port, prefix=prefix, ssl=ssl)
+        response = request_logout(host, port=port, prefix=prefix, ssl=ssl, session_token=session_token)
 
     except requests.exceptions.RequestException as e:
         # Handle connection errors (network issues, server down, etc.)
@@ -619,7 +616,7 @@ def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, session_t
         return None, None, None, message_style, alert
 
     logout_msg = response.json().get('message')
-    if response.ok:
+    if response:
         # Parse successful response
         alert = dbc.Alert(logout_msg, color="success", class_name="mb-0")
         return None, None, None, message_style, alert
