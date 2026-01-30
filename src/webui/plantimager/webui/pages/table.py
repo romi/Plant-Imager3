@@ -128,9 +128,10 @@ def _column_defs(col_name):
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
     State('plantdb-ssl', 'data'),
+    State('session-token', 'data'),
     prevent_initial_call=True
 )
-def refresh_table_data(n_clicks, host, port, prefix, ssl):
+def refresh_table_data(n_clicks, host, port, prefix, ssl, session_token):
     """Refresh the dataset dictionary.
 
     Parameters
@@ -147,10 +148,12 @@ def refresh_table_data(n_clicks, host, port, prefix, ssl):
         The prefix of the PlantDB REST API server.
     ssl : bool
         Whether the PlantDB REST API server is using SSL or not.
+    session_token
+        The PlantDB REST API session token.
 
     """
     if n_clicks > 0:
-        dataset_dict = get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl)
+        dataset_dict = get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl, session_token=session_token)
         return dataset_dict, 0
     return dash.no_update, 0
 
@@ -162,9 +165,10 @@ def refresh_table_data(n_clicks, host, port, prefix, ssl):
     State('plantdb-host', 'data'),
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
-    State('plantdb-ssl', 'data')
+    State('plantdb-ssl', 'data'),
+    State('session-token', 'data'),
 )
-def update_on_url_change(url, host, port, prefix, ssl):
+def update_on_url_change(url, host, port, prefix, ssl, session_token):
     """Update the dataset dictionary when the URL changes.
 
     Parameters
@@ -179,9 +183,11 @@ def update_on_url_change(url, host, port, prefix, ssl):
         The prefix of the PlantDB REST API server.
     ssl : bool
         Whether the PlantDB REST API server is using SSL or not.
+    session_token
+        The PlantDB REST API session token.
     """
     if url.endswith('/table'):
-        return get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl)
+        return get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl, session_token=session_token)
     return dash.no_update
 
 
