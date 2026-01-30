@@ -28,6 +28,7 @@ $ python app.py --plantdb-host example-server.local --plantdb-port 5000
 """
 
 import argparse
+import os
 from pathlib import Path
 from threading import Thread
 
@@ -220,6 +221,9 @@ def main() -> None:
 
     # Load environment variables from an `.env` file if present
     load_dotenv()
+
+    if args.plantdb_host in ('localhost', '127.0.0.1'):
+        os.environ['VALIDATE_HOST'] = 'false'
 
     # - Start the Dash app:
     app = setup_web_app(args.plantdb_host, args.plantdb_port, args.plantdb_prefix, args.plantdb_ssl,
