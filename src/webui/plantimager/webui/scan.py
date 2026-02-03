@@ -30,6 +30,7 @@ from dash import html
 from dash.exceptions import PreventUpdate
 from plantdb.client.rest_api import plantdb_url
 
+from plantimager.commons.RPC import NoResult
 from plantimager.webui.utils import config_upload
 from plantimager.webui.controller_proxy import RPCController
 
@@ -375,7 +376,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     """
     try:
         RPCController.instance()
-    except RuntimeError as e:
+    except RuntimeError:
         if previous_state:
             raise PreventUpdate
         return True, True
@@ -441,7 +442,7 @@ def run_scan(_, url: str, port: str, prefix: str, ssl: bool, session_token: str,
     try:
         controller = RPCController.instance()
     except RuntimeError as e:
-        return f"Error: Raspberry Pi Controller not initialized!", str(e)
+        return "Error: Raspberry Pi Controller not initialized!", str(e)
 
     set_props('scan-response', {'children': "Scan started"})
     set_props('scan-output', {'children': "Scan in progress ..."})
@@ -451,11 +452,21 @@ def run_scan(_, url: str, port: str, prefix: str, ssl: bool, session_token: str,
     update_progress(controller.progress)
     update_max_progress(controller.max_progress)
 
-    controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
-    controller.set_dataset_name(dataset_name)
-    controller.set_session_token(session_token)
-    controller.set_config(tomllib.loads(cfg))
-    controller.run_scan()
+    res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
+    if isinstance(res, NoResult):
+        return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
+    res: None | NoResult = controller.set_session_token(session_token)
+    if isinstance(res, NoResult):
+        return "Failed to connect to set session token.", res.traceback
+    res: None | NoResult = controller.set_dataset_name(dataset_name)
+    if isinstance(res, NoResult):
+        return f"Failed to set dataset {dataset_name}", res.traceback
+    res: None | NoResult = controller.set_config(tomllib.loads(cfg))
+    if isinstance(res, NoResult):
+        return "Failed to configure scann", res.traceback
+    res: None | NoResult = controller.run_scan()
+    if isinstance(res, NoResult):
+        return "Scan Failed", res.traceback
 
     return "Scan finished", "Scan complete"
 
@@ -507,12 +518,18 @@ def config_scan(_, url: str, port: str, prefix: str, ssl:bool, cfg: str, dataset
     try:
         controller = RPCController.instance()
     except RuntimeError as e:
-        return f"Error: Raspberry Pi Controller not initialized!", str(e)
+        return "Error: Raspberry Pi Controller not initialized!", str(e)
 
 
-    controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
-    controller.set_dataset_name(dataset_name)
-    controller.set_config(tomllib.loads(cfg))
+    res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
+    if isinstance(res, NoResult):
+        return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
+    res: None | NoResult = controller.set_dataset_name(dataset_name)
+    if isinstance(res, NoResult):
+        return f"Failed to set dataset {dataset_name}", res.traceback
+    res: None | NoResult = controller.set_config(tomllib.loads(cfg))
+    if isinstance(res, NoResult):
+        return "Failed to configure scan", res.traceback
 
     return "Scan configured", "Scan configured, ready to start"
 
