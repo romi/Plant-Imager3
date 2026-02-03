@@ -21,6 +21,9 @@ from base64 import b64decode
 from typing import Dict
 
 import dash_bootstrap_components as dbc
+import diskcache
+import zmq
+from dash import DiskcacheManager
 from dash import Input, set_props
 from dash import Output
 from dash import State
@@ -36,6 +39,9 @@ from plantimager.webui.controller_proxy import RPCController
 
 #: Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
+
+cache = diskcache.Cache("./cache")
+background_callback_manager = DiskcacheManager(cache)
 
 #: Get the directory where the current script (scan.py) is located
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -396,16 +402,22 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     State('session-token', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
+    background=True,
+    manager=background_callback_manager,
     prevent_initial_call=True,
     running=[
         (Output('start-scan-button', 'disabled', allow_duplicate=True), True, False),
         (Output('config-scan-button', 'disabled'), True, False),
-        (Output('scan-progress-interval', 'disabled'), False, True),
         (Output('scan-response', 'children'), 'Scan in progress', ""),
         (Output('scan-output', 'children'), 'Scan in progress', ""),
+    ],
+    progress=[
+        Output('scan-progress', 'value'),
+        Output('scan-progress', 'max'),
+        Output('scan-progress', 'label'),
     ]
 )
-def run_scan(_, url: str, port: str, prefix: str, ssl: bool, session_token: str, cfg: str, dataset_name: str):
+def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, session_token: str, cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
 
     Parameters
@@ -439,18 +451,11 @@ def run_scan(_, url: str, port: str, prefix: str, ssl: bool, session_token: str,
     RuntimeError
         If the Raspberry Pi Controller is not initialized.
     """
-    try:
-        controller = RPCController.instance()
-    except RuntimeError as e:
-        return "Error: Raspberry Pi Controller not initialized!", str(e)
+    # Background callbacks run in a new process. We must re-init the ZMQ context and Controller proxy.
+    ctx = zmq.Context()
+    # Using the same URL as app.py
+    controller = RPCController(ctx, "tcp://localhost:14567")
 
-    set_props('scan-response', {'children': "Scan started"})
-    set_props('scan-output', {'children': "Scan in progress ..."})
-
-    controller.progressChanged.connect(update_progress)
-    controller.maxProgressChanged.connect(update_max_progress)
-    update_progress(controller.progress)
-    update_max_progress(controller.max_progress)
 
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):
@@ -464,6 +469,12 @@ def run_scan(_, url: str, port: str, prefix: str, ssl: bool, session_token: str,
     res: None | NoResult = controller.set_config(tomllib.loads(cfg))
     if isinstance(res, NoResult):
         return "Failed to configure scann", res.traceback
+
+    m_prog = controller.max_progress
+    def _update_progress(prog):
+        set_progress((str(prog), str(m_prog), f"{prog}/{m_prog}"))
+    controller.progressChanged.connect(_update_progress)
+
     res: None | NoResult = controller.run_scan()
     if isinstance(res, NoResult):
         return "Scan Failed", res.traceback

@@ -215,6 +215,7 @@ def main() -> None:
 
     # - Create connexion with controller
     context = zmq.Context()
+    # Create a thread to avoid blocking the process
     controller_thread = Thread(target=lambda ctx: RPCController(ctx, "tcp://localhost:14567"), args=(context,))
     controller_thread.daemon = True
     controller_thread.start()
