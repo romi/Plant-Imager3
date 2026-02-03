@@ -7,10 +7,11 @@ name = "plantimager.controller"
 version = "0.0.1"
 dependencies = [
     "av",
-    "pyside6",
+    "pyside6<6.9",
     "pyside6-addons",  # for QtMultimedia
     "pyserial",
     "scipy",
+    "scikit-image",
     "numpy",
     "plantimager.commons",
 ]
