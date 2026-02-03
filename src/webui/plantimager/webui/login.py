@@ -28,6 +28,7 @@ from dash import html
 from plantdb.client.rest_api import request_check_username
 from plantdb.client.rest_api import request_login
 from plantdb.client.rest_api import request_logout
+from plantdb.client.rest_api import request_token_validation
 
 from plantimager.webui.new_user import new_user_button
 
@@ -411,6 +412,35 @@ def login(
         # Handle connection errors (network issues, server down, etc.)
         alert = dbc.Alert(f"Connection error: {str(e)}", color="danger", class_name="mb-0")
         return None, None, None, message_style, alert
+
+
+@callback(
+    Output('logged-username', 'data', allow_duplicate=True),
+    Output('logged-fullname', 'data', allow_duplicate=True),
+    Output('session-token', 'data', allow_duplicate=True),
+    Input('session-token', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
+    prevent_initial_call=True,
+)
+def restore_login(session_token, host, port, prefix, ssl):
+    """
+    If a session token exists in session storage, verify it with the API
+    and populate the logged‑in stores. This runs on every page load.
+    """
+    if not session_token:
+        return None, None, None
+
+    try:
+        # API endpoint that returns user info given a token
+        user = request_token_validation(host, port=port, prefix=prefix, ssl=ssl, session_token=session_token).json()[
+            'user']
+        return user['username'], user['fullname'], session_token
+    except Exception:
+        # If the token is invalid, clear it so we don't keep an old one
+        return None, None, None
 
 
 @callback(
