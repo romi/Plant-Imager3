@@ -23,7 +23,7 @@ from plantimager.webui.visu import dash_boostrap_carousel
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
     State('plantdb-ssl', 'data'),
-          State('session-token', 'data'),
+    State('session-token', 'data'),
 )
 def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl, session_token):
     """Updates the dropdown options for image tasks based on the dataset and API configuration.

@@ -173,7 +173,7 @@ class DataUploader():
         This method may block indefinitely if the upload queue is full and
         no upload jobs are completing.
         """
-        # Wait if number of jobs submitted is greater than queue_size
+        # Wait if the number of jobs submitted is greater than queue_size
         if len(self.jobs) >= self.queue_size:
             wait(self.jobs, return_when=FIRST_COMPLETED)  # blocking
 

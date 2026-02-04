@@ -266,7 +266,6 @@ class CNC(AbstractCNC):
         dist[2] = angle_min_travel_distance(z, pos[2])
         dist = np.abs(dist)
         logger.debug(f"distance: {dist}")
-        #dist[2] = angle_min_travel(pos[2], z)
         max_speed = np.array([self.grbl_settings["$110"], self.grbl_settings["$111"], self.grbl_settings["$112"]])/60 # mm/s, mm/s, deg/s
         max_speed *= 0.8
         acceleration = np.array([self.grbl_settings["$120"], self.grbl_settings["$121"], self.grbl_settings["$122"]])*0.8
