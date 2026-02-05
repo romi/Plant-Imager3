@@ -9,16 +9,18 @@ Will then connect to the PlantImagerApp with RPCController with plantimager.webu
 """
 import os
 import signal
-import sys
 import subprocess
+import sys
 import time
-import unittest
-import zmq
 import tomllib
+import unittest
 
-# Assuming these are available in your python path as per your project structure
-from plantimager.webui.controller_proxy import RPCController
+import zmq
 from plantdb.client.plantdb_client import PlantDBClient
+from plantdb.commons.test_database import get_test_dataset
+
+from plantimager.webui.controller_proxy import RPCController
+
 
 class TestScanIntegration(unittest.TestCase):
     """
@@ -28,11 +30,12 @@ class TestScanIntegration(unittest.TestCase):
 
     def setUp(self):
         # Configuration
-        # You might want to point this to a generic test resource folder or use a temp dir generator
-        self.images_path = os.environ.get(
-            "PI3_CAMERASERVER_IMAGE",
-            "/home/arthur/Documents/test_db_plantdb/tabac_20251013_1/images"
-        )
+        # Use a shared test resource folder
+        self.images_path = os.getenv("PI3_CAMERASERVER_IMAGE")
+        if self.images_path is None:
+            dataset_path = get_test_dataset('real_plant')
+            self.images_path = str(dataset_path / "images")
+
         self.db_url = "http://localhost:5000"
         self.rpc_addr = "tcp://localhost:14567"
 
@@ -62,6 +65,7 @@ class TestScanIntegration(unittest.TestCase):
 
     def tearDown(self):
         print("\n[TearDown] Cleaning up subprocesses...")
+
         # Helper to safely kill a process
         def kill_proc(proc):
             if proc.poll() is None:
@@ -117,7 +121,7 @@ class TestScanIntegration(unittest.TestCase):
         for cam_name in rpc_controller.camera_names:
             conf[cam_name] = conf["picamera"].copy()
 
-        rpc_controller.set_session_token(db_client.jwt_token)
+        rpc_controller.set_session_token(db_client._access_token)
         rpc_controller.set_db_url(self.db_url)
         rpc_controller.set_dataset_name("test_dataset")
         rpc_controller.set_config(conf)
@@ -158,6 +162,7 @@ class TestScanIntegration(unittest.TestCase):
 
         rpc_controller.stop_server()
         print("Test Successful!")
+
 
 if __name__ == "__main__":
     unittest.main()
