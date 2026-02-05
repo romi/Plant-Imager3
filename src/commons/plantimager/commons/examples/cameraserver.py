@@ -1,6 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import zmq
+from plantdb.commons.test_database import get_test_dataset
 from scipy import ndimage
 from simplejpeg import encode_jpeg
 import numpy as np
@@ -11,12 +12,29 @@ from plantimager.commons.cameradevice import Camera, CameraMode
 
 
 def image_provider():
-    image_path = os.getenv("PI3_CAMERASERVER_IMAGE", "/home/arthur/Documents/test_db_plantdb/tabac_20251013_1/images")
+    """Generates an infinite sequence of images from a directory.
+
+    Yields
+    ------
+    numpy.ndarray
+        Image data loaded by ``matplotlib.pyplot.imread`` from the current file.
+        The generator loops indefinitely, restarting after the last image.
+    """
+    image_path = os.getenv("PI3_CAMERASERVER_IMAGE")
+    if image_path is None:
+        dataset_path = get_test_dataset('real_plant')
+        image_path = str(dataset_path / "images")
+
     images = sorted(os.listdir(image_path))
     n = len(images)
     i = 0
     while True:
-        yield plt.imread(os.path.join(image_path, images[i%n]))
+        image = plt.imread(os.path.join(image_path, images[i % n]))
+        # SimpleJPEG only supports RGB, so drop the alpha channel if it exists.
+        if image.ndim == 3 and image.shape[2] == 4:
+            # keep only the first three channels (R, G, B)
+            image = image[:, :, :3]
+        yield image
         i += 1
 
 def block_mean(ar, fact):
