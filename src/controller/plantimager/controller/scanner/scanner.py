@@ -394,8 +394,8 @@ class Scanner(QObject):
             self.db_client = PlantDBClient(self.db_url)  # Create new client
             if self._session_token:
                 logger.debug("Validating PlantDB session token")
-                self.db_client.validate_session_token(self._session_token)
-                assert self._session_token == self.db_client.jwt_token
+                self.db_client.validate_token(self._session_token)
+                assert self._session_token == self.db_client._access_token
             self.uploader = DataUploader(self.db_client, 10)  # Create new uploader
             self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state
 
@@ -846,5 +846,5 @@ class Scanner(QObject):
         self._session_token = token
         if self.db_client:
             logger.debug("Validating PlantDB session token")
-            self.db_client.validate_session_token(token)
+            self.db_client.validate_token(token)
             logger.debug("Session token valid")
