@@ -93,7 +93,7 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl,
     prefix : str
         The prefix of the PlantDB REST API server.
     access_token : str
-        A access token used to authenticate against PlantDB.
+        AN access token used to authenticate against PlantDB.
 
     Returns
     -------
@@ -105,7 +105,7 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl,
         return None
 
     images = list_task_images_uri(host, dataset_id, task_name=image_task, size='orig',
-                                  port=port, prefix=prefix, ssl=ssl, access_token=access_token)
+                                  port=port, prefix=prefix, ssl=ssl, session_token=access_token)
 
     if len(images) == 0:
         return dbc.Alert(f"Could not find any images for task '{image_task}' and dataset '{dataset_id}'.", color="danger")

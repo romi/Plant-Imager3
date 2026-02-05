@@ -80,8 +80,8 @@ def create_avatar(fullname: str) -> html.Div | None:
     return html.Div(initials, style=avatar_style)
 
 
-def create_login_button(is_logged_in: bool = False, user_fullname: str | None = None) -> dbc.NavLink:
-    """Create a login/logout button with avatar for the navigation bar.
+def create_login_avatar_button(is_logged_in: bool = False, user_fullname: str | None = None) -> dbc.NavLink:
+    """Create an avatar button triggering the login/logout modal for the navigation bar.
 
     This function generates a navigation link component that displays either a default
     person icon (when logged out) or a user avatar (when logged in). The avatar is
@@ -122,17 +122,17 @@ def create_login_button(is_logged_in: bool = False, user_fullname: str | None = 
         )
 
 
-login_button_tooltip = dbc.Tooltip(
+login_avatar_button_tooltip = dbc.Tooltip(
     children="Login to the Plant Imager",
     target="login-avatar-button",
     placement="bottom",
 )
 
 # Create login button components for the navigation bar
-login_button = create_login_button()
+login_avatar_button = create_login_avatar_button()
 
 
-def login_title(fullname: str | None = None, username: str | None = None) -> list:
+def login_modal_title(fullname: str | None = None, username: str | None = None) -> list:
     """Create a title for the login modal based on user login status.
 
     Parameters
@@ -302,7 +302,7 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
     if not is_modal_open or not username:
         return False, False
 
-    # Check if username already exists in the backend before proceeding
+    # Check if a username already exists in the backend before proceeding
     user_exists = request_check_username(host, username, port=port, prefix=prefix, ssl=ssl)
     return user_exists, not user_exists
 
@@ -310,6 +310,7 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
 @callback(Output('logged-username', 'data', allow_duplicate=True),
           Output('logged-fullname', 'data', allow_duplicate=True),
           Output('access-token', 'data', allow_duplicate=True),
+          Output('refresh-token', 'data', allow_duplicate=True),
           Output('login-attempt-message', 'style'),
           Output('login-attempt-message', 'children'),
           Input('username-input', 'n_submit'),
@@ -332,7 +333,7 @@ def login(
         port: int | str,
         prefix: str,
         ssl: bool
-) -> tuple[str | None, str | None, str | None, dict, dbc.Alert]:
+) -> tuple[str | None, str | None, str | None, str | None, dict, dbc.Alert]:
     """Handle user authentication through the REST API.
 
     This callback function processes login attempts by sending credentials to a REST API endpoint
@@ -368,6 +369,8 @@ def login(
         The user's full name if login successful, ``None`` otherwise.
     str or None
         The access token if login successful, ``None`` otherwise.
+    str or None
+        The refresh token if login successful, ``None`` otherwise.
     dict
         CSS style dictionary for the message display.
     dash_bootstrap_components.Alert
@@ -385,32 +388,36 @@ def login(
     Authentication state is maintained through Dash Store components in the application layout.
     """
     message_style = {'display': 'block', 'margin-top': '10px'}
+    print("COUCOU")
 
     try:
         # Send login request to REST API endpoint
         loggin_data = request_login(host, username, password, port=port, prefix=prefix, ssl=ssl)
-        login_msg = loggin_data['message']
-
-        if 'user' in loggin_data:
-            # Parse successful response
-            fullname = loggin_data['user']['fullname']
-            access_token = loggin_data['access_token']
-            # Setup success message display
-            alert = dbc.Alert(login_msg, color="success", class_name="mb-0")
-            return username, fullname, access_token, message_style, alert
-
-        # Handle failed login attempts
-        error_msg = "Login failed. Please check your credentials."
-        if 'message' in loggin_data:
-            error_msg = login_msg
-
-        alert = dbc.Alert(error_msg, color="danger", class_name="mb-0")
-        return None, None, None, message_style, alert
-
     except requests.exceptions.RequestException as e:
         # Handle connection errors (network issues, server down, etc.)
+        # Set up an alert message
         alert = dbc.Alert(f"Connection error: {str(e)}", color="danger", class_name="mb-0")
-        return None, None, None, message_style, alert
+        return None, None, None, None, message_style, alert
+
+    login_msg = loggin_data['message']
+    if 'user' in loggin_data:
+        # Parse successful response
+        fullname = loggin_data['user']['fullname']
+        access_token = loggin_data['access_token']
+        refresh_token = loggin_data['refresh_token']
+        # Set up a success message
+        alert = dbc.Alert(login_msg, color="success", class_name="mb-0")
+        print(login_msg)
+        return username, fullname, access_token, refresh_token, message_style, alert
+
+    # Handle failed login attempts
+    error_msg = "Login failed. Please check your credentials."
+    if 'message' in loggin_data:
+        error_msg = login_msg
+    # Set up an alert message
+    alert = dbc.Alert(error_msg, color="danger", class_name="mb-0")
+    print(error_msg)
+    return None, None, None, None, message_style, alert
 
 
 @callback(
@@ -426,7 +433,7 @@ def login(
 )
 def restore_login(access_token, host, port, prefix, ssl):
     """
-    If a access token exists in session storage, verify it with the API
+    If an access token exists in session storage, verify it with the API
     and populate the logged‑in stores. This runs on every page load.
     """
     if not access_token:
@@ -434,8 +441,7 @@ def restore_login(access_token, host, port, prefix, ssl):
 
     try:
         # API endpoint that returns user info given a token
-        user = request_token_validation(host, port=port, prefix=prefix, ssl=ssl, access_token=access_token).json()[
-            'user']
+        user = request_token_validation(host, port=port, prefix=prefix, ssl=ssl, session_token=access_token)['user']
         return user['username'], user['fullname'], access_token
     except Exception:
         # If the token is invalid, clear it so we don't keep an old one
@@ -469,11 +475,8 @@ def update_login_avatar_button(fullname: str | None) -> list:
     create_login_button : The underlying function that creates the button components
     """
     if fullname:
-        return create_login_button(
-            is_logged_in=True,
-            user_fullname=fullname
-        ).children
-    return create_login_button(is_logged_in=False).children
+        return create_login_avatar_button(is_logged_in=True, user_fullname=fullname).children
+    return create_login_avatar_button(is_logged_in=False).children
 
 
 @callback(
@@ -505,8 +508,8 @@ def update_login_modal_title(fullname: str | None, username: str | None) -> list
         if no user information is provided.
     """
     if fullname:
-        return login_title(fullname, username)
-    return login_title()
+        return login_modal_title(fullname, username)
+    return login_modal_title()
 
 
 @callback(
@@ -637,7 +640,7 @@ def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, access_to
 
     try:
         # Send login request to REST API endpoint
-        logout_success, logout_msg = request_logout(host, port=port, prefix=prefix, ssl=ssl, access_token=access_token)
+        logout_success, logout_msg = request_logout(host, port=port, prefix=prefix, ssl=ssl, session_token=access_token)
 
     except requests.exceptions.RequestException as e:
         # Handle connection errors (network issues, server down, etc.)
@@ -656,7 +659,6 @@ def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, access_to
 @callback(
     Output("logout-button", "disabled"),
     Input("logged-username", "data"),
-
 )
 def disable_logout_button(username: str | None) -> bool:
     """Control the enabled/disabled state of the logout button.

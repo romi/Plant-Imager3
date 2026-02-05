@@ -22,8 +22,8 @@ from dash import html
 
 from plantimager.webui.config import cfg_button
 from plantimager.webui.config import cfg_tooltip
-from plantimager.webui.login import login_button
-from plantimager.webui.login import login_button_tooltip
+from plantimager.webui.login import login_avatar_button
+from plantimager.webui.login import login_avatar_button_tooltip
 
 #: URL for the ROMI project logo used in the navigation ba
 ROMI_LOGO: str = "https://romi-project.eu/assets/logo.svg"
@@ -97,7 +97,7 @@ def update_table_link_href(_):
 
 #: Define main navigation items including scan, database, and documentation links
 nav_items: list = [
-    dbc.NavItem(children=[login_button, login_button_tooltip]),
+    dbc.NavItem(children=[login_avatar_button, login_avatar_button_tooltip]),
     dbc.NavItem(children=[tutorial_link, tutorial_tooltip]),
     dbc.NavItem(children=[scan_link, scan_tooltip]),
     dbc.NavItem(children=[dataset_table_link, dataset_table_tooltip]),

@@ -153,7 +153,7 @@ def refresh_table_data(n_clicks, host, port, prefix, ssl, access_token):
 
     """
     if n_clicks > 0:
-        dataset_dict = get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl, access_token=access_token)
+        dataset_dict = get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl, session_token=access_token)
         return dataset_dict, 0
     return dash.no_update, 0
 
@@ -187,7 +187,7 @@ def update_on_url_change(url, host, port, prefix, ssl, access_token):
         The PlantDB REST API access token.
     """
     if url.endswith('/table'):
-        return get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl, access_token=access_token)
+        return get_dataset_dict(host=host, port=port, prefix=prefix, ssl=ssl, session_token=access_token)
     return dash.no_update
 
 
@@ -214,7 +214,7 @@ def update_table(dataset_dict, host, port, prefix, ssl, access_token):
     ssl : bool
         Whether the PlantDB REST API server is using SSL or not.
     access_token : str
-        A access token used to authenticate against PlantDB.
+        AN access token used to authenticate against PlantDB.
 
     Returns
     -------

@@ -85,7 +85,7 @@ def dash_boostrap_carousel(images: list[str], access_token: Optional[str]) -> Ca
     images
         A list of image URLs to include in the carousel.
     access_token : Optional[str]
-        A access token used to authenticate against PlantDB.
+        AN access token used to authenticate against PlantDB.
 
     Returns
     -------

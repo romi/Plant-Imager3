@@ -58,7 +58,7 @@ configuration_card = [
         children=[
             dbc.CardHeader(children=[html.I(className="bi bi-code-square me-2"), "Configuration"]),
             dbc.CardBody([
-                dbc.Textarea(id="scan-cfg-toml", class_name="mb-3", size='md',
+                dcc.Textarea(id="scan-cfg-toml", class_name="mb-3", size='md',
                              value=default_toml,
                              title="The scan configuration in TOML format.",
                              placeholder="Scan configuration (TOML).",
@@ -248,7 +248,7 @@ def update_toml_cfg(contents: str) -> str:
 
 @callback(
     Output('scan-cfg-toml', 'style'),
-    Input('scan-cfg-toml', 'value')
+    Input('scan-cfg-toml', 'value'),
 )
 def validate_toml_textarea(toml_text: str) -> dict:
     """
