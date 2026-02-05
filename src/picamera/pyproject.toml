@@ -10,7 +10,7 @@ dependencies = [
 ]
 description = "A PiCamera package, transfering video and images to the main controller of the ROMI Plant Imager."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11, <3.13"  # 3.13 upper bound for open3d dependency
 license = { 'text' = "LGPL-3.0-or-later" }   # to replace by "LGPL-3.0-or-later" only in next release, pending deprecation
 authors = [
     { name = "Nabil Ait Taleb", email = "mohamednabil.aittaleb@sony.com" },
