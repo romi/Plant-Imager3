@@ -389,7 +389,7 @@ def login(
 
     try:
         # Send login request to REST API endpoint
-        loggin_data = request_login(host, username, password, port=port, prefix=prefix, ssl=ssl).json()
+        loggin_data = request_login(host, username, password, port=port, prefix=prefix, ssl=ssl)
         login_msg = loggin_data['message']
 
         if 'user' in loggin_data:
@@ -638,15 +638,14 @@ def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, session_t
 
     try:
         # Send login request to REST API endpoint
-        response = request_logout(host, port=port, prefix=prefix, ssl=ssl, session_token=session_token)
+        logout_success, logout_msg = request_logout(host, port=port, prefix=prefix, ssl=ssl, session_token=session_token)
 
     except requests.exceptions.RequestException as e:
         # Handle connection errors (network issues, server down, etc.)
         alert = dbc.Alert(f"Connection error: {str(e)}", color="danger", class_name="mb-0")
         return None, None, None, message_style, alert
 
-    logout_msg = response.json().get('message')
-    if response:
+    if logout_success:
         # Parse successful response
         alert = dbc.Alert(logout_msg, color="success", class_name="mb-0")
         return None, None, None, message_style, alert
