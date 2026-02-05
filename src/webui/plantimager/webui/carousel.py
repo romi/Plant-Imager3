@@ -23,9 +23,9 @@ from plantimager.webui.visu import dash_boostrap_carousel
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
     State('plantdb-ssl', 'data'),
-    State('session-token', 'data'),
+    State('access-token', 'data'),
 )
-def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl, session_token):
+def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl, access_token):
     """Updates the dropdown options for image tasks based on the dataset and API configuration.
 
     This callback function is triggered when the carousel modal is opened or closed. It fetches
@@ -56,7 +56,7 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl, 
     if not open_modal or dataset_id is None or dataset_id == '':
         return ['images']
     tasks_fileset = request_scan_tasks_fileset(host, dataset_id, port=port, prefix=prefix, ssl=ssl,
-                                               session_token=session_token)
+                                               access_token=access_token)
     return [task for task in IMAGE_TASKS if task in tasks_fileset]
 
 
@@ -69,9 +69,9 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl, 
           State('plantdb-port', 'data'),
           State('plantdb-prefix', 'data'),
           State('plantdb-ssl', 'data'),
-          State('session-token', 'data'),
+          State('access-token', 'data'),
           )
-def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl, session_token):
+def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl, access_token):
     """Create a Dash carousel component displaying images from a specified dataset task.
 
     This callback function generates a Bootstrap-styled carousel component for displaying
@@ -92,8 +92,8 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl,
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
-    session_token : str
-        A session token used to authenticate against PlantDB.
+    access_token : str
+        A access token used to authenticate against PlantDB.
 
     Returns
     -------
@@ -105,7 +105,7 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl,
         return None
 
     images = list_task_images_uri(host, dataset_id, task_name=image_task, size='orig',
-                                  port=port, prefix=prefix, ssl=ssl, session_token=session_token)
+                                  port=port, prefix=prefix, ssl=ssl, access_token=access_token)
 
     if len(images) == 0:
         return dbc.Alert(f"Could not find any images for task '{image_task}' and dataset '{dataset_id}'.", color="danger")
@@ -117,7 +117,7 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl,
     # # Remove the axis ticks and labels:
     # fig.update_layout(xaxis={'visible': False}, yaxis={'visible': False})
     # return fig
-    return dash_boostrap_carousel(images, session_token)
+    return dash_boostrap_carousel(images, access_token)
 
 
 caroussel_modal = dbc.Modal(children=[

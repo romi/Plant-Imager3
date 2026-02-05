@@ -76,7 +76,7 @@ def plotly_image_carousel(
     return fig
 
 
-def dash_boostrap_carousel(images: list[str], session_token: Optional[str]) -> Carousel:
+def dash_boostrap_carousel(images: list[str], access_token: Optional[str]) -> Carousel:
     """
     Creates a Bootstrap Carousel component from a list of image URLs.
 
@@ -84,8 +84,8 @@ def dash_boostrap_carousel(images: list[str], session_token: Optional[str]) -> C
     ----------
     images
         A list of image URLs to include in the carousel.
-    session_token : Optional[str]
-        A session token used to authenticate against PlantDB.
+    access_token : Optional[str]
+        A access token used to authenticate against PlantDB.
 
     Returns
     -------
@@ -101,7 +101,7 @@ def dash_boostrap_carousel(images: list[str], session_token: Optional[str]) -> C
     images.sort()
 
     with ThreadPoolExecutor(max_workers=4) as pool:
-        encoded_images = list(pool.map(lambda img: load_image_from_url(img, session_token), images))
+        encoded_images = list(pool.map(lambda img: load_image_from_url(img, access_token), images))
     carousel = Carousel(
         items=[{"key": idx, "alt": img.split('/')[-1], "src": encoded_images[idx]} for idx, img in
                enumerate(images)],

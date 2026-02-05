@@ -303,14 +303,13 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
         return False, False
 
     # Check if username already exists in the backend before proceeding
-    res_data = request_check_username(host, username, port=port, prefix=prefix, ssl=ssl).json()
-    user_exists = res_data.get('exists', False)  # True if username is taken
+    user_exists = request_check_username(host, username, port=port, prefix=prefix, ssl=ssl)
     return user_exists, not user_exists
 
 
 @callback(Output('logged-username', 'data', allow_duplicate=True),
           Output('logged-fullname', 'data', allow_duplicate=True),
-          Output('session-token', 'data', allow_duplicate=True),
+          Output('access-token', 'data', allow_duplicate=True),
           Output('login-attempt-message', 'style'),
           Output('login-attempt-message', 'children'),
           Input('username-input', 'n_submit'),
@@ -368,7 +367,7 @@ def login(
     str or None
         The user's full name if login successful, ``None`` otherwise.
     str or None
-        The session token if login successful, ``None`` otherwise.
+        The access token if login successful, ``None`` otherwise.
     dict
         CSS style dictionary for the message display.
     dash_bootstrap_components.Alert
@@ -395,10 +394,10 @@ def login(
         if 'user' in loggin_data:
             # Parse successful response
             fullname = loggin_data['user']['fullname']
-            session_token = loggin_data['access_token']
+            access_token = loggin_data['access_token']
             # Setup success message display
             alert = dbc.Alert(login_msg, color="success", class_name="mb-0")
-            return username, fullname, session_token, message_style, alert
+            return username, fullname, access_token, message_style, alert
 
         # Handle failed login attempts
         error_msg = "Login failed. Please check your credentials."
@@ -417,27 +416,27 @@ def login(
 @callback(
     Output('logged-username', 'data', allow_duplicate=True),
     Output('logged-fullname', 'data', allow_duplicate=True),
-    Output('session-token', 'data', allow_duplicate=True),
-    Input('session-token', 'data'),
+    Output('access-token', 'data', allow_duplicate=True),
+    Input('access-token', 'data'),
     State('plantdb-host', 'data'),
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
     State('plantdb-ssl', 'data'),
     prevent_initial_call=True,
 )
-def restore_login(session_token, host, port, prefix, ssl):
+def restore_login(access_token, host, port, prefix, ssl):
     """
-    If a session token exists in session storage, verify it with the API
+    If a access token exists in session storage, verify it with the API
     and populate the logged‑in stores. This runs on every page load.
     """
-    if not session_token:
+    if not access_token:
         return None, None, None
 
     try:
         # API endpoint that returns user info given a token
-        user = request_token_validation(host, port=port, prefix=prefix, ssl=ssl, session_token=session_token).json()[
+        user = request_token_validation(host, port=port, prefix=prefix, ssl=ssl, access_token=access_token).json()[
             'user']
-        return user['username'], user['fullname'], session_token
+        return user['username'], user['fullname'], access_token
     except Exception:
         # If the token is invalid, clear it so we don't keep an old one
         return None, None, None
@@ -585,7 +584,7 @@ def timeout_modal(username: str | None) -> bool:
 @callback(
     Output('logged-username', 'data', allow_duplicate=True),
     Output('logged-fullname', 'data', allow_duplicate=True),
-    Output('session-token', "data", allow_duplicate=True),
+    Output('access-token', "data", allow_duplicate=True),
     Output('login-attempt-message', 'style', allow_duplicate=True),
     Output("login-attempt-message", "children", allow_duplicate=True),
     Input('logout-button', 'n_clicks'),
@@ -593,10 +592,10 @@ def timeout_modal(username: str | None) -> bool:
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
     State('plantdb-ssl', 'data'),
-    State('session-token', 'data'),
+    State('access-token', 'data'),
     prevent_initial_call=True,
 )
-def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, session_token: str) -> tuple[
+def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, access_token: str) -> tuple[
     str | None, str | None, str | None, dict, dbc.Alert]:
     """Handle user logout functionality.
 
@@ -614,8 +613,8 @@ def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, session_t
         The prefix of the PlantDB REST API server.
     ssl : bool
         Flag indicating whether SSL (HTTPS) is enabled.
-    session_token
-        The PlantDB REST API session token.
+    access_token
+        The PlantDB REST API access token.
 
     Returns
     -------
@@ -624,7 +623,7 @@ def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, session_t
     None
         Clears the logged full name.
     None
-        Clears the session token.
+        Clears the access token.
     dict
         CSS style dictionary for the message display.
     dash_bootstrap_components.Alert
@@ -632,13 +631,13 @@ def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, session_t
     """
     message_style = {'display': 'block', 'margin-top': '10px'}
 
-    if not session_token:
-        alert = dbc.Alert(f"Missing session token, you need to login first!", color="danger", className="mb-0")
+    if not access_token:
+        alert = dbc.Alert(f"Missing access token, you need to login first!", color="danger", className="mb-0")
         return None, None, None, message_style, alert
 
     try:
         # Send login request to REST API endpoint
-        logout_success, logout_msg = request_logout(host, port=port, prefix=prefix, ssl=ssl, session_token=session_token)
+        logout_success, logout_msg = request_logout(host, port=port, prefix=prefix, ssl=ssl, access_token=access_token)
 
     except requests.exceptions.RequestException as e:
         # Handle connection errors (network issues, server down, etc.)

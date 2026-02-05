@@ -44,7 +44,7 @@ IMAGE_TASKS = [
 ]
 
 
-def get_dataset_dict(host: str, port: int, prefix: str, ssl: bool, session_token: str) -> dict[str, Any] | None:
+def get_dataset_dict(host: str, port: int, prefix: str, ssl: bool, access_token: str) -> dict[str, Any] | None:
     """Returns the dataset dictionary for the PlantDB REST API at a given host url and port.
 
     Parameters
@@ -57,8 +57,8 @@ def get_dataset_dict(host: str, port: int, prefix: str, ssl: bool, session_token
         The prefix of the PlantDB REST API server.
     ssl : bool
         Whether the PlantDB REST API server is using SSL or not.
-    session_token
-        The PlantDB REST API session token.
+    access_token
+        The PlantDB REST API access token.
 
     Returns
     -------
@@ -85,9 +85,9 @@ def get_dataset_dict(host: str, port: int, prefix: str, ssl: bool, session_token
     plantdb.rest_api_client.parse_scans_info
     """
     scans_list = sorted(request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl,
-                                                session_token=session_token).json())
+                                                access_token=access_token).json())
     if len(scans_list) > 0:
-        dataset_dict = parse_scans_info(host, port=port, prefix=prefix, ssl=ssl, session_token=session_token)
+        dataset_dict = parse_scans_info(host, port=port, prefix=prefix, ssl=ssl, access_token=access_token)
     else:
         dataset_dict = None
     return dataset_dict
@@ -149,15 +149,15 @@ def _validate_new_username(username: str, host: str, port: str, prefix: str, ssl
         return False
 
 
-def load_image_from_url(url, session_token=None):
+def load_image_from_url(url, access_token=None):
     """Load an image from a given URL and encode it to a base64 data URI.
 
     Parameters
     ----------
     url : str
         The base URL to request.
-    session_token : str
-        A session token used to authenticate against PlantDB.
+    access_token : str
+        A access token used to authenticate against PlantDB.
 
     Returns
     -------
@@ -179,7 +179,7 @@ def load_image_from_url(url, session_token=None):
     """
     # Fetch image and convert to base64
     try:
-        response = make_api_request(url=url, session_token=session_token, timeout=5)
+        response = make_api_request(url=url, access_token=access_token, timeout=5)
         if response.status_code == 200:
             content_type = response.headers.get('content-type', 'image/jpeg')
             if not content_type.startswith('image'):

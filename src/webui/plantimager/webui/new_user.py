@@ -261,13 +261,13 @@ def validate_password_match(password: str | None, confirm_password: str | None) 
      State("plantdb-port", "data"),
      State("plantdb-prefix", "data"),
      State("plantdb-ssl", "data"),
-     State("session-token", "data"),
+     State("access-token", "data"),
      ],
     prevent_initial_call=True
 )
 def register_user(n_clicks: int | None, username: str, fullname: str, password: str,
                   confirm_password: str, host: str, port: str, prefix: str, ssl: bool,
-                  session_token: str) -> str | dbc.Alert:
+                  access_token: str) -> str | dbc.Alert:
     """Process user registration by validating inputs and creating a new account.
 
     This callback handles the complete user registration process, including input
@@ -291,8 +291,8 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
-    session_token : str
-        The session token to authenticate against the PlantDB REST API server.
+    access_token : str
+        The access token to authenticate against the PlantDB REST API server.
 
     Returns
     -------
@@ -331,13 +331,13 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
     if password != confirm_password:
         return dbc.Alert("Passwords do not match!", color="danger", class_name="mb-0")
 
-    if not session_token:
-        return dbc.Alert(f"Missing session token, you need to login first!", color="danger", className="mb-0")
+    if not access_token:
+        return dbc.Alert(f"Missing access token, you need to login first!", color="danger", className="mb-0")
 
     try:
         # Create a new user via REST API
         response = request_new_user(host, username, password, fullname, port=port, prefix=prefix, ssl=ssl,
-                                    session_token=session_token)
+                                    access_token=access_token)
 
         if response.ok:
             return dbc.Alert("Registration successful! You can now login.", color="success", class_name="mb-0")

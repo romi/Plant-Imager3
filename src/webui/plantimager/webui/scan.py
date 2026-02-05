@@ -118,19 +118,19 @@ scan_card = [
                     dbc.Col([
                         dbc.Button(
                             children=[
-                                html.I(className="bi bi-play-fill me-2"),
-                                'Start scan'
+                                html.I(className="bi bi-gear-fill me-2"),
+                                'Configure Scanner'
                             ],
-                            id='start-scan-button'
+                            id='config-scan-button'
                         ),
                     ], width=3),
                     dbc.Col([
                         dbc.Button(
                             children=[
                                 html.I(className="bi bi-play-fill me-2"),
-                                'Configure Scanner'
+                                'Start scan'
                             ],
-                            id='config-scan-button'
+                            id='start-scan-button'
                         ),
                     ], width=3),
                     dbc.Col([
@@ -246,6 +246,34 @@ def update_toml_cfg(contents: str) -> str:
     cfg = b64decode(content_string)
     return cfg.decode()
 
+@callback(
+    Output('scan-cfg-toml', 'style'),
+    Input('scan-cfg-toml', 'value')
+)
+def validate_toml_textarea(toml_text: str) -> dict:
+    """
+    Validate the TOML configuration entered by the user.
+
+    Returns a style dict that highlights the textarea with a red border
+    when the TOML is invalid, otherwise restores the default style.
+    """
+    # Default style – the height is defined in the component declaration
+    default_style = {'height': '65vh'}
+
+    # Empty textarea should not be flagged as an error
+    if not toml_text:
+        return default_style
+
+    try:
+        # Attempt to parse the TOML; we only care about success/failure
+        tomllib.loads(toml_text)
+        # Valid TOML → keep normal appearance
+        return default_style
+    except Exception:
+        # Invalid TOML → add a red border for visual feedback
+        error_style = default_style.copy()
+        error_style.update({'border': '2px solid red'})
+        return error_style
 
 def all_valid_characters(dataset_name: str) -> bool:
     """Validates if all characters in a given dataset name are permissible.
@@ -399,7 +427,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
     State('plantdb-ssl', 'data'),
-    State('session-token', 'data'),
+    State('access-token', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
     background=True,
@@ -417,7 +445,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
         Output('scan-progress', 'label'),
     ]
 )
-def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, session_token: str, cfg: str, dataset_name: str):
+def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, access_token: str, cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
 
     Parameters
@@ -432,8 +460,8 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, sessi
         The prefix of the PlantDB REST API server.
     ssl : bool
         Whether the PlantDB REST API server is using SSL.
-    session_token : str
-        The PlantDB REST API session token of the user.
+    access_token : str
+        The PlantDB REST API access token of the user.
     cfg : str
         The TOML configuration string for the scan.
     dataset_name : str
@@ -456,13 +484,12 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, sessi
     # Using the same URL as app.py
     controller = RPCController(ctx, "tcp://localhost:14567")
 
-
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):
         return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
-    res: None | NoResult = controller.set_session_token(session_token)
+    res: None | NoResult = controller.set_access_token(access_token)
     if isinstance(res, NoResult):
-        return "Failed to connect to set session token.", res.traceback
+        return "Failed to connect to set access token.", res.traceback
     res: None | NoResult = controller.set_dataset_name(dataset_name)
     if isinstance(res, NoResult):
         return f"Failed to set dataset {dataset_name}", res.traceback
@@ -530,7 +557,6 @@ def config_scan(_, url: str, port: str, prefix: str, ssl:bool, cfg: str, dataset
         controller = RPCController.instance()
     except RuntimeError as e:
         return "Error: Raspberry Pi Controller not initialized!", str(e)
-
 
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):

@@ -597,7 +597,7 @@ def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) ->
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
     State('plantdb-ssl', 'data'),
-    State('session-token', 'data'),
+    State('access-token', 'data'),
     prevent_initial_call=True,
 )
 def update_dataset_list(
@@ -607,7 +607,7 @@ def update_dataset_list(
         port: int | str,
         prefix: str,
         ssl: bool,
-        session_token: str,
+        access_token: str,
 ) -> tuple[dbc.Alert, list[str]]:
     """Callback updating the dataset list and displaying the load status when a user clicks the load button.
 
@@ -640,7 +640,7 @@ def update_dataset_list(
 
     try:
         dataset_list = sorted(request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl,
-                                                      session_token=session_token).json())
+                                                      access_token=access_token))
     except RequestException as e:
         dataset_list = []
         error = e
