@@ -1,14 +1,15 @@
 import os
+
 import matplotlib.pyplot as plt
+import numpy as np
 import zmq
 from plantdb.commons.test_database import get_test_dataset
+from plantimager.commons.RPC import RPCProperty
+from plantimager.commons.RPC import RPCServer
+from plantimager.commons.cameradevice import Camera
+from plantimager.commons.cameradevice import CameraMode
 from scipy import ndimage
 from simplejpeg import encode_jpeg
-import numpy as np
-import scipy
-
-from plantimager.commons.RPC import RPCServer, RPCProperty
-from plantimager.commons.cameradevice import Camera, CameraMode
 
 
 def image_provider():
@@ -37,12 +38,13 @@ def image_provider():
         yield image
         i += 1
 
+
 def block_mean(ar, fact):
     assert isinstance(fact, int), type(fact)
     sx, sy, *others = ar.shape
-    assert len(others) <= 1, f"no more than 3 dimensions are allowed, got {len(others)+2}"
+    assert len(others) <= 1, f"no more than 3 dimensions are allowed, got {len(others) + 2}"
     X, Y = np.ogrid[0:sx, 0:sy]
-    regions = sy//fact * (X//fact) + Y//fact
+    regions = sy // fact * (X // fact) + Y // fact
     if others:
         max_ = regions.max()
         regions = np.expand_dims(regions, axis=2).repeat(others[0], axis=2)
@@ -50,11 +52,20 @@ def block_mean(ar, fact):
         for i in range(1, others[0]):
             regions[:, :, i] += i
     res = ndimage.mean(ar, labels=regions, index=np.arange(regions.max() + 1))
-    res.shape = (sx//fact, sy//fact, *others)
+    res.shape = (sx // fact, sy // fact, *others)
     return res
 
 
 class DummyCamera(Camera, RPCServer):
+    """Dummy Camera serving images from a shared dataset for testing purposes.
+
+    Parameters
+    ----------
+    context : zmq.Context
+        ZeroMQ context used to create sockets for RPC communication.
+    url : str
+        Endpoint address that the RPC server will bind to.
+    """
     def __init__(self, context: zmq.Context, url: str):
         RPCServer.__init__(self, context, url)
         self._mode = CameraMode.STILL
@@ -64,17 +75,22 @@ class DummyCamera(Camera, RPCServer):
 
     @RPCServer.register_method_buffer(timeout=10000)
     def get_image(self, lores=False) -> (memoryview, dict):
+        """Return a JPEG‑encoded image (as a memoryview) and a metadata dict.
+
+        The *lores* flag is ignored for the dummy implementation.
+        """
         if self.mode != CameraMode.STILL:
             self.mode = CameraMode.STILL
         image = next(self._image_provider)
-        #image = block_mean(image, 5)
-        #image = np.clip(image.astype(int) + np.round(np.random.normal(0.0, 0.5, image.shape)), 0, 255)
+        # image = block_mean(image, 5)
+        # image = np.clip(image.astype(int) + np.round(np.random.normal(0.0, 0.5, image.shape)), 0, 255)
         buffer = encode_jpeg(image.astype(np.uint8), quality=95, colorsubsampling="420", fastdct=True)
         return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape}
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self):
         return self._mode
+
     @mode.setter
     def mode(self, value):
         if value != self._mode:
@@ -90,6 +106,7 @@ class DummyCamera(Camera, RPCServer):
     @RPCProperty(notify=Camera.rotationChanged)
     def rotation(self):
         return self._rotation
+
     @rotation.setter
     def rotation(self, value):
         if value != self._rotation:
@@ -99,6 +116,7 @@ class DummyCamera(Camera, RPCServer):
     @RPCProperty(notify=Camera.resolutionChanged)
     def resolution(self) -> tuple[int, int]:
         return 640, 480
+
     @resolution.setter
     def resolution(self, value: tuple[int, int]):
         pass
