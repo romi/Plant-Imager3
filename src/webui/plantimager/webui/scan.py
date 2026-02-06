@@ -58,7 +58,7 @@ configuration_card = [
         children=[
             dbc.CardHeader(children=[html.I(className="bi bi-code-square me-2"), "Configuration"]),
             dbc.CardBody([
-                dcc.Textarea(id="scan-cfg-toml", class_name="mb-3", size='md',
+                dbc.Textarea(id="scan-cfg-toml", class_name="mb-3", size='md',
                              value=default_toml,
                              title="The scan configuration in TOML format.",
                              placeholder="Scan configuration (TOML).",
@@ -247,33 +247,24 @@ def update_toml_cfg(contents: str) -> str:
     return cfg.decode()
 
 @callback(
-    Output('scan-cfg-toml', 'style'),
+    Output('scan-cfg-toml', 'valid'),
+    Output('scan-cfg-toml', 'invalid'),
     Input('scan-cfg-toml', 'value'),
 )
-def validate_toml_textarea(toml_text: str) -> dict:
-    """
-    Validate the TOML configuration entered by the user.
-
-    Returns a style dict that highlights the textarea with a red border
-    when the TOML is invalid, otherwise restores the default style.
-    """
-    # Default style – the height is defined in the component declaration
-    default_style = {'height': '65vh'}
-
-    # Empty textarea should not be flagged as an error
+def validate_toml_textarea(toml_text: str) -> tuple[bool, bool]:
+    """Validate the TOML configuration entered by the user."""
+    # Empty textarea should not be flagged
     if not toml_text:
-        return default_style
+        return False, False
 
     try:
         # Attempt to parse the TOML; we only care about success/failure
         tomllib.loads(toml_text)
         # Valid TOML → keep normal appearance
-        return default_style
+        return True, False
     except Exception:
         # Invalid TOML → add a red border for visual feedback
-        error_style = default_style.copy()
-        error_style.update({'border': '2px solid red'})
-        return error_style
+        return False, True
 
 def all_valid_characters(dataset_name: str) -> bool:
     """Validates if all characters in a given dataset name are permissible.
