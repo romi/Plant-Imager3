@@ -7,6 +7,7 @@ Test the scanning process. Will spawn:
 
 Will then connect to the PlantImagerApp with RPCController with plantimager.webui.controller_proxy.RPCController.
 """
+import gc
 import os
 import signal
 import subprocess
@@ -65,10 +66,12 @@ class TestScanIntegration(unittest.TestCase):
 
     def tearDown(self):
         print("\n[TearDown] Cleaning up subprocesses...")
+        gc.collect()
 
         # Helper to safely kill a process
         def kill_proc(proc):
             if proc.poll() is None:
+                print(f"Killing subprocess {proc.pid}")
                 proc.send_signal(signal.SIGINT)
                 try:
                     proc.wait(timeout=5)
@@ -121,7 +124,7 @@ class TestScanIntegration(unittest.TestCase):
         for cam_name in rpc_controller.camera_names:
             conf[cam_name] = conf["picamera"].copy()
 
-        rpc_controller.set_session_token(db_client._access_token)
+        rpc_controller.set_session_token((db_client._access_token, db_client._refresh_token))
         rpc_controller.set_db_url(self.db_url)
         rpc_controller.set_dataset_name("test_dataset")
         rpc_controller.set_config(conf)
@@ -160,7 +163,9 @@ class TestScanIntegration(unittest.TestCase):
             f"Expected {n_images} images, found {len(fileset_files['files'])}"
         )
 
-        rpc_controller.stop_server()
+        #rpc_controller.stop_server()
+        rpc_controller._instance = None
+        del rpc_controller
         print("Test Successful!")
 
 
