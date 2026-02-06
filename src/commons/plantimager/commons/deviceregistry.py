@@ -91,7 +91,7 @@ class DeviceRegistry(Thread):
         List of callback functions to execute when a new device is added.
     _device_removed_callbacks : list of Callable
         List of callback functions to execute when a device is removed.
-    _stop : bool
+    _stop_flag : bool
         Control flag to indicate whether the registry thread should stop.
     _callback_events_to_process : dict of str (Literal["added", "removed"]) to list of tuple
         Dictionary containing lists of registered or removed devices to process
@@ -111,13 +111,13 @@ class DeviceRegistry(Thread):
         self.devices: dict[str, tuple[str, str]] = {}  # name --> (device_type, addr)
         self.device_names: dict[str, str] = {}  # uuid --> name
         self.device_health_timeout: dict[str, int] = {} # uuid --> expiration time
-        self._stop = False
+        self._stop_flag = False
 
     def stop(self):
         """Stop the registry thread."""
         self._device_removed_callbacks = []
         self._new_device_callbacks = []
-        self._stop = True
+        self._stop_flag = True
 
     def run(self):
         """
@@ -128,7 +128,7 @@ class DeviceRegistry(Thread):
         with self.context.socket(zmq.REP) as socket:
             socket.bind(f"tcp://{self.addr}:{self.port}")
             logger.info(f"Starting registry on {self.addr}:{self.port}")
-            while not self._stop:
+            while not self._stop_flag:
                 self._prune_unhealthy_devices()
                 # Fire callbacks for removed and added devices after responding back
                 for device_type, addr, name in self._callback_events_to_process["removed"]:

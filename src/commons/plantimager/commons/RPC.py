@@ -17,6 +17,8 @@ from decorator import decorate
 import zmq
 from typing import Callable, Any
 
+from zmq import ZMQBindError
+
 from .deviceregistry import register_device, unregister_device, send_alive_check
 from .logging import create_logger
 from .systemd import notify_watchdog
@@ -104,17 +106,17 @@ class RPCSignalReceiver(Thread):
     emit the same signals in the proxy.
     """
     def __init__(self, context: zmq.Context, url: str, signals: dict[str, RPCSignal]):
-        super().__init__()
+        super().__init__(name="RPCSignalReceiver")
         self.context = context
         self.url = url
-        self._stop = False
+        self._stop_flag = False
         self.signals = signals
         self.socket: zmq.Socket = context.socket(zmq.REP)
         self.port = self.socket.bind_to_random_port(url)
 
     def run(self):
         try:
-            while not self._stop:
+            while not self._stop_flag:
                 if self.socket.poll(100, zmq.POLLIN) == 0:
                     continue
                 request = self.socket.recv_json()
@@ -137,7 +139,7 @@ class RPCSignalReceiver(Thread):
         logger.debug(f"Stopping signal receiver {self}")
 
     def stop(self):
-        self._stop = True
+        self._stop_flag = True
 
 class RPCClient:
     """
@@ -191,7 +193,7 @@ class RPCClient:
             self._signal_receiver = RPCSignalReceiver(
                 context=self.context, url=f"tcp://{self.own_address}", signals=self._signals
             )
-            self._signal_receiver.daemon = False
+            self._signal_receiver.daemon = True  # FIXME: Should be False!
             self._signal_receiver.start()
             signal_port = self._signal_receiver.port
             self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING, "address": self.own_address, "port": signal_port})
@@ -437,7 +439,12 @@ class RPCServer:
 
         if port_str:
             port = int(port_str)
-            socket.bind(url)
+            try:
+                socket.bind(url)
+            except ZMQBindError as e:
+                logger.critical(f"Failed to bind to {url}")
+                logger.critical(e)
+                sys.exit(1)
         else:
             port = socket.bind_to_random_port(url, 10000, 12000)
 
@@ -456,6 +463,8 @@ class RPCServer:
 
         def _server_finalizer(state):
             # This function does not capture 'self'
+            for signal in self._signals.values():
+                signal.disconnect()
             if state["uuid"] and state["registry_addr"]:
                 unregister_device(state["context"], state["uuid"], state["registry_addr"])
                 logger.info("Device unregistered successfully")
@@ -726,6 +735,10 @@ class RPCServer:
                 case RPCEvents.STOP_SERVER:
                     self._socket.send_json({"success": True})
                     break
-        if self._socket: self._socket.close()
-        if self._signal_socket: self._signal_socket.close()
+        for signal in self._signals.values():
+            signal.disconnect()
+        if self._signal_socket:
+            self._signal_socket.close()
+        if self._socket:
+            self._socket.close()
         logger.info("Server stopped")
