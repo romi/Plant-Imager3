@@ -337,7 +337,7 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
     try:
         # Create a new user via REST API
         response = request_new_user(host, username, password, fullname, port=port, prefix=prefix, ssl=ssl,
-                                    access_token=access_token)
+                                    session_token=access_token)
 
         if response.ok:
             return dbc.Alert("Registration successful! You can now login.", color="success", class_name="mb-0")

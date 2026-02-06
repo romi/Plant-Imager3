@@ -640,7 +640,7 @@ def update_dataset_list(
 
     try:
         dataset_list = sorted(request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl,
-                                                      access_token=access_token))
+                                                      session_token=access_token))
     except RequestException as e:
         dataset_list = []
         error = e

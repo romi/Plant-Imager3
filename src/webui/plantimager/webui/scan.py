@@ -105,15 +105,6 @@ scan_card = [
         children=[
             dbc.CardHeader(children=[html.I(className="bi bi-camera me-2"), "Scan"]),
             dbc.CardBody([
-                dbc.Row(dbc.Col(
-                    dbc.Accordion(
-                        dbc.AccordionItem(children=[
-                            dcc.Markdown(id="available-cameras", children="No camera connected")
-                        ],
-                            title="Available cameras:",
-                        ), start_collapsed=True, flush=True
-                    ),
-                )),
                 dbc.Row([
                     # --- Scanner Configuration Button ---
                     dbc.Col([
@@ -197,7 +188,7 @@ scan_layout = html.Div(
         dcc.Interval(id='main-interval', disabled=False, interval=4000),
         dbc.Row([
             dbc.Col(configuration_card, md=6),
-            dbc.Col(dataset_name_card + [html.Br()] + scan_card, md=6)
+            dbc.Col(dataset_name_card + [html.Br()] + camera_card + [html.Br()] + scan_card, md=6)
         ])
     ], id="scan-page-layout"
 )

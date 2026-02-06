@@ -56,7 +56,7 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl, 
     if not open_modal or dataset_id is None or dataset_id == '':
         return ['images']
     tasks_fileset = request_scan_tasks_fileset(host, dataset_id, port=port, prefix=prefix, ssl=ssl,
-                                               access_token=access_token)
+                                               session_token=access_token)
     return [task for task in IMAGE_TASKS if task in tasks_fileset]
 
 
@@ -104,7 +104,7 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl,
     if not open_modal or dataset_id is None or dataset_id == '':
         return None
 
-    images = list_task_images_uri(host, dataset_id, task_name=image_task, size='orig',
+    images = list_task_images_uri(host, dataset_id, task_name=image_task, size='orig', as_base64=True,
                                   port=port, prefix=prefix, ssl=ssl, session_token=access_token)
 
     if len(images) == 0:
