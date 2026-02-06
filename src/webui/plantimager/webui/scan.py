@@ -24,7 +24,7 @@ import dash_bootstrap_components as dbc
 import diskcache
 import zmq
 from dash import DiskcacheManager
-from dash import Input, set_props
+from dash import Input
 from dash import Output
 from dash import State
 from dash import callback
@@ -34,8 +34,8 @@ from dash.exceptions import PreventUpdate
 from plantdb.client.rest_api import plantdb_url
 
 from plantimager.commons.RPC import NoResult
-from plantimager.webui.utils import config_upload
 from plantimager.webui.controller_proxy import RPCController
+from plantimager.webui.utils import config_upload
 
 #: Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
@@ -108,40 +108,64 @@ scan_card = [
                 dbc.Row(dbc.Col(
                     dbc.Accordion(
                         dbc.AccordionItem(children=[
-                                dcc.Markdown(id="available-cameras", children="No camera connected")
-                            ],
-                            title="Available cameras:" ,
+                            dcc.Markdown(id="available-cameras", children="No camera connected")
+                        ],
+                            title="Available cameras:",
                         ), start_collapsed=True, flush=True
                     ),
                 )),
                 dbc.Row([
+                    # --- Scanner Configuration Button ---
                     dbc.Col([
                         dbc.Button(
                             children=[
                                 html.I(className="bi bi-gear-fill me-2"),
                                 'Configure Scanner'
                             ],
-                            id='config-scan-button'
+                            id='config-scan-button',
+                            color="primary",
+                            style={'width': '100%'},
                         ),
                     ], width=3),
+                    # --- Start Scan Button ---
                     dbc.Col([
                         dbc.Button(
                             children=[
                                 html.I(className="bi bi-play-fill me-2"),
-                                'Start scan'
+                                'Start Scanning'
                             ],
-                            id='start-scan-button'
+                            id='start-scan-button',
+                            color="success",
+                            style={'width': '100%'},
                         ),
                     ], width=3),
+                    # --- Cancel Scan Button ---
+                    dbc.Col([
+                        dbc.Button(
+                            children=[
+                                html.I(className="bi bi-x-circle me-2"),
+                                'Cancel Scan'
+                            ],
+                            id='cancel-scan-button',
+                            disabled=True,  # inactive by default
+                            color="danger",
+                            style={'width': '100%'},
+                        ),
+                    ], width=3),
+                ], align="center"),
+                # --- Scan Output Section
+                dbc.Row([
                     dbc.Col([
                         dbc.Alert(
                             id='scan-response',
-                            children="",
+                            children="Configure or start a scann to the the ouptut here...",
                             color="secondary",
-                            className="mb-0"
+                            className="mb-0",
+                            style={'display': 'none', 'color': 'gray'}
                         )
                     ], width="auto"),
-                ], align="center"),
+                ], align="center", style={"margin-top": "15px"}),
+                # --- Scan ProgressBar Section
                 dbc.Row([
                     dbc.Col([
                         dcc.Interval(id='scan-progress-interval', disabled=True, interval=1000),
@@ -182,13 +206,16 @@ progress = 0
 max_progress = 100
 available_cameras = []
 
+
 def update_progress(val):
     global progress
     progress = val
 
+
 def update_max_progress(val):
     global max_progress
     max_progress = val
+
 
 def update_available_cameras(val):
     global available_cameras
@@ -246,6 +273,7 @@ def update_toml_cfg(contents: str) -> str:
     cfg = b64decode(content_string)
     return cfg.decode()
 
+
 @callback(
     Output('scan-cfg-toml', 'valid'),
     Output('scan-cfg-toml', 'invalid'),
@@ -265,6 +293,7 @@ def validate_toml_textarea(toml_text: str) -> tuple[bool, bool]:
     except Exception:
         # Invalid TOML → add a red border for visual feedback
         return False, True
+
 
 def all_valid_characters(dataset_name: str) -> bool:
     """Validates if all characters in a given dataset name are permissible.
@@ -429,6 +458,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
         (Output('config-scan-button', 'disabled'), True, False),
         (Output('scan-response', 'children'), 'Scan in progress', ""),
         (Output('scan-output', 'children'), 'Scan in progress', ""),
+        (Output('cancel-scan-button', 'disabled', allow_duplicate=True), False, True),
     ],
     progress=[
         Output('scan-progress', 'value'),
@@ -436,7 +466,8 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
         Output('scan-progress', 'label'),
     ]
 )
-def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, access_token: str, cfg: str, dataset_name: str):
+def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, access_token: str, cfg: str,
+             dataset_name: str):
     """Execute a plant scan with the specified configuration.
 
     Parameters
@@ -489,8 +520,10 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
         return "Failed to configure scann", res.traceback
 
     m_prog = controller.max_progress
+
     def _update_progress(prog):
         set_progress((str(prog), str(m_prog), f"{prog}/{m_prog}"))
+
     controller.progressChanged.connect(_update_progress)
 
     res: None | NoResult = controller.run_scan()
@@ -498,6 +531,17 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
         return "Scan Failed", res.traceback
 
     return "Scan finished", "Scan complete"
+
+
+@callback(
+    Output('scan-response', 'children', allow_duplicate=True),
+    Input('cancel-scan-button', 'n_clicks'),
+    prevent_initial_call=True,
+)
+def cancel_scan(_):
+    """Placeholder callback for the Cancel Scan button."""
+    # TODO: implement actual cancellation logic
+    return "Cancelling scan..."
 
 
 @callback(
@@ -512,7 +556,7 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
     State('dataset-input-name', 'value'),
     prevent_initial_call=True,
 )
-def config_scan(_, url: str, port: str, prefix: str, ssl:bool, cfg: str, dataset_name: str):
+def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, dataset_name: str):
     """Configure a plant scan with the specified configuration.
 
     Parameters
