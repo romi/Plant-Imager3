@@ -386,20 +386,38 @@ class RPCServer:
         """
         super().__init__()
 
-        self.uuid: None | str = None
-        self._json_methods: dict[str, Callable] = dict()
-        self._buffer_methods: dict[str, Callable] = dict()
-        self._rpc_properties: dict[str, property] = dict()
-        self._signals: dict[str, RPCSignal] = dict()
+        self.context: zmq.Context = context
+        self.url: str = url
         self.alive_timeout = alive_timeout
+        self.uuid: str | None = None
+        self.name = ""
+        self.registry_addr = ""
+        self.peer_addr: str | None = None
 
-        # replacing class attribute signals from other bases by instance signals
+        # Containers for RPC members
+        self._json_methods: dict[str, Callable] = {}
+        self._buffer_methods: dict[str, Callable] = {}
+        self._rpc_properties: dict[str, property] = {}
+        self._signals: dict[str, RPCSignal] = {}
+
+        # Initialize internals
+        self._initialize_rpc_members()
+        self._socket, self.port = self._bind_socket(url)
+        self._signal_socket: zmq.Socket[zmq.REQ] | None = None
+        self._stop = False
+
+        self._setup_lifecycle_cleanup()
+
+    def _initialize_rpc_members(self):
+        """Scans class and bases for Signals, Properties, and RPC methods."""
+        # 1. Inherit signals from base classes (instance-specific copy)
         for base in self.__class__.__bases__:
             for key, value in base.__dict__.items():
                 if isinstance(value, RPCSignal):
                     setattr(self, key, copy.deepcopy(value))
                     self._signals[key] = getattr(self, key)
 
+        # 2. Register members defined in this class
         for key, val in self.__class__.__dict__.items():
             if inspect.isfunction(val) and hasattr(val, "_is_json_method") and val._is_json_method:
                 self._json_methods[key] = val
@@ -412,34 +430,29 @@ class RPCServer:
                 setattr(self, key, copy.deepcopy(val))
                 self._signals[key] = getattr(self, key)
 
-        self.context: zmq.Context = context
-        self.url: str = url
-        self._socket: zmq.Socket[zmq.REP] = context.socket(zmq.REP)
+    def _bind_socket(self, url: str) -> tuple[zmq.Socket, int]:
+        """Creates and binds the ZMQ REP socket."""
+        socket: zmq.Socket[zmq.REP] = self.context.socket(zmq.REP)
+        protocol, ip_addr, port_str = url_parser.match(url).groups()
 
-        protocol, ip_addr, port = url_parser.match(url).groups()
-        if port:
-            self.port = int(port)
-            self._socket.bind(url)
+        if port_str:
+            port = int(port_str)
+            socket.bind(url)
         else:
-            self.port = self._socket.bind_to_random_port(url, 10000, 12000)
-        logger.debug(f"RPCServer of type {type(self)} bound to {ip_addr} on port {self.port}")
+            port = socket.bind_to_random_port(url, 10000, 12000)
 
-        self.name = ""
-        self.registry_addr = ""
-        self._signal_socket: zmq.Socket[zmq.REQ] | None = None
-        self.peer_addr: str | None = None
+        logger.debug(f"RPCServer of type {type(self)} bound to {ip_addr} on port {port}")
+        return socket, port
 
-        self._stop = False
-
-        # State container for finalizer to avoid capturing 'self'
+    def _setup_lifecycle_cleanup(self):
+        """Configures weakref finalizer to handle cleanup without capturing 'self'."""
         self._cleanup_state = {
             "uuid": None,
             "registry_addr": "",
-            "context": context,
+            "context": self.context,
             "socket": self._socket,
             "signal_socket": None
         }
-
 
         def _server_finalizer(state):
             # This function does not capture 'self'
@@ -447,7 +460,8 @@ class RPCServer:
                 unregister_device(state["context"], state["uuid"], state["registry_addr"])
                 logger.info("Device unregistered successfully")
             state["socket"].close()
-            if state["signal_socket"]: state["signal_socket"].close()
+            if state["signal_socket"]:
+                state["signal_socket"].close()
             logger.info("Server deleted")
 
         finalize(self, _server_finalizer, self._cleanup_state)
