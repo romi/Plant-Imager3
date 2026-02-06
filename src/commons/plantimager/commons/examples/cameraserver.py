@@ -125,5 +125,5 @@ class DummyCamera(Camera, RPCServer):
 if __name__ == "__main__":
     context = zmq.Context()
     camera = DummyCamera(context, url="tcp://127.0.0.1")
-    camera.register_to_registry("camera", DummyCamera.__name__, "tcp://127.0.0.1:5555")
+    camera.register_to_registry("camera", DummyCamera.__name__, "tcp://127.0.0.1:5555", overwrite=False)
     camera.serve_forever()

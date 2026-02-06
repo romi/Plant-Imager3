@@ -466,7 +466,7 @@ class RPCServer:
 
         finalize(self, _server_finalizer, self._cleanup_state)
 
-    def register_to_registry(self, type_: str, name: str, registry_url: str) -> str:
+    def register_to_registry(self, type_: str, name: str, registry_url: str, overwrite=True) -> str:
         """
         Register this RPCServer to the registry at `registry_address` as a device of type `type_` and name `name`.
 
@@ -481,6 +481,9 @@ class RPCServer:
             Proposed name of the device.
         registry_url: str
             Url of the device registry. Must have the form "tcp://<ip>:<port>" if the registry uses tcp
+        overwrite: bool, optional
+            Wether or not this device should take preference for the use of this name and overwrite other
+            conflicting devices.
 
         Returns
         -------
@@ -493,7 +496,7 @@ class RPCServer:
             self.context, type_,
             f"{self.url}:{self.port}",
             name, registry_url,
-            overwrite=True,
+            overwrite=overwrite,
         )
         self.registry_addr = registry_url if self.name else ""
 

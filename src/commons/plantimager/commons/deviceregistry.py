@@ -147,7 +147,7 @@ class DeviceRegistry(Thread):
                 message = socket.recv_json()
                 event_type: str = message["event"]
                 payload: dict = message["payload"]
-                logger.debug(f"Received event: {event_type}, {payload}")
+                # logger.debug(f"Received event: {event_type}, {payload}")
                 match event_type:
                     case EventType.REGISTER:
                         device_type = payload["device_type"]
