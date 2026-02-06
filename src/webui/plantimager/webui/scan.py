@@ -98,12 +98,26 @@ dataset_name_card = [
     )
 ]
 
+camera_card = [
+    dbc.Card(
+        id="camera-card",
+        children=[
+            dbc.CardHeader(children=[html.I(className="bi bi-camera me-2"), "Camera"]),
+            dbc.CardBody(
+                children=[
+                    dcc.Markdown(id="available-cameras", children="No camera connected")
+                ]
+            ),
+        ]
+    )
+]
+
 # Card containing scan controls and status information
 scan_card = [
     dbc.Card(
         id="scan-card",
         children=[
-            dbc.CardHeader(children=[html.I(className="bi bi-camera me-2"), "Scan"]),
+            dbc.CardHeader(children=[html.I(className="bi bi-upc-scan me-2"), "Scan"]),
             dbc.CardBody([
                 dbc.Row([
                     # --- Scanner Configuration Button ---
