@@ -8,7 +8,7 @@ from enum import StrEnum
 from functools import wraps, partial
 import random
 from threading import Thread
-from weakref import finalize
+from weakref import finalize, WeakMethod
 import socket
 import re
 
@@ -17,7 +17,7 @@ from decorator import decorate
 import zmq
 from typing import Callable, Any
 
-from .deviceregistry import register_device, unregister_device
+from .deviceregistry import register_device, unregister_device, send_alive_check
 from .logging import create_logger
 from .systemd import notify_watchdog
 
@@ -111,28 +111,30 @@ class RPCSignalReceiver(Thread):
         self.signals = signals
         self.socket: zmq.Socket = context.socket(zmq.REP)
         self.port = self.socket.bind_to_random_port(url)
-        finalize(self.socket, self.socket.close)
 
     def run(self):
-        while not self._stop:
-            if self.socket.poll(100, zmq.POLLIN) == 0:
-                continue
-            request = self.socket.recv_json()
-            if request["event"] != RPCEvents.EMIT_SIGNAL:
-                logger.error(f"Expected event {RPCEvents.EMIT_SIGNAL}, got {request['event']} instead.")
-                self.socket.send_json({"success": False})
-                continue
-            signal = request["signal"]
-            args = request["args"]
-            logger.debug(f"Emitting signal {signal} with args {args}")
-            if request["blocking"]:
-                self.signals[signal].emit(*args)
-                self.socket.send_json({"success": True})
-            else:
-                self.socket.send_json({"success": True})
-                self.signals[signal].emit(*args)
+        try:
+            while not self._stop:
+                if self.socket.poll(100, zmq.POLLIN) == 0:
+                    continue
+                request = self.socket.recv_json()
+                if request["event"] != RPCEvents.EMIT_SIGNAL:
+                    logger.error(f"Expected event {RPCEvents.EMIT_SIGNAL}, got {request['event']} instead.")
+                    self.socket.send_json({"success": False})
+                    continue
+                signal = request["signal"]
+                args = request["args"]
+                logger.debug(f"Emitting signal {signal} with args {args}")
+                if request["blocking"]:
+                    self.signals[signal].emit(*args)
+                    self.socket.send_json({"success": True})
+                else:
+                    self.socket.send_json({"success": True})
+                    self.signals[signal].emit(*args)
+        finally:
+            self.socket.close()
+            del self.socket
         logger.debug(f"Stopping signal receiver {self}")
-
 
     def stop(self):
         self._stop = True
@@ -189,7 +191,7 @@ class RPCClient:
             self._signal_receiver = RPCSignalReceiver(
                 context=self.context, url=f"tcp://{self.own_address}", signals=self._signals
             )
-            self._signal_receiver.daemon = True
+            self._signal_receiver.daemon = False
             self._signal_receiver.start()
             signal_port = self._signal_receiver.port
             self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING, "address": self.own_address, "port": signal_port})
@@ -201,13 +203,14 @@ class RPCClient:
                 raise RuntimeError(f"INIT_SIGNALS_HANDLING failed")
             logger.info("Successfully initialized signal handling")
 
-        def _finalizer():
-            self.socket.close()
-            if self._signal_receiver:
-                self._signal_receiver.stop()
-                self._signal_receiver.join(2)
+        def _finalizer(sock, receiver):
+            sock.close()
+            if receiver:
+                receiver.stop()
+                receiver.join(2)
+            logger.debug("Client finalized")
 
-        finalize(self, _finalizer)
+        finalize(self, _finalizer, self.socket, self._signal_receiver)
 
     @classmethod
     def register_interface(cls, interface: type):
@@ -346,7 +349,7 @@ class RPCClient:
 
 class RPCServer:
 
-    def __init__(self, context: zmq.Context, url: str):
+    def __init__(self, context: zmq.Context, url: str, alive_timeout: int = 60):
         """
         RPCServer to use in combination with RPCClient.
         The server holds the concrete implementation of an interface that is made available on the network.
@@ -362,6 +365,8 @@ class RPCServer:
         url: str
             Url where the RPCServer should listen. It should be of the form "tcp://<ip>" where ip is one
             of the local network interface ip which must be accessible from the client.
+        alive_timeout: int, optional
+            Time in seconds after which the device_registry will consider this service dead or unreachable.
 
         Attributes
         ----------
@@ -386,6 +391,7 @@ class RPCServer:
         self._buffer_methods: dict[str, Callable] = dict()
         self._rpc_properties: dict[str, property] = dict()
         self._signals: dict[str, RPCSignal] = dict()
+        self.alive_timeout = alive_timeout
 
         # replacing class attribute signals from other bases by instance signals
         for base in self.__class__.__bases__:
@@ -425,7 +431,26 @@ class RPCServer:
 
         self._stop = False
 
-        finalize(self, self._finalize)
+        # State container for finalizer to avoid capturing 'self'
+        self._cleanup_state = {
+            "uuid": None,
+            "registry_addr": "",
+            "context": context,
+            "socket": self._socket,
+            "signal_socket": None
+        }
+
+
+        def _server_finalizer(state):
+            # This function does not capture 'self'
+            if state["uuid"] and state["registry_addr"]:
+                unregister_device(state["context"], state["uuid"], state["registry_addr"])
+                logger.info("Device unregistered successfully")
+            state["socket"].close()
+            if state["signal_socket"]: state["signal_socket"].close()
+            logger.info("Server deleted")
+
+        finalize(self, _server_finalizer, self._cleanup_state)
 
     def register_to_registry(self, type_: str, name: str, registry_url: str) -> str:
         """
@@ -457,6 +482,11 @@ class RPCServer:
             overwrite=True,
         )
         self.registry_addr = registry_url if self.name else ""
+
+        # Update cleanup state so finalizer knows what to unregister
+        self._cleanup_state["uuid"] = self.uuid
+        self._cleanup_state["registry_addr"] = self.registry_addr
+
         return self.name
 
 
@@ -566,6 +596,17 @@ class RPCServer:
 
     def stop_server(self):
         self._stop = True
+        if self.name and self.registry_addr and self.uuid:
+            unregister_device(self.context, self.uuid, self.registry_addr)
+            self.name = ""
+            self.uuid = ""
+            self.registry_addr = ""
+
+            # Clear cleanup state to avoid double unregister
+            self._cleanup_state["uuid"] = None
+            self._cleanup_state["registry_addr"] = None
+
+            logger.info("Device unregistered successfully")
 
     def serve_forever(self):
         """
@@ -578,7 +619,13 @@ class RPCServer:
         self._stop = False
         while not self._stop:
             notify_watchdog()
-            if self._socket.poll(100, zmq.POLLIN) == 0:
+            if self.registry_addr:
+                res = send_alive_check(self.context, self.uuid, self.registry_addr, self.alive_timeout)
+                if not res:
+                    # TODO: if res == False --> do something (reset?)
+                    logger.error(f"Check Alive failed. Registry at {self.registry_addr} "
+                                 f"is unreachable or does not know this service.")
+            if self._socket.poll(1000, zmq.POLLIN) == 0:
                 continue
             request = self._socket.recv_json()
             match request["event"]:
@@ -613,8 +660,10 @@ class RPCServer:
                     address, port = request["address"], request["port"]
                     self._signal_socket = self.context.socket(zmq.REQ)
                     self._signal_socket.connect(f"tcp://{address}:{port}")
+                    self._cleanup_state["signal_socket"] = self._signal_socket
+                    weak_send_signal = WeakMethod(self._send_signal)
                     for sig_name, sig in self._signals.items():
-                        sig.connect(partial(self._send_signal, sig_name))
+                        sig.connect(lambda *args, **kwargs: weak_send_signal()(sig_name, *args, **kwargs))
                     self._socket.send_json({"success": True})
                     logger.info("Successfully initialized signal handling")
                 case RPCEvents.METHOD_CALL:
@@ -660,12 +709,6 @@ class RPCServer:
                 case RPCEvents.STOP_SERVER:
                     self._socket.send_json({"success": True})
                     break
+        if self._socket: self._socket.close()
+        if self._signal_socket: self._signal_socket.close()
         logger.info("Server stopped")
-
-    def _finalize(self):
-        self._stop = True
-        if self.name and self.registry_addr and self.uuid:
-            unregister_device(self.context, self.uuid, self.registry_addr)
-            logger.info("Device unregistered successfully")
-        logger.info("Server deleted")
-
