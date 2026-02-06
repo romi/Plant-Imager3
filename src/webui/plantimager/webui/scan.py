@@ -509,7 +509,7 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):
         return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
-    res: None | NoResult = controller.set_access_token(access_token)
+    res: None | NoResult = controller.set_session_token(access_token)
     if isinstance(res, NoResult):
         return "Failed to connect to set access token.", res.traceback
     res: None | NoResult = controller.set_dataset_name(dataset_name)
