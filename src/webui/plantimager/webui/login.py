@@ -388,7 +388,6 @@ def login(
     Authentication state is maintained through Dash Store components in the application layout.
     """
     message_style = {'display': 'block', 'margin-top': '10px'}
-    print("COUCOU")
 
     try:
         # Send login request to REST API endpoint
