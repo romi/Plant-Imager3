@@ -148,7 +148,7 @@ scan_card = [
                     dbc.Col([
                         dbc.Button(
                             children=[
-                                html.I(className="bi bi-x-circle me-2"),
+                                html.I(className="bi bi-x-circle-fill me-2"),
                                 'Cancel Scan'
                             ],
                             id='cancel-scan-button',

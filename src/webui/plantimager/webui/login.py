@@ -222,7 +222,8 @@ login_modal = dbc.Modal(children=[
                 ],
                 id='logout-button',
                 n_clicks=0,
-                disabled=True,
+                disabled=True,  # inactive by default
+                color="danger",
                 class_name="me-2"
             )
         ])
