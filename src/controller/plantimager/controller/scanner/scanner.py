@@ -48,6 +48,8 @@ from PySide6.QtCore import Slot
 from PySide6.QtQml import QmlElement
 from PySide6.QtQml import QmlUncreatable
 from plantdb.client.plantdb_client import PlantDBClient
+from requests.exceptions import RequestException
+
 from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.scanner.dummy_cnc import DummyCNC
@@ -59,7 +61,6 @@ from plantimager.controller.scanner.path import CustomPath
 from plantimager.controller.scanner.path import Path
 from plantimager.controller.scanner.path import PathElement
 from plantimager.controller.scanner.path import Pose
-from requests.exceptions import RequestException
 
 QML_IMPORT_NAME = "PlantImagerApp.Scanner"
 QML_IMPORT_MAJOR_VERSION = 1
@@ -281,7 +282,8 @@ class Scanner(QObject):
         self.db_client: PlantDBClient | None = None  # Database client
         self.uploader: DataUploader | None = None  # Data uploader
         self.fileset = "images"  # Default fileset name
-        self._session_token = ""
+        self._access_token = ""
+        self._refresh_token = ""
 
         self._cnc_connection_timer = QTimer()
         self._cnc_connection_timer.setInterval(5000)
@@ -392,10 +394,20 @@ class Scanner(QObject):
         if self.db_url != url:  # Only update if URL has changed
             self.db_url = url  # Set new URL
             self.db_client = PlantDBClient(self.db_url)  # Create new client
-            if self._session_token:
+            if self._access_token:
+                # Validate existing tokens
+                self.db_client._access_token = self._access_token
+                self.db_client._refresh_token = self._refresh_token
                 logger.debug("Validating PlantDB session token")
-                self.db_client.validate_token(self._session_token)
-                assert self._session_token == self.db_client._access_token
+                if self.db_client.validate_token(self._access_token):
+                    # Update them if valid
+                    self._access_token = self.db_client._access_token
+                    self._refresh_token = self.db_client._refresh_token
+                else:
+                    # Reset if not
+                    logger.warning("Invalid PlantDB session token found!")
+                    self._access_token = None
+                    self._refresh_token = None
             self.uploader = DataUploader(self.db_client, 10)  # Create new uploader
             self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state
 
@@ -819,7 +831,8 @@ class Scanner(QObject):
             x, y = np.mean(points[:, 0]), np.mean(points[:, 1])
             self.move_arm(x, y, 0)
         else:
-            x, y, z = (self.cnc.x_lims[0] + self.cnc.x_lims[1]) / 2, (self.cnc.y_lims[0] + self.cnc.y_lims[1]) / 2, self.cnc.z
+            x, y, z = (self.cnc.x_lims[0] + self.cnc.x_lims[1]) / 2, (
+                        self.cnc.y_lims[0] + self.cnc.y_lims[1]) / 2, self.cnc.z
             self.move_arm(x, y, z)
 
     @Slot(int)
@@ -841,10 +854,11 @@ class Scanner(QObject):
             return f"{type(self.scan_path).__name__}: center {self.scan_path.center_x:g}, {self.scan_path.center_y:g}, radius {self.scan_path.radius:g} - {len(self.scan_path)} steps"
         return f"{type(self.scan_path).__name__}: {len(self.scan_path)} steps"
 
-    def set_session_token(self, token: str):
+    def set_session_token(self, tokens: tuple[str, str]):
         """Set the session token for plantdb"""
-        self._session_token = token
+        self._access_token, self._refresh_token = tokens
         if self.db_client:
+            self.db_client._access_token, self.db_client._refresh_token = tokens
             logger.debug("Validating PlantDB session token")
-            self.db_client.validate_token(token)
+            self.db_client.validate_token(self._access_token)
             logger.debug("Session token valid")

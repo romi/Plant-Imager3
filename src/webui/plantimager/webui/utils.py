@@ -6,6 +6,7 @@
 This module provides common utility functions used across the Plant Imager web interface,
 particularly for interacting with the PlantDB REST API and handling configuration files.
 """
+import pybase64
 
 try:
     import pybase64 as base64
@@ -84,8 +85,7 @@ def get_dataset_dict(host: str, port: int, prefix: str, ssl: bool, access_token:
     plantdb.rest_api_client.request_scan_names_list
     plantdb.rest_api_client.parse_scans_info
     """
-    scans_list = sorted(request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl,
-                                                access_token=access_token).json())
+    scans_list = sorted(request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl, session_token=access_token))
     if len(scans_list) > 0:
         dataset_dict = parse_scans_info(host, port=port, prefix=prefix, ssl=ssl, session_token=access_token)
     else:
@@ -149,7 +149,7 @@ def _validate_new_username(username: str, host: str, port: str, prefix: str, ssl
         return False
 
 
-def load_image_from_url(url, session_token=None):
+def load_image_from_url(url, access_token=None):
     """Load an image from a given URL and encode it to a base64 data URI.
 
     Parameters
@@ -157,7 +157,7 @@ def load_image_from_url(url, session_token=None):
     url : str
         The base URL to request.
     access_token : str
-        AN access token used to authenticate against PlantDB.
+        An access token used to authenticate against PlantDB.
 
     Returns
     -------
@@ -175,17 +175,27 @@ def load_image_from_url(url, session_token=None):
     >>> # Load a very small image:
     >>> load_image_from_url(scan_image_url('localhost', "real_plant", "images", "00000_rgb", port=5000, size='10'))
     'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q=='
+    >>> load_image_from_url(scan_image_url('localhost', "real_plant", "images", "00000_rgb", port=5000, size='10', as_base64=True))
+    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q=='
     >>> server.stop()
     """
     # Fetch image and convert to base64
     try:
         response = make_api_request(url=url, session_token=access_token, timeout=5)
-        if response.status_code == 200:
-            content_type = response.headers.get('content-type', 'image/jpeg')
-            if not content_type.startswith('image'):
-                return f"Not an image: {content_type}"
-            encoded_img = base64.b64encode(response.content).decode('ascii')
-            img_data = f"data:{content_type};base64,{encoded_img}"
+        if response.ok:
+            content_type = response.headers.get('Content-Type')
+            encoding = response.headers.get("X-Content-Encoding")
+            if encoding == 'binary':
+                # Convert binary streaming to base64 encoding:
+                encoded_img = pybase64.b64encode(response.content).decode('ascii')
+                img_data = f"data:{content_type};base64,{encoded_img}"
+            elif encoding == 'base64':
+                # A base64 encoded image from JSON:
+                content_type = response.json()['content-type']
+                img_str = response.json()['image']
+                img_data = f"data:{content_type};base64,{img_str}"
+            else:
+                img_data = f"Error processing sent image: Unknown content type: {content_type}"
         else:
             img_data = f"No Image: {response.status_code}"
     except Exception as e:
