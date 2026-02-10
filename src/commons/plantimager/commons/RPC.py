@@ -1,29 +1,26 @@
 import copy
-import sys
 import inspect
 import json
-import traceback
 import logging
-import types
-import typing
+import random
+import re
+import socket
+import sys
+import traceback
 from enum import StrEnum
 from functools import wraps, partial
-import random
 from threading import Thread
+from typing import Callable, Any
 from weakref import finalize, WeakMethod
-import socket
-import re
-
-from decorator import decorate
 
 import zmq
-from typing import Callable, Any
-
+from decorator import decorate
 from zmq import ZMQBindError
 
-from .deviceregistry import register_device, unregister_device, send_alive_check
-from .logging import create_logger
-from .systemd import notify_watchdog
+from plantimager.commons.utils import is_instance_of_generic, coerce_to_generic
+from plantimager.commons.deviceregistry import register_device, unregister_device, send_alive_check
+from plantimager.commons.logging import create_logger
+from plantimager.commons.systemd import notify_watchdog
 
 logger = create_logger("RPC")
 
@@ -67,166 +64,67 @@ class NoResult:
     def __bool__(self):
         return False
 
-
-from typing import get_origin, get_args
-import collections.abc
-
-
-def is_instance_of_generic(value, generic_type):
-    """
-    Determine whether ``value`` conforms to a typing generic specification.
-
-    This utility inspects ``generic_type`` using :func:`typing.get_origin` and
-    :func:`typing.get_args` and recursively validates ``value`` against the
-    resolved origin and its type arguments.  It supports built‑in container
-    types (``list``, ``set``, ``tuple``, ``dict``) as well as user‑defined
-    generic classes.  When ``generic_type`` is a tuple, each element may be a
-    distinct type specification; an ellipsis (``...``) as the last element
-    denotes a variadic element type that applies to all items of the tuple.
-
-    Parameters
-    ----------
-    value : Any
-        The object whose type is being checked.
-    generic_type : type or tuple of types
-        A concrete type, a typing generic (e.g. ``list[int]``), or a tuple of
-        such specifications.  If a tuple is provided, the function returns
-        ``True`` when ``value`` matches **any** of the contained specifications.
-
-    Returns
-    -------
-    bool
-        ``True`` if ``value`` matches ``generic_type``; otherwise ``False``.
-
-    Raises
-    ------
-    TypeError
-        If ``generic_type`` is not a type, a recognized generic, or a tuple of
-        such specifications.
-
-    Notes
-    -----
-    * The function handles nested containers by recursively invoking itself on
-      each element, key, or value.
-    * For ``tuple`` generics:
-        - ``Tuple[int, str]`` requires a two‑item tuple with the first element
-          an ``int`` and the second a ``str``.
-        - ``Tuple[int, ...]`` (ellipsis as the last argument) validates that
-          **all** items are ``int``.
-    * For sequence and set generics (e.g. ``list[int]`` or ``set[str]``) the
-      single type argument is applied to every element.
-    * For mapping generics (e.g. ``dict[str, float]``) the first type argument
-      validates keys and the second validates values.
-
-    See Also
-    --------
-    typing.get_origin
-    typing.get_args
-    isinstance
-    """
-    if isinstance(generic_type, tuple):
-        return any(is_instance_of_generic(value, gtype) for gtype in generic_type)
-
-    if generic_type is Any:
-        return True
-
-    origin = get_origin(generic_type)
-
-    # If no origin, it's not a generic type
-    if origin is None:
-        return isinstance(value, generic_type)
-
-    # If Union
-    if origin in (types.UnionType, typing.Union):
-        return is_instance_of_generic(value, get_args(generic_type))
-
-    # Check if the value is an instance of the origin type
-    if not is_instance_of_generic(value, origin):
-        return False
-
-    # Get the expected type arguments
-    args = get_args(generic_type)
-
-    # If no type args specified, just check the origin
-    if not args:
-        return True
-
-    # For tuple check if it is a fixed size spec (Ellipsis in args otherwise)
-    if issubclass(origin, tuple):
-        # Validates tuple elements against variadic or fixed type spec
-        if args and args[-1] is  Ellipsis:
-            return all(
-                is_instance_of_generic(val, tuple(args[:-1])) for val in value
-            )
-        else:
-            return all(
-                is_instance_of_generic(val, gtype) for val, gtype in zip(value, args)
-            )
-
-    # For containers, check the elements
-    if issubclass(origin, (collections.abc.Sequence, collections.abc.Set)):
-        return all(is_instance_of_generic(item, args[0]) for item in value)
-
-    # For dictionaries, check keys and values
-    if issubclass(origin, collections.abc.Mapping):
-        if len(args) >= 2:
-            return all(
-                is_instance_of_generic(k, args[0]) and is_instance_of_generic(v, args[1])
-                for k, v in value.items()
-            )
-    return True
-
 class RPCSignal:
     def __init__(self, *arg_types):
         self.arg_types = arg_types
         self.connections = []
 
     def emit(self, *args):
-        self.validate_args(*args)
+        args = self.validate_args(*args, coerce=True)
         for conn in self.connections:
             conn(*args)
 
-    def validate_args(self, *args):
+    def validate_args(self, *args, coerce=False) -> tuple:
         """
-        Validate that the supplied arguments match the expected types.
+        Validates and coerces input arguments based on expected types.
 
-        This method checks that the number of positional arguments equals the
-        length of ``self.arg_types`` and that each argument is an instance of the
-        corresponding generic type.  Detailed error messages are logged before the
-        appropriate exception is raised.
+        This method validates the provided `args` against the expected types specified
+        in `self.arg_types`. If `coerce` is set to `True`, it attempts to coerce the
+        arguments to the expected types when a mismatch occurs. If validation or coercion
+        fails, the method raises appropriate exceptions.
 
         Parameters
         ----------
-        *args :
-            Positional arguments to be validated.  The tuple length must equal
-            ``len(self.arg_types)`` and each element must satisfy
-            ``is_instance_of_generic(arg, expected_type)``.
+        *args
+            Positional arguments to be validated against `self.arg_types`. The number
+            of arguments must match the number of expected types.
+        coerce : bool, optional
+            If `True`, attempts to coerce arguments to the expected type in case of a
+            mismatch. Defaults to `False`.
 
         Returns
         -------
-        None
-            No value is returned; the function completes silently when validation
-            succeeds.
+        tuple
+            A tuple of validated (or coerced) arguments in the same order as the input.
 
         Raises
         ------
         RuntimeError
-            If the number of supplied arguments does not match the expected count.
+            Raised if the number of provided arguments does not match the number of
+            expected types in `self.arg_types`.
         TypeError
-            If any argument is not an instance of its corresponding expected type.
+            Raised if an argument type mismatch occurs and `coerce` is `False`, or if
+            coercion fails when `coerce` is `True`.
 
         See Also
         --------
-        is_instance_of_generic : Helper function used to perform generic type
-            checking.
+        coerce_to_generic : Function used to coerce arguments to generic types.
+        is_instance_of_generic : Function to check whether an argument matches an expected type.
         """
         if len(args) != len(self.arg_types):
             logger.error(f"Expected {len(self.arg_types)} arguments, got {len(args)}.")
             raise RuntimeError(f"Expected {len(self.arg_types)} arguments, got {len(args)}.")
+        new_args = []
+        # Validates and coerces each argument; errors on type mismatch
         for i, (arg, arg_type) in enumerate(zip(args, self.arg_types)):
-            if not is_instance_of_generic(arg, arg_type):
-                logger.error(f"Argument {i} of type {type(arg)} is not an instance of {arg_type}")
-                raise TypeError(f"Argument {i} of type {type(arg)} is not an instance of {arg_type}")
+            if coerce:
+                new_args.append(coerce_to_generic(arg, arg_type))
+            elif is_instance_of_generic(arg, arg_type):
+                new_args.append(arg)
+            else:
+                logger.error(f"Argument {i} of type {type(arg)} is not an instance of {arg_type}.")
+                raise TypeError(f"Argument {i} of type {type(arg)} is not an instance of {arg_type}.")
+        return tuple(new_args)
 
     def connect(self, conn: Callable):
         if not conn in self.connections:
