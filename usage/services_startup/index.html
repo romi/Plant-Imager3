@@ -3034,8 +3034,6 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>Plant-Imager3/<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Build context for the WebUI service</span>
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/webui/Dockerfile<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Specify the Dockerfile for building the image</span>
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">args</span>:
-<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">PLANTDB_BRANCH</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&#39;feature/authentication&#39;</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantimager_webui:latest
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_webui
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
@@ -3054,8 +3052,6 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">               </span><span style="color: #BA2121">--master</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--processes=4</span><span style="color: #19177C"> </span><span style="color: #BA2121">--threads=2</span><span style="color: #19177C"> </span><span style="color: #BA2121">--buffer-size=32768&quot;</span><span style="color: #BBB"> </span>]
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>unless-stopped
-<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">extra_hosts</span>:
-<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;dev.romi.local:host-gateway&quot;</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>nginx_cert:/etc/nginx/ssl/
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
