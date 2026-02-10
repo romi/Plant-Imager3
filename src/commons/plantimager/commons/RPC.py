@@ -4,6 +4,8 @@ import inspect
 import json
 import traceback
 import logging
+import types
+import typing
 from enum import StrEnum
 from functools import wraps, partial
 import random
@@ -66,14 +68,165 @@ class NoResult:
         return False
 
 
+from typing import get_origin, get_args
+import collections.abc
+
+
+def is_instance_of_generic(value, generic_type):
+    """
+    Determine whether ``value`` conforms to a typing generic specification.
+
+    This utility inspects ``generic_type`` using :func:`typing.get_origin` and
+    :func:`typing.get_args` and recursively validates ``value`` against the
+    resolved origin and its type arguments.  It supports built‑in container
+    types (``list``, ``set``, ``tuple``, ``dict``) as well as user‑defined
+    generic classes.  When ``generic_type`` is a tuple, each element may be a
+    distinct type specification; an ellipsis (``...``) as the last element
+    denotes a variadic element type that applies to all items of the tuple.
+
+    Parameters
+    ----------
+    value : Any
+        The object whose type is being checked.
+    generic_type : type or tuple of types
+        A concrete type, a typing generic (e.g. ``list[int]``), or a tuple of
+        such specifications.  If a tuple is provided, the function returns
+        ``True`` when ``value`` matches **any** of the contained specifications.
+
+    Returns
+    -------
+    bool
+        ``True`` if ``value`` matches ``generic_type``; otherwise ``False``.
+
+    Raises
+    ------
+    TypeError
+        If ``generic_type`` is not a type, a recognized generic, or a tuple of
+        such specifications.
+
+    Notes
+    -----
+    * The function handles nested containers by recursively invoking itself on
+      each element, key, or value.
+    * For ``tuple`` generics:
+        - ``Tuple[int, str]`` requires a two‑item tuple with the first element
+          an ``int`` and the second a ``str``.
+        - ``Tuple[int, ...]`` (ellipsis as the last argument) validates that
+          **all** items are ``int``.
+    * For sequence and set generics (e.g. ``list[int]`` or ``set[str]``) the
+      single type argument is applied to every element.
+    * For mapping generics (e.g. ``dict[str, float]``) the first type argument
+      validates keys and the second validates values.
+
+    See Also
+    --------
+    typing.get_origin
+    typing.get_args
+    isinstance
+    """
+    if isinstance(generic_type, tuple):
+        return any(is_instance_of_generic(value, gtype) for gtype in generic_type)
+
+    if generic_type is Any:
+        return True
+
+    origin = get_origin(generic_type)
+
+    # If no origin, it's not a generic type
+    if origin is None:
+        return isinstance(value, generic_type)
+
+    # If Union
+    if origin in (types.UnionType, typing.Union):
+        return is_instance_of_generic(value, get_args(generic_type))
+
+    # Check if the value is an instance of the origin type
+    if not is_instance_of_generic(value, origin):
+        return False
+
+    # Get the expected type arguments
+    args = get_args(generic_type)
+
+    # If no type args specified, just check the origin
+    if not args:
+        return True
+
+    # For tuple check if it is a fixed size spec (Ellipsis in args otherwise)
+    if issubclass(origin, tuple):
+        # Validates tuple elements against variadic or fixed type spec
+        if args and args[-1] is  Ellipsis:
+            return all(
+                is_instance_of_generic(val, tuple(args[:-1])) for val in value
+            )
+        else:
+            return all(
+                is_instance_of_generic(val, gtype) for val, gtype in zip(value, args)
+            )
+
+    # For containers, check the elements
+    if issubclass(origin, (collections.abc.Sequence, collections.abc.Set)):
+        return all(is_instance_of_generic(item, args[0]) for item in value)
+
+    # For dictionaries, check keys and values
+    if issubclass(origin, collections.abc.Mapping):
+        if len(args) >= 2:
+            return all(
+                is_instance_of_generic(k, args[0]) and is_instance_of_generic(v, args[1])
+                for k, v in value.items()
+            )
+    return True
+
 class RPCSignal:
     def __init__(self, *arg_types):
-        self.args = arg_types
+        self.arg_types = arg_types
         self.connections = []
 
     def emit(self, *args):
+        self.validate_args(*args)
         for conn in self.connections:
             conn(*args)
+
+    def validate_args(self, *args):
+        """
+        Validate that the supplied arguments match the expected types.
+
+        This method checks that the number of positional arguments equals the
+        length of ``self.arg_types`` and that each argument is an instance of the
+        corresponding generic type.  Detailed error messages are logged before the
+        appropriate exception is raised.
+
+        Parameters
+        ----------
+        *args :
+            Positional arguments to be validated.  The tuple length must equal
+            ``len(self.arg_types)`` and each element must satisfy
+            ``is_instance_of_generic(arg, expected_type)``.
+
+        Returns
+        -------
+        None
+            No value is returned; the function completes silently when validation
+            succeeds.
+
+        Raises
+        ------
+        RuntimeError
+            If the number of supplied arguments does not match the expected count.
+        TypeError
+            If any argument is not an instance of its corresponding expected type.
+
+        See Also
+        --------
+        is_instance_of_generic : Helper function used to perform generic type
+            checking.
+        """
+        if len(args) != len(self.arg_types):
+            logger.error(f"Expected {len(self.arg_types)} arguments, got {len(args)}.")
+            raise RuntimeError(f"Expected {len(self.arg_types)} arguments, got {len(args)}.")
+        for i, (arg, arg_type) in enumerate(zip(args, self.arg_types)):
+            if not is_instance_of_generic(arg, arg_type):
+                logger.error(f"Argument {i} of type {type(arg)} is not an instance of {arg_type}")
+                raise TypeError(f"Argument {i} of type {type(arg)} is not an instance of {arg_type}")
 
     def connect(self, conn: Callable):
         if not conn in self.connections:
@@ -577,6 +730,9 @@ class RPCServer:
         if not self._signal_socket:
             logger.error(f"Signal socket not initialized")
             raise RuntimeError(f"Signal socket not initialized")
+        # Validate that we send a signal with arguments matching the expected types
+        signal: RPCSignal = getattr(self, signal_name)
+        signal.validate_args(*args)
         logger.debug(f"sending signal {signal_name} with args {args}")
         self._signal_socket.send_json({
             "event": RPCEvents.EMIT_SIGNAL,
@@ -689,7 +845,7 @@ class RPCServer:
                     self._cleanup_state["signal_socket"] = self._signal_socket
                     weak_send_signal = WeakMethod(self._send_signal)
                     for sig_name, sig in self._signals.items():
-                        sig.connect(lambda *args, **kwargs: weak_send_signal()(sig_name, *args, **kwargs))
+                        sig.connect(lambda *args, sig_name=sig_name, **kwargs: weak_send_signal()(sig_name, *args, **kwargs))
                     self._socket.send_json({"success": True})
                     logger.info("Successfully initialized signal handling")
                 case RPCEvents.METHOD_CALL:

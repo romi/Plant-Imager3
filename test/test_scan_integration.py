@@ -37,7 +37,8 @@ class TestScanIntegration(unittest.TestCase):
             dataset_path = get_test_dataset('real_plant')
             self.images_path = str(dataset_path / "images")
 
-        self.db_url = "http://localhost:5000"
+        self.db_port = 23656
+        self.db_url = f"http://localhost:{self.db_port}"
         self.rpc_addr = "tcp://localhost:14567"
 
         # Prepare Environment
@@ -57,7 +58,7 @@ class TestScanIntegration(unittest.TestCase):
         )
 
         self.plantdb = subprocess.Popen(
-            ["fsdb_rest_api", "--test", "--empty", "--host", "localhost", "--port", "5000"],
+            ["fsdb_rest_api", "--test", "--empty", "--host", "localhost", "--port", str(self.db_port)],
             env=os.environ
         )
 
