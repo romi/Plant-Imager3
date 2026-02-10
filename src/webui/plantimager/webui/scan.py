@@ -17,6 +17,7 @@ Key Features
 
 import os
 import tomllib
+import traceback
 from base64 import b64decode
 from typing import Dict
 
@@ -604,7 +605,11 @@ def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, datase
     res: None | NoResult = controller.set_dataset_name(dataset_name)
     if isinstance(res, NoResult):
         return f"Failed to set dataset {dataset_name}", res.traceback
-    res: None | NoResult = controller.set_config(tomllib.loads(cfg))
+    try:
+        config_dict = tomllib.load(cfg)
+    except tomllib.TOMLDecodeError:
+        return "Failed to parse config file", traceback.format_exc(limit=1)
+    res: None | NoResult = controller.set_config(config_dict)
     if isinstance(res, NoResult):
         return "Failed to configure scan", res.traceback
 
