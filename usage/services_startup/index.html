@@ -1,0 +1,3236 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Plant-Imager3 documentation.">
+      
+      
+        <meta name="author" content="ROMI Team">
+      
+      
+        <link rel="canonical" href="https://github.com/romi/Plant-Imager3/usage/services_startup/">
+      
+      
+        <link rel="prev" href="../services_overview/">
+      
+      
+        <link rel="next" href="../services_usage/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/ROMI_ICON_green.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Services Startup - Plant-Imager3</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,300i,400,400i,700,700i%7CUbuntu+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Nunito Sans";--md-code-font:"Ubuntu Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_markdown_exec_pyodide.css">
+    
+      <link rel="stylesheet" href="../../assets/_markdown_exec_ansi.css">
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#starting-up-the-services" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://github.com/romi/Plant-Imager3" title="Plant-Imager3" class="md-header__button md-logo" aria-label="Plant-Imager3" data-md-component="logo">
+      
+  <img src="../../assets/images/ROMI_logo_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Plant-Imager3
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Services Startup
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/romi/Plant-Imager3" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M202.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M496 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/commons/" class="md-tabs__link">
+          
+  
+  
+  Reference API
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../services_overview/" class="md-tabs__link">
+          
+  
+  
+  Usage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../developer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Developer
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://github.com/romi/Plant-Imager3" title="Plant-Imager3" class="md-nav__button md-logo" aria-label="Plant-Imager3" data-md-component="logo">
+      
+  <img src="../../assets/images/ROMI_logo_white.svg" alt="logo">
+
+    </a>
+    Plant-Imager3
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/romi/Plant-Imager3" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M202.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M496 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    commons
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    commons
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/commons/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    commons
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1_1" id="__nav_2_1_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    commons
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commons/RPC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commons/cameradevice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cameradevice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commons/controller_device/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    controller_device
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commons/deviceregistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deviceregistry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_1_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/commons/examples/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    examples
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1_1_5" id="__nav_2_1_1_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_1_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_1_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commons/examples/cameraclient/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cameraclient
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commons/examples/cameraserver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cameraserver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commons/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commons/systemd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    systemd
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/commons/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    utils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    controller
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    controller
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/controller/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    controller
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    controller
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/AppBridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AppBridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/ImageProvider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ImageProvider
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/controller/PlantImagerApp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PlantImagerApp
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2_1_3" id="__nav_2_2_1_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PlantImagerApp
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/PlantImagerApp/Controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/PlantImagerApp/Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/PlantImagerApp/rc_style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    rc_style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1_3_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/controller/PlantImagerApp/ttf/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ttf
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2_1_3_4" id="__nav_2_2_1_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_2_1_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ttf
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/PlantImagerApp/ttf/rc_ttf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    rc_ttf
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/controller/camera/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    camera
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2_1_4" id="__nav_2_2_1_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    camera
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/camera/CameraBridge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CameraBridge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/camera/CameraVideoReceiver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CameraVideoReceiver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/camera/PiCameraComm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PiCameraComm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/camera/pyav_receiver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pyav_receiver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    main
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/controller/scanner/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    scanner
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2_1_6" id="__nav_2_2_1_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    scanner
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/scanner/dummy_cnc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    dummy_cnc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/scanner/grbl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    grbl
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/scanner/hal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/scanner/path/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    path
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/scanner/rpc_controller/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    rpc_controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/scanner/scanner/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    scanner
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/controller/scanner/units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    webui
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    webui
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/webui/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    webui
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3_1" id="__nav_2_3_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    webui
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    app
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/carousel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    carousel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/controller_proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    controller_proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/login/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    login
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/nav/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    nav
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/new_user/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    new_user
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/webui/pages/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pages
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    pages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/pages/home/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/pages/table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    utils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/visu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    visu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/webui/wsgi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    wsgi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Usage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../services_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Services Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Services Startup
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Services Startup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-file-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration File Breakdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration File Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#env" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .env
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-composeyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        docker-compose.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-the-stack-running-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting the Stack Running (Development)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../services_usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Services Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../developer/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developer
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer/guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation Guidelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer/RPC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RPC Communication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer/NTP_server.md.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    None
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-file-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration File Breakdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration File Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#env" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .env
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-composeyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        docker-compose.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-the-stack-running-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting the Stack Running (Development)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="starting-up-the-services">Starting up the services<a class="headerlink" href="#starting-up-the-services" title="Permanent link">Link</a></h1>
+<p>In this section we detail how to configure and start the services stack.</p>
+<h2 id="configuration-file-breakdown">Configuration File Breakdown<a class="headerlink" href="#configuration-file-breakdown" title="Permanent link">Link</a></h2>
+<h3 id="env"><code>.env</code><a class="headerlink" href="#env" title="Permanent link">Link</a></h3>
+<div class="language-text highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>SERVER_HOST=plantimager.local
+# Plant Imager WebUI (webui service)
+CONTROLLER_HOST=&quot;plantimager_webui&quot;  # internal docker DNS, can be an IP if external
+CONTROLLER_PORT=8080
+CONTROLLER_PREFIX=&quot;/webui&quot;
+# PlantDB REST API (plantdb servie)
+PLANTDB_HOST=&quot;plantimager_plantdb&quot;  # internal docker DNS
+PLANTDB_PORT=5000
+PLANTDB_PREFIX=&quot;/plantdb&quot;
+# Plant 3D Explorer UI (p3dx service)
+P3DX_HOST=&quot;plantimager_p3dx&quot;  # internal docker DNS
+P3DX_PORT=80
+P3DX_PREFIX=&quot;/p3dx&quot;
+# Plant 3D Vision WebTerm (p3dv service)
+P3DV_HOST=&quot;plantimager_p3dv&quot;  # internal docker DNS
+P3DV_PORT=8081
+P3DV_PREFIX=&quot;/p3dv&quot;
+
+SSL_CERT_LOC=&quot;Plant-Imager3/docker/nginx/ssl&quot;  # location of the serf-signed certificates
+ROMI_DB=&quot;/data/ROMI/&quot;  # path to the database to use, here a bind mount, can be a volume 
+COLMAP_VERSION=&quot;3.13.0&quot;
+P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
+</code></pre></div>
+<ul>
+<li>These variables are substituted into the <code>docker-compose.yml</code> at build time (via <code>${VAR}</code> syntax).</li>
+<li>They drive the NGINX configuration and the service hostnames used by the containers.</li>
+</ul>
+<h3 id="docker-composeyml"><code>docker-compose.yml</code><a class="headerlink" href="#docker-composeyml" title="Permanent link">Link</a></h3>
+<ul>
+<li><strong>Build Arguments</strong> – <code>docker-compose</code> passes the environment variables as build arguments to <code>nginx</code>, <code>p3dx</code>, and
+  <code>p3dv</code> Dockerfiles.</li>
+<li><strong>Volumes</strong> –<ul>
+<li><code>nginx_cert</code> – Shared certs for NGINX and <code>webui</code>.</li>
+<li><code>uwsgi_sockets</code> – Shared UNIX socket for the uWSGI workers.</li>
+<li><code>p3dv_cfg</code>, <code>webterm_users</code> – Persist configuration and user data for P3DV.</li>
+<li><code>/data/ROMI/test_owner</code> – Local development database mount (replace with a persistent volume in production).</li>
+</ul>
+</li>
+<li><strong>Ports</strong> –<ul>
+<li><code>80:80</code> &amp; <code>443:443</code> expose NGINX externally.</li>
+<li><code>CONTROLLER_PORT</code> and
+  <code>PLANTDB_PORT</code> are also mapped for debugging, but in production you would typically not expose them.</li>
+</ul>
+</li>
+<li><strong>Dependencies</strong> –<ul>
+<li><code>nginx</code> waits for <code>ssl_cert</code>, <code>plantdb</code>, <code>p3dx</code>, and <code>p3dv</code>.</li>
+<li><code>webui</code> depends on <code>ssl_cert</code>.</li>
+</ul>
+</li>
+</ul>
+<h2 id="service-stack">Service stack<a class="headerlink" href="#service-stack" title="Permanent link">Link</a></h2>
+<div class="language-yaml highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">services</span>:
+
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">ssl_cert</span>:
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># Copy the certificates to the `nginx_cert` volume</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantimager_nginx:latest
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>no
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${SSL_CERT_LOC}:/tmp<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># location of the certificates to copy</span>
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>nginx_cert:/etc/nginx/ssl/<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># volume (shared with nginx service) hosting the copied certificates</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>/bin/bash -c &#39;cp /tmp/*.pem /etc/nginx/ssl/&#39;
+
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">nginx</span>:
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># NGINX service forwarding requests by reverse proxy</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>Plant-Imager3/docker/nginx/<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Build context for the Nginx service</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>Dockerfile<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Specify the Dockerfile for building the image</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">args</span>:
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">SERVER_HOST</span>:<span style="color: #BBB"> </span>${SERVER_HOST}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">CONTROLLER_HOST</span>:<span style="color: #BBB"> </span>${CONTROLLER_HOST}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">CONTROLLER_PORT</span>:<span style="color: #BBB"> </span>${CONTROLLER_PORT}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">CONTROLLER_PREFIX</span>:<span style="color: #BBB"> </span>${CONTROLLER_PREFIX}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">PLANTDB_HOST</span>:<span style="color: #BBB"> </span>${PLANTDB_HOST}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">PLANTDB_PORT</span>:<span style="color: #BBB"> </span>${PLANTDB_PORT}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">PLANTDB_PREFIX</span>:<span style="color: #BBB"> </span>${PLANTDB_PREFIX}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">P3DX_HOST</span>:<span style="color: #BBB"> </span>${P3DX_HOST}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">P3DX_PORT</span>:<span style="color: #BBB"> </span>${P3DX_PORT}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">P3DX_PREFIX</span>:<span style="color: #BBB"> </span>${P3DX_PREFIX}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">P3DV_HOST</span>:<span style="color: #BBB"> </span>${P3DV_HOST}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">P3DV_PORT</span>:<span style="color: #BBB"> </span>${P3DV_PORT}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">P3DV_PREFIX</span>:<span style="color: #BBB"> </span>${P3DV_PREFIX}
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantimager_nginx:latest
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_nginx
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">ports</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>80:80<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># HTTP traffic (redirected to HTTPS)</span>
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>443:443<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># HTTPS traffic</span>
+<span style="color: #BBB">      </span><span style="color: #3D7B7B; font-style: italic">#- 8080:8080</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>unless-stopped
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>uwsgi_sockets:/tmp
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>nginx_cert:/etc/nginx/ssl/
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">depends_on</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>ssl_cert
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantdb
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>p3dx
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>p3dv
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>webui
+
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">plantdb</span>:
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># PlantDB REST API service, in production mode, served by uWSGI</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>plantdb/
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/Dockerfile
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantdb:0.14.6
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_plantdb
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">expose</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${PLANTDB_PORT}<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Expose port internally to the network</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_API_PREFIX</span>:<span style="color: #BBB"> </span>${PLANTDB_PREFIX}
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_API_SSL</span>:<span style="color: #BBB"> </span>true
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;uwsgi</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--http=:${PLANTDB_PORT}</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--socket=/tmp/uwsgi.sock</span><span style="color: #19177C"> </span><span style="color: #BA2121">--chmod-socket=666</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--module=plantdb.server.cli.wsgi:application</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--callable=application</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--master</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--processes=4</span><span style="color: #19177C"> </span><span style="color: #BA2121">--threads=2</span><span style="color: #19177C"> </span><span style="color: #BA2121">--buffer-size=32768&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>unless-stopped
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">user</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;${UID:-2020}:${GID:-2020}&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${ROMI_DB}:/myapp/db
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>uwsgi_sockets:/tmp
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">healthcheck</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;CMD&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;curl&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;-f&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;http://localhost:${PLANTDB_PORT}${PLANTDB_PREFIX}/health&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>120s
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">timeout</span>:<span style="color: #BBB"> </span>10s
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">retries</span>:<span style="color: #BBB"> </span>3
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">start_period</span>:<span style="color: #BBB"> </span>40s
+
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">p3dx</span>:
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># P3DX service, in production mode, served by NGINX</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>plant-3d-explorer/
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/production/Dockerfile
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">args</span>:
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">API_URL</span>:<span style="color: #BBB"> </span>http://${SERVER_HOST}${PLANTDB_PREFIX}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">BASENAME</span>:<span style="color: #BBB"> </span>${P3DX_PREFIX}
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantimager_p3dx:0.1.2
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_p3dx
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">expose</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${P3DX_PORT}<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Expose port internally to the network</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">REACT_APP_API_URL</span>:<span style="color: #BBB"> </span>http://${SERVER_HOST}${PLANTDB_PREFIX}
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">REACT_APP_BASENAME</span>:<span style="color: #BBB"> </span>${P3DX_PREFIX}
+<span style="color: #BBB">      </span><span style="color: #3D7B7B; font-style: italic"># Tells the development server to serve assets from the subdirectory</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PUBLIC_URL</span>:<span style="color: #BBB"> </span>${P3DX_PREFIX}
+<span style="color: #BBB">      </span><span style="color: #3D7B7B; font-style: italic"># Tells the dev server where to listen for WebSockets</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">WDS_SOCKET_PATH</span>:<span style="color: #BBB"> </span>${P3DX_PREFIX}/sockjs-node
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>unless-stopped
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">healthcheck</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;CMD&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;curl&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;-f&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;http://localhost:${P3DX_PORT}${P3DX_PREFIX}&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>120s
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">timeout</span>:<span style="color: #BBB"> </span>10s
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">retries</span>:<span style="color: #BBB"> </span>3
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">start_period</span>:<span style="color: #BBB"> </span>40s
+
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">p3dv</span>:
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># P3DV service, in production mode, served by Gunicorn</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>plant-3d-vision/
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/Dockerfile
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">args</span>:
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">COLMAP_VERSION</span>:<span style="color: #BBB"> </span>${COLMAP_VERSION:-&#39;3.8&#39;}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">CUDA_CC</span>:<span style="color: #BBB"> </span>${CUDA_CC:-&#39;75&#39;}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">P3DV_BASE_IMG</span>:<span style="color: #BBB"> </span>${P3DV_BASE_IMG}
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plant-3d-vision:colmap_${COLMAP_VERSION:-&#39;3.8&#39;}
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_p3dv
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">expose</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${P3DV_PORT}<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Expose port internally to the network</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_API</span>:<span style="color: #BBB"> </span>${PLANTDB_HOST}/${PLANTDB_PREFIX}
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">WEBTERM_PROXY</span>:<span style="color: #BBB"> </span>true
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">WEBTERM_PREFIX</span>:<span style="color: #BBB"> </span>${P3DV_PREFIX}
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;gunicorn</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--worker-class</span><span style="color: #19177C"> </span><span style="color: #BA2121">eventlet</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">-w</span><span style="color: #19177C"> </span><span style="color: #BA2121">1</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--bind</span><span style="color: #19177C"> </span><span style="color: #BA2121">0.0.0.0:${P3DV_PORT}</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">plant3dvision.webterm.wsgi:application&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>unless-stopped
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">deploy</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">resources</span>:
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">reservations</span>:
+<span style="color: #BBB">          </span><span style="color: #008000; font-weight: bold">devices</span>:
+<span style="color: #BBB">            </span>-<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">driver</span>:<span style="color: #BBB"> </span>nvidia
+<span style="color: #BBB">              </span><span style="color: #008000; font-weight: bold">count</span>:<span style="color: #BBB"> </span>all
+<span style="color: #BBB">              </span><span style="color: #008000; font-weight: bold">capabilities</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #19177C">gpu</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${ROMI_DB}:/myapp/db
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>p3dv_cfg:/myapp/cfg
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>webterm_users:/myapp/users
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
+
+<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># WebUI is served from the RasPi controller, use this for development purposes</span>
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">webui</span>:
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>Plant-Imager3/<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Build context for the WebUI service</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/webui/Dockerfile<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Specify the Dockerfile for building the image</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">args</span>:
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">PLANTDB_BRANCH</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&#39;feature/authentication&#39;</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantimager_webui:latest
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_webui
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">ALLOW_PRIVATE_IP</span>:<span style="color: #BBB"> </span>true<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># use true for tests with &#39;localhost&#39;</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">CERT_PATH</span>:<span style="color: #BBB"> </span>/etc/nginx/ssl/cert.pem<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># self-signed certificate for SSL/TLS verification</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_HOST</span>:<span style="color: #BBB"> </span>${SERVER_HOST}
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_PORT</span>:<span style="color: #BBB"> </span>${PLANTDB_PORT}
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_PREFIX</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;&quot;</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_SSL</span>:<span style="color: #BBB"> </span>true
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">WEBUI_PROXY</span>:<span style="color: #BBB"> </span>true
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">WEBUI_PREFIX</span>:<span style="color: #BBB"> </span>${CONTROLLER_PREFIX}
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;uwsgi</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--http=:${CONTROLLER_PORT}</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--module=plantimager.webui.wsgi:application</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--callable=application</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--master</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">               </span><span style="color: #BA2121">--processes=4</span><span style="color: #19177C"> </span><span style="color: #BA2121">--threads=2</span><span style="color: #19177C"> </span><span style="color: #BA2121">--buffer-size=32768&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>unless-stopped
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">extra_hosts</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;dev.romi.local:host-gateway&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>nginx_cert:/etc/nginx/ssl/
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">depends_on</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>ssl_cert
+
+<span style="color: #008000; font-weight: bold">networks</span>:
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">plantimager-net</span>:
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">driver</span>:<span style="color: #BBB"> </span>bridge
+
+<span style="color: #008000; font-weight: bold">volumes</span>:
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">nginx_cert</span>:
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">external</span>:<span style="color: #BBB"> </span>false
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">uwsgi_sockets</span>:
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">external</span>:<span style="color: #BBB"> </span>false
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">romi_db_test</span>:<span style="color: #BBB"> </span><span style="color: #3D7B7B; font-style: italic"># This volume hosts PlantDB FSDB files</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">external</span>:<span style="color: #BBB"> </span>false<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># set to `true` use an existing volume</span>
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">p3dv_cfg</span>:<span style="color: #BBB"> </span><span style="color: #3D7B7B; font-style: italic"># This volume hosts P3DV WebTerm configuration files</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">external</span>:<span style="color: #BBB"> </span>false<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># set to `true` use an existing volume</span>
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">webterm_users</span>:<span style="color: #BBB"> </span><span style="color: #3D7B7B; font-style: italic"># This volume hosts P3DV WebTerm users database</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">external</span>:<span style="color: #BBB"> </span>false<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># set to `true` use an existing volume</span>
+</code></pre></div>
+<h2 id="getting-the-stack-running-development">Getting the Stack Running (Development)<a class="headerlink" href="#getting-the-stack-running-development" title="Permanent link">Link</a></h2>
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #3D7B7B; font-style: italic"># 1. Ensure Docker is running</span>
+docker<span style="color: #BBB"> </span>compose<span style="color: #BBB"> </span>version
+
+<span style="color: #3D7B7B; font-style: italic"># 2. Build and start all services</span>
+docker<span style="color: #BBB"> </span>compose<span style="color: #BBB"> </span>up<span style="color: #BBB"> </span>--build
+</code></pre></div>
+<ul>
+<li>Docker will build each image (or pull if already available).</li>
+<li>The <code>nginx</code> container will wait for the other services to be healthy before starting to accept traffic.</li>
+</ul>
+<p>Open your browser at <code>http://plantimager.local</code> (or
+<code>https://plantimager.local</code> if you add proper certificates). You should see the Plant‑Imager WebUI. The other services are accessible through the following URLs:</p>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>Service</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/webui</code></td>
+<td>WebUI (frontend)</td>
+</tr>
+<tr>
+<td><code>/plantdb</code></td>
+<td>REST API</td>
+</tr>
+<tr>
+<td><code>/p3dx</code></td>
+<td>3D Explorer</td>
+</tr>
+<tr>
+<td><code>/p3dv</code></td>
+<td>3D Vision WebTerm</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      The ROMI project has received funding from the European Community’s H2020 Programme under Grant Agreement No. 773875.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/ROMI_EU_PROJECT" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.facebook.com/ROMIEUProject" target="_blank" rel="noopener" title="www.facebook.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256c0 120 82.7 220.8 194.2 248.5V334.2h-52.8V256h52.8v-33.7c0-87.1 39.4-127.5 125-127.5 16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287v175.9C413.8 494.8 512 386.9 512 256"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/romi/Plant-Imager3" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/repositories/roboticsmicrofarms" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/_markdown_exec_pyodide.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+        <script src="https://buttons.github.io/buttons.js"></script>
+      
+    
+  </body>
+</html>
