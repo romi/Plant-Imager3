@@ -1,17 +1,12 @@
-# [![ROMI_logo](docs/assets/images/ROMI_logo_green_25.svg)](https://romi-project.eu) / plantimager.webui
+# [![ROMI_logo](../../docs/assets/images/ROMI_logo_green_25.svg)](https://romi-project.eu) / plantimager.webui
 
-[![Licence](https://img.shields.io/github/license/romi/plantdb?color=lightgray)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
-[![Python Version](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fromi%2Fplantdb%2Frefs%2Fheads%2Fdev%2Fsrc%2Fcommons%2Fpyproject.toml&logo=python&logoColor=white)]()
+[![Licence](https://img.shields.io/github/license/romi/Plant-Imager3?color=lightgray)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+[![Python Version](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fgithub.com%2Fromi%2FPlant-Imager3%2Fraw%2Frefs%2Fheads%2Fdevelop%2Fsrc%2Fwebui%2Fpyproject.toml)]()
 
-A Dash-based Python package for the main controller (Raspberry Pi 4 or 5).
-It offers a client interface for plant scanning.
+A Dash-based Python package providing a web-based user interface for plant scanning.
+It is intended to run on the main controller (Raspberry Pi 4 or 5) or as a Docker container in a remote server.
 
-This package provides a web-based user interface for plant scanning:
-
-- Dash-based web application
-- Scan configuration and execution
-- Integration with the controller package
-
+![webui_screenshot.png](../../docs/assets/images/webui_screenshot.png)
 
 ## Environment Setup
 
@@ -24,6 +19,7 @@ To create a new conda environment, named `plant-imager3`, with Python3.11 & IPyt
 ``` shell
 conda create -n plant-imager3 'python==3.11' ipython
 ```
+
 
 ## Installation
 
@@ -54,7 +50,6 @@ For regular users who just need to use the application without modifying the sou
 This method installs a pre-built version of the application, making it quick and easy to set up.
 
 
-
 ## Usage
 
 ### Development
@@ -72,6 +67,19 @@ To run the app in development mode, you have two options:
 Both methods will start the Dash-based web application in development mode, which includes features like automatic code reloading and detailed error messages, making it easier to develop and test your application efficiently.
 
 ### Production
+
+#### Environment variable
+
+Here is the list of environment variables you can define:
+
+- `ALLOW_PRIVATE_IP`: if `True`, allow the use of private IPs for PlantDB REST API URL
+- `CERT_PATH`: specify the path to the self-signed certificates used by the PlantDB server.
+- `VALIDATE_HOST`: if `True`, check the PlantDB REST API URL against a blacklist
+
+The app makes use of `dotenv.load_dotenv` so you can define them in a `.env` file located in the same directory as the `app.py` file.
+It should be under `src/webui/plantimager/webui`.
+
+> If you are running the WebUI on a different machine than the NGINX server is running to serve the PlantDB and want to use SSL, do not forget to copy the (self-signed) certificate and reference them with the `CERT_PATH` env var. 
 
 #### Running with uWSGI
 `uWSGI` is a fast, self-healing, and extensively configurable application server that can serve Python applications.
@@ -105,13 +113,6 @@ uwsgi --http :8080 --module plantimager.webui.wsgi:application --callable applic
 - `--thunder-lock`: Use a more efficient lock mechanism for multi-process deployments
 
 
-#### Security Recommendations
-
-1. **Use a volume for certificates** - This allows you to update certificates without rebuilding the container
-2. **Use a proper certificate authority** - Let's Encrypt is free and widely trusted
-3. **Set up auto-renewal** - Let's Encrypt certificates expire after 90 days
-4. **Use strong SSL settings** - As included in the configuration
-
 ## Docker
 
 ### Build Image
@@ -132,9 +133,9 @@ Once you've built the Docker image, you can run it as a container. This will sta
 
 1. Open your terminal.
 2. Run the following command:
-    ```shell
-    docker run -it --rm --name plantimager_webui -p 8080:8080 roboticsmicrofarms/plantimager_webui:latest "uwsgi --http :8080 --module plantimager.webui.wsgi:application --callable application --master  --processes 4 --threads 2 --thunder-lock"
-    ```
+   ```shell
+   docker run -it --rm --name plantimager_webui -p 8080:8080 roboticsmicrofarms/plantimager_webui:latest "uwsgi --http :8080 --module plantimager.webui.wsgi:application --callable application --master  --processes 4 --threads 2 --thunder-lock"
+   ```
 
 Let's break down what this command does:
 - `docker run`: This starts a new Docker container.
@@ -148,85 +149,3 @@ Let's break down what this command does:
 After running this command, you should be able to access the web UI by opening your browser and navigating to `http://localhost:8080/webui`.
 
 If you encounter any issues or need further assistance, please refer to the [Docker documentation](https://docs.docker.com/) for more details.
-
-
-## Let's Encrypt Certificates
-
-Let's Encrypt is a free, automated, and open Certificate Authority that provides TLS certificates trusted by all major browsers.
-
-### How Let's Encrypt Works
-1. **Domain Validation**: Let's Encrypt validates that you control a domain before issuing a certificate
-2. **Automated**: The entire process can be automated using the Certbot client
-3. **Short Validity**: Certificates are valid for 90 days to encourage automation
-4. **Renewal**: Certificates must be renewed before expiration
-
-### Setting Up Let's Encrypt with NGINX in Docker
-
-#### Method 1: Using Certbot with Docker
-
-1. **Create a Docker network for your services**:
-   ``` bash
-   docker network create web
-   ```
-1. **Run Certbot in Docker to obtain certificates**:
-   ``` bash
-   docker run -it --rm \
-     -v /etc/letsencrypt:/etc/letsencrypt \
-     -v /var/lib/letsencrypt:/var/lib/letsencrypt \
-     -p 80:80 \
-     certbot/certbot certonly --standalone \
-     -d yourdomain.com --agree-tos -m your-email@example.com
-   ```
-1. **Mount the certificates in your NGINX container**:
-   ``` bash
-   docker run -d \
-     -v /etc/letsencrypt:/etc/letsencrypt \
-     -p 80:80 -p 443:443 \
-     --network web \
-     your-nginx-image
-   ```
-1. **Update your NGINX configuration to use the certificates**:
-   ``` nginx
-   ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
-   ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
-   ```
-
-#### Method 2: Using Docker Compose with Nginx and Certbot
-
-``` yaml
-services:
-  nginx:
-    image: your-nginx-image
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-    
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-```
-
-### Let's Encrypt Certificate Renewal
-
-Certificates expire after 90 days and must be renewed. Set up automatic renewal:
-1. **Using a Cron Job on the Host**:
-   ``` 
-   0 12 * * * docker run --rm -v /etc/letsencrypt:/etc/letsencrypt -v /var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot renew --quiet && docker exec nginx nginx -s reload
-   ```
-2. **Using a Docker Container** (as shown in Docker Compose example above)
-
-### Testing Your SSL Configuration
-
-After setting up, test your SSL configuration using:
-1. **SSL Labs**: [https://www.ssllabs.com/ssltest/](https://www.ssllabs.com/ssltest/)
-2. **Mozilla Observatory**: [https://observatory.mozilla.org/](https://observatory.mozilla.org/)
-
-These tools will analyze your HTTPS implementation and suggest improvements.
