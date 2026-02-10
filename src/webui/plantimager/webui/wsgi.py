@@ -37,6 +37,7 @@ python src/webui/plantimager/webui/wsgi.py
 ```
 Should then be accessible under: https://localhost:8080/webui/
 """
+import logging
 import os
 from threading import Thread
 
@@ -73,12 +74,16 @@ application = dash_app.server
 if __name__ == "__main__":
     from werkzeug.serving import run_simple
 
+    logger = logging.getLogger('werkzeug')
+    if app_config['plantdb_ssl'] and not os.getenv('CERT_PATH', None):
+        logger.warning('Using SSL but CERT_PATH env var is not set!')
+
     run_config = {
         'hostname': os.getenv('WEBUI_HOST', '0.0.0.0'),
         'port': int(os.getenv('WEBUI_PORT', 8080)),
         'application': application,
         # Set an SSL context only if SSL is enabled
-        # 'ssl_context': os.getenv('CERT_PATH', '/etc/nginx/ssl/cert.pem') if app_config['plantdb_ssl'] else None,
+        'ssl_context': os.getenv('CERT_PATH', None) if app_config['plantdb_ssl'] else None,
         'use_debugger': bool(os.getenv('WEBUI_DEBUG', False)),
     }
     run_simple(**run_config)
