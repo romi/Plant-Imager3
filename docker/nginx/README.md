@@ -10,7 +10,6 @@ The purpose of this proxy is to route incoming requests to appropriate backend s
 
 The NGINX reverse proxy is configured to route requests as follows:
 
-
 | URL Path   | Service                            |
 |------------|------------------------------------|
 | `/test`    | NGINX test route                   |
@@ -53,9 +52,6 @@ prompt = no
 default_bits = 2048
 default_md = sha256
 
-[ca]
-default_days = 365
-
 [req_distinguished_name]
 C = <FR>
 ST = <Your-State>
@@ -65,8 +61,8 @@ OU = <Your-Department>
 CN = <personal.server.fr>
 
 [v3_req]
-basicConstraints = CA:FALSE
-keyUsage = keyEncipherment, dataEncipherment
+basicConstraints = CA:TRUE
+keyUsage = keyCertSign, keyEncipherment, digitalSignature
 extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
@@ -169,7 +165,8 @@ This command:
 
 - Runs the container in detached mode (`-d`)
 - Names the container `plantimager_nginx`
-- Bind the path whe you create your OpenSSL certificates (`/path/to/cert/ssl/`) to the location NGINX expect them to be (`/etc/nginx/ssl/`)
+- Bind the path whe you create your OpenSSL certificates (
+  `/path/to/cert/ssl/`) to the location NGINX expect them to be (`/etc/nginx/ssl/`)
 - Maps the following ports:
     - Host port 80 → container port 80 (HTTP)
     - Host port 443 → container port 443 (HTTPS)
@@ -191,6 +188,52 @@ The Docker image uses two configuration files:
 - `default.conf`: Contains the specific proxy routing rules
 
 You can modify these files to adjust the proxy behavior before building the image.
+
+## Trusting the Self-Signed Certificate
+
+To handle a self-signed certificate on Ubuntu, you can either bypass the check (not recommended for production) or trust the certificate globally so that both
+`curl` and your browser recognize it.
+
+To make the system and browser trust the certificate, follow these steps:
+
+### Step A: Obtain the Certificate
+
+First, download the certificate from the server:
+
+```shell script
+echo | openssl s_client -servername mellitus.biologie.ens-lyon.fr -connect mellitus.biologie.ens-lyon.fr:443 2>/dev/null | openssl x509 -outform PEM > mellitus.crt
+```
+
+### Step B: Add to System Trust Store (for `curl`)
+
+Ubuntu uses the `ca-certificates` package to manage trusted CAs.
+
+1. Copy the certificate to the local trusted directory:
+   ```shell script
+   sudo cp mellitus.crt /usr/local/share/ca-certificates/mellitus.crt
+   ```
+2. Update the certificate store:
+   ```shell script
+   sudo update-ca-certificates
+   ```
+   > Note: This command expects a file with a `.crt` extension.
+
+### Step C: Add to Browser (Chrome/Firefox)
+
+Browsers often maintain their own certificate stores separate from the OS:
+
+- **Brave**:
+    1. Go to (certificate manager)[brave://certificate-manager/localcerts/usercerts]
+    2. Under "Approved certificates" import the `mellitus.crt` file.
+- **Chrome**:
+    1. Go to `Settings` -> `Privacy and security` -> `Security`.
+    2. Click `Manage certificates`.
+    3. Under the `Authorities` tab, click `Import` and select your `mellitus.crt` file.
+    4. Check "Trust this certificate for identifying websites".
+- **Firefox**:
+    1. Go to `Settings` -> `Privacy & Security`.
+    2. Scroll down to `Certificates` and click `View Certificates...`.
+    3. Under the `Authorities` tab, click `Import` and select the file.
 
 ## Obtaining Trusted SSL Certificates
 
