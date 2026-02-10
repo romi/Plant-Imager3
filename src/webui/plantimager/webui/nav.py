@@ -113,6 +113,7 @@ navbar_layout = dbc.Navbar(
                 dbc.Col(html.Img(src=ROMI_LOGO, height="35px")),
                 dbc.Col(
                     dbc.NavbarBrand(
+                        id="navbar-brand",
                         children="Plant Imager",
                         href="/",
                         style={'color': "#f3f3f3", 'font-size': '30px'}
@@ -129,3 +130,14 @@ navbar_layout = dbc.Navbar(
     ], className="align-items-center"),
     color="#00a960", class_name="mb-3",
 )
+
+
+# Callback to update NavbarBrand href
+@callback(
+    Output("navbar-brand", "href"),
+    Input('plantdb-prefix', 'data')
+)
+def update_navbar_brand_href(prefix):
+    if prefix:
+        return prefix
+    return "/"
