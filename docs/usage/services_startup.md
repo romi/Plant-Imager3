@@ -207,8 +207,6 @@ services:
     build:
       context: Plant-Imager3/  # Build context for the WebUI service
       dockerfile: docker/webui/Dockerfile  # Specify the Dockerfile for building the image
-      args:
-        PLANTDB_BRANCH: 'feature/authentication'
     image: roboticsmicrofarms/plantimager_webui:latest
     container_name: plantimager_webui
     environment:
@@ -227,8 +225,6 @@ services:
                --master \
                --processes=4 --threads=2 --buffer-size=32768" ]
     restart: unless-stopped
-    extra_hosts:
-      - "dev.romi.local:host-gateway"
     volumes:
       - nginx_cert:/etc/nginx/ssl/
     networks:
