@@ -606,7 +606,7 @@ def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, datase
     if isinstance(res, NoResult):
         return f"Failed to set dataset {dataset_name}", res.traceback
     try:
-        config_dict = tomllib.load(cfg)
+        config_dict = tomllib.loads(cfg)
     except tomllib.TOMLDecodeError:
         return "Failed to parse config file", traceback.format_exc(limit=1)
     res: None | NoResult = controller.set_config(config_dict)
