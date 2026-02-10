@@ -78,7 +78,7 @@ if __name__ == "__main__":
         'port': int(os.getenv('WEBUI_PORT', 8080)),
         'application': application,
         # Set an SSL context only if SSL is enabled
-        'ssl_context': os.getenv('CERT_PATH', '/etc/nginx/ssl/cert.pem') if app_config['plantdb_ssl'] else None,
+        # 'ssl_context': os.getenv('CERT_PATH', '/etc/nginx/ssl/cert.pem') if app_config['plantdb_ssl'] else None,
         'use_debugger': bool(os.getenv('WEBUI_DEBUG', False)),
     }
     run_simple(**run_config)
