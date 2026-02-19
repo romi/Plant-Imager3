@@ -30,15 +30,19 @@ class PiCameraComm(QObject):
     videoUrlChanged = Signal(str)
     rotationChanged = Signal(int)
     resolutionChanged = Signal(int, int)
+    encodingChanged = Signal(str)
+    configChanged = Signal(dict)
 
     def __init__(self, context: zmq.Context, url: str, parent: QObject = None):
         QObject.__init__(self, parent)
         self.camera = PiCameraProxy(context, url)
         self._thread_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"{self.__class__.__name__}Thread")
-        self.camera.modeChanged.connect(lambda *args: self.modeChanged.emit(*args))
-        self.camera.videoUrlChanged.connect(lambda *args: self.videoUrlChanged.emit(*args))
-        self.camera.rotationChanged.connect(lambda *args: self.rotationChanged.emit(*args))
-        self.camera.resolutionChanged.connect(lambda res: self.resolutionChanged.emit(*res))
+        self.camera.modeChanged.connect(lambda mode: self.modeChanged.emit(mode))
+        self.camera.videoUrlChanged.connect(lambda u: self.videoUrlChanged.emit(u))
+        self.camera.rotationChanged.connect(lambda rot: self.rotationChanged.emit(rot))
+        self.camera.resolutionChanged.connect(lambda *res: self.resolutionChanged.emit(*res))
+        self.camera.encodingChanged.connect(lambda e: self.encodingChanged.emit(e))
+        self.camera.configChanged.connect(lambda c: self.configChanged.emit(c))
         finalize(self, self._finalize)
 
     def _finalize(self):
@@ -94,3 +98,17 @@ class PiCameraComm(QObject):
     @resolution.setter
     def resolution(self, value: tuple[int, int]):
         self._thread_pool.submit(lambda : setattr(self.camera, "resolution", value))
+
+    @Property(int, notify=encodingChanged)
+    def encoding(self):
+        return self.camera.resolution
+    @encoding.setter
+    def encoding(self, value: tuple[int, int]):
+        self._thread_pool.submit(lambda : setattr(self.camera, "encoding", value))
+
+    @Property(int, notify=configChanged)
+    def config(self):
+        return self.camera.config
+    @config.setter
+    def config(self, value: tuple[int, int]):
+        self._thread_pool.submit(lambda : setattr(self.camera, "config", value))
