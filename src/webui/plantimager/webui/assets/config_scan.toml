@@ -24,6 +24,12 @@ n_points = 36
 [picamera]
 res_x = 2000 # max 4056
 res_y = 1500 # max 3040
+encoding = "jpeg"  # "jpeg" or "png"
+
+[picamera.config]
+# properties from Appendix C of the picamera2 doc
+# https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf
+
 
 [picamera.offset] # top camera
 x = 0
@@ -35,6 +41,12 @@ tilt = 0
 [picamera2]
 res_x = 2000 # max 4056
 res_y = 1500 # max 3040
+encoding = "jpeg"  # "jpeg" or "png"
+
+[picamera2.config]
+# properties from Appendix C of the picamera2 doc
+# https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf
+
 
 [picamera2.offset] # bottom camera
 x = 0

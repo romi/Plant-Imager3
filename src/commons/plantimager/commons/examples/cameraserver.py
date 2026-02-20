@@ -119,7 +119,7 @@ class DummyCamera(Camera, RPCServer):
     @config.setter
     def config(self, value: dict):
         """
-        Sets camera controls/parameters from Picamera2 Appendix B.
+        Sets camera controls/parameters from Picamera2 Appendix C.
 
         Parameters
         ----------
@@ -128,8 +128,9 @@ class DummyCamera(Camera, RPCServer):
 
         See Also
         --------
-        Picamera2 Manual Appendix B:
-https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf?disposition=inline#%5B%7B%22num%22%3A10333%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70.86614%2C781.0236%2C0%5D        """
+        Picamera2 Manual Appendix C:
+https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf?disposition=inline#%5B%7B%22num%22%3A10333%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70.86614%2C781.0236%2C0%5D
+        """
         self._config.update(value)
         # Apply controls to the running camera
         self.configChanged.emit(self._config)
