@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/ROMI_ICON_green.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -3520,8 +3520,7 @@ isinstance</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">349</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">350</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">351</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">352</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">353</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_instance_of_generic</span>(value, generic_type):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">352</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_instance_of_generic</span>(value, generic_type):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Determine whether ``value`` conforms to a typing generic specification.</span>
 
@@ -3617,12 +3616,11 @@ isinstance</p>
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">all</span>(is_instance_of_generic(item, args[<span style="color: #666">0</span>]) <span style="color: #008000; font-weight: bold">for</span> item <span style="color: #A2F; font-weight: bold">in</span> value)
 
     <span style="color: #3D7B7B; font-style: italic"># For dictionaries, check keys and values</span>
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">issubclass</span>(origin, collections<span style="color: #666">.</span>abc<span style="color: #666">.</span>Mapping):
-        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(args) <span style="color: #666">&gt;=</span> <span style="color: #666">2</span>:
-            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">all</span>(
-                is_instance_of_generic(k, args[<span style="color: #666">0</span>]) <span style="color: #A2F; font-weight: bold">and</span> is_instance_of_generic(v, args[<span style="color: #666">1</span>])
-                <span style="color: #008000; font-weight: bold">for</span> k, v <span style="color: #A2F; font-weight: bold">in</span> value<span style="color: #666">.</span>items()
-            )
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">issubclass</span>(origin, collections<span style="color: #666">.</span>abc<span style="color: #666">.</span>Mapping) <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">len</span>(args) <span style="color: #666">&gt;=</span> <span style="color: #666">2</span>:
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">all</span>(
+            is_instance_of_generic(k, args[<span style="color: #666">0</span>]) <span style="color: #A2F; font-weight: bold">and</span> is_instance_of_generic(v, args[<span style="color: #666">1</span>])
+            <span style="color: #008000; font-weight: bold">for</span> k, v <span style="color: #A2F; font-weight: bold">in</span> value<span style="color: #666">.</span>items()
+        )
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>
 </code></pre></div></td></tr></table></div>
             </details>
