@@ -1,5 +1,6 @@
 import io
 import os
+import time
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,6 +14,7 @@ from plantimager.commons.cameradevice import CameraMode
 from scipy import ndimage
 from simplejpeg import encode_jpeg
 
+CAMERASERVER_LAG = int(os.getenv("PI3_CAMERASERVER_LAG", 0))  # in milliseconds
 
 def image_provider():
     """Generates an infinite sequence of images from a directory.
@@ -97,6 +99,7 @@ class DummyCamera(Camera, RPCServer):
             buffer = buf.getvalue()
         else:
             raise ValueError(f"Unknown encoding: {self._encoding}")
+        time.sleep(CAMERASERVER_LAG/1000)
         return memoryview(buffer), {"format": self._encoding, "rotation": self._rotation, "size": image.shape}
 
     @RPCProperty(notify=Camera.encodingChanged)
