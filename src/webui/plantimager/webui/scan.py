@@ -454,6 +454,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     State('plantdb-prefix', 'data'),
     State('plantdb-ssl', 'data'),
     State('access-token', 'data'),
+    State('refresh-token', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
     background=True,
@@ -472,8 +473,8 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
         Output('scan-progress', 'label'),
     ]
 )
-def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, access_token: str, cfg: str,
-             dataset_name: str):
+def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, access_token: str, refresh_token: str,
+             cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
 
     Parameters
@@ -490,6 +491,8 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
         Whether the PlantDB REST API server is using SSL.
     access_token : str
         The PlantDB REST API access token of the user.
+    refresh_token : str
+        The PlantDB REST API refresh token of the user.
     cfg : str
         The TOML configuration string for the scan.
     dataset_name : str
@@ -515,7 +518,7 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):
         return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
-    res: None | NoResult = controller.set_session_token(access_token)
+    res: None | NoResult = controller.set_session_token((access_token, refresh_token))
     if isinstance(res, NoResult):
         return "Failed to connect to set access token.", res.traceback
     res: None | NoResult = controller.set_dataset_name(dataset_name)
