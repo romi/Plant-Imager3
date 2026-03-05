@@ -32,7 +32,9 @@ from dash import callback
 from dash import dcc
 from dash import html
 from dash.exceptions import PreventUpdate
+from plantdb.client.plantdb_client import PlantDBClient
 from plantdb.client.rest_api import plantdb_url
+from plantdb.commons.auth.models import Permission
 
 from plantimager.commons.RPC import NoResult
 from plantimager.webui.controller_proxy import RPCController
@@ -518,7 +520,18 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):
         return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
-    res: None | NoResult = controller.set_session_token((access_token, refresh_token))
+
+    client = PlantDBClient(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
+    if client.validate_token(access_token):
+        client._access_token = access_token
+        client._refresh_token = refresh_token
+    else:
+        return "Failed to authenticate with plantdb.", "Failed to authenticate with plantdb."
+    api_token = client.create_api_token(
+        600,
+        {dataset_name: (Permission.WRITE, Permission.CREATE, Permission.READ)}
+    )
+    res: None | NoResult = controller.set_api_token(api_token)
     if isinstance(res, NoResult):
         return "Failed to connect to set access token.", res.traceback
     res: None | NoResult = controller.set_dataset_name(dataset_name)
