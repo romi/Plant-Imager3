@@ -1,3 +1,23 @@
+"""
+Remote Procedure Call (RPC) Framework.
+
+This module provides a lightweight RPC framework built on top of ZeroMQ.
+It supports method execution (both JSON-serializable and binary buffers),
+property proxying, and a publish-subscribe signaling mechanism.
+
+Classes
+-------
+NoResult
+    Represents an operation failure with error details.
+RPCSignal
+    Lightweight publish-subscribe signal implementation.
+RPCProperty
+    RPC-enabled property descriptor for proxying attribute access.
+RPCClient
+    Abstract client class for connecting to and interacting with an RPC server.
+RPCServer
+    Server class that exposes methods, properties, and signals over the network.
+"""
 import copy
 import inspect
 import json
@@ -23,9 +43,15 @@ from plantimager.commons.deviceregistry import register_device, unregister_devic
 from plantimager.commons.logging import create_logger
 from plantimager.commons.systemd import notify_watchdog
 
+__all__ = ["RPCClient", "RPCServer", "RPCProperty", "RPCSignal", "NoResult"]
+
 logger = create_logger("RPC")
 
 class RPCEvents(StrEnum):
+    """
+    Enumeration of valid RPC event types used for communication
+    between clients and servers.
+    """
     PROPERTY_GET = "PROPERTY_GET"
     PROPERTY_SET = "PROPERTY_SET"
     METHOD_CALL = "METHOD_CALL"
@@ -35,7 +61,7 @@ class RPCEvents(StrEnum):
     INIT_SIGNALS_HANDLING = "INIT_SIGNALS_HANDLING"
     EMIT_SIGNAL = "EMIT_SIGNAL"
 
-url_parser = re.compile(r"([a-zA-Z]*)://([a-zA-Z.0-9]*):?([0-9]*)")
+url_parser = re.compile(r"([a-zA-Z]*)://([a-zA-Z.0-9]*):?(\d*)")
 
 
 class NoResult:
@@ -359,8 +385,26 @@ class RPCProperty(property):
 
 class RPCSignalReceiver(Thread):
     """
-    A receiver thread for RPCClient to listen for and receive RPC Signals from the server and in turn
-    emit the same signals in the proxy.
+    Background thread that listens for and dispatches RPC signals from the server.
+
+    This thread binds a ZeroMQ `REP` socket to a random port and continuously
+    polls for incoming signal events. When a signal is received, it emits the
+    corresponding proxy signal on the client side.
+
+    Parameters
+    ----------
+    context : zmq.Context
+        The ZeroMQ context used to create the socket.
+    url : str
+        The base URL to bind the receiver socket (e.g., "tcp://127.0.0.1").
+    signals : dict of str to RPCSignal
+        A dictionary mapping signal names to their corresponding `RPCSignal`
+        instances on the client.
+
+    Attributes
+    ----------
+    port : int
+        The randomly selected port number this receiver is bound to.
     """
     def __init__(self, context: zmq.Context, url: str, signals: dict[str, RPCSignal]):
         super().__init__(name="RPCSignalReceiver")
@@ -372,6 +416,31 @@ class RPCSignalReceiver(Thread):
         self.port = self.socket.bind_to_random_port(url)
 
     def run(self):
+        """
+        Continuously processes incoming socket requests to emit signals.
+
+        This method runs an event loop that listens for incoming JSON requests via
+        a ZeroMQ socket. Requests are expected to contain an event key and
+        associated data such as signals and arguments. If a request matches the
+        expected event type (`RPCEvents.EMIT_SIGNAL`), a corresponding signal
+        is emitted. The loop runs until the `_stop_flag` is set to `True`.
+
+        Notes
+        -----
+        - If the `"blocking"` flag in the request is `True`, the signal emission is
+          performed before sending back a success response. Otherwise, the success
+          response is sent immediately, and the signal emission happens afterward.
+
+        Raises
+        ------
+        KeyError
+            If the incoming request JSON does not contain the required keys.
+        zmq.ZMQError
+            If there is an issue receiving or sending data via the ZeroMQ socket.
+        RuntimeError
+            If an error occurs while emitting a signal.
+
+        """
         try:
             while not self._stop_flag:
                 if self.socket.poll(100, zmq.POLLIN) == 0:
@@ -396,14 +465,34 @@ class RPCSignalReceiver(Thread):
         logger.debug(f"Stopping signal receiver {self}")
 
     def stop(self):
+        """
+        Signal the receiver thread to stop polling and shut down.
+        """
         self._stop_flag = True
 
 class RPCClient:
     """
-    Abstract class for RPC clients.
-    To use, create a class inheriting from the interface and this.
-    This new class must be decorated with `@RPCClient.register_interface`
+    Abstract base class for RPC clients.
 
+    This class sets up a ZeroMQ `REQ` socket to communicate with an `RPCServer`.
+    To use this, create a subclass that inherits from both a target interface
+    and this class, and decorate it with `@RPCClient.register_interface`.
+
+    Parameters
+    ----------
+    context : zmq.Context
+        The ZeroMQ context used for networking.
+    url : str
+        The URL of the target RPC server to connect to.
+
+    Attributes
+    ----------
+    own_address : str
+        The local IP address of the client.
+    peer_address : str
+        The IP address of the connected RPC server.
+    name : str
+        The designated name of the connected RPC server.
     """
 
     def __init__(self, context: zmq.Context, url: str):
@@ -473,6 +562,29 @@ class RPCClient:
 
     @classmethod
     def register_interface(cls, interface: type):
+        """
+        Class decorator to bind an interface to an RPCClient subclass.
+
+        This decorator inspects the provided `interface` and dynamically
+        proxies its methods and properties so that calls are forwarded
+        over the network to the RPC server.
+
+        Parameters
+        ----------
+        interface : type
+            The interface class defining the methods and properties to proxy.
+
+        Returns
+        -------
+        callable
+            A class decorator that applies the proxy logic.
+
+        Raises
+        ------
+        RuntimeError
+            If the decorated class does not inherit from both `interface`
+            and `RPCClient`.
+        """
         def _decorator(target_cls: type):
             if interface not in target_cls.__bases__ or cls not in target_cls.__bases__:
                 raise RuntimeError(f"{target_cls} must inherit from {interface} and {cls}.")
@@ -557,6 +669,28 @@ class RPCClient:
                 RPCClient._print_traceback_from_remote(traceback_)
 
     def execute(self, method_name: str, params: dict) -> tuple[bool, object]:
+        """
+        Execute a remote method on the RPC server.
+
+        Parameters
+        ----------
+        method_name : str
+            The name of the method to execute.
+        params : dict
+            A dictionary containing the `args` and `kwargs` for the method.
+
+        Returns
+        -------
+        tuple
+            A 2-tuple `(success, result)`. If `success` is True, `result`
+            contains the return value of the method. If False, `result`
+            is a tuple containing the `(error_message, traceback)`.
+
+        Raises
+        ------
+        TimeoutError
+            If the server does not respond within the configured timeout.
+        """
         package = {
             "event": RPCEvents.METHOD_CALL,
             "method": method_name,
@@ -590,6 +724,12 @@ class RPCClient:
         return False, (Warning(f"Unknown method {method_name}"), "")
 
     def stop_server(self):
+        """
+        Request the connected RPC server to shut down.
+
+        Sends a non-blocking `STOP_SERVER` event to the remote server.
+        If the server responds, it logs the reply.
+        """
         logger.info(f"Stopping server {self.url}")
         if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
             logger.info(f"Server {self.url} could not be joined (might already be dead)")
