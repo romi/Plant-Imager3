@@ -719,6 +719,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#plantimager.commons.controller_device.ControllerDevice.set_api_token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;set_api_token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.commons.controller_device.ControllerDevice.set_config" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -745,17 +756,6 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;set_db_url
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plantimager.commons.controller_device.ControllerDevice.set_session_token" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;set_session_token
       
     </span>
   </a>
@@ -2897,6 +2897,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#plantimager.commons.controller_device.ControllerDevice.set_api_token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;set_api_token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.commons.controller_device.ControllerDevice.set_config" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2923,17 +2934,6 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;set_db_url
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plantimager.commons.controller_device.ControllerDevice.set_session_token" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;set_session_token
       
     </span>
   </a>
@@ -3237,6 +3237,41 @@
 <div class="doc doc-object doc-function">
 
 
+<h4 id="plantimager.commons.controller_device.ControllerDevice.set_api_token" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">set_api_token</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
+  </span>
+
+<a href="#plantimager.commons.controller_device.ControllerDevice.set_api_token" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>set_api_token(token)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Set the session token to use for authenticated requests.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>plantimager/commons/controller_device.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">37</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">38</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@abstractmethod</span>
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_api_token</span>(<span style="color: #008000">self</span>, token: <span style="color: #008000">str</span>):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the session token to use for authenticated requests.&quot;&quot;&quot;</span>
+    <span style="color: #008000; font-weight: bold">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h4 id="plantimager.commons.controller_device.ControllerDevice.set_config" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">set_config</span>
 
@@ -3332,41 +3367,6 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">25</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_db_url</span>(<span style="color: #008000">self</span>, url: <span style="color: #008000">str</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the database URL for the controller.&quot;&quot;&quot;</span>
-    <span style="color: #008000; font-weight: bold">pass</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="plantimager.commons.controller_device.ControllerDevice.set_session_token" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">set_session_token</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
-  </span>
-
-<a href="#plantimager.commons.controller_device.ControllerDevice.set_session_token" class="headerlink" title="Permanent link">Link</a></h4>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>set_session_token(token)
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Set the session token to use for authenticated requests.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>plantimager/commons/controller_device.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">37</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">38</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@abstractmethod</span>
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_session_token</span>(<span style="color: #008000">self</span>, token: <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>]):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the session token to use for authenticated requests.&quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
