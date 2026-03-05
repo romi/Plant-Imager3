@@ -8,8 +8,13 @@ dagcomponentfuncs.DBC_Dual_Buttons = function (props) {
     }
 
     function onClickVisit() {
-        // Open URL in new tab
-        window.open(`https://mellitus.biologie.ens-lyon.fr/p3dx/viewer/${props.data.Name}`, '_blank');
+        // Resolve the base URL: use the env variable if present, otherwise default
+        const baseUrl = typeof P3DX_URL !== 'undefined' && P3DX_URL
+            ? P3DX_URL
+            : 'http://127.0.0.1:5050';
+
+        // Open the viewer for the current row in a new tab
+        window.open(`${baseUrl}/viewer/${props.data.Name}`, '_blank');
     }
 
     return React.createElement(
