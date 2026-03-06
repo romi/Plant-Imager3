@@ -80,15 +80,15 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Callback to update the ROMI project logo (used in the navigation bar) src once the app is running
 @callback(
-    Output("navbar-logo", "src"),
-    Input("url", "pathname")
+    Output('navbar-logo', 'src'),
+    Input('url', 'pathname')
 )
 def update_logo_url(_):
     return current_dir + "/.." + get_asset_url("logo.svg")
 
 # Then update the href through a callback when the app starts
 @callback(
-    Output("scan-link", "href"),
+    Output('scan-link', 'href'),
     Input('url', 'pathname')
 )
 def update_scan_link_href(_):
@@ -97,7 +97,7 @@ def update_scan_link_href(_):
 
 # Then update the href of the dataset table page through a callback when the app starts
 @callback(
-    Output("dataset-table-link", "href"),
+    Output('dataset-table-link', 'href'),
     Input('url', 'pathname')
 )
 def update_table_link_href(_):
@@ -143,7 +143,7 @@ navbar_layout = dbc.Navbar(
 
 # Callback to update NavbarBrand href
 @callback(
-    Output("navbar-brand", "href"),
+    Output('navbar-brand', 'href'),
     Input('plantdb-prefix', 'data')
 )
 def update_navbar_brand_href(prefix):

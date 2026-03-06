@@ -207,8 +207,8 @@ scan_layout = html.Div(
 
 # Callback to update the default configuration file once the app is running
 @callback(
-    Output("scan-cfg-toml", "value"),
-    Input("url", "pathname")
+    Output('scan-cfg-toml', 'value'),
+    Input('url', 'pathname')
 )
 def load_default_toml_cfg(_):
     # Construct the path to the sample TOML config file (`assets` directory)
@@ -240,8 +240,8 @@ def update_available_cameras(val):
 
 
 @callback(
-    Output("available-cameras", "children"),
-    Input("main-interval", "n_intervals"))
+    Output('available-cameras', 'children'),
+    Input('main-interval', 'n_intervals'))
 def update_interval(n_intervals):
     """Updates various components on a timer.
 

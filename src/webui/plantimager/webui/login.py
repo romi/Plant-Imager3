@@ -230,7 +230,7 @@ login_modal = dbc.Modal(children=[
 ], id='login-modal', is_open=True, backdrop='static')
 
 
-@callback(Output("login-modal", "is_open", allow_duplicate=True),
+@callback(Output('login-modal', 'is_open', allow_duplicate=True),
           Input('login-avatar-button', 'n_clicks'),
           State('login-modal', 'is_open'),
           State('logged-username', 'data'),
@@ -449,8 +449,8 @@ def restore_login(access_token, host, port, prefix, ssl):
 
 
 @callback(
-    Output("login-avatar-button", "children"),
-    Input("logged-fullname", "data")
+    Output('login-avatar-button', 'children'),
+    Input('logged-fullname', 'data')
 )
 def update_login_avatar_button(fullname: str | None) -> list:
     """Update the login avatar button display based on user login status.
@@ -480,9 +480,9 @@ def update_login_avatar_button(fullname: str | None) -> list:
 
 
 @callback(
-    Output("login-modal-title", "children"),
-    Input("logged-fullname", "data"),
-    Input("logged-username", "data"),
+    Output('login-modal-title', 'children'),
+    Input('logged-fullname', 'data'),
+    Input('logged-username', 'data'),
 )
 def update_login_modal_title(fullname: str | None, username: str | None) -> list:
     """Updates the title of the login modal window dynamically based on the logged-in
@@ -513,11 +513,11 @@ def update_login_modal_title(fullname: str | None, username: str | None) -> list
 
 
 @callback(
-    Output("username-input-group", "style", allow_duplicate=True),
-    Output("password-input-group", "style", allow_duplicate=True),
-    Output("login-attempt-message", "children", allow_duplicate=True),
-    Input("logged-fullname", "data"),
-    State("login-attempt-message", "children"),
+    Output('username-input-group', 'style', allow_duplicate=True),
+    Output('password-input-group', 'style', allow_duplicate=True),
+    Output('login-attempt-message', 'children', allow_duplicate=True),
+    Input('logged-fullname', 'data'),
+    State('login-attempt-message', 'children'),
     prevent_initial_call=True,
 )
 def update_login_modal_body(fullname: str | None, msg: dbc.Alert) -> tuple[dict, dict, str]:
@@ -553,8 +553,8 @@ def update_login_modal_body(fullname: str | None, msg: dbc.Alert) -> tuple[dict,
 
 
 @callback(
-    Output("login-modal", "is_open", allow_duplicate=True),
-    Input("logged-username", "data"),
+    Output('login-modal', 'is_open', allow_duplicate=True),
+    Input('logged-username', 'data'),
     prevent_initial_call=True,
 )
 def timeout_modal(username: str | None) -> bool:
@@ -587,9 +587,9 @@ def timeout_modal(username: str | None) -> bool:
 @callback(
     Output('logged-username', 'data', allow_duplicate=True),
     Output('logged-fullname', 'data', allow_duplicate=True),
-    Output('access-token', "data", allow_duplicate=True),
+    Output('access-token', 'data', allow_duplicate=True),
     Output('login-attempt-message', 'style', allow_duplicate=True),
-    Output("login-attempt-message", "children", allow_duplicate=True),
+    Output('login-attempt-message', 'children', allow_duplicate=True),
     Input('logout-button', 'n_clicks'),
     State('plantdb-host', 'data'),
     State('plantdb-port', 'data'),
@@ -657,8 +657,8 @@ def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, access_to
 
 
 @callback(
-    Output("logout-button", "disabled"),
-    Input("logged-username", "data"),
+    Output('logout-button', 'disabled'),
+    Input('logged-username', 'data'),
 )
 def disable_logout_button(username: str | None) -> bool:
     """Control the enabled/disabled state of the logout button.

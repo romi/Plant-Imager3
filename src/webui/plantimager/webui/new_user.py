@@ -113,9 +113,9 @@ new_user_modal = dbc.Modal([
 
 
 @callback(
-    Output("new-user-modal", "is_open"),
-    Input("new-user-button", "n_clicks"),
-    State("new-user-modal", "is_open"),
+    Output('new-user-modal', 'is_open'),
+    Input('new-user-button', 'n_clicks'),
+    State('new-user-modal', 'is_open'),
     prevent_initial_call=True
 )
 def toggle_register_modal(new_user_clicks: int | None, is_open: bool) -> bool:
@@ -198,14 +198,14 @@ def validate_new_username(new_username: str | None, is_modal_open: bool, host: s
 
 @callback(
     [
-        Output("new-password-input", "valid"),
-        Output("new-password-input", "invalid"),
-        Output("confirm-password-input", "valid"),
-        Output("confirm-password-input", "invalid")
+        Output('new-password-input', 'valid'),
+        Output('new-password-input', 'invalid'),
+        Output('confirm-password-input', 'valid'),
+        Output('confirm-password-input', 'invalid')
     ],
     [
-        Input("new-password-input", "value"),
-        Input("confirm-password-input", "value")
+        Input('new-password-input', 'value'),
+        Input('confirm-password-input', 'value')
     ]
 )
 def validate_password_match(password: str | None, confirm_password: str | None) -> tuple[bool, bool, bool, bool]:
@@ -251,17 +251,17 @@ def validate_password_match(password: str | None, confirm_password: str | None) 
 
 
 @callback(
-    Output("registration-message", "children"),
-    [Input("register-button", "n_clicks")],
-    [State("new-username-input", "value"),
-     State("new-fullname-input", "value"),
-     State("new-password-input", "value"),
-     State("confirm-password-input", "value"),
-     State("plantdb-host", "data"),
-     State("plantdb-port", "data"),
-     State("plantdb-prefix", "data"),
-     State("plantdb-ssl", "data"),
-     State("access-token", "data"),
+    Output('registration-message', 'children'),
+    [Input('register-button', 'n_clicks')],
+    [State('new-username-input', 'value'),
+     State('new-fullname-input', 'value'),
+     State('new-password-input', 'value'),
+     State('confirm-password-input', 'value'),
+     State('plantdb-host', 'data'),
+     State('plantdb-port', 'data'),
+     State('plantdb-prefix', 'data'),
+     State('plantdb-ssl', 'data'),
+     State('access-token', 'data'),
      ],
     prevent_initial_call=True
 )
