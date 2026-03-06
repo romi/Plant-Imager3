@@ -26,7 +26,7 @@ from plantimager.webui.config import cfg_tooltip
 from plantimager.webui.login import login_avatar_button
 from plantimager.webui.login import login_avatar_button_tooltip
 
-#: URL for the ROMI project logo used in the navigation ba
+#: URL for the ROMI project logo used in the navigation bar
 ROMI_LOGO: str = get_asset_url("logo.svg")
 
 #: Link component providing a tutorial link to the Plant Imager documentation page, with a tooltip for user guidance
