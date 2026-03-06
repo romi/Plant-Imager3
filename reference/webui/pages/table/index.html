@@ -3242,10 +3242,10 @@ a 'rowId' key with the dataset name. If None, the modal will be closed.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">300</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">301</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">302</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&quot;view-dataset&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
-    Output(<span style="color: #BA2121">&quot;carousel-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
-    Output(<span style="color: #BA2121">&quot;carousel-modal-title&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
-    Input(<span style="color: #BA2121">&quot;plantdb-dag&quot;</span>, <span style="color: #BA2121">&quot;cellRendererData&quot;</span>),
+    Output(<span style="color: #BA2121">&#39;view-dataset&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Output(<span style="color: #BA2121">&#39;carousel-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
+    Output(<span style="color: #BA2121">&#39;carousel-modal-title&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
+    Input(<span style="color: #BA2121">&#39;plantdb-dag&#39;</span>, <span style="color: #BA2121">&#39;cellRendererData&#39;</span>),
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">show_carousel_modal</span>(cell_data):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
@@ -3312,7 +3312,7 @@ a 'rowId' key with the dataset name. If None, the modal will be closed.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">94</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">95</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">96</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&quot;back-button&quot;</span>, <span style="color: #BA2121">&quot;href&quot;</span>),
+    Output(<span style="color: #BA2121">&#39;back-button&#39;</span>, <span style="color: #BA2121">&#39;href&#39;</span>),
     Input(<span style="color: #BA2121">&#39;url&#39;</span>, <span style="color: #BA2121">&#39;pathname&#39;</span>)
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_back_button_href</span>(_):

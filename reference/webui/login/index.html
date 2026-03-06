@@ -3537,8 +3537,8 @@ a user is currently logged in.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">680</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">681</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">682</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&quot;logout-button&quot;</span>, <span style="color: #BA2121">&quot;disabled&quot;</span>),
-    Input(<span style="color: #BA2121">&quot;logged-username&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
+    Output(<span style="color: #BA2121">&#39;logout-button&#39;</span>, <span style="color: #BA2121">&#39;disabled&#39;</span>),
+    Input(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">disable_logout_button</span>(username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Control the enabled/disabled state of the logout button.</span>
@@ -4483,9 +4483,9 @@ or a default login icon and text</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">656</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&#39;access-token&#39;</span>, <span style="color: #BA2121">&quot;data&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">&#39;access-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;style&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&quot;login-attempt-message&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">&#39;logout-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
     State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
@@ -4741,8 +4741,8 @@ when a user successfully logs in.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">582</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">583</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">584</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&quot;login-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Input(<span style="color: #BA2121">&quot;logged-username&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
+    Output(<span style="color: #BA2121">&#39;login-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Input(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">timeout_modal</span>(username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
@@ -4898,7 +4898,7 @@ when a user successfully logs in.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&quot;login-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&#39;login-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
           Input(<span style="color: #BA2121">&#39;login-avatar-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
           State(<span style="color: #BA2121">&#39;login-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
           State(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
@@ -5043,8 +5043,8 @@ The content varies based on login status.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">477</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">478</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">479</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&quot;login-avatar-button&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
-    Input(<span style="color: #BA2121">&quot;logged-fullname&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>)
+    Output(<span style="color: #BA2121">&#39;login-avatar-button&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
+    Input(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>)
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_login_avatar_button</span>(fullname: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Update the login avatar button display based on user login status.</span>
@@ -5217,11 +5217,11 @@ as well as any login attempt messages, based on whether a user is logged in.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">550</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">551</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">552</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&quot;username-input-group&quot;</span>, <span style="color: #BA2121">&quot;style&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&quot;password-input-group&quot;</span>, <span style="color: #BA2121">&quot;style&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&quot;login-attempt-message&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Input(<span style="color: #BA2121">&quot;logged-fullname&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
-    State(<span style="color: #BA2121">&quot;login-attempt-message&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
+    Output(<span style="color: #BA2121">&#39;username-input-group&#39;</span>, <span style="color: #BA2121">&#39;style&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">&#39;password-input-group&#39;</span>, <span style="color: #BA2121">&#39;style&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Input(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    State(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_login_modal_body</span>(fullname: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, msg: dbc<span style="color: #666">.</span>Alert) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">dict</span>, <span style="color: #008000">dict</span>, <span style="color: #008000">str</span>]:
@@ -5387,9 +5387,9 @@ if no user information is provided.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">510</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">511</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">512</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&quot;login-modal-title&quot;</span>, <span style="color: #BA2121">&quot;children&quot;</span>),
-    Input(<span style="color: #BA2121">&quot;logged-fullname&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
-    Input(<span style="color: #BA2121">&quot;logged-username&quot;</span>, <span style="color: #BA2121">&quot;data&quot;</span>),
+    Output(<span style="color: #BA2121">&#39;login-modal-title&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
+    Input(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Input(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_login_modal_title</span>(fullname: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Updates the title of the login modal window dynamically based on the logged-in</span>

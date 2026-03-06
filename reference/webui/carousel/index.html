@@ -3047,8 +3047,8 @@ None if the modal is closed or dataset_id is invalid</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&#39;carousel&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
           <span style="color: #3D7B7B; font-style: italic"># Output(&#39;carousel&#39;, &#39;figure&#39;),</span>
-          Input(<span style="color: #BA2121">&quot;carousel-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
-          Input(<span style="color: #BA2121">&quot;select-image-task&quot;</span>, <span style="color: #BA2121">&quot;value&quot;</span>),
+          Input(<span style="color: #BA2121">&#39;carousel-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
+          Input(<span style="color: #BA2121">&#39;select-image-task&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
           State(<span style="color: #BA2121">&#39;view-dataset&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
           State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
           State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
@@ -3294,7 +3294,7 @@ the tasks available for the selected dataset.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;select-image-task&#39;</span>, <span style="color: #BA2121">&#39;options&#39;</span>),
-    Input(<span style="color: #BA2121">&quot;carousel-modal&quot;</span>, <span style="color: #BA2121">&quot;is_open&quot;</span>),
+    Input(<span style="color: #BA2121">&#39;carousel-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
     State(<span style="color: #BA2121">&#39;view-dataset&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
     State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
