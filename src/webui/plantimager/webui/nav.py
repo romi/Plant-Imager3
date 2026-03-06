@@ -26,9 +26,6 @@ from plantimager.webui.config import cfg_tooltip
 from plantimager.webui.login import login_avatar_button
 from plantimager.webui.login import login_avatar_button_tooltip
 
-#: URL for the ROMI project logo used in the navigation bar
-ROMI_LOGO: str = get_asset_url("logo.svg")
-
 #: Link component providing a tutorial link to the Plant Imager documentation page, with a tooltip for user guidance
 tutorial_link: dbc.NavLink = dbc.NavLink(
     children=html.I(className="bi bi-journal-text fs-3"),
@@ -77,6 +74,13 @@ dataset_table_tooltip: dbc.Tooltip = dbc.Tooltip(
     placement="bottom",
 )
 
+# Callback to update the ROMI project logo (used in the navigation bar) src once the app is running
+@callback(
+    Output("navbar-logo", "src"),
+    Input("url", "pathname")
+)
+def update_logo_url(_):
+    return get_asset_url("logo.svg")
 
 # Then update the href through a callback when the app starts
 @callback(
@@ -111,7 +115,7 @@ navbar_layout = dbc.Navbar(
         # Logo and brand section
         html.A(
             dbc.Row(children=[
-                dbc.Col(html.Img(src=ROMI_LOGO, height="35px")),
+                dbc.Col(html.Img(id="navbar-logo", height="35px")),
                 dbc.Col(
                     dbc.NavbarBrand(
                         id="navbar-brand",
