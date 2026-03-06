@@ -14,7 +14,7 @@ Key Features
 - Configuration file upload functionality
 - Comprehensive error handling and user feedback
 """
-
+import os
 import tomllib
 import traceback
 from base64 import b64decode
@@ -42,6 +42,9 @@ from plantimager.webui.utils import config_upload
 
 #: Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
+
+#: Get the directory where the current file is located
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 cache = diskcache.Cache("./cache")
 background_callback_manager = DiskcacheManager(cache)
@@ -211,7 +214,7 @@ def load_default_toml_cfg(_):
     # Construct the path to the sample TOML config file (`assets` directory)
     default_toml_path = get_asset_url('config_scan.toml')
     # Load the default TOML configuration file into a string variable
-    with open(default_toml_path, 'r') as f:
+    with open(current_dir + "/.." + default_toml_path, 'r') as f:
         default_toml = f.read()
     return default_toml
 
