@@ -3152,15 +3152,15 @@ and executing plant scans in the Plant Imager system.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">564</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">565</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">565</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">566</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">567</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">568</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">569</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">570</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">571</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">572</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">572</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">573</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;scan-response&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">&#39;cancel-scan-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
@@ -3518,8 +3518,7 @@ Otherwise, it will hide the message.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">575</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">576</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">576</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">577</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">578</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">579</span>
@@ -3581,7 +3580,8 @@ Otherwise, it will hide the message.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">635</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">636</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">637</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">638</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">638</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">639</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;scan-response&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">&#39;scan-output&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">&#39;config-scan-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
@@ -4290,7 +4290,8 @@ existing datasets, <code>False</code> otherwise.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">558</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">559</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">560</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">561</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">561</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">562</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">&#39;scan-response&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
     Output(<span style="color: #BA2121">&#39;scan-output&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">&#39;start-scan-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
@@ -4365,15 +4366,16 @@ existing datasets, <code>False</code> otherwise.</p>
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">f&quot;Failed to connect to </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #BA2121">&#39;https&#39;</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">if</span><span style="color: #BBB"> </span>ssl<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">else</span><span style="color: #BBB"> </span><span style="color: #BA2121">&#39;http&#39;</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">://</span><span style="color: #A45A77; font-weight: bold">{</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}{</span>prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>, res<span style="color: #666">.</span>traceback
 
     client <span style="color: #666">=</span> PlantDBClient(plantdb_url(url, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl))
-    <span style="color: #008000; font-weight: bold">if</span> client<span style="color: #666">.</span>validate_token(access_token):
-        client<span style="color: #666">.</span>_access_token <span style="color: #666">=</span> access_token
-        client<span style="color: #666">.</span>_refresh_token <span style="color: #666">=</span> refresh_token
-    <span style="color: #008000; font-weight: bold">else</span>:
+    client<span style="color: #666">.</span>_access_token <span style="color: #666">=</span> access_token
+    client<span style="color: #666">.</span>_refresh_token <span style="color: #666">=</span> refresh_token
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> client<span style="color: #666">.</span>validate_token(access_token):
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;Failed to authenticate with plantdb.&quot;</span>, <span style="color: #BA2121">&quot;Failed to authenticate with plantdb.&quot;</span>
     api_token <span style="color: #666">=</span> client<span style="color: #666">.</span>create_api_token(
         <span style="color: #666">600</span>,
         {dataset_name: (Permission<span style="color: #666">.</span>WRITE, Permission<span style="color: #666">.</span>CREATE, Permission<span style="color: #666">.</span>READ)}
     )
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> api_token:
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;Failed to authenticate with plantdb.&quot;</span>, <span style="color: #BA2121">&quot;Failed to authenticate with plantdb and create the API token.&quot;</span>
     res: <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">|</span> NoResult <span style="color: #666">=</span> controller<span style="color: #666">.</span>set_api_token(api_token)
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(res, NoResult):
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;Failed to connect to set access token.&quot;</span>, res<span style="color: #666">.</span>traceback
