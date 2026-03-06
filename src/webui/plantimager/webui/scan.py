@@ -30,13 +30,14 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import dcc
+from dash import get_asset_url
 from dash import html
 from dash.exceptions import PreventUpdate
 from plantdb.client.plantdb_client import PlantDBClient
 from plantdb.client.rest_api import plantdb_url
 from plantdb.commons.auth.models import Permission
-
 from plantimager.commons.RPC import NoResult
+
 from plantimager.webui.controller_proxy import RPCController
 from plantimager.webui.utils import config_upload
 
@@ -49,7 +50,7 @@ background_callback_manager = DiskcacheManager(cache)
 #: Get the directory where the current script (scan.py) is located
 current_dir = os.path.dirname(os.path.abspath(__file__))
 #: Construct the path to the sample TOML config file (`assets` directory)
-default_toml_path = os.path.join(current_dir, 'assets', 'config_scan.toml')
+default_toml_path = get_asset_url('config_scan.toml')
 #: Load the default TOML configuration file into a string variable
 with open(default_toml_path, 'r') as f:
     default_toml = f.read()

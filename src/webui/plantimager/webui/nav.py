@@ -17,6 +17,7 @@ import dash_bootstrap_components as dbc
 from dash import Input
 from dash import Output
 from dash import callback
+from dash import get_asset_url
 from dash import get_relative_path
 from dash import html
 
@@ -26,7 +27,7 @@ from plantimager.webui.login import login_avatar_button
 from plantimager.webui.login import login_avatar_button_tooltip
 
 #: URL for the ROMI project logo used in the navigation ba
-ROMI_LOGO: str = "https://romi-project.eu/assets/logo.svg"
+ROMI_LOGO: str = get_asset_url("logo.svg")
 
 #: Link component providing a tutorial link to the Plant Imager documentation page, with a tooltip for user guidance
 tutorial_link: dbc.NavLink = dbc.NavLink(

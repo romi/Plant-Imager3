@@ -51,6 +51,8 @@ from plantimager.webui.login import login_modal
 from plantimager.webui.nav import navbar_layout
 from plantimager.webui.new_user import new_user_modal
 
+WEBUI_PORT = "8080"
+
 
 def parsing() -> argparse.ArgumentParser:
     """Create and configure the command-line argument parser for the Plant Imager WebUI.
@@ -74,10 +76,12 @@ def parsing() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="PlantImager WebUI.")
 
     app_args = parser.add_argument_group("Dash app options")
+    app_args.add_argument('-p', '--port', type=int, default=WEBUI_PORT,
+                          help="Port of the WebUI app.")
     app_args.add_argument('--proxy', action='store_true',
-                          help="Defines if the application is running behind a reverse proxy.")
+                          help="Defines if the WebUI app is running behind a reverse proxy.")
     app_args.add_argument('--url-prefix', type=str, default='',
-                          help="URL prefix for the application (e.g. should match NGINX location if behind proxy).")
+                          help="URL prefix for the WebUI app (e.g. should match NGINX location if behind proxy).")
 
     plantdb_args = parser.add_argument_group("PlantDB REST API options")
     plantdb_args.add_argument('--plantdb-host', type=str, default=PLANTDB_HOST,
@@ -230,7 +234,7 @@ def main() -> None:
     # - Start the Dash app:
     app = setup_web_app(args.plantdb_host, args.plantdb_port, args.plantdb_prefix, args.plantdb_ssl,
                         proxy=args.proxy, url_prefix=args.url_prefix)
-    app.run(host="0.0.0.0", debug=args.debug, port=8080)
+    app.run(host="0.0.0.0", debug=args.debug, port=args.port)
 
 
 if __name__ == "__main__":
