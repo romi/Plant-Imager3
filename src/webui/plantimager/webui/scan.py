@@ -15,7 +15,6 @@ Key Features
 - Comprehensive error handling and user feedback
 """
 
-import os
 import tomllib
 import traceback
 from base64 import b64decode
@@ -47,14 +46,6 @@ FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
 cache = diskcache.Cache("./cache")
 background_callback_manager = DiskcacheManager(cache)
 
-#: Get the directory where the current script (scan.py) is located
-current_dir = os.path.dirname(os.path.abspath(__file__))
-#: Construct the path to the sample TOML config file (`assets` directory)
-default_toml_path = get_asset_url('config_scan.toml')
-#: Load the default TOML configuration file into a string variable
-with open(default_toml_path, 'r') as f:
-    default_toml = f.read()
-
 # Card for scan configuration settings using TOML format
 configuration_card = [
     dbc.Card(
@@ -63,7 +54,6 @@ configuration_card = [
             dbc.CardHeader(children=[html.I(className="bi bi-code-square me-2"), "Configuration"]),
             dbc.CardBody([
                 dbc.Textarea(id="scan-cfg-toml", class_name="mb-3", size='md',
-                             value=default_toml,
                              title="The scan configuration in TOML format.",
                              placeholder="Scan configuration (TOML).",
                              style={'height': "65vh"}, persistence=True),
@@ -210,6 +200,21 @@ scan_layout = html.Div(
         ])
     ], id="scan-page-layout"
 )
+
+
+# Callback to update the default configuration file once the app is running
+@callback(
+    Output("scan-cfg-toml", "value"),
+    Input("url", "pathname")
+)
+def load_default_toml_cfg(_):
+    # Construct the path to the sample TOML config file (`assets` directory)
+    default_toml_path = get_asset_url('config_scan.toml')
+    # Load the default TOML configuration file into a string variable
+    with open(default_toml_path, 'r') as f:
+        default_toml = f.read()
+    return default_toml
+
 
 progress = 0
 max_progress = 100
