@@ -528,15 +528,16 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
         return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
 
     client = PlantDBClient(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
-    if client.validate_token(access_token):
-        client._access_token = access_token
-        client._refresh_token = refresh_token
-    else:
+    client._access_token = access_token
+    client._refresh_token = refresh_token
+    if not client.validate_token(access_token):
         return "Failed to authenticate with plantdb.", "Failed to authenticate with plantdb."
     api_token = client.create_api_token(
         600,
         {dataset_name: (Permission.WRITE, Permission.CREATE, Permission.READ)}
     )
+    if not api_token:
+        return "Failed to authenticate with plantdb.", "Failed to authenticate with plantdb and create the API token."
     res: None | NoResult = controller.set_api_token(api_token)
     if isinstance(res, NoResult):
         return "Failed to connect to set access token.", res.traceback
