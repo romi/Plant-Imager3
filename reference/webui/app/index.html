@@ -2943,11 +2943,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/app.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span>
@@ -2977,7 +2973,11 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">230</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">231</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">232</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">233</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">233</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">234</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">235</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">236</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">237</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Run the Plant Imager Web Interface application.</span>
 
 <span style="color: #BA2121; font-style: italic">    This function serves as the entry point for the Plant Imager Web UI. It:</span>
@@ -3011,7 +3011,7 @@
     <span style="color: #3D7B7B; font-style: italic"># - Start the Dash app:</span>
     app <span style="color: #666">=</span> setup_web_app(args<span style="color: #666">.</span>plantdb_host, args<span style="color: #666">.</span>plantdb_port, args<span style="color: #666">.</span>plantdb_prefix, args<span style="color: #666">.</span>plantdb_ssl,
                         proxy<span style="color: #666">=</span>args<span style="color: #666">.</span>proxy, url_prefix<span style="color: #666">=</span>args<span style="color: #666">.</span>url_prefix)
-    app<span style="color: #666">.</span>run(host<span style="color: #666">=</span><span style="color: #BA2121">&quot;0.0.0.0&quot;</span>, debug<span style="color: #666">=</span>args<span style="color: #666">.</span>debug, port<span style="color: #666">=8080</span>)
+    app<span style="color: #666">.</span>run(host<span style="color: #666">=</span><span style="color: #BA2121">&quot;0.0.0.0&quot;</span>, debug<span style="color: #666">=</span>args<span style="color: #666">.</span>debug, port<span style="color: #666">=</span>args<span style="color: #666">.</span>port)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3070,9 +3070,7 @@ including host address and port options.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/app.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">55</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
@@ -3110,7 +3108,11 @@ including host address and port options.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">92</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">93</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">94</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">95</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parsing</span>() <span style="color: #666">-&gt;</span> argparse<span style="color: #666">.</span>ArgumentParser:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">95</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">96</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">97</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">98</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">99</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parsing</span>() <span style="color: #666">-&gt;</span> argparse<span style="color: #666">.</span>ArgumentParser:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create and configure the command-line argument parser for the Plant Imager WebUI.</span>
 
 <span style="color: #BA2121; font-style: italic">    Sets up command-line arguments for configuring the connection to the PlantDB REST API,</span>
@@ -3132,10 +3134,12 @@ including host address and port options.</p>
     parser <span style="color: #666">=</span> argparse<span style="color: #666">.</span>ArgumentParser(description<span style="color: #666">=</span><span style="color: #BA2121">&quot;PlantImager WebUI.&quot;</span>)
 
     app_args <span style="color: #666">=</span> parser<span style="color: #666">.</span>add_argument_group(<span style="color: #BA2121">&quot;Dash app options&quot;</span>)
+    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;-p&#39;</span>, <span style="color: #BA2121">&#39;--port&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">int</span>, default<span style="color: #666">=</span>WEBUI_PORT,
+                          help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Port of the WebUI app.&quot;</span>)
     app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--proxy&#39;</span>, action<span style="color: #666">=</span><span style="color: #BA2121">&#39;store_true&#39;</span>,
-                          help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Defines if the application is running behind a reverse proxy.&quot;</span>)
+                          help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Defines if the WebUI app is running behind a reverse proxy.&quot;</span>)
     app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--url-prefix&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span><span style="color: #BA2121">&#39;&#39;</span>,
-                          help<span style="color: #666">=</span><span style="color: #BA2121">&quot;URL prefix for the application (e.g. should match NGINX location if behind proxy).&quot;</span>)
+                          help<span style="color: #666">=</span><span style="color: #BA2121">&quot;URL prefix for the WebUI app (e.g. should match NGINX location if behind proxy).&quot;</span>)
 
     plantdb_args <span style="color: #666">=</span> parser<span style="color: #666">.</span>add_argument_group(<span style="color: #BA2121">&quot;PlantDB REST API options&quot;</span>)
     plantdb_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--plantdb-host&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span>PLANTDB_HOST,
@@ -3324,11 +3328,7 @@ user authentication, and dataset management.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/app.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 98</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 99</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">100</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">101</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">103</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">104</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">105</span>
@@ -3422,7 +3422,11 @@ user authentication, and dataset management.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(plantdb_host: <span style="color: #008000">str</span>, plantdb_port: <span style="color: #008000">int</span>, plantdb_prefix: <span style="color: #008000">str</span>, plantdb_ssl: <span style="color: #008000">str</span>,
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(plantdb_host: <span style="color: #008000">str</span>, plantdb_port: <span style="color: #008000">int</span>, plantdb_prefix: <span style="color: #008000">str</span>, plantdb_ssl: <span style="color: #008000">str</span>,
                   proxy: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>, url_prefix: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&#39;/webui&#39;</span>) <span style="color: #666">-&gt;</span> Dash:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Initialize and configure the Plant Imager Dash web application.</span>
 
