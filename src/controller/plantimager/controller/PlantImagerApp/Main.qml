@@ -22,7 +22,7 @@ ApplicationWindow {
 
     P.LeftPane {
         id: left_pane
-        anchors.top: header.bottom
+        anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.right: parent.horizontalCenter
@@ -30,7 +30,7 @@ ApplicationWindow {
 
     P.RightPane {
         id: right_pane
-        anchors.top: header.bottom
+        anchors.top: parent.top
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.left: parent.horizontalCenter

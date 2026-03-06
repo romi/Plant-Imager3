@@ -35,7 +35,7 @@ class ControllerDevice(ABC):
         pass
 
     @abstractmethod
-    def set_session_token(self, token: tuple[str, str]):
+    def set_api_token(self, token: str):
         """Set the session token to use for authenticated requests."""
         pass
 

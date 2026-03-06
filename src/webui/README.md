@@ -75,6 +75,7 @@ Here is the list of environment variables you can define:
 - `ALLOW_PRIVATE_IP`: if `True`, allow the use of private IPs for PlantDB REST API URL
 - `CERT_PATH`: specify the path to the self-signed certificates used by the PlantDB server.
 - `VALIDATE_HOST`: if `True`, check the PlantDB REST API URL against a blacklist
+- `P3DX_URL`: to be able to open plants from the table in the P3DX, default to http://127.0.0.1:5050
 
 The app makes use of `dotenv.load_dotenv` so you can define them in a `.env` file located in the same directory as the `app.py` file.
 It should be under `src/webui/plantimager/webui`.
