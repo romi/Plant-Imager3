@@ -267,7 +267,7 @@ def update_interval(n_intervals):
         return "No camera connected"
 
 
-@callback(Output('scan-cfg-toml', 'value'),
+@callback(Output('scan-cfg-toml', 'value', allow_duplicate=True),
           Input('cfg-upload', 'contents'),
           prevent_initial_call=True)
 def update_toml_cfg(contents: str) -> str:
