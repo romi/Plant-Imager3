@@ -66,4 +66,6 @@ plant-imager-webui = "plantimager.webui.app:main"
 "plantimager.webui" = [
     "assets/*.toml",
     "assets/*.js",
+    "assets/*.svg",
+    "assets/*.png",
 ]
