@@ -24,7 +24,7 @@ dependencies = [
 ]
 description = "A Dash-based web interface, served by the Raspberry PI 4/5 main controller, to setup and run acquisitions with the ROMI Plant Imager."
 readme = "README.md"
-requires-python = ">=3.11, <3.13"  # 3.13 upper bound for open3d dependency
+requires-python = ">=3.11, <3.13"  # 3.13 upper bound for open3d dependency from plantdb.commons[io]
 license = { 'text' = "LGPL-3.0-or-later" }   # to replace by "LGPL-3.0-or-later" only in next release, pending deprecation
 authors = [
     { name = "Nabil Ait Taleb", email = "mohamednabil.aittaleb@sony.com" },
