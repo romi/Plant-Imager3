@@ -2839,7 +2839,7 @@
 <tr>
 <td><strong>PlantDB</strong></td>
 <td>Store plant image metadata, query experimental data.</td>
-<td><code>http://plantimager.local:5000/plantdb/scan/dataset_123</code></td>
+<td><code>http://plantimager.local/plantdb/scan/dataset_123</code></td>
 </tr>
 <tr>
 <td><strong>P3DX</strong></td>
@@ -2854,7 +2854,7 @@
 <tr>
 <td><strong>WebUI</strong></td>
 <td>Manage experiments, view real‑time imaging pipelines.</td>
-<td><code>http://plantimager.local:8080/webui</code></td>
+<td><code>http://plantimager.local/webui</code></td>
 </tr>
 </tbody>
 </table>
@@ -2864,13 +2864,11 @@
 <ol>
 <li>Pick a "fake" domain (<em>e.g.</em> <code>plantimager.local</code>).</li>
 <li>Add an entry to <code>/etc/hosts</code> that points that domain to <code>127.0.0.1</code>.</li>
-<li>Tell Docker‑Compose to use the same host name by setting <code>SERVER_HOST</code> in the
-   <code>.env</code> file (or via the environment section).</li>
+<li>Tell Docker‑Compose to use the same host name by setting <code>SERVER_HOST</code> in the <code>.env</code> file (or via the environment section).</li>
 <li>Make sure the <code>plantimager_nginx</code> image is built with that host name (<code>SERVER_HOST</code> is passed as a Docker build arg).</li>
 </ol>
 <h3 id="set-up-a-local-dns-server">Set up a local DNS server<a class="headerlink" href="#set-up-a-local-dns-server" title="Permanent link">Link</a></h3>
-<p>If you want to avoid editing <code>/etc/hosts</code> and want a more scalable solution (
-<em>e.g.</em> for multiple machines), you need to set up a DNS server.</p>
+<p>If you want to avoid editing <code>/etc/hosts</code> and want a more scalable solution (<em>e.g.</em> for multiple machines), you need to set up a DNS server.</p>
 <ol>
 <li>
 <p>Install and configure <code>dnsmasq</code>:
@@ -2894,33 +2892,33 @@ address=/dev.mellitus.local/127.0.0.1
 <p>Now any machine on the same network that uses the local DNS server will resolve dev.mellitus.local to 127.0.0.1.</p>
 <h2 id="production-deployment">Production Deployment<a class="headerlink" href="#production-deployment" title="Permanent link">Link</a></h2>
 <ol>
-<li><strong>Switch to the production network</strong><br />
-   In <code>docker-compose.yml</code> set <code>plantimager-net</code> to <code>external: true</code> and create the network beforehand:</li>
+<li>
+<p><strong>Switch to the production network</strong><br />
+   In <code>docker-compose.yml</code> set <code>plantimager-net</code> to <code>external: true</code> and create the network beforehand:</p>
+<p><code>shell script
+docker network create plantimager-net</code></p>
+</li>
+<li>
+<p><strong>Use a real SSL certificate</strong> – Replace the <code>ssl_cert</code> volume with a persistent cert volume mounted to <code>/etc/nginx/ssl/</code>.</p>
+</li>
+<li>
+<p><strong>Persist data</strong> – Mount a real database volume for <code>plantdb</code> (<code>romi_db</code>) and for P3DV (<code>p3dv_cfg</code>, <code>webterm_users</code>).</p>
+</li>
+<li>
+<p><strong>Disable development ports</strong> – Remove or comment out the <code>ports:</code> entries for <code>plantdb</code>, <code>webui</code>, etc.</p>
+</li>
+<li>
+<p><strong>Deploy</strong> –</p>
+<p><code>shell script
+docker compose -f docker-compose.yml up -d</code></p>
+</li>
 </ol>
-<p>```shell script
-docker network create plantimager-net
-<div class="language-text highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>2. **Use a real SSL certificate** – Replace the `ssl_cert` volume with a persistent cert volume mounted to
-   `/etc/nginx/ssl/`.
-
-3. **Persist data** – Mount a real database volume for `plantdb` (`romi_db`) and for P3DV (`p3dv_cfg`,
-   `webterm_users`).
-
-4. **Disable development ports** – Remove or comment out the `ports:` entries for `plantdb`, `webui`, etc.
-
-5. **Deploy** –
-
-```shell script
-docker compose -f docker-compose.yml up -d
-</code></pre></div></p>
-<p>The stack will now be reachable from the internet over HTTPS, with all services properly isolated on the
-<code>plantimager-net</code>.</p>
+<p>The stack will now be reachable from the internet over HTTPS, with all services properly isolated on the <code>plantimager-net</code>.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">Link</a></h2>
 <ul>
 <li><strong>NGINX</strong> is the traffic controller that forwards requests based on URL prefixes.</li>
-<li><strong>PlantDB</strong>, <strong>P3DX</strong>, <strong>P3DV</strong>, and **WebUI
-  ** each run inside their own containers and expose their own WSGI/HTTP interfaces.</li>
-<li><strong>Docker volumes</strong> keep data and certificates persistent, while the internal network (
-  <code>plantimager-net</code>) allows name‑based service discovery.</li>
+<li><strong>PlantDB</strong>, <strong>P3DX</strong>, <strong>P3DV</strong>, and <strong>WebUI</strong> each run inside their own containers and expose their own WSGI/HTTP interfaces.</li>
+<li><strong>Docker volumes</strong> keep data and certificates persistent, while the internal network (<code>plantimager-net</code>) allows name‑based service discovery.</li>
 <li>The <code>.env</code> file holds all host/port/prefix settings that keep the configuration consistent across all services.</li>
 </ul>
 
