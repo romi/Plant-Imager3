@@ -35,8 +35,8 @@ from dash.exceptions import PreventUpdate
 from plantdb.client.plantdb_client import PlantDBClient
 from plantdb.client.rest_api import plantdb_url
 from plantdb.commons.auth.models import Permission
-from plantimager.commons.RPC import NoResult
 
+from plantimager.commons.RPC import NoResult
 from plantimager.webui.controller_proxy import RPCController
 from plantimager.webui.utils import config_upload
 
@@ -170,7 +170,6 @@ scan_card = [
                 # --- Scan ProgressBar Section
                 dbc.Row([
                     dbc.Col([
-                        dcc.Interval(id='scan-progress-interval', disabled=True, interval=1000),
                         dbc.Progress(
                             id='scan-progress', style={"margin-top": "15px"}, className="mb-3"
                         ),
@@ -219,19 +218,7 @@ def load_default_toml_cfg(_):
     return default_toml
 
 
-progress = 0
-max_progress = 100
 available_cameras = []
-
-
-def update_progress(val):
-    global progress
-    progress = val
-
-
-def update_max_progress(val):
-    global max_progress
-    max_progress = val
 
 
 def update_available_cameras(val):
@@ -641,12 +628,3 @@ def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, datase
 
     return "Scan configured", "Scan configured, ready to start"
 
-
-@callback(
-    Output('scan-progress', 'value'),
-    Output('scan-progress', 'max'),
-    Output('scan-progress', 'label'),
-    Input('scan-progress-interval', 'n_intervals'),
-)
-def progress_bar_update(n_int):
-    return progress, max_progress, f"{progress}/{max_progress}"
