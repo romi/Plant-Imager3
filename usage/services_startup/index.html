@@ -2499,6 +2499,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#getting-the-stack-running-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting the Stack Running (Production)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2806,6 +2817,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#getting-the-stack-running-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting the Stack Running (Production)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2884,19 +2906,19 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <div class="language-yaml highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">services</span>:
 
 <span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">ssl_cert</span>:
-<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># Copy the certificates to the `nginx_cert` volume</span>
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># One-shot service to copy the SSL certificates from the host to the `nginx_cert` volume</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantimager_nginx:latest
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>no
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
-<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${SSL_CERT_LOC}:/tmp<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># location of the certificates to copy</span>
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${SSL_CERT_LOC}:/tmp<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># location of the certificates on the host</span>
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>nginx_cert:/etc/nginx/ssl/<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># volume (shared with nginx service) hosting the copied certificates</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>/bin/bash -c &#39;cp /tmp/*.pem /etc/nginx/ssl/&#39;
 
 <span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">nginx</span>:
-<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># NGINX service forwarding requests by reverse proxy</span>
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># NGINX service, forwards requests by reverse proxy</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>Plant-Imager3/docker/nginx/<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Build context for the Nginx service</span>
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>Dockerfile<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Specify the Dockerfile for building the image</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>Plant-Imager3/docker/nginx/
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>Dockerfile
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">args</span>:
 <span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">SERVER_HOST</span>:<span style="color: #BBB"> </span>${SERVER_HOST}
 <span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">CONTROLLER_HOST</span>:<span style="color: #BBB"> </span>${CONTROLLER_HOST}
@@ -2931,14 +2953,14 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>webui
 
 <span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">plantdb</span>:
-<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># PlantDB REST API service, in production mode, served by uWSGI</span>
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># PlantDB service, Flask RESTful App served by uWSGI</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>plantdb/
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/Dockerfile
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantdb:0.14.6
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_plantdb
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">expose</span>:
-<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${PLANTDB_PORT}<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Expose port internally to the network</span>
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${PLANTDB_PORT}<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Expose port internally to the docker network</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_API_PREFIX</span>:<span style="color: #BBB"> </span>${PLANTDB_PREFIX}
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_API_SSL</span>:<span style="color: #BBB"> </span>true
@@ -2958,13 +2980,13 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">healthcheck</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;CMD&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;curl&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;-f&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;http://localhost:${PLANTDB_PORT}${PLANTDB_PREFIX}/health&quot;</span><span style="color: #BBB"> </span>]
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>120s
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>180s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">timeout</span>:<span style="color: #BBB"> </span>10s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">retries</span>:<span style="color: #BBB"> </span>3
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">start_period</span>:<span style="color: #BBB"> </span>40s
 
 <span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">p3dx</span>:
-<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># P3DX service, in production mode, served by NGINX</span>
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># P3DX service, Node.js App served by NGINX</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>plant-3d-explorer/
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/production/Dockerfile
@@ -2974,7 +2996,7 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantimager_p3dx:0.1.2
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_p3dx
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">expose</span>:
-<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${P3DX_PORT}<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Expose port internally to the network</span>
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${P3DX_PORT}<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Expose port internally to the docker network</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">REACT_APP_API_URL</span>:<span style="color: #BBB"> </span>http://${SERVER_HOST}${PLANTDB_PREFIX}
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">REACT_APP_BASENAME</span>:<span style="color: #BBB"> </span>${P3DX_PREFIX}
@@ -2987,13 +3009,13 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">healthcheck</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;CMD&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;curl&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;-f&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;http://localhost:${P3DX_PORT}${P3DX_PREFIX}&quot;</span><span style="color: #BBB"> </span>]
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>120s
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>180s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">timeout</span>:<span style="color: #BBB"> </span>10s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">retries</span>:<span style="color: #BBB"> </span>3
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">start_period</span>:<span style="color: #BBB"> </span>40s
 
 <span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">p3dv</span>:
-<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># P3DV service, in production mode, served by Gunicorn</span>
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># P3DV service, WebTerm UI served by Gunicorn</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>plant-3d-vision/
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/Dockerfile
@@ -3004,7 +3026,7 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plant-3d-vision:colmap_${COLMAP_VERSION:-&#39;3.8&#39;}
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_p3dv
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">expose</span>:
-<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${P3DV_PORT}<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Expose port internally to the network</span>
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${P3DV_PORT}<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Expose port internally to the docker network</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_API</span>:<span style="color: #BBB"> </span>${PLANTDB_HOST}/${PLANTDB_PREFIX}
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">WEBTERM_PROXY</span>:<span style="color: #BBB"> </span>true
@@ -3028,12 +3050,20 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>webterm_users:/myapp/users
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">healthcheck</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;CMD&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;curl&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;-f&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;http://localhost:${P3DV_PORT}${P3DV_PREFIX}&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>180s
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">timeout</span>:<span style="color: #BBB"> </span>10s
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">retries</span>:<span style="color: #BBB"> </span>3
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">start_period</span>:<span style="color: #BBB"> </span>40s
 
-<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># WebUI is served from the RasPi controller, use this for development purposes</span>
 <span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">webui</span>:
+<span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># WebUI service, Dash App served by uWSGI</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">build</span>:
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>Plant-Imager3/<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Build context for the WebUI service</span>
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/webui/Dockerfile<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Specify the Dockerfile for building the image</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>Plant-Imager3/
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/webui/Dockerfile
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">args</span>:
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">PLANTDB_BRANCH</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&#39;hotfix/jwt_exp_date&#39;</span><span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># pull a specific branch of plantdb</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantimager_webui:latest
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_webui
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
@@ -3052,12 +3082,20 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">               </span><span style="color: #BA2121">--master</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--processes=4</span><span style="color: #19177C"> </span><span style="color: #BA2121">--threads=2</span><span style="color: #19177C"> </span><span style="color: #BA2121">--buffer-size=32768&quot;</span><span style="color: #BBB"> </span>]
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>unless-stopped
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">extra_hosts</span>:
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;dev.romi.local:host-gateway&quot;</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>nginx_cert:/etc/nginx/ssl/
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">depends_on</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>ssl_cert
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">healthcheck</span>:
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;CMD&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;curl&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;-f&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;http://localhost:${WEBUI_PORT}${WEBUI_PREFIX}&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>180s
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">timeout</span>:<span style="color: #BBB"> </span>10s
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">retries</span>:<span style="color: #BBB"> </span>3
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">start_period</span>:<span style="color: #BBB"> </span>40s
 
 <span style="color: #008000; font-weight: bold">networks</span>:
 <span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">plantimager-net</span>:
@@ -3068,7 +3106,7 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">external</span>:<span style="color: #BBB"> </span>false
 <span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">uwsgi_sockets</span>:
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">external</span>:<span style="color: #BBB"> </span>false
-<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">romi_db_test</span>:<span style="color: #BBB"> </span><span style="color: #3D7B7B; font-style: italic"># This volume hosts PlantDB FSDB files</span>
+<span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">romi_db</span>:<span style="color: #BBB"> </span><span style="color: #3D7B7B; font-style: italic"># This volume hosts PlantDB FSDB files</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">external</span>:<span style="color: #BBB"> </span>false<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># set to `true` use an existing volume</span>
 <span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">p3dv_cfg</span>:<span style="color: #BBB"> </span><span style="color: #3D7B7B; font-style: italic"># This volume hosts P3DV WebTerm configuration files</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">external</span>:<span style="color: #BBB"> </span>false<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># set to `true` use an existing volume</span>
@@ -3086,8 +3124,9 @@ docker<span style="color: #BBB"> </span>compose<span style="color: #BBB"> </span
 <li>Docker will build each image (or pull if already available).</li>
 <li>The <code>nginx</code> container will wait for the other services to be healthy before starting to accept traffic.</li>
 </ul>
-<p>Open your browser at <code>http://plantimager.local</code> (or
-<code>https://plantimager.local</code> if you add proper certificates). You should see the Plant‑Imager WebUI. The other services are accessible through the following URLs:</p>
+<p>Open your browser at <code>http://plantimager.local</code> (or <code>https://plantimager.local</code> if you add proper certificates).
+You should see the Plant‑Imager WebUI.</p>
+<p>The other services are accessible through the following URLs:</p>
 <table>
 <thead>
 <tr>
@@ -3097,12 +3136,12 @@ docker<span style="color: #BBB"> </span>compose<span style="color: #BBB"> </span
 </thead>
 <tbody>
 <tr>
-<td><code>/webui</code></td>
-<td>WebUI (frontend)</td>
+<td><code>/plantdb</code></td>
+<td>REST API (backend)</td>
 </tr>
 <tr>
-<td><code>/plantdb</code></td>
-<td>REST API</td>
+<td><code>/webui</code></td>
+<td>WebUI</td>
 </tr>
 <tr>
 <td><code>/p3dx</code></td>
@@ -3110,10 +3149,30 @@ docker<span style="color: #BBB"> </span>compose<span style="color: #BBB"> </span
 </tr>
 <tr>
 <td><code>/p3dv</code></td>
-<td>3D Vision WebTerm</td>
+<td>WebTerm</td>
 </tr>
 </tbody>
 </table>
+<h2 id="getting-the-stack-running-production">Getting the Stack Running (Production)<a class="headerlink" href="#getting-the-stack-running-production" title="Permanent link">Link</a></h2>
+<ol>
+<li>
+<p>Choose to run the WebUI either from the <em>PlantImager Controller</em> (RasPi) or to serve it as part of the stack (like in the <code>docker-compose.yaml</code>) above.
+  If you choose to run it outside the stack, just remove the <code>webui</code> service from the Docker compose file and be sure to use the right IP or URL for the <code>CONTROLLER_HOST</code> environment vaiable in the <code>.env</code> file. </p>
+</li>
+<li>
+<p>Set the <code>SERVER_HOST</code> environment variable to the correct URL.</p>
+</li>
+<li>
+<p>Verify the <code>ROMI_DB</code> is named after the persistent volume you want to use as a database, <em>e.g.</em> <code>ROMI_DB=romi_db</code> and set <code>external: true</code> if the volume already exists.</p>
+</li>
+</ol>
+<p>Finally, you may start the stack with.
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #3D7B7B; font-style: italic"># 1. Ensure Docker is running</span>
+docker<span style="color: #BBB"> </span>compose<span style="color: #BBB"> </span>version
+
+<span style="color: #3D7B7B; font-style: italic"># 2. Build and start all services</span>
+docker<span style="color: #BBB"> </span>compose<span style="color: #BBB"> </span>up<span style="color: #BBB"> </span>--build
+</code></pre></div></p>
 
 
 
