@@ -17,7 +17,6 @@ Key Features
 
 import json
 from typing import Tuple
-from urllib.parse import urljoin
 
 import dash_bootstrap_components as dbc
 import requests
@@ -26,7 +25,10 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import html
-from plantdb.client.rest_api import base_url
+from plantdb.client.rest_api import request_check_username
+from plantdb.client.rest_api import request_new_user
+
+from plantimager.webui.utils import _validate_new_username
 
 # Create a button for new user registration
 new_user_button = dbc.Button(
@@ -111,9 +113,9 @@ new_user_modal = dbc.Modal([
 
 
 @callback(
-    Output("new-user-modal", "is_open"),
-    Input("new-user-button", "n_clicks"),
-    State("new-user-modal", "is_open"),
+    Output('new-user-modal', 'is_open'),
+    Input('new-user-button', 'n_clicks'),
+    State('new-user-modal', 'is_open'),
     prevent_initial_call=True
 )
 def toggle_register_modal(new_user_clicks: int | None, is_open: bool) -> bool:
@@ -140,46 +142,18 @@ def toggle_register_modal(new_user_clicks: int | None, is_open: bool) -> bool:
     return is_open
 
 
-def _validate_new_username(new_username: str, host: str, port: str, prefix: str) -> bool:
-    """Check if a username is available for registration.
-
-    Parameters
-    ----------
-    new_username : str
-        The username to check for availability.
-    host : str
-       The hostname or IP address of the PlantDB REST API server.
-    port : int
-        The port number of the PlantDB REST API server.
-    prefix : str
-        The prefix of the PlantDB REST API server.
-
-    Returns
-    -------
-    bool
-        ``True`` if the username is available, ``False`` if it already exists or there was an error.
-    """
-    try:
-        response = requests.get(urljoin(base_url(host, port, prefix), f'login?username={new_username}'))
-        user_exists = response.json().get('exists', False)
-        if user_exists:
-            return False  # Unavailable username
-        else:
-            return True  # Available username
-    except Exception as e:
-        return False
-
-
 @callback(
     Output('new-username-input', 'valid'),
     Output('new-username-input', 'invalid'),
     Input('new-username-input', 'value'),
     State('new-user-modal', 'is_open'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
 )
-def validate_new_username(new_username: str | None, is_modal_open: bool, host: str, port: str, prefix:str) -> tuple[bool, bool]:
+def validate_new_username(new_username: str | None, is_modal_open: bool, host: str, port: str, prefix: str,
+                          ssl: bool) -> Tuple[bool, bool]:
     """Validate if the entered username is available for registration.
 
     Makes an API request to check if the username already exists in the system.
@@ -197,6 +171,8 @@ def validate_new_username(new_username: str | None, is_modal_open: bool, host: s
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    ssl : bool
+        Flag indicating whether SSL (HTTPS) is enabled.
 
     Returns
     -------
@@ -212,20 +188,24 @@ def validate_new_username(new_username: str | None, is_modal_open: bool, host: s
     """
     if not is_modal_open or not new_username:
         return False, False
-    valid_username = _validate_new_username(new_username, host, port, prefix)
-    return valid_username, ~valid_username
+
+    # Check if username already exists in the backend before proceeding
+    res_data = request_check_username(host, new_username, port=port, prefix=prefix, ssl=ssl)
+    user_exists = res_data.get('exists', False)  # True if username is taken
+    valid_username = not user_exists
+    return valid_username, not valid_username
 
 
 @callback(
     [
-        Output("new-password-input", "valid"),
-        Output("new-password-input", "invalid"),
-        Output("confirm-password-input", "valid"),
-        Output("confirm-password-input", "invalid")
+        Output('new-password-input', 'valid'),
+        Output('new-password-input', 'invalid'),
+        Output('confirm-password-input', 'valid'),
+        Output('confirm-password-input', 'invalid')
     ],
     [
-        Input("new-password-input", "value"),
-        Input("confirm-password-input", "value")
+        Input('new-password-input', 'value'),
+        Input('confirm-password-input', 'value')
     ]
 )
 def validate_password_match(password: str | None, confirm_password: str | None) -> tuple[bool, bool, bool, bool]:
@@ -271,19 +251,23 @@ def validate_password_match(password: str | None, confirm_password: str | None) 
 
 
 @callback(
-    Output("registration-message", "children"),
-    [Input("register-button", "n_clicks")],
-    [State("new-username-input", "value"),
-     State("new-fullname-input", "value"),
-     State("new-password-input", "value"),
-     State("confirm-password-input", "value"),
-     State("rest-api-host", "data"),
-     State("rest-api-port", "data"),
-     State("rest-api-prefix", "data")],
+    Output('registration-message', 'children'),
+    [Input('register-button', 'n_clicks')],
+    [State('new-username-input', 'value'),
+     State('new-fullname-input', 'value'),
+     State('new-password-input', 'value'),
+     State('confirm-password-input', 'value'),
+     State('plantdb-host', 'data'),
+     State('plantdb-port', 'data'),
+     State('plantdb-prefix', 'data'),
+     State('plantdb-ssl', 'data'),
+     State('access-token', 'data'),
+     ],
     prevent_initial_call=True
 )
-def register_user(n_clicks: int | None, username: str, fullname: str, password: str, 
-               confirm_password: str, host: str, port: str, prefix:str) -> str | dbc.Alert:
+def register_user(n_clicks: int | None, username: str, fullname: str, password: str,
+                  confirm_password: str, host: str, port: str, prefix: str, ssl: bool,
+                  access_token: str) -> str | dbc.Alert:
     """Process user registration by validating inputs and creating a new account.
 
     This callback handles the complete user registration process, including input
@@ -307,6 +291,8 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    access_token : str
+        The access token to authenticate against the PlantDB REST API server.
 
     Returns
     -------
@@ -333,7 +319,10 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
     if not n_clicks:
         return ""
 
-    if not _validate_new_username(username, host, port, prefix):
+    # Check if a username already exists in the backend before proceeding
+    res_data = request_check_username(host, username, port=port, prefix=prefix, ssl=ssl)
+    user_exists = res_data.get('exists', False)  # True if username is taken
+    if user_exists:
         return dbc.Alert(f"Username '{username}' is unavailable!", color="danger", class_name="mb-0")
 
     if not all([username, fullname, password, confirm_password]):
@@ -342,20 +331,18 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
     if password != confirm_password:
         return dbc.Alert("Passwords do not match!", color="danger", class_name="mb-0")
 
+    if not access_token:
+        return dbc.Alert(f"Missing access token, you need to login first!", color="danger", className="mb-0")
+
     try:
-        response = requests.post(
-            urljoin(base_url(host, port, prefix), 'register'),
-            data=json.dumps({
-                'username': username,
-                'fullname': fullname,
-                'password': password
-            }),
-            headers={'Content-Type': 'application/json'}
-        )
+        # Create a new user via REST API
+        response = request_new_user(host, username, password, fullname, port=port, prefix=prefix, ssl=ssl,
+                                    session_token=access_token)
 
         if response.ok:
             return dbc.Alert("Registration successful! You can now login.", color="success", class_name="mb-0")
         else:
+            # Extract error message from API response if possible
             error_msg = "Registration failed"
             try:
                 error_data = response.json()

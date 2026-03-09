@@ -8,7 +8,7 @@ from dash import State
 from dash import callback
 from dash import dcc
 from dash import html
-from plantdb.client.rest_api import get_tasks_fileset_from_api
+from plantdb.client.rest_api import request_scan_tasks_fileset
 from plantdb.client.rest_api import list_task_images_uri
 
 from plantimager.webui.utils import IMAGE_TASKS
@@ -17,13 +17,15 @@ from plantimager.webui.visu import dash_boostrap_carousel
 
 @callback(
     Output('select-image-task', 'options'),
-    Input("carousel-modal", "is_open"),
+    Input('carousel-modal', 'is_open'),
     State('view-dataset', 'data'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
+    State('access-token', 'data'),
 )
-def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix):
+def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl, access_token):
     """Updates the dropdown options for image tasks based on the dataset and API configuration.
 
     This callback function is triggered when the carousel modal is opened or closed. It fetches
@@ -47,26 +49,29 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix):
     -------
     list of str
         List of available image task options. Returns ['images'] if the modal is closed
-        or no dataset is selected. Otherwise returns the intersection of IMAGE_TASKS and
+        or no dataset is selected. Otherwise, returns the intersection of IMAGE_TASKS and
         the tasks available for the selected dataset.
 
     """
     if not open_modal or dataset_id is None or dataset_id == '':
         return ['images']
-    tasks_fileset = get_tasks_fileset_from_api(dataset_id, host=host, port=port, prefix=prefix)
+    tasks_fileset = request_scan_tasks_fileset(host, dataset_id, port=port, prefix=prefix, ssl=ssl,
+                                               session_token=access_token)
     return [task for task in IMAGE_TASKS if task in tasks_fileset]
 
 
 @callback(Output('carousel', 'children'),
           # Output('carousel', 'figure'),
-          Input("carousel-modal", "is_open"),
-          Input("select-image-task", "value"),
+          Input('carousel-modal', 'is_open'),
+          Input('select-image-task', 'value'),
           State('view-dataset', 'data'),
-          State('rest-api-host', 'data'),
-          State('rest-api-port', 'data'),
-          State('rest-api-prefix', 'data'),
+          State('plantdb-host', 'data'),
+          State('plantdb-port', 'data'),
+          State('plantdb-prefix', 'data'),
+          State('plantdb-ssl', 'data'),
+          State('access-token', 'data'),
           )
-def images_carousel(open_modal, image_task, dataset_id, host, port, prefix):
+def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl, access_token):
     """Create a Dash carousel component displaying images from a specified dataset task.
 
     This callback function generates a Bootstrap-styled carousel component for displaying
@@ -87,6 +92,8 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix):
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    access_token : str
+        AN access token used to authenticate against PlantDB.
 
     Returns
     -------
@@ -97,7 +104,11 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix):
     if not open_modal or dataset_id is None or dataset_id == '':
         return None
 
-    images = list_task_images_uri(dataset_id, task_name=image_task, size='orig', host=host, port=port, prefix=prefix)
+    images = list_task_images_uri(host, dataset_id, task_name=image_task, size='orig', as_base64=True,
+                                  port=port, prefix=prefix, ssl=ssl, session_token=access_token)
+
+    if len(images) == 0:
+        return dbc.Alert(f"Could not find any images for task '{image_task}' and dataset '{dataset_id}'.", color="danger")
 
     # fig_layout_kwargs = {'font_family': FONT_FAMILY, 'paper_bgcolor': "#F3F3F3",
     #                      'autosize': True, 'margin': {'t': 25, 'b': 5}, 'width': None, 'height': None}
@@ -106,7 +117,7 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix):
     # # Remove the axis ticks and labels:
     # fig.update_layout(xaxis={'visible': False}, yaxis={'visible': False})
     # return fig
-    return dash_boostrap_carousel(images)
+    return dash_boostrap_carousel(images, access_token)
 
 
 caroussel_modal = dbc.Modal(children=[

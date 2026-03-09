@@ -38,6 +38,7 @@ class DisplayMode(StrEnum):
     NORMAL = "normal"
     FOCUS = "focus"
     ZOOMED = "zoomed"
+    ZOOMED_FOCUS = "zoomed-focus"
     ALIGN = "align"
 
 @QmlElement
@@ -169,6 +170,8 @@ class CameraBridge(QObject):
             path = os.path.split(self._image_source)[0] + "/focus-" + os.path.split(self._image_source)[1]
         elif self._displayMode == DisplayMode.ZOOMED:
             path = os.path.split(self._image_source)[0] + "/zoomed-" + os.path.split(self._image_source)[1]
+        elif self._displayMode == DisplayMode.ZOOMED_FOCUS:
+            path = os.path.split(self._image_source)[0] + "/zoomed-focus-" + os.path.split(self._image_source)[1]
         elif self._displayMode == DisplayMode.ALIGN:
             path = os.path.split(self._image_source)[0] + "/align-" + os.path.split(self._image_source)[1]
         else:
@@ -208,6 +211,9 @@ class CameraBridge(QObject):
             self.displayMode = DisplayMode.ZOOMED
             return
         elif self._displayMode == DisplayMode.ZOOMED:
+            self.displayMode = DisplayMode.ZOOMED_FOCUS
+            return
+        elif self._displayMode == DisplayMode.ZOOMED_FOCUS:
             self.displayMode = DisplayMode.ALIGN
             return
         elif self._displayMode == DisplayMode.ALIGN:

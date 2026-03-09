@@ -163,6 +163,13 @@ class ImageProvider(QQuickImageProvider):
             size.setWidth(zoomed_image.width())
             size.setHeight(zoomed_image.height())
             return zoomed_image
+        elif id.removeprefix("zoomed-focus-") in self.images:
+            image: QImage = self.images[id.removeprefix("zoomed-focus-")]
+            w, h = image.width(), image.height()
+            zoomed_image = image.copy(w // 3, h // 3, w // 3, h // 3)
+            size.setWidth(zoomed_image.width())
+            size.setHeight(zoomed_image.height())
+            return focus_highlight(zoomed_image, 90)
         elif id.removeprefix("align-") in self.images:
             display_width, display_height = 640, 480
             target_line_width = 3 #  pixel

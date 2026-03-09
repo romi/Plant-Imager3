@@ -14,34 +14,40 @@ Key Features
 - Configuration file upload functionality
 - Comprehensive error handling and user feedback
 """
-
 import os
 import tomllib
+import traceback
 from base64 import b64decode
 from typing import Dict
 
 import dash_bootstrap_components as dbc
-from dash import Input, set_props
+import diskcache
+import zmq
+from dash import DiskcacheManager
+from dash import Input
 from dash import Output
 from dash import State
 from dash import callback
 from dash import dcc
+from dash import get_asset_url
 from dash import html
 from dash.exceptions import PreventUpdate
+from plantdb.client.plantdb_client import PlantDBClient
+from plantdb.client.rest_api import plantdb_url
+from plantdb.commons.auth.models import Permission
 
-from plantimager.webui.utils import config_upload
+from plantimager.commons.RPC import NoResult
 from plantimager.webui.controller_proxy import RPCController
+from plantimager.webui.utils import config_upload
 
 #: Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
 
-#: Get the directory where the current script (scan.py) is located
+#: Get the directory where the current file is located
 current_dir = os.path.dirname(os.path.abspath(__file__))
-#: Construct the path to the sample TOML config file (`assets` directory)
-default_toml_path = os.path.join(current_dir, 'assets', 'config_scan.toml')
-#: Load the default TOML configuration file into a string variable
-with open(default_toml_path, 'r') as f:
-    default_toml = f.read()
+
+cache = diskcache.Cache("./cache")
+background_callback_manager = DiskcacheManager(cache)
 
 # Card for scan configuration settings using TOML format
 configuration_card = [
@@ -51,7 +57,6 @@ configuration_card = [
             dbc.CardHeader(children=[html.I(className="bi bi-code-square me-2"), "Configuration"]),
             dbc.CardBody([
                 dbc.Textarea(id="scan-cfg-toml", class_name="mb-3", size='md',
-                             value=default_toml,
                              title="The scan configuration in TOML format.",
                              placeholder="Scan configuration (TOML).",
                              style={'height': "65vh"}, persistence=True),
@@ -90,53 +95,81 @@ dataset_name_card = [
     )
 ]
 
+camera_card = [
+    dbc.Card(
+        id="camera-card",
+        children=[
+            dbc.CardHeader(children=[html.I(className="bi bi-camera me-2"), "Camera"]),
+            dbc.CardBody(
+                children=[
+                    dcc.Markdown(id="available-cameras", children="No camera connected")
+                ]
+            ),
+        ]
+    )
+]
+
 # Card containing scan controls and status information
 scan_card = [
     dbc.Card(
         id="scan-card",
         children=[
-            dbc.CardHeader(children=[html.I(className="bi bi-camera me-2"), "Scan"]),
+            dbc.CardHeader(children=[html.I(className="bi bi-upc-scan me-2"), "Scan"]),
             dbc.CardBody([
-                dbc.Row(dbc.Col(
-                    dbc.Accordion(
-                        dbc.AccordionItem(children=[
-                                dcc.Markdown(id="available-cameras", children="No camera connected")
-                            ],
-                            title="Available cameras:" ,
-                        ), start_collapsed=True, flush=True
-                    ),
-                )),
                 dbc.Row([
+                    # --- Scanner Configuration Button ---
                     dbc.Col([
                         dbc.Button(
                             children=[
-                                html.I(className="bi bi-play-fill me-2"),
-                                'Start scan'
-                            ],
-                            id='start-scan-button'
-                        ),
-                    ], width=3),
-                    dbc.Col([
-                        dbc.Button(
-                            children=[
-                                html.I(className="bi bi-play-fill me-2"),
+                                html.I(className="bi bi-gear-fill me-2"),
                                 'Configure Scanner'
                             ],
-                            id='config-scan-button'
+                            id='config-scan-button',
+                            color="primary",
+                            style={'width': '100%'},
                         ),
                     ], width=3),
+                    # --- Start Scan Button ---
+                    dbc.Col([
+                        dbc.Button(
+                            children=[
+                                html.I(className="bi bi-play-fill me-2"),
+                                'Start Scanning'
+                            ],
+                            id='start-scan-button',
+                            color="success",
+                            style={'width': '100%'},
+                        ),
+                    ], width=3),
+                    # --- Cancel Scan Button ---
+                    dbc.Col([
+                        dbc.Button(
+                            children=[
+                                html.I(className="bi bi-x-circle-fill me-2"),
+                                'Cancel Scan'
+                            ],
+                            id='cancel-scan-button',
+                            disabled=True,  # inactive by default
+                            color="danger",
+                            style={'width': '100%'},
+                        ),
+                    ], width=3),
+                ], align="center"),
+                # --- Scan Output Section
+                dbc.Row([
                     dbc.Col([
                         dbc.Alert(
                             id='scan-response',
-                            children="",
+                            children="Configure or start a scann to the the ouptut here...",
                             color="secondary",
-                            className="mb-0"
+                            className="mb-0",
+                            style={'display': 'none', 'color': 'gray'}
                         )
                     ], width="auto"),
-                ], align="center"),
+                ], align="center", style={"margin-top": "15px"}),
+                # --- Scan ProgressBar Section
                 dbc.Row([
                     dbc.Col([
-                        dcc.Interval(id='scan-progress-interval', disabled=True, interval=1000),
                         dbc.Progress(
                             id='scan-progress', style={"margin-top": "15px"}, className="mb-3"
                         ),
@@ -165,22 +198,28 @@ scan_layout = html.Div(
         dcc.Interval(id='main-interval', disabled=False, interval=4000),
         dbc.Row([
             dbc.Col(configuration_card, md=6),
-            dbc.Col(dataset_name_card + [html.Br()] + scan_card, md=6)
+            dbc.Col(dataset_name_card + [html.Br()] + camera_card + [html.Br()] + scan_card, md=6)
         ])
     ], id="scan-page-layout"
 )
 
-progress = 0
-max_progress = 100
+
+# Callback to update the default configuration file once the app is running
+@callback(
+    Output('scan-cfg-toml', 'value'),
+    Input('url', 'pathname')
+)
+def load_default_toml_cfg(_):
+    # Construct the path to the sample TOML config file (`assets` directory)
+    default_toml_path = get_asset_url('config_scan.toml')
+    # Load the default TOML configuration file into a string variable
+    with open(current_dir + "/.." + default_toml_path, 'r') as f:
+        default_toml = f.read()
+    return default_toml
+
+
 available_cameras = []
 
-def update_progress(val):
-    global progress
-    progress = val
-
-def update_max_progress(val):
-    global max_progress
-    max_progress = val
 
 def update_available_cameras(val):
     global available_cameras
@@ -188,31 +227,23 @@ def update_available_cameras(val):
 
 
 @callback(
-    Output("available-cameras", "children"),
-    Input("main-interval", "n_intervals"))
+    Output('available-cameras', 'children'),
+    Input('main-interval', 'n_intervals'))
 def update_interval(n_intervals):
-    """Updates various components on a timer
-
-    Updates the camera list
-
-    Parameters
-    ----------
-    n_intervals
+    """Updates various components on a timer.
 
     Returns
     -------
-    str:
-        Markdown message which is printed at available-cameras
-
+    str
+        Markdown message which is printed at 'available-cameras'.
     """
     try:
         controller = RPCController.instance()
     except RuntimeError as e:
-        return f"Controller not connected", str(e)
+        return f"**Controller not connected**: {e}"
     if update_available_cameras not in controller.cameraNamesChanged.connections:
         controller.cameraNamesChanged.connect(update_available_cameras)
         update_available_cameras(controller.camera_names)
-
 
     if available_cameras:
         lines = []
@@ -223,7 +254,7 @@ def update_interval(n_intervals):
         return "No camera connected"
 
 
-@callback(Output('scan-cfg-toml', 'value'),
+@callback(Output('scan-cfg-toml', 'value', allow_duplicate=True),
           Input('cfg-upload', 'contents'),
           prevent_initial_call=True)
 def update_toml_cfg(contents: str) -> str:
@@ -245,6 +276,27 @@ def update_toml_cfg(contents: str) -> str:
     content_type, content_string = contents.split(',')
     cfg = b64decode(content_string)
     return cfg.decode()
+
+
+@callback(
+    Output('scan-cfg-toml', 'valid'),
+    Output('scan-cfg-toml', 'invalid'),
+    Input('scan-cfg-toml', 'value'),
+)
+def validate_toml_textarea(toml_text: str) -> tuple[bool, bool]:
+    """Validate the TOML configuration entered by the user."""
+    # Empty textarea should not be flagged
+    if not toml_text:
+        return False, False
+
+    try:
+        # Attempt to parse the TOML; we only care about success/failure
+        tomllib.loads(toml_text)
+        # Valid TOML → keep normal appearance
+        return True, False
+    except Exception:
+        # Invalid TOML → add a red border for visual feedback
+        return False, True
 
 
 def all_valid_characters(dataset_name: str) -> bool:
@@ -382,7 +434,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     """
     try:
         RPCController.instance()
-    except RuntimeError as e:
+    except RuntimeError:
         if previous_state:
             raise PreventUpdate
         return True, True
@@ -395,20 +447,32 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     Output('scan-response', 'children'),
     Output('scan-output', 'children', allow_duplicate=True),
     Input('start-scan-button', 'n_clicks'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
+    State('access-token', 'data'),
+    State('refresh-token', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
+    background=True,
+    manager=background_callback_manager,
     prevent_initial_call=True,
     running=[
         (Output('start-scan-button', 'disabled', allow_duplicate=True), True, False),
         (Output('config-scan-button', 'disabled'), True, False),
-        (Output('scan-progress-interval', 'disabled'), False, True),
         (Output('scan-response', 'children'), 'Scan in progress', ""),
         (Output('scan-output', 'children'), 'Scan in progress', ""),
+        (Output('cancel-scan-button', 'disabled', allow_duplicate=True), False, True),
+    ],
+    progress=[
+        Output('scan-progress', 'value'),
+        Output('scan-progress', 'max'),
+        Output('scan-progress', 'label'),
     ]
 )
-def run_scan(_, url: str, port: str, cfg: str, dataset_name: str):
+def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, access_token: str, refresh_token: str,
+             cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
 
     Parameters
@@ -419,6 +483,14 @@ def run_scan(_, url: str, port: str, cfg: str, dataset_name: str):
         The hostname or IP address of the PlantDB REST API server.
     port : str
         The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL.
+    access_token : str
+        The PlantDB REST API access token of the user.
+    refresh_token : str
+        The PlantDB REST API refresh token of the user.
     cfg : str
         The TOML configuration string for the scan.
     dataset_name : str
@@ -436,39 +508,74 @@ def run_scan(_, url: str, port: str, cfg: str, dataset_name: str):
     RuntimeError
         If the Raspberry Pi Controller is not initialized.
     """
-    try:
-        controller = RPCController.instance()
-    except RuntimeError as e:
-        return f"Error: Raspberry Pi Controller not initialized!", str(e)
+    # Background callbacks run in a new process. We must re-init the ZMQ context and Controller proxy.
+    ctx = zmq.Context()
+    # Using the same URL as app.py
+    controller = RPCController(ctx, "tcp://localhost:14567")
 
-    set_props('scan-response', {'children': "Scan started"})
-    set_props('scan-output', {'children': "Scan in progress ..."})
+    res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
+    if isinstance(res, NoResult):
+        return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
 
-    controller.progressChanged.connect(update_progress)
-    controller.maxProgressChanged.connect(update_max_progress)
-    update_progress(controller.progress)
-    update_max_progress(controller.max_progress)
+    client = PlantDBClient(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
+    client._access_token = access_token
+    client._refresh_token = refresh_token
+    if not client.validate_token(access_token):
+        return "Failed to authenticate with plantdb.", "Failed to authenticate with plantdb."
+    api_token = client.create_api_token(
+        600,
+        {dataset_name: (Permission.WRITE, Permission.CREATE, Permission.READ)}
+    )
+    if not api_token:
+        return "Failed to authenticate with plantdb.", "Failed to authenticate with plantdb and create the API token."
+    res: None | NoResult = controller.set_api_token(api_token)
+    if isinstance(res, NoResult):
+        return "Failed to connect to set access token.", res.traceback
+    res: None | NoResult = controller.set_dataset_name(dataset_name)
+    if isinstance(res, NoResult):
+        return f"Failed to set dataset {dataset_name}", res.traceback
+    res: None | NoResult = controller.set_config(tomllib.loads(cfg))
+    if isinstance(res, NoResult):
+        return "Failed to configure scann", res.traceback
 
-    controller.set_db_url(f"http://{url}:{port}")
-    controller.set_dataset_name(dataset_name)
-    print(tomllib.loads(cfg))
-    controller.set_config(tomllib.loads(cfg))
-    controller.run_scan()
+    m_prog = controller.max_progress
+
+    def _update_progress(prog):
+        set_progress((str(prog), str(m_prog), f"{prog}/{m_prog}"))
+
+    controller.progressChanged.connect(_update_progress)
+
+    res: None | NoResult = controller.run_scan()
+    if isinstance(res, NoResult):
+        return "Scan Failed", res.traceback
 
     return "Scan finished", "Scan complete"
 
 
 @callback(
     Output('scan-response', 'children', allow_duplicate=True),
+    Input('cancel-scan-button', 'n_clicks'),
+    prevent_initial_call=True,
+)
+def cancel_scan(_):
+    """Placeholder callback for the Cancel Scan button."""
+    # TODO: implement actual cancellation logic
+    return "Cancelling scan..."
+
+
+@callback(
+    Output('scan-response', 'children', allow_duplicate=True),
     Output('scan-output', 'children', allow_duplicate=True),
     Input('config-scan-button', 'n_clicks'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
     prevent_initial_call=True,
 )
-def config_scan(_, url: str, port: str, cfg: str, dataset_name: str):
+def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, dataset_name: str):
     """Configure a plant scan with the specified configuration.
 
     Parameters
@@ -479,6 +586,10 @@ def config_scan(_, url: str, port: str, cfg: str, dataset_name: str):
         The hostname or IP address of the PlantDB REST API server.
     port : str
         The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL.
     cfg : str
         The TOML configuration string for the scan.
     dataset_name : str
@@ -499,22 +610,21 @@ def config_scan(_, url: str, port: str, cfg: str, dataset_name: str):
     try:
         controller = RPCController.instance()
     except RuntimeError as e:
-        return f"Error: Raspberry Pi Controller not initialized!", str(e)
+        return "Error: Raspberry Pi Controller not initialized!", str(e)
 
-
-    controller.set_db_url(f"http://{url}:{port}")
-    controller.set_dataset_name(dataset_name)
-    print(tomllib.loads(cfg))
-    controller.set_config(tomllib.loads(cfg))
+    res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
+    if isinstance(res, NoResult):
+        return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
+    res: None | NoResult = controller.set_dataset_name(dataset_name)
+    if isinstance(res, NoResult):
+        return f"Failed to set dataset {dataset_name}", res.traceback
+    try:
+        config_dict = tomllib.loads(cfg)
+    except tomllib.TOMLDecodeError:
+        return "Failed to parse config file", traceback.format_exc(limit=1)
+    res: None | NoResult = controller.set_config(config_dict)
+    if isinstance(res, NoResult):
+        return "Failed to configure scan", res.traceback
 
     return "Scan configured", "Scan configured, ready to start"
 
-
-@callback(
-    Output('scan-progress', 'value'),
-    Output('scan-progress', 'max'),
-    Output('scan-progress', 'label'),
-    Input('scan-progress-interval', 'n_intervals'),
-)
-def progress_bar_update(n_int):
-    return progress, max_progress, f"{progress}/{max_progress}"

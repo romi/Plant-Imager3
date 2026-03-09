@@ -4,7 +4,9 @@
 from abc import ABC
 from abc import abstractmethod
 
-from plantimager.commons.RPC import RPCSignal, RPCProperty
+from plantimager.commons.RPC import RPCProperty
+from plantimager.commons.RPC import RPCSignal
+
 
 class ControllerDevice(ABC):
     """Abstract class for controller device."""
@@ -30,6 +32,11 @@ class ControllerDevice(ABC):
     @abstractmethod
     def set_dataset_name(self, name: str):
         """Set the name of the dataset to be created."""
+        pass
+
+    @abstractmethod
+    def set_api_token(self, token: str):
+        """Set the session token to use for authenticated requests."""
         pass
 
     @abstractmethod

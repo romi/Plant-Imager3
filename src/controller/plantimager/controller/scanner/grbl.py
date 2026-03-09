@@ -43,7 +43,7 @@ from .units import length_mm
 logger = create_logger(__name__)
 
 #: Regular expression pattern for parsing GRBL status messages to extract X,Y,Z coordinates.
-pos_regex = re.compile("MPos:(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)")
+pos_regex = re.compile(r"MPos:(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)")
 
 #: Dictionary mapping the GRBL codes to their meaning, units and default values.
 GRBL_SETTINGS = {
@@ -62,8 +62,8 @@ GRBL_SETTINGS = {
     "$21": ("Hard limits", "boolean", 0),
     "$22": ("Homing cycle", "boolean", 1),
     "$23": ("Homing dir invert", "mask", 4),
-    "$24": ("Homing feed", "mm/min", 200),
-    "$25": ("Homing seek", "mm/min", 1000),
+    "$24": ("Homing feed", "mm/min", 250),
+    "$25": ("Homing seek", "mm/min", 1500),
     "$26": ("Homing debounce", "milliseconds", 250),
     "$27": ("Homing pull-off", "mm", 20),
     "$30": ("Max spindle speed", "RPM", 12000),
@@ -75,8 +75,8 @@ GRBL_SETTINGS = {
     "$110": ("X Max rate", "mm/min", 6000),
     "$111": ("Y Max rate", "mm/min", 6000),
     "$112": ("Z Max rate", "deg/min", 1500),
-    "$120": ("X Acceleration", "mm/sec^2", 500),
-    "$121": ("Y Acceleration", "mm/sec^2", 500),
+    "$120": ("X Acceleration", "mm/sec^2", 200),
+    "$121": ("Y Acceleration", "mm/sec^2", 200),
     "$122": ("Z Acceleration", "deg/sec^2", 50),
     "$130": ("X Max travel", "mm", 740),
     "$131": ("Y Max travel", "mm", 740),
@@ -266,7 +266,6 @@ class CNC(AbstractCNC):
         dist[2] = angle_min_travel_distance(z, pos[2])
         dist = np.abs(dist)
         logger.debug(f"distance: {dist}")
-        #dist[2] = angle_min_travel(pos[2], z)
         max_speed = np.array([self.grbl_settings["$110"], self.grbl_settings["$111"], self.grbl_settings["$112"]])/60 # mm/s, mm/s, deg/s
         max_speed *= 0.8
         acceleration = np.array([self.grbl_settings["$120"], self.grbl_settings["$121"], self.grbl_settings["$122"]])*0.8
@@ -332,7 +331,7 @@ class CNC(AbstractCNC):
             z = -float(z) if self.invert_z else float(z)
         else:
             # If no match found, position data is invalid
-            raise RuntimeError("Error reading position from cnc")
+            raise RuntimeError(f"Error reading position from cnc. Got {res}")
 
         # Return current position as tuple of (x,y,z) coordinates
         return x, y, z
@@ -528,6 +527,7 @@ class CNC(AbstractCNC):
             self.wait(timeout=30)
         if time.time() - t0 < travel_time:
             time.sleep(travel_time - (time.time() - t0))
+        self.wait_until_immobile(30)
 
     def moveto_async(self, x: length_mm, y: length_mm, z: deg) -> bytes:
         """Asynchronously move the CNC machine to specified coordinates using G0 rapid positioning.
@@ -611,8 +611,10 @@ class CNC(AbstractCNC):
                 # Read response
                 lines = self.serial_port.readlines()
                 # Check if we got a response and if it indicates the machine is idle
-                if lines:
-                    status_line = lines[0].decode('ascii', errors='ignore').strip()
+                for line in lines:
+                    if line.decode('ascii', errors='ignore').strip() == 'ok':
+                        continue
+                    status_line = line.decode('ascii', errors='ignore').strip()
                     # GRBL status format is typically <status|...>, check for 'Idle' status
                     if 'Idle' in status_line or 'Home' in status_line:
                         return lines[1] if len(lines) > 1 else ""
@@ -626,6 +628,49 @@ class CNC(AbstractCNC):
             if self.serial_port is None or not self.serial_port.is_open:
                 raise RuntimeError("Serial port is closed or not properly initialized") from e
             raise
+
+    def wait_until_immobile(self, timeout: int=60) -> None:
+        """Wait for the CNC machine to stop moving by monitoring real-time position.
+
+        This method repeatedly queries the machine status and waits until the reported
+        position remains stable for a short duration, indicating movement has ceased.
+        It handles interleaving 'ok' responses from previous asynchronous commands.
+
+        Parameters
+        ----------
+        timeout : int
+            Maximum time to wait in seconds before raising a TimeoutError.
+
+        Raises
+        ------
+        TimeoutError
+            If the machine does not stop moving within the timeout period.
+        RuntimeError
+            If the serial port is not open.
+        """
+        if self.serial_port is None or not self.serial_port.is_open:
+            raise RuntimeError("Serial port is closed or not properly initialized")
+
+        start_time = time.time()
+        last_pos = None
+        last_pos_time = time.time()
+        stable_duration = 0.2  # Duration (seconds) position must be stable to consider stopped
+
+        while True:
+            if time.time() - start_time > timeout:
+                raise TimeoutError("Timeout waiting for CNC machine to stop")
+
+            curr_pos = self.get_position()
+            # Check for stability
+            if curr_pos != last_pos:
+                last_pos = curr_pos
+                last_pos_time = time.time()
+            elif time.time() - last_pos_time > stable_duration:
+                # Position has been stable for enough time
+                return
+
+            # Small delay to prevent CPU flooding
+            time.sleep(0.05)
 
     def send_cmd(self, cmd: str, wait=False, timeout=None) -> str:
         """Send a command to the GRBL controller and return its response.

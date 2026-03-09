@@ -12,16 +12,24 @@ Key Features
 - User authentication and account management
 - Dataset acquisition with metadata management
 
+Environment variables
+---------------------
+- ALLOW_PRIVATE_IP: if `True`, allow the use of private IPs for PlantDB REST API URL
+- CERT_PATH: specify the path to the self-signed certificates used by the PlantDB server.
+- VALIDATE_HOST: if `True`, check the PlantDB REST API URL against a blacklist
+
 Usage Examples
 --------------
-# Run the web interface with default REST API settings
+# Run the web interface with default PlantDB REST API settings
 $ python app.py
 
-# Connect to a specific REST API server
-$ python app.py --api_host http://example-server --api_port 5000
+# Connect to a specific PlantDB REST API server
+$ python app.py --plantdb-host example-server.local --plantdb-port 5000
 """
 
 import argparse
+import os
+from pathlib import Path
 from threading import Thread
 
 import dash
@@ -30,8 +38,10 @@ import zmq
 from dash import Dash
 from dash import dcc
 from dash import html
-from plantdb.client.plantdb_client import PlantDBClient, api_prefix
-from plantdb.client.rest_api import base_url
+from dotenv import load_dotenv
+from plantdb.client.rest_api import PLANTDB_HOST
+from plantdb.client.rest_api import PLANTDB_PORT
+from plantdb.client.rest_api import PLANTDB_PREFIX
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from plantimager.webui.carousel import caroussel_modal
@@ -41,8 +51,7 @@ from plantimager.webui.login import login_modal
 from plantimager.webui.nav import navbar_layout
 from plantimager.webui.new_user import new_user_modal
 
-REST_API_URL = "127.0.0.1"
-REST_API_PORT = 5000
+WEBUI_PORT = "8080"
 
 
 def parsing() -> argparse.ArgumentParser:
@@ -60,29 +69,38 @@ def parsing() -> argparse.ArgumentParser:
     --------
     >>> from plantimager.webui.app import parsing
     >>> parser = parsing()
-    >>> args = parser.parse_args(['--api_host', '192.168.1.100', '--api_port', '5001', '--api_prefix', '/plantdb'])
-    >>> print(f"https://{args.api_host}:{args.api_port}{args.api_prefix}")
+    >>> args = parser.parse_args(['--plantdb-host', '192.168.1.100', '--plantdb-port', '5001', '--plantdb-prefix', '/plantdb'])
+    >>> print(f"https://{args.plantdb_host}:{args.plantdb_port}{args.plantdb_prefix}")
     https://192.168.1.100:5001/plantdb
     """
     parser = argparse.ArgumentParser(description="PlantImager WebUI.")
 
     app_args = parser.add_argument_group("Dash app options")
-    app_args.add_argument('--api_host', type=str, default=REST_API_URL,
-                          help="Host address of the PlantDB REST API.")
-    app_args.add_argument('--api_port', type=int, default=REST_API_PORT,
-                          help="Port of the PlantDB REST API.")
-    app_args.add_argument('--api_prefix', type=str, default=api_prefix(),
-                          help="Prefix of the PlantDB REST API.")
+    app_args.add_argument('-p', '--port', type=int, default=WEBUI_PORT,
+                          help="Port of the WebUI app.")
     app_args.add_argument('--proxy', action='store_true',
-                          help="Activate if the server is behind a reverse proxy")
-    app_args.add_argument('--url-base-pathname', type=str, default='/webui/',
-                          help="Base URL path for the application (should match Nginx location).")
-    app_args.add_argument('--debug', action='store_true',
-                          help="Enable/disable all the dev tools.")
+                          help="Defines if the WebUI app is running behind a reverse proxy.")
+    app_args.add_argument('--url-prefix', type=str, default='',
+                          help="URL prefix for the WebUI app (e.g. should match NGINX location if behind proxy).")
+
+    plantdb_args = parser.add_argument_group("PlantDB REST API options")
+    plantdb_args.add_argument('--plantdb-host', type=str, default=PLANTDB_HOST,
+                              help="Host address of the PlantDB REST API.")
+    plantdb_args.add_argument('--plantdb-port', type=int, default=PLANTDB_PORT,
+                              help="Port of the PlantDB REST API.")
+    plantdb_args.add_argument('--plantdb-prefix', type=str, default=PLANTDB_PREFIX,
+                              help="URL prefix of the PlantDB REST API.")
+    plantdb_args.add_argument('--plantdb-ssl', type=bool, default=False,
+                              help="Whether the PlantDB REST API is using SSL or not.")
+
+    misc_args = parser.add_argument_group("Miscellaneous options")
+    misc_args.add_argument('--debug', action='store_true',
+                           help="Enable/disable all the dev tools.")
     return parser
 
 
-def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url_base_pathname: str = '/webui/') -> Dash:
+def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, plantdb_ssl: str,
+                  proxy: bool = False, url_prefix: str = '/webui') -> Dash:
     """Initialize and configure the Plant Imager Dash web application.
 
     Creates a Dash application instance with Bootstrap styling and sets up the main
@@ -92,15 +110,17 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
 
     Parameters
     ----------
-    api_url : str
-        The base URL for the PlantDB REST API server (e.g., 'http://localhost')
-    api_port : int
+    plantdb_host : str
+        The hostname for the PlantDB REST API server (e.g., 'localhost', '127.0.0.1', 'example.com')
+    plantdb_port : int
         The port number for the PlantDB REST API server connection
-    api_prefix : str, optional
+    plantdb_prefix : str
         URL prefix of the PlantDB REST API server.
+    plantdb_ssl : bool
+        Whether the PlantDB REST API server is using SSL or not.
     proxy : bool, optional
         Boolean flag indicating whether the application is behind a reverse proxy, by default ``False``.
-    url_base_pathname : str
+    url_prefix : str
         The base URL path where the application is served (should match Nginx location)
 
     Returns
@@ -111,20 +131,26 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
     Notes
     -----
     The application layout includes several components:
-    - Global state management using dcc.Store components
+
+    - Global state management using `dcc.Store` components
     - Navigation bar with ROMI branding
     - Configuration and authentication modals
     - Main content area for scan management
     """
+    # Ensure `url_prefix` ends with a trailing slash (as required by Dash)
+    if url_prefix and not url_prefix.endswith('/'):
+        url_prefix += '/'
+    else:
+        url_prefix = None
 
     app = Dash(
         name="plantimager.webui",
-        title="Plant Imager",
+        title="Plant Imager WebUI",
         external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
-        url_base_pathname=url_base_pathname,
+        url_base_pathname=url_prefix,
         use_pages=True,
-        pages_folder="pages",
-        assets_folder="assets",
+        pages_folder=str(Path(__file__).parent / "pages"),
+        assets_folder=str(Path(__file__).parent / "assets"),
     )
 
     if proxy:
@@ -132,22 +158,27 @@ def setup_web_app(api_url: str, api_port: int, api_prefix: str, proxy=False, url
         app.server.wsgi_app = ProxyFix(app.server.wsgi_app, x_for=1, x_host=1, x_proto=1)
         # Set secure cookies
         app.server.config.update(
-            SESSION_COOKIE_SECURE=True,
-            SESSION_COOKIE_SAMESITE='Lax'
+            SESSION_COOKIE_SECURE=True,  # Only send cookies over HTTPS
+            SESSION_COOKIE_HTTPONLY=True,  # Prevent JavaScript access
+            SESSION_COOKIE_SAMESITE='Strict'  # CSRF protection
         )
 
     # Main application layout definition
     app.layout = html.Div([
         # Global state storage
-        dcc.Store(id='rest-api-host', data=api_url, storage_type='session'),  # PlantDB REST API URL
-        dcc.Store(id='rest-api-port', data=api_port, storage_type='session'),  # PlantDB REST API port
-        dcc.Store(id='rest-api-prefix', data=api_prefix, storage_type='session'),  # PlantDB REST API prefix
+        dcc.Store(id='plantdb-host', data=plantdb_host, storage_type='session'),  # PlantDB REST API URL
+        dcc.Store(id='plantdb-port', data=plantdb_port, storage_type='session'),  # PlantDB REST API port
+        dcc.Store(id='plantdb-prefix', data=plantdb_prefix, storage_type='session'),  # PlantDB REST API prefix
+        dcc.Store(id='plantdb-ssl', data=plantdb_ssl, storage_type='session'),  # PlantDB REST API prefix
         dcc.Store(id='connected', data=None),  # boolean flag indicating if connected to the database or not
         dcc.Store(id='logged-username', data=None, storage_type='session'),  # id of the logger user
         dcc.Store(id='logged-fullname', data=None, storage_type='session'),  # real name of the logged user
+        dcc.Store(id='access-token', data=None, storage_type='session'),  # access token of the logged user
+        dcc.Store(id='refresh-token', data=None, storage_type='session'),  # refresh token of the logged user
         dcc.Store(id='dataset-list', data=[]),  # list of datasets known to the database
         dcc.Store(id='dataset-id', data=None),  # name of the dataset to create (scan operation)
-        dcc.Store(id='dataset-dict', data={}, storage_type='session'),  # dictionary of dataset information, used for AG grid table
+        dcc.Store(id='dataset-dict', data={}, storage_type='session'),
+        # dictionary of dataset information, used for AG grid table
         dcc.Store(id='view-dataset', data=None),  # name of the dataset to visualize (plotly carousel)
         # Navigation and modal components
         html.Div(children=[
@@ -179,6 +210,7 @@ def main() -> None:
 
     Notes
     -----
+    - This should be used for development purposes only, refers to the wsgi.py file for production
     - The controller connection runs in a separate daemon thread
     - The Dash application runs in debug mode on port 8000
     """
@@ -188,13 +220,21 @@ def main() -> None:
 
     # - Create connexion with controller
     context = zmq.Context()
+    # Create a thread to avoid blocking the process
     controller_thread = Thread(target=lambda ctx: RPCController(ctx, "tcp://localhost:14567"), args=(context,))
     controller_thread.daemon = True
     controller_thread.start()
 
+    # Load environment variables from an `.env` file if present
+    load_dotenv()
+
+    if args.plantdb_host in ('localhost', '127.0.0.1'):
+        os.environ['VALIDATE_HOST'] = 'false'
+
     # - Start the Dash app:
-    app = setup_web_app(args.api_host, args.api_port, args.api_prefix, args.proxy)
-    app.run(host="0.0.0.0", debug=args.debug, port=8080)
+    app = setup_web_app(args.plantdb_host, args.plantdb_port, args.plantdb_prefix, args.plantdb_ssl,
+                        proxy=args.proxy, url_prefix=args.url_prefix)
+    app.run(host="0.0.0.0", debug=args.debug, port=args.port)
 
 
 if __name__ == "__main__":

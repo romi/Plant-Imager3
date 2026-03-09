@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------------------------
-#  Copyright (c) 2022 Univ. Lyon, ENS de Lyon, UCB Lyon 1, CNRS, INRAe, Inria
-#  All rights reserved.
-#  This file is part of the TimageTK library, and is released under the "GPLv3"
-#  license. Please see the LICENSE.md file that should have been included as
-#  part of this package.
-# ------------------------------------------------------------------------------
 
 import dash
 import dash_ag_grid as dag
@@ -20,9 +13,10 @@ from dash import dcc
 from dash import get_relative_path
 from dash import html
 from dash import register_page
-from plantdb.client.rest_api import base_url
+from plantdb.client.rest_api import plantdb_url
 
 from plantimager.webui.utils import get_dataset_dict
+from plantimager.webui.utils import load_image_from_url
 
 register_page(__name__, path='/table')
 
@@ -94,7 +88,7 @@ layout = html.Div([
 
 
 @callback(
-    Output("back-button", "href"),
+    Output('back-button', 'href'),
     Input('url', 'pathname')
 )
 def update_back_button_href(_):
@@ -130,12 +124,14 @@ def _column_defs(col_name):
     Output('dataset-dict', 'data', allow_duplicate=True),
     Output('refresh-table-button', 'n_clicks'),
     Input('refresh-table-button', 'n_clicks'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
+    State('access-token', 'data'),
     prevent_initial_call=True
 )
-def refresh_table_data(n_clicks, host, port, prefix):
+def refresh_table_data(n_clicks, host, port, prefix, ssl, access_token):
     """Refresh the dataset dictionary.
 
     Parameters
@@ -150,9 +146,14 @@ def refresh_table_data(n_clicks, host, port, prefix):
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL or not.
+    access_token
+        The PlantDB REST API access token.
+
     """
     if n_clicks > 0:
-        dataset_dict = get_dataset_dict(host=host, port=port, prefix=prefix)
+        dataset_dict = get_dataset_dict(host, port, prefix, ssl, access_token)
         return dataset_dict, 0
     return dash.no_update, 0
 
@@ -161,11 +162,13 @@ def refresh_table_data(n_clicks, host, port, prefix):
 @callback(
     Output('dataset-dict', 'data'),
     Input('url', 'pathname'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data')
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
+    State('access-token', 'data'),
 )
-def update_on_url_change(url, host, port, prefix):
+def update_on_url_change(url, host, port, prefix, ssl, access_token):
     """Update the dataset dictionary when the URL changes.
 
     Parameters
@@ -178,18 +181,24 @@ def update_on_url_change(url, host, port, prefix):
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL or not.
+    access_token
+        The PlantDB REST API access token.
     """
     if url.endswith('/table'):
-        return get_dataset_dict(host=host, port=port, prefix=prefix)
+        return get_dataset_dict(host, port, prefix, ssl, access_token)
     return dash.no_update
 
 
 @callback(Output('dataset-table', 'children'),
           Input('dataset-dict', 'data'),
-          State('rest-api-host', 'data'),
-          State('rest-api-port', 'data'),
-          State('rest-api-prefix', 'data'))
-def update_table(dataset_dict, url, port, prefix):
+          State('plantdb-host', 'data'),
+          State('plantdb-port', 'data'),
+          State('plantdb-prefix', 'data'),
+          State('plantdb-ssl', 'data'),
+          State('access-token', 'data'))
+def update_table(dataset_dict, host, port, prefix, ssl, access_token):
     """Update the AG Grid table.
 
     Parameters
@@ -197,11 +206,15 @@ def update_table(dataset_dict, url, port, prefix):
     dataset_dict : dict
         The currently stored dataset dictionary.
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
         The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL or not.
+    access_token : str
+        AN access token used to authenticate against PlantDB.
 
     Returns
     -------
@@ -211,12 +224,14 @@ def update_table(dataset_dict, url, port, prefix):
     thumb_size = 150  # max width or height
     if dataset_dict is not None:
         table_dict = {col: [] for col in ["Thumbnail", "Name", "Action", "Date", "Species", "Images"]}
-        plantdb_url = base_url(url, port, prefix)
+        url = plantdb_url(host, port=port if not prefix else None, prefix=prefix, ssl=ssl)
 
         for ds_id, md in dataset_dict.items():
             thumbnail_url = md["thumbnailUri"].replace('thumb', f'{thumb_size}')
+            full_url = url.rstrip('/') + '/' + thumbnail_url
+            img_data = load_image_from_url(full_url, access_token)
             # Include the first image thumbnail and a link to the carousel
-            table_dict["Thumbnail"].append(f"![{ds_id}]({plantdb_url}{thumbnail_url})")
+            table_dict["Thumbnail"].append(f"![{ds_id}]({img_data})")
             table_dict["Name"].append(ds_id)
             table_dict["Action"].append("Open")
             table_dict["Date"].append(md["metadata"]["date"])
@@ -246,10 +261,10 @@ def update_table(dataset_dict, url, port, prefix):
 
 
 @callback(
-    Output("view-dataset", "data"),
-    Output("carousel-modal", "is_open"),
-    Output("carousel-modal-title", "children"),
-    Input("plantdb-dag", "cellRendererData"),
+    Output('view-dataset', 'data'),
+    Output('carousel-modal', 'is_open'),
+    Output('carousel-modal-title', 'children'),
+    Input('plantdb-dag', 'cellRendererData'),
 )
 def show_carousel_modal(cell_data):
     """

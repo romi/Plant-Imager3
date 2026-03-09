@@ -7,13 +7,17 @@ repo_url: https://github.com/romi/Plant-Imager3
 
 nav:
   - 'Home': index.md
-  - 'REST API': rest_api.md
   - 'Reference API': reference/
+  - 'Usage':
+    - 'Services Overview': usage/services_overview.md
+    - 'Services Startup': usage/services_startup.md
+    - 'Services Usage': usage/services_usage.md
   - 'Developer':
     - developer/index.md
-    - developer/documentation.md
+    - developer/guidelines.md
     - developer/architecture.md
     - developer/RPC.md
+    - developer/NTP_server.md.md
 
 
 theme:
@@ -87,7 +91,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          import:
+          inventories:
             - https://docs.python.org/3/objects.inv
             - https://numpy.org/doc/stable/objects.inv
             - https://flask.palletsprojects.com/en/latest/objects.inv
@@ -104,7 +108,6 @@ plugins:
           options:
             docstring_style: numpy
             docstring_section_style: table
-            ignore_init_summary: true
             merge_init_into_class: true
             show_docstring_examples: true
             show_docstring_raises: true

@@ -3,30 +3,73 @@
 
 """PlantDB Configuration Interface for Plant Imager Web UI.
 
-This module provides components and callbacks for configuring the connection to the PlantDB REST API
+This module provides components and callbacks for configuring the connection to the PlantDB API
 and managing datasets within the Plant Imager web interface.
 
 Key Features
 ------------
-- REST API connection configuration and testing
+- PlantDB API connection configuration and testing
 - Dataset listing and management
 - Dynamic UI components for database status visualization
 - Bootstrap-styled modals and alerts for user interaction
+
+Environment variables
+---------------------
+- ALLOW_PRIVATE_IP: if `True`, allow the use of private IPs for PlantDB REST API URL
+- CERT_PATH: specify the path to the self-signed certificates used by the PlantDB server.
+- VALIDATE_HOST: if `True`, check the PlantDB REST API URL against a blacklist
 """
+import os
 
 import dash_bootstrap_components as dbc
 from dash import Input
 from dash import Output
 from dash import State
 from dash import callback
+from dash import ctx
+from dash import dcc
 from dash import html
-from plantdb.client.plantdb_client import PlantDBClient
-from plantdb.client.rest_api import REST_API_PORT
-from plantdb.client.rest_api import REST_API_URL
-from plantdb.client.rest_api import base_url
-from plantdb.client.rest_api import list_scan_names
-from plantdb.client.rest_api import test_availability
+from dash import no_update
+from dash_bootstrap_components import NavLink
+from plantdb.client.rest_api import PLANTDB_HOST
+from plantdb.client.rest_api import PLANTDB_PORT
+from plantdb.client.rest_api import plantdb_url
+from plantdb.client.rest_api import request_scan_names_list
+from plantdb.client.url import is_server_available
 from requests import RequestException
+
+
+def server_available(host, port, prefix, ssl):
+    """Checks the availability of a server.
+
+    Parameters
+    ----------
+    host : str
+        The IP address or hostname of the server to test.
+    port : int
+        The port number of the server to test.
+    prefix : str
+        The URL prefix of the server to test.
+    ssl : bool
+        Flag indicating whether SSL (HTTPS) is enabled.
+
+    Returns
+    -------
+    bool
+        A flag indicating whether the server is available.
+    """
+    allow_private_ip = os.getenv('ALLOW_PRIVATE_IP', 'false').lower() == 'true'
+    cert_path = os.getenv('CERT_PATH', None)
+    validate_host = os.getenv('VALIDATE_HOST', 'true').lower() == 'true'
+    try:
+        url = plantdb_url(host, port=port, prefix=prefix, ssl=ssl)
+        availability = is_server_available(url, allow_private_ip=allow_private_ip,
+                                           cert_path=cert_path, validate_host=validate_host)
+    except:
+        is_available = False
+    else:
+        is_available = availability.ok
+    return is_available
 
 
 def _connected_status(dataset_list):
@@ -37,10 +80,10 @@ def _connected_status(dataset_list):
     return status
 
 
-def _unconnected_status():
+def _unconnected_status(error):
     status = dbc.Alert([
         html.I(className="bi bi-x-octagon-fill me-2"),
-        f"Could not load any dataset!",
+        f"Could not load any dataset!\n{error}",
     ], color="danger")
     return status
 
@@ -110,43 +153,53 @@ def create_dataset_cfg_icon(is_connected: bool = False, dataset_list: list | Non
     )
 
 
-# Create PlantDB REST API configuration button component for the navigation bar
+# Create PlantDB API configuration button component for the navigation bar
 cfg_button = create_dataset_cfg_icon()
 cfg_tooltip = dbc.Tooltip(
-    children="Configure PlantDB REST API connection and load dataset list.",
+    children="Configure the PlantDB API",
     target="plantdb-cfg-button",
     placement="bottom",
 )
 
-# Card component for PlantDB REST API configuration
+# Card component for PlantDB API configuration
 plantdb_cfg_modal = html.Div(children=[
-    dbc.Modal(id="plantdb-cfg-modal", children=[
+    dbc.Modal(id="plantdb-cfg-modal", is_open=False, children=[
         dbc.ModalHeader(
             dbc.ModalTitle(
                 children=[
                     html.I(className="bi bi-database-gear-fill me-2"),
-                    "PlantDB REST API configuration"
+                    "PlantDB API configuration"
                 ]
             )
         ),
         dbc.ModalBody(children=[
-            # URL input field for REST API endpoint
+            # URL input field for PlantDB API endpoint
             html.Div(children=[
-                dbc.Label([html.I(className="bi bi-link-45deg me-2"), "REST API URL:"]),
+                dbc.Label([html.I(className="bi bi-link-45deg me-2"), "PlantDB API hostname:"]),
                 dbc.Input(id="api-address", type="url"),
-                dbc.FormText(f"Use '{REST_API_URL}' for a local database.", color="secondary"),
+                dbc.FormText(f"Use '{PLANTDB_HOST}' for a local database.", color="secondary"),
             ]),
-            # Port number input for REST API
+            # Port number input for PlantDB API
             html.Div(children=[
-                dbc.Label([html.I(className="bi bi-hdd-network me-2"), "REST API port:"]),
+                dbc.Label([html.I(className="bi bi-hdd-network me-2"), "PlantDB API port:"]),
                 dbc.Input(id="api-port", type="text"),
-                dbc.FormText(f"Should be '{REST_API_PORT}' by default.", color="secondary"),
+                dbc.FormText(f"Should be '{PLANTDB_PORT}' by default.", color="secondary"),
             ]),
-            # URL prefix for REST API
+            # URL prefix for PlantDB API
             html.Div(children=[
-                dbc.Label([html.I(className="bi bi-hdd-network me-2"), "REST API prefix:"]),
+                dbc.Label([html.I(className="bi bi-hdd-network me-2"), "PlantDB API prefix:"]),
                 dbc.Input(id="api-prefix", type="text"),
-                dbc.FormText(f"Should be '' by default. Use if behind a proxy.", color="secondary"),
+                dbc.FormText(f"Should be empty by default. Use it if the PlantDB server is behind a proxy.",
+                             color="secondary"),
+            ]),
+            # SSL checkbox
+            html.Div(children=[
+                dbc.Checkbox(
+                    id="api-ssl",
+                    label="Use SSL (HTTPS)",
+                    value=False,
+                ),
+                dbc.FormText("Enable if the PlantDB server uses HTTPS instead of HTTP.", color="secondary"),
             ]),
             html.Br(),
             dbc.Row(children=[
@@ -182,43 +235,66 @@ plantdb_cfg_modal = html.Div(children=[
             html.Div(id="plantdb-status-form", className="w-100"),
             html.Div(id="load-status-form", className="w-100"),
         ])
-    ])
+    ]),
+    # Interval component for auto-closing modal after successful connection
+    dcc.Interval(
+        id='modal-close-interval',
+        interval=2000,  # 2 seconds
+        n_intervals=0,
+        max_intervals=1,
+        disabled=True
+    )
 ])
 
 
-@callback(Output("plantdb-cfg-modal", "is_open"),
+@callback(Output('plantdb-cfg-modal', 'is_open'),
           Input('plantdb-cfg-button', 'n_clicks'),
+          Input('modal-close-interval', 'n_intervals'),
           State('plantdb-cfg-modal', 'is_open'),
           prevent_initial_call=True)
-def toggle_plantdb_cfg_modal(n_clicks: int, is_open: bool) -> bool | None:
+def toggle_plantdb_cfg_modal(
+        cfg_clicks: int,
+        n_intervals: int,
+        is_open: bool
+) -> bool:
     """Toggle the visibility state of the PlantDB configuration modal.
 
     This callback function controls the opening and closing of the PlantDB configuration
-    modal dialog. It is triggered by clicking on the configuration button and toggles
-    the modal's visibility state.
+    modal dialog. It is triggered by:
+    1. clicking the configuration button (opens modal)
+    2. the interval timer (closes modal after successful connection)
 
     Parameters
     ----------
-    n_clicks : int
-        Number of times the plantdb-cfg-button has been clicked. Used to determine
-        when to toggle the modal state.
+    cfg_clicks : int
+        Number of times the plantdb-cfg-button has been clicked.
+    n_intervals : int
+        Number of intervals elapsed (for auto-close after successful connection).
     is_open : bool
         Current visibility state of the modal.
 
     Returns
     -------
-    bool or None
-        The new visibility state of the modal. Returns the opposite of the current
-        state when n_clicks > 0, otherwise returns None.
+    bool
+        The new visibility state of the modal.
     """
-    if n_clicks > 0:
+    triggered_id = ctx.triggered_id
+
+    # The configuration button was clicked - toggle modal
+    if triggered_id == 'plantdb-cfg-button':
         return not is_open
+
+    # The interval timer fired - close the modal (only fires after successful connection)
+    elif triggered_id == 'modal-close-interval':
+        return False
+
+    return no_update
 
 
 @callback(
-    Output("api-address", "value"),
-    Input("plantdb-cfg-modal", "is_open"),
-    State("rest-api-host", "data")
+    Output('api-address', 'value'),
+    Input('plantdb-cfg-modal', 'is_open'),
+    State('plantdb-host', 'data')
 )
 def show_api_address(modal_is_open: bool, stored_host: str | None) -> str:
     """Callback updating the value of the 'api-address' field with stored data when opening the PlantDB configuration modal.
@@ -228,24 +304,24 @@ def show_api_address(modal_is_open: bool, stored_host: str | None) -> str:
     modal_is_open : bool
         Indicates whether the configuration modal is currently open.
     stored_host : str or None
-        The stored value of the REST API host. Can be ``None`` if not previously set.
+        The stored value of the PlantDB API host. Can be ``None`` if not previously set.
 
     Returns
     -------
     str
-        The IP address to be used, either the stored host value or the ``REST_API_URL`` constant.
+        The IP address to be used, either the stored host value or the ``PLANTDB_HOST`` constant.
     """
     if modal_is_open:
-        return stored_host if stored_host is not None else REST_API_URL
+        return stored_host if stored_host is not None else PLANTDB_HOST
     else:
         return stored_host
 
 
 # Callback to update IP port from a stored value
 @callback(
-    Output("api-port", "value"),
-    Input("plantdb-cfg-modal", "is_open"),
-    State("rest-api-port", "data")
+    Output('api-port', 'value'),
+    Input('plantdb-cfg-modal', 'is_open'),
+    State('plantdb-port', 'data')
 )
 def show_api_port(modal_is_open: bool, stored_port: int | None) -> int | str:
     """Callback updating the value of the 'api-port' field with stored data when opening the PlantDB configuration modal.
@@ -260,19 +336,19 @@ def show_api_port(modal_is_open: bool, stored_port: int | None) -> int | str:
     Returns
     -------
     str
-        Value to be set for the "api-port" input field, either the stored port value or the ``REST_API_PORT`` constant.
+        Value to be set for the "api-port" input field, either the stored port value or the ``PLANTDB_PORT`` constant.
     """
     if modal_is_open:
-        return stored_port if stored_port is not None else REST_API_PORT
+        return stored_port if stored_port is not None else PLANTDB_PORT
     else:
         return stored_port
 
 
 # Callback to update IP port from a stored value
 @callback(
-    Output("api-prefix", "value"),
-    Input("plantdb-cfg-modal", "is_open"),
-    State("rest-api-prefix", "data")
+    Output('api-prefix', 'value'),
+    Input('plantdb-cfg-modal', 'is_open'),
+    State('plantdb-prefix', 'data')
 )
 def show_api_prefix(modal_is_open: bool, stored_prefix: str | None) -> int | str:
     """Callback updating the value of the 'api-prefix' field with stored data when opening the PlantDB configuration modal.
@@ -295,14 +371,42 @@ def show_api_prefix(modal_is_open: bool, stored_prefix: str | None) -> int | str
         return stored_prefix
 
 
+# Callback to show SSL status from stored data
 @callback(
-    Output("plantdb-status-form", "children"),
-    Input("connected", "data"),
-    State("rest-api-host", "data"),
-    State("rest-api-port", "data"),
-    State("rest-api-prefix", "data"),
+    Output('api-ssl', 'value'),
+    Input('plantdb-cfg-modal', 'is_open'),
+    State('plantdb-ssl', 'data')
 )
-def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str) -> dbc.Alert:
+def show_api_ssl(modal_is_open: bool, stored_ssl: bool | None) -> bool:
+    """Callback updating the value of the 'api-ssl' checkbox with stored data when opening the PlantDB configuration modal.
+
+    Parameters
+    ----------
+    modal_is_open : bool
+        Boolean indicating whether the configuration modal is open or closed.
+    stored_ssl : bool or None
+        Stored SSL flag retrieved from the state. Can be ``None`` if not specified.
+
+    Returns
+    -------
+    bool
+        Value to be set for the "api-ssl" checkbox.
+    """
+    if modal_is_open:
+        return stored_ssl if stored_ssl is not None else False
+    else:
+        return stored_ssl
+
+
+@callback(
+    Output('plantdb-status-form', 'children'),
+    Input('connected', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
+)
+def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str, ssl: bool) -> dbc.Alert:
     """Display the connection status of the PlantDB server in a Bootstrap alert component.
 
     This callback function generates a styled alert component that shows whether the
@@ -322,6 +426,8 @@ def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str) 
         Port number of the PlantDB server
     prefix : str
         URL prefix of the PlantDB server
+    ssl : bool
+        Flag indicating whether SSL (HTTPS) is enabled
 
     Returns
     -------
@@ -339,39 +445,48 @@ def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str) 
         ], color="info")
     elif status:
         status_form = dbc.Alert(children=[
-            html.I(className="bi bi-check-circle-fill me-2"), f"Server {base_url(host, port, prefix)} available.",
+            html.I(className="bi bi-check-circle-fill me-2"),
+            f"Server {plantdb_url(host, port=port, prefix=prefix, ssl=ssl)} available.",
         ], color="success")
     else:
         status_form = dbc.Alert(children=[
-            html.I(className="bi bi-x-octagon-fill me-2"), f"Server {base_url(host, port, prefix)} unavailable!",
+            html.I(className="bi bi-x-octagon-fill me-2"),
+            f"Server {plantdb_url(host, port=port, prefix=prefix, ssl=ssl)} unavailable!",
         ], color="danger")
     return status_form
 
 
-# Callback to test REST API connection and update UI accordingly
+# Callback to test PlantDB API connection and update UI accordingly
 @callback(
     Output('connected', 'data'),
     Output('load-plantdb-button', 'disabled'),
-    Output('rest-api-host', 'data'),
-    Output('rest-api-port', 'data'),
-    Output('rest-api-prefix', 'data'),
+    Output('plantdb-host', 'data'),
+    Output('plantdb-port', 'data'),
+    Output('plantdb-prefix', 'data'),
+    Output('plantdb-ssl', 'data'),
+    Output('modal-close-interval', 'disabled'),
+    Output('modal-close-interval', 'n_intervals'),
     Input('connect-plantdb-button', 'n_clicks'),
     State('api-address', 'value'),
     State('api-port', 'value'),
     State('api-prefix', 'value'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
+    State('api-ssl', 'value'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
 )
 def check_server_availability(
         _: int,
         host: str | None,
         port: int | str | None,
         prefix: str | None,
-        stored_host: str | None,
-        stored_port: int | str | None,
-        stored_prefix: str | None,
-) -> tuple[bool, bool, str, int | str]:
+        ssl: bool | None,
+        stored_host: str,
+        stored_port: int,
+        stored_prefix: str,
+        stored_ssl: bool,
+) -> tuple[bool, bool, str, int, str, bool, bool, int]:
     """Checks the availability of a server based on the provided host and port and updates the UI accordingly.
 
     Parameters
@@ -382,21 +497,37 @@ def check_server_availability(
         The IP address or hostname of the server to test.
     port : int
         The port number of the server to test.
+    prefix : str
+        The URL prefix of the server to test.
+    ssl : bool
+        Flag indicating whether SSL (HTTPS) is enabled.
     stored_host : str
         The previously stored server host value, used if the connection test fails.
     stored_port : int
         The previously stored server port value, used if the connection test fails.
+    stored_prefix : str
+        The previously stored server prefix value, used if the connection test fails.
+    stored_ssl : bool
+        The previously stored server SSL flag, used if the connection test fails.
 
     Returns
     -------
     bool
-        A storer flag indicating whether the connection test was successful.
+        A flag indicating whether the server is available.
     bool
         A boolean indicating whether the load button should be disabled.
     str
         The updated server host value to store.
     int
         The updated server port value to store.
+    str
+        The updated server prefix value to store.
+    bool
+        The updated server SSL flag value to store.
+    bool
+        Whether the modal-close-interval should be disabled.
+    int
+        Reset n_intervals to 0 to restart the timer.
     """
     if host is None:
         host = stored_host
@@ -404,30 +535,32 @@ def check_server_availability(
         port = stored_port
     if prefix is None:
         prefix = stored_prefix
-    if host.startswith("http://"):
-        host = host[7:]
-    elif host.startswith("https://"):
-        host = host[8:]
+    if ssl is None:
+        ssl = stored_ssl
 
-    try:
-        test_availability(base_url(host, port, prefix))
-    except:
-        is_available = False
-    else:
-        is_available = True
+    # Handle URLs that include a protocol prefix
+    if host and isinstance(host, str):
+        if host.startswith("http://"):
+            host = host[7:]
+            ssl = False
+        elif host.startswith("https://"):
+            host = host[8:]
+            ssl = True
 
-    if is_available:
-        return True, False, host, port, prefix
+    if server_available(host, port, prefix, ssl):
+        # Server is available: enable load button, enable interval timer
+        return True, False, host, port, prefix, ssl, False, 0
     else:
-        return False, True, host, port, prefix
+        # Server is not available: disable load button, disable interval timer
+        return False, True, host, port, prefix, ssl, True, 0
 
 
 @callback(
-    Output("plantdb-cfg-button", "children"),
-    Input("connected", "data"),
-    State("dataset-list", "data"),
+    Output('plantdb-cfg-button', 'children'),
+    Input('connected', 'data'),
+    State('dataset-list', 'data'),
 )
-def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) -> list:
+def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) -> NavLink:
     """Update the PlantDB configuration button's appearance based on connection status.
 
     This callback function updates the visual representation of the PlantDB configuration
@@ -437,7 +570,7 @@ def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) ->
     Parameters
     ----------
     status : bool or None
-        The connection status to the PlantDB REST API.
+        The connection status to the PlantDB API.
         ``None`` indicates no connection attempt has been made.
         ``True`` indicates a successful connection.
         ``False`` indicates a failed connection.
@@ -447,22 +580,24 @@ def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) ->
 
     Returns
     -------
-    dash.html.Component
+    dash_bootstrap_components.NavLink
         A Dash HTML component representing the configuration button icon
         with the appropriate styling based on the connection status.
     """
     return create_dataset_cfg_icon(status, dataset_list)
 
 
-# Callback to load a dataset list from PlantDB REST API
+# Callback to load a dataset list from PlantDB API
 @callback(
     Output('load-status-form', 'children'),
     Output('dataset-list', 'data'),
     Input('load-plantdb-button', 'n_clicks'),
     Input('connected', 'data'),
-    State('rest-api-host', 'data'),
-    State('rest-api-port', 'data'),
-    State('rest-api-prefix', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
+    State('access-token', 'data'),
     prevent_initial_call=True,
 )
 def update_dataset_list(
@@ -471,6 +606,8 @@ def update_dataset_list(
         host: str,
         port: int | str,
         prefix: str,
+        ssl: bool,
+        access_token: str,
 ) -> tuple[dbc.Alert, list[str]]:
     """Callback updating the dataset list and displaying the load status when a user clicks the load button.
 
@@ -479,13 +616,15 @@ def update_dataset_list(
     n_clicks : int
         The n_clicks property of the load-plantdb-button element, which triggers the callback (not used).
     connected : bool
-        The connection status of the PlantDB REST API server.
+        The connection status of the PlantDB API server.
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+       The hostname or IP address of the PlantDB API server.
     port : int
-        The port number of the PlantDB REST API server.
+        The port number of the PlantDB API server.
     prefix : str
-        The prefix of the PlantDB REST API server.
+        The prefix of the PlantDB API server.
+    ssl : bool
+        Flag indicating whether SSL (HTTPS) is enabled.
 
     Returns
     -------
@@ -494,25 +633,29 @@ def update_dataset_list(
     list of str
         A list of dataset names retrieved from the server.
     """
+    error = ""
     if not connected:
-        return _unconnected_status(), []
+        error = "PlantDB API server not connected."
+        return _unconnected_status(error=error), []
 
     try:
-        dataset_list = list_scan_names(host=host, port=port, prefix=prefix)
-    except RequestException:
+        dataset_list = sorted(request_scan_names_list(host, port=port, prefix=prefix, ssl=ssl,
+                                                      session_token=access_token))
+    except RequestException as e:
         dataset_list = []
+        error = e
 
     if dataset_list:
         status = _connected_status(dataset_list)
     else:
-        status = _unconnected_status()
+        status = _unconnected_status(error=error)
 
     return status, dataset_list
 
 
 @callback(
-    Output("dataset-count-badge", "children"),
-    Input("dataset-list", "data")  # Assuming you have a dataset list stored in dcc.Store
+    Output('dataset-count-badge', 'children'),
+    Input('dataset-list', 'data')  # Assuming you have a dataset list stored in dcc.Store
 )
 def update_dataset_badge(dataset_list: list) -> str:
     """Update the dataset count badge with the current number of datasets.

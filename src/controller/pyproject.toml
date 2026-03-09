@@ -7,16 +7,17 @@ name = "plantimager.controller"
 version = "0.0.1"
 dependencies = [
     "av",
-    "pyside6",
+    "pyside6<6.9",
     "pyside6-addons",  # for QtMultimedia
     "pyserial",
     "scipy",
+    "scikit-image",
     "numpy",
     "plantimager.commons",
 ]
 description = "A Qt-based interface turning a Raspberry Pi 4/5 into the main controller of the ROMI Plant Imager."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11, <3.13"  # 3.13 upper bound for open3d dependency from plantdb.commons[io]
 license = { 'text' = "LGPL-3.0-or-later" }   # to replace by "LGPL-3.0-or-later" only in next release, pending deprecation
 authors = [
     { name = "Nabil Ait Taleb", email = "mohamednabil.aittaleb@sony.com" },

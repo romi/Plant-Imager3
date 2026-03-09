@@ -26,7 +26,7 @@ StartLimitIntervalSec=30
 Type=exec
 
 # Command with arguments to invoke when the unit is activated.
-ExecStart=/home/romi/miniconda3/envs/plant-imager/bin/plant-imager-webui --proxy
+ExecStart=/home/romi/miniconda3/envs/plant-imager/bin/plant-imager-webui --proxy --url-prefix "/webui" --plantdb-host mellitus.biologie.ens-lyon.fr --plantdb-prefix /plantdb --plantdb-ssl True
 # Command with arguments to invoke when the unit is deactivated.
 ExecStop=
 

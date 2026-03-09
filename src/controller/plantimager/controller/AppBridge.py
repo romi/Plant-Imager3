@@ -61,7 +61,6 @@ class AppBridge(QObject):
         self.registry.daemon = True
         self._registryNewDevice.connect(self._create_new_device, Qt.ConnectionType.QueuedConnection)
         self._registryRemoveDevice.connect(self._remove_device, Qt.ConnectionType.QueuedConnection)
-        finalize(self, self._stop)
         self.device_list: list[str] = []
         self.device_bridges: list[CameraBridge] = []
 
@@ -76,14 +75,16 @@ class AppBridge(QObject):
 
         self.registry.start()
 
-    def _stop(self):
-        """Finalizer for AppBridge, should be called through weakref.finalize"""
-        logger.debug("finalizing AppBridge")
-        self.registry.stop()
-        self.registry.join()
-        self._controller_server.stop_server()
-        self._controller_thread.join(4)
-        logger.debug("AppBridge finalized")
+        def finalizer(registry, controller_server, controller_thread, context):
+            logger.debug("finalizing AppBridge")
+            registry.stop()
+            registry.join()
+            controller_server.stop_server()
+            print(controller_thread, context)
+            controller_thread.join()
+            context.term()
+            logger.debug("AppBridge finalized")
+        finalize(self, finalizer, self.registry, self._controller_server, self._controller_thread, self.context)
 
     @Property(QObject, notify=currentCameraChanged)
     def currentCamera(self) -> CameraBridge:
@@ -127,6 +128,7 @@ class AppBridge(QObject):
         """
         logger.debug(f"New device for {addr}: {device_type}, {name}")
         if device_type.lower() == "camera":
+            logger.debug("New camera, creating bridge and adding to scanner.")
             new_bridge = CameraBridge(name, addr, self.context)
             self.device_list.append(name)
             self.device_bridges.append(new_bridge)

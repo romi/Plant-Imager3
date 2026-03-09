@@ -40,8 +40,9 @@ from typing import Literal
 from weakref import finalize
 
 import numpy as np
-from PySide6.QtCore import Property, QTimer
+from PySide6.QtCore import Property
 from PySide6.QtCore import QObject
+from PySide6.QtCore import QTimer
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
 from PySide6.QtQml import QmlElement
@@ -54,7 +55,10 @@ from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.scanner.dummy_cnc import DummyCNC
 from plantimager.controller.scanner.grbl import CNC
 from plantimager.controller.scanner.hal import DataItem
-from plantimager.controller.scanner.path import Path, Circle, CalibrationPath2, CustomPath
+from plantimager.controller.scanner.path import CalibrationPath2
+from plantimager.controller.scanner.path import Circle
+from plantimager.controller.scanner.path import CustomPath
+from plantimager.controller.scanner.path import Path
 from plantimager.controller.scanner.path import PathElement
 from plantimager.controller.scanner.path import Pose
 
@@ -170,7 +174,7 @@ class DataUploader():
         This method may block indefinitely if the upload queue is full and
         no upload jobs are completing.
         """
-        # Wait if number of jobs submitted is greater than queue_size
+        # Wait if the number of jobs submitted is greater than queue_size
         if len(self.jobs) >= self.queue_size:
             wait(self.jobs, return_when=FIRST_COMPLETED)  # blocking
 
@@ -278,6 +282,7 @@ class Scanner(QObject):
         self.db_client: PlantDBClient | None = None  # Database client
         self.uploader: DataUploader | None = None  # Data uploader
         self.fileset = "images"  # Default fileset name
+        self._api_token = ""
 
         self._cnc_connection_timer = QTimer()
         self._cnc_connection_timer.setInterval(5000)
@@ -325,6 +330,7 @@ class Scanner(QObject):
         -----
         Emits cameraNamesChanged and readyToScanChanged signals.
         """
+        logger.debug(f"Adding camera {camera.name} to scanner.")
         self.cameras.append(camera)  # Add camera to list
         self.cameraNamesChanged.emit(self.camera_names)  # Update camera names
         self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state
@@ -386,7 +392,11 @@ class Scanner(QObject):
         """
         if self.db_url != url:  # Only update if URL has changed
             self.db_url = url  # Set new URL
-            self.db_client = PlantDBClient(self.db_url)  # Create new client
+            if self._api_token:
+                logger.debug(f"Connecting to PlantDB with token {self._api_token}")
+                self.db_client = PlantDBClient(self.db_url, api_token=self._api_token)  # Create new client
+            else:
+                self.db_client = PlantDBClient(self.db_url)
             self.uploader = DataUploader(self.db_client, 10)  # Create new uploader
             self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state
 
@@ -488,7 +498,6 @@ class Scanner(QObject):
                 res = config[camera.name]["res_x"], config[camera.name]["res_y"]
                 camera.resolution = res
 
-
     @Property(bool, notify=readyToScanChanged)
     def ready_to_scan(self) -> bool:
         """Check if the scanner is ready to perform a scan.
@@ -516,7 +525,7 @@ class Scanner(QObject):
                 self.uploader and self.db_client and
                 hasattr(self, 'scan_id') and self.scan_id and self.fileset and
                 not self._scan_in_progress and not self._scanner_working
-            ):
+        ):
             return True
         return False
 
@@ -632,7 +641,6 @@ class Scanner(QObject):
         self.uploader.upload(scan_id=self.scan_id, fileset=self.fileset, data=data)
 
         return data
-
 
     def get_target_pose(self, x: PathElement) -> Pose:
         """Calculate the target pose from a path element.
@@ -787,9 +795,9 @@ class Scanner(QObject):
                 wait(jobs, return_when=ALL_COMPLETED)
 
         # Move the arm back close to origin
-        #self.cnc.moveto(10, 10,-10)
+        # self.cnc.moveto(10, 10,-10)
         time.sleep(1)
-        #self.cnc.home()
+        # self.cnc.home()
         self.move_arm(20, 20, 45)
         self._scan_in_progress = False
         self.scanInProgressChanged.emit(self.scan_in_progress)
@@ -812,7 +820,8 @@ class Scanner(QObject):
             x, y = np.mean(points[:, 0]), np.mean(points[:, 1])
             self.move_arm(x, y, 0)
         else:
-            x, y, z = (self.cnc.x_lims[0] + self.cnc.x_lims[1])/2, (self.cnc.y_lims[0] + self.cnc.y_lims[1])/2, self.cnc.z
+            x, y, z = (self.cnc.x_lims[0] + self.cnc.x_lims[1]) / 2, (
+                        self.cnc.y_lims[0] + self.cnc.y_lims[1]) / 2, self.cnc.z
             self.move_arm(x, y, z)
 
     @Slot(int)
@@ -833,3 +842,12 @@ class Scanner(QObject):
         if isinstance(self.scan_path, CalibrationPath2):
             return f"{type(self.scan_path).__name__}: center {self.scan_path.center_x:g}, {self.scan_path.center_y:g}, radius {self.scan_path.radius:g} - {len(self.scan_path)} steps"
         return f"{type(self.scan_path).__name__}: {len(self.scan_path)} steps"
+
+    def set_api_token(self, token: str):
+        """Set the API token and re-create the PlantDBClient to access the plantdb server."""
+        self._api_token = token
+        if self.db_client:
+            logger.debug("Initializing PlantDBClient with API token...")
+            self.db_client = PlantDBClient(self.db_client.base_url, api_token=self._api_token)
+            self.uploader.db_client = self.db_client
+            logger.debug("Done.")
