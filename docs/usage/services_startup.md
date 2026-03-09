@@ -57,19 +57,19 @@ P3DV_BASE_IMG='colmap/colmap:20251107.4118'  # 3.13.0
 services:
 
   ssl_cert:
-    # Copy the certificates to the `nginx_cert` volume
+    # One-shot service to copy the SSL certificates from the host to the `nginx_cert` volume
     image: roboticsmicrofarms/plantimager_nginx:latest
     restart: no
     volumes:
-      - ${SSL_CERT_LOC}:/tmp  # location of the certificates to copy
+      - ${SSL_CERT_LOC}:/tmp  # location of the certificates on the host
       - nginx_cert:/etc/nginx/ssl/  # volume (shared with nginx service) hosting the copied certificates
     command: /bin/bash -c 'cp /tmp/*.pem /etc/nginx/ssl/'
 
   nginx:
-    # NGINX service forwarding requests by reverse proxy
+    # NGINX service, forwards requests by reverse proxy
     build:
-      context: Plant-Imager3/docker/nginx/  # Build context for the Nginx service
-      dockerfile: Dockerfile  # Specify the Dockerfile for building the image
+      context: Plant-Imager3/docker/nginx/
+      dockerfile: Dockerfile
       args:
         SERVER_HOST: ${SERVER_HOST}
         CONTROLLER_HOST: ${CONTROLLER_HOST}
@@ -104,14 +104,14 @@ services:
       - webui
 
   plantdb:
-    # PlantDB REST API service, in production mode, served by uWSGI
+    # PlantDB service, Flask RESTful App served by uWSGI
     build:
       context: plantdb/
       dockerfile: docker/Dockerfile
     image: roboticsmicrofarms/plantdb:0.14.6
     container_name: plantimager_plantdb
     expose:
-      - ${PLANTDB_PORT}  # Expose port internally to the network
+      - ${PLANTDB_PORT}  # Expose port internally to the docker network
     environment:
       PLANTDB_API_PREFIX: ${PLANTDB_PREFIX}
       PLANTDB_API_SSL: true
@@ -131,13 +131,13 @@ services:
       - plantimager-net
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:${PLANTDB_PORT}${PLANTDB_PREFIX}/health" ]
-      interval: 120s
+      interval: 180s
       timeout: 10s
       retries: 3
       start_period: 40s
 
   p3dx:
-    # P3DX service, in production mode, served by NGINX
+    # P3DX service, Node.js App served by NGINX
     build:
       context: plant-3d-explorer/
       dockerfile: docker/production/Dockerfile
@@ -147,7 +147,7 @@ services:
     image: roboticsmicrofarms/plantimager_p3dx:0.1.2
     container_name: plantimager_p3dx
     expose:
-      - ${P3DX_PORT}  # Expose port internally to the network
+      - ${P3DX_PORT}  # Expose port internally to the docker network
     environment:
       REACT_APP_API_URL: http://${SERVER_HOST}${PLANTDB_PREFIX}
       REACT_APP_BASENAME: ${P3DX_PREFIX}
@@ -160,13 +160,13 @@ services:
       - plantimager-net
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:${P3DX_PORT}${P3DX_PREFIX}" ]
-      interval: 120s
+      interval: 180s
       timeout: 10s
       retries: 3
       start_period: 40s
 
   p3dv:
-    # P3DV service, in production mode, served by Gunicorn
+    # P3DV service, WebTerm UI served by Gunicorn
     build:
       context: plant-3d-vision/
       dockerfile: docker/Dockerfile
@@ -177,7 +177,7 @@ services:
     image: roboticsmicrofarms/plant-3d-vision:colmap_${COLMAP_VERSION:-'3.8'}
     container_name: plantimager_p3dv
     expose:
-      - ${P3DV_PORT}  # Expose port internally to the network
+      - ${P3DV_PORT}  # Expose port internally to the docker network
     environment:
       PLANTDB_API: ${PLANTDB_HOST}/${PLANTDB_PREFIX}
       WEBTERM_PROXY: true
@@ -201,12 +201,20 @@ services:
       - webterm_users:/myapp/users
     networks:
       - plantimager-net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:${P3DV_PORT}${P3DV_PREFIX}" ]
+      interval: 180s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-  # WebUI is served from the RasPi controller, use this for development purposes
   webui:
+    # WebUI service, Dash App served by uWSGI
     build:
-      context: Plant-Imager3/  # Build context for the WebUI service
-      dockerfile: docker/webui/Dockerfile  # Specify the Dockerfile for building the image
+      context: Plant-Imager3/
+      dockerfile: docker/webui/Dockerfile
+      args:
+        PLANTDB_BRANCH: 'hotfix/jwt_exp_date'  # pull a specific branch of plantdb
     image: roboticsmicrofarms/plantimager_webui:latest
     container_name: plantimager_webui
     environment:
@@ -225,12 +233,20 @@ services:
                --master \
                --processes=4 --threads=2 --buffer-size=32768" ]
     restart: unless-stopped
+    extra_hosts:
+      - "dev.romi.local:host-gateway"
     volumes:
       - nginx_cert:/etc/nginx/ssl/
     networks:
       - plantimager-net
     depends_on:
       - ssl_cert
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:${WEBUI_PORT}${WEBUI_PREFIX}" ]
+      interval: 180s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   plantimager-net:
@@ -241,13 +257,12 @@ volumes:
     external: false
   uwsgi_sockets:
     external: false
-  romi_db_test: # This volume hosts PlantDB FSDB files
+  romi_db: # This volume hosts PlantDB FSDB files
     external: false  # set to `true` use an existing volume
   p3dv_cfg: # This volume hosts P3DV WebTerm configuration files
     external: false  # set to `true` use an existing volume
   webterm_users: # This volume hosts P3DV WebTerm users database
     external: false  # set to `true` use an existing volume
-
 ```
 
 ## Getting the Stack Running (Development)
@@ -263,12 +278,33 @@ docker compose up --build
 * Docker will build each image (or pull if already available).
 * The `nginx` container will wait for the other services to be healthy before starting to accept traffic.
 
-Open your browser at `http://plantimager.local` (or
-`https://plantimager.local` if you add proper certificates). You should see the Plant‑Imager WebUI. The other services are accessible through the following URLs:
+Open your browser at `http://plantimager.local` (or `https://plantimager.local` if you add proper certificates).
+You should see the Plant‑Imager WebUI.
 
-| URL        | Service           |
-|------------|-------------------|
-| `/webui`   | WebUI (frontend)  |
-| `/plantdb` | REST API          |
-| `/p3dx`    | 3D Explorer       |
-| `/p3dv`    | 3D Vision WebTerm |
+The other services are accessible through the following URLs:
+
+| URL        | Service            |
+|------------|--------------------|
+| `/plantdb` | REST API (backend) |
+| `/webui`   | WebUI              |
+| `/p3dx`    | 3D Explorer        |
+| `/p3dv`    | WebTerm            |
+
+## Getting the Stack Running (Production)
+
+1. Choose to run the WebUI either from the _PlantImager Controller_ (RasPi) or to serve it as part of the stack (like in the `docker-compose.yaml`) above.
+  If you choose to run it outside the stack, just remove the `webui` service from the Docker compose file and be sure to use the right IP or URL for the `CONTROLLER_HOST` environment vaiable in the `.env` file. 
+
+2. Set the `SERVER_HOST` environment variable to the correct URL.
+
+3. Verify the `ROMI_DB` is named after the persistent volume you want to use as a database, _e.g._ `ROMI_DB=romi_db` and set `external: true` if the volume already exists.
+
+Finally, you may start the stack with.
+```shell
+# 1. Ensure Docker is running
+docker compose version
+
+# 2. Build and start all services
+docker compose up --build
+```
+

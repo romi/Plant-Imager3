@@ -56,7 +56,7 @@ docker network create plantimager-net
 2. **Use a real SSL certificate** – Replace the `ssl_cert` volume with a persistent cert volume mounted to
    `/etc/nginx/ssl/`.
 
-3. **Persist data** – Mount a real database volume for `plantdb` (`romi_db_test`) and for P3DV (`p3dv_cfg`,
+3. **Persist data** – Mount a real database volume for `plantdb` (`romi_db`) and for P3DV (`p3dv_cfg`,
    `webterm_users`).
 
 4. **Disable development ports** – Remove or comment out the `ports:` entries for `plantdb`, `webui`, etc.
