@@ -460,6 +460,7 @@ class RPCServer:
         self._stop = False
 
         self._setup_lifecycle_cleanup()
+        self._dead = False
 
     def _initialize_rpc_members(self):
         """Scans class and bases for Signals, Properties, and RPC methods."""
@@ -692,10 +693,15 @@ class RPCServer:
         """
         Starts serving requests for this RPCServer.
 
+        If registered to the registry and the check_alive fails, exits the loop
+
         Returns
         -------
 
         """
+        if self._dead:
+            logger.error("RPCServer is in dead state. A new instance must be created.")
+            raise RuntimeError(f"RPCServer is in dead state. A new instance must be created.")
         self._stop = False
         while not self._stop:
             notify_watchdog()
@@ -705,6 +711,7 @@ class RPCServer:
                     # TODO: if res == False --> do something (reset?)
                     logger.error(f"Check Alive failed. Registry at {self.registry_addr} "
                                  f"is unreachable or does not know this service.")
+                    break
             if self._socket.poll(1000, zmq.POLLIN) == 0:
                 continue
             request = self._socket.recv_json()
@@ -789,6 +796,7 @@ class RPCServer:
                 case RPCEvents.STOP_SERVER:
                     self._socket.send_json({"success": True})
                     break
+        self._dead = True
         for signal in self._signals.values():
             signal.disconnect()
         if self._signal_socket:

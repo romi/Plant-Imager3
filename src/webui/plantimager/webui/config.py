@@ -247,7 +247,7 @@ plantdb_cfg_modal = html.Div(children=[
 ])
 
 
-@callback(Output("plantdb-cfg-modal", "is_open"),
+@callback(Output('plantdb-cfg-modal', 'is_open'),
           Input('plantdb-cfg-button', 'n_clicks'),
           Input('modal-close-interval', 'n_intervals'),
           State('plantdb-cfg-modal', 'is_open'),
@@ -292,9 +292,9 @@ def toggle_plantdb_cfg_modal(
 
 
 @callback(
-    Output("api-address", "value"),
-    Input("plantdb-cfg-modal", "is_open"),
-    State("plantdb-host", "data")
+    Output('api-address', 'value'),
+    Input('plantdb-cfg-modal', 'is_open'),
+    State('plantdb-host', 'data')
 )
 def show_api_address(modal_is_open: bool, stored_host: str | None) -> str:
     """Callback updating the value of the 'api-address' field with stored data when opening the PlantDB configuration modal.
@@ -319,9 +319,9 @@ def show_api_address(modal_is_open: bool, stored_host: str | None) -> str:
 
 # Callback to update IP port from a stored value
 @callback(
-    Output("api-port", "value"),
-    Input("plantdb-cfg-modal", "is_open"),
-    State("plantdb-port", "data")
+    Output('api-port', 'value'),
+    Input('plantdb-cfg-modal', 'is_open'),
+    State('plantdb-port', 'data')
 )
 def show_api_port(modal_is_open: bool, stored_port: int | None) -> int | str:
     """Callback updating the value of the 'api-port' field with stored data when opening the PlantDB configuration modal.
@@ -346,9 +346,9 @@ def show_api_port(modal_is_open: bool, stored_port: int | None) -> int | str:
 
 # Callback to update IP port from a stored value
 @callback(
-    Output("api-prefix", "value"),
-    Input("plantdb-cfg-modal", "is_open"),
-    State("plantdb-prefix", "data")
+    Output('api-prefix', 'value'),
+    Input('plantdb-cfg-modal', 'is_open'),
+    State('plantdb-prefix', 'data')
 )
 def show_api_prefix(modal_is_open: bool, stored_prefix: str | None) -> int | str:
     """Callback updating the value of the 'api-prefix' field with stored data when opening the PlantDB configuration modal.
@@ -373,9 +373,9 @@ def show_api_prefix(modal_is_open: bool, stored_prefix: str | None) -> int | str
 
 # Callback to show SSL status from stored data
 @callback(
-    Output("api-ssl", "value"),
-    Input("plantdb-cfg-modal", "is_open"),
-    State("plantdb-ssl", "data")
+    Output('api-ssl', 'value'),
+    Input('plantdb-cfg-modal', 'is_open'),
+    State('plantdb-ssl', 'data')
 )
 def show_api_ssl(modal_is_open: bool, stored_ssl: bool | None) -> bool:
     """Callback updating the value of the 'api-ssl' checkbox with stored data when opening the PlantDB configuration modal.
@@ -399,12 +399,12 @@ def show_api_ssl(modal_is_open: bool, stored_ssl: bool | None) -> bool:
 
 
 @callback(
-    Output("plantdb-status-form", "children"),
-    Input("connected", "data"),
-    State("plantdb-host", "data"),
-    State("plantdb-port", "data"),
-    State("plantdb-prefix", "data"),
-    State("plantdb-ssl", "data"),
+    Output('plantdb-status-form', 'children'),
+    Input('connected', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
 )
 def show_plantdb_status(status: bool | None, host: str, port: int, prefix: str, ssl: bool) -> dbc.Alert:
     """Display the connection status of the PlantDB server in a Bootstrap alert component.
@@ -556,9 +556,9 @@ def check_server_availability(
 
 
 @callback(
-    Output("plantdb-cfg-button", "children"),
-    Input("connected", "data"),
-    State("dataset-list", "data"),
+    Output('plantdb-cfg-button', 'children'),
+    Input('connected', 'data'),
+    State('dataset-list', 'data'),
 )
 def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) -> NavLink:
     """Update the PlantDB configuration button's appearance based on connection status.
@@ -654,8 +654,8 @@ def update_dataset_list(
 
 
 @callback(
-    Output("dataset-count-badge", "children"),
-    Input("dataset-list", "data")  # Assuming you have a dataset list stored in dcc.Store
+    Output('dataset-count-badge', 'children'),
+    Input('dataset-list', 'data')  # Assuming you have a dataset list stored in dcc.Store
 )
 def update_dataset_badge(dataset_list: list) -> str:
     """Update the dataset count badge with the current number of datasets.

@@ -344,10 +344,9 @@ def is_instance_of_generic(value, generic_type):
         return all(is_instance_of_generic(item, args[0]) for item in value)
 
     # For dictionaries, check keys and values
-    if issubclass(origin, collections.abc.Mapping):
-        if len(args) >= 2:
-            return all(
-                is_instance_of_generic(k, args[0]) and is_instance_of_generic(v, args[1])
-                for k, v in value.items()
-            )
+    if issubclass(origin, collections.abc.Mapping) and len(args) >= 2:
+        return all(
+            is_instance_of_generic(k, args[0]) and is_instance_of_generic(v, args[1])
+            for k, v in value.items()
+        )
     return True

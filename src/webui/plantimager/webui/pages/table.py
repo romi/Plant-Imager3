@@ -88,7 +88,7 @@ layout = html.Div([
 
 
 @callback(
-    Output("back-button", "href"),
+    Output('back-button', 'href'),
     Input('url', 'pathname')
 )
 def update_back_button_href(_):
@@ -261,10 +261,10 @@ def update_table(dataset_dict, host, port, prefix, ssl, access_token):
 
 
 @callback(
-    Output("view-dataset", "data"),
-    Output("carousel-modal", "is_open"),
-    Output("carousel-modal-title", "children"),
-    Input("plantdb-dag", "cellRendererData"),
+    Output('view-dataset', 'data'),
+    Output('carousel-modal', 'is_open'),
+    Output('carousel-modal-title', 'children'),
+    Input('plantdb-dag', 'cellRendererData'),
 )
 def show_carousel_modal(cell_data):
     """

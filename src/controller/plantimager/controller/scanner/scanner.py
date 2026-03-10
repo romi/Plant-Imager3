@@ -282,8 +282,7 @@ class Scanner(QObject):
         self.db_client: PlantDBClient | None = None  # Database client
         self.uploader: DataUploader | None = None  # Data uploader
         self.fileset = "images"  # Default fileset name
-        self._access_token = ""
-        self._refresh_token = ""
+        self._api_token = ""
 
         self._cnc_connection_timer = QTimer()
         self._cnc_connection_timer.setInterval(5000)
@@ -395,21 +394,11 @@ class Scanner(QObject):
         """
         if self.db_url != url:  # Only update if URL has changed
             self.db_url = url  # Set new URL
-            self.db_client = PlantDBClient(self.db_url)  # Create new client
-            if self._access_token:
-                # Validate existing tokens
-                self.db_client._access_token = self._access_token
-                self.db_client._refresh_token = self._refresh_token
-                logger.debug("Validating PlantDB session token")
-                if self.db_client.validate_token(self._access_token):
-                    # Update them if valid
-                    self._access_token = self.db_client._access_token
-                    self._refresh_token = self.db_client._refresh_token
-                else:
-                    # Reset if not
-                    logger.warning("Invalid PlantDB session token found!")
-                    self._access_token = None
-                    self._refresh_token = None
+            if self._api_token:
+                logger.debug(f"Connecting to PlantDB with token {self._api_token}")
+                self.db_client = PlantDBClient(self.db_url, api_token=self._api_token)  # Create new client
+            else:
+                self.db_client = PlantDBClient(self.db_url)
             self.uploader = DataUploader(self.db_client, 10)  # Create new uploader
             self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state
 
@@ -862,11 +851,11 @@ class Scanner(QObject):
             return f"{type(self.scan_path).__name__}: center {self.scan_path.center_x:g}, {self.scan_path.center_y:g}, radius {self.scan_path.radius:g} - {len(self.scan_path)} steps"
         return f"{type(self.scan_path).__name__}: {len(self.scan_path)} steps"
 
-    def set_session_token(self, tokens: tuple[str, str]):
-        """Set the session token for plantdb"""
-        self._access_token, self._refresh_token = tokens
+    def set_api_token(self, token: str):
+        """Set the API token and re-create the PlantDBClient to access the plantdb server."""
+        self._api_token = token
         if self.db_client:
-            self.db_client._access_token, self.db_client._refresh_token = tokens
-            logger.debug("Validating PlantDB session token")
-            self.db_client.validate_token(self._access_token)
-            logger.debug("Session token valid")
+            logger.debug("Initializing PlantDBClient with API token...")
+            self.db_client = PlantDBClient(self.db_client.base_url, api_token=self._api_token)
+            self.uploader.db_client = self.db_client
+            logger.debug("Done.")

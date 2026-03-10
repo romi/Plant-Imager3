@@ -18,6 +18,7 @@ import unittest
 
 import zmq
 from plantdb.client.plantdb_client import PlantDBClient
+from plantdb.commons.auth.models import Permission
 from plantdb.commons.test_database import get_test_dataset
 
 from plantimager.webui.controller_proxy import RPCController
@@ -126,7 +127,12 @@ class TestScanIntegration(unittest.TestCase):
         for cam_name in rpc_controller.camera_names:
             conf[cam_name] = conf["picamera"].copy()
 
-        rpc_controller.set_session_token((db_client._access_token, db_client._refresh_token))
+
+        api_token = db_client.create_api_token(
+            600,
+            {"test_dataset": (Permission.WRITE, Permission.CREATE, Permission.READ)}
+        )
+        rpc_controller.set_api_token(api_token)
         rpc_controller.set_db_url(self.db_url)
         rpc_controller.set_dataset_name("test_dataset")
         rpc_controller.set_config(conf)

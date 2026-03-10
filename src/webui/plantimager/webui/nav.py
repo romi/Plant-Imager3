@@ -12,11 +12,13 @@ Key Features
 - External links to documentation and tutorials
 - Consistent styling with tooltips for user guidance
 """
+import os
 
 import dash_bootstrap_components as dbc
 from dash import Input
 from dash import Output
 from dash import callback
+from dash import get_asset_url
 from dash import get_relative_path
 from dash import html
 
@@ -24,9 +26,6 @@ from plantimager.webui.config import cfg_button
 from plantimager.webui.config import cfg_tooltip
 from plantimager.webui.login import login_avatar_button
 from plantimager.webui.login import login_avatar_button_tooltip
-
-#: URL for the ROMI project logo used in the navigation ba
-ROMI_LOGO: str = "https://romi-project.eu/assets/logo.svg"
 
 #: Link component providing a tutorial link to the Plant Imager documentation page, with a tooltip for user guidance
 tutorial_link: dbc.NavLink = dbc.NavLink(
@@ -76,10 +75,20 @@ dataset_table_tooltip: dbc.Tooltip = dbc.Tooltip(
     placement="bottom",
 )
 
+#: Get the directory where the current file is located
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Callback to update the ROMI project logo (used in the navigation bar) src once the app is running
+@callback(
+    Output('navbar-logo', 'src'),
+    Input('url', 'pathname')
+)
+def update_logo_url(_):
+    return current_dir + "/.." + get_asset_url("logo.svg")
 
 # Then update the href through a callback when the app starts
 @callback(
-    Output("scan-link", "href"),
+    Output('scan-link', 'href'),
     Input('url', 'pathname')
 )
 def update_scan_link_href(_):
@@ -88,7 +97,7 @@ def update_scan_link_href(_):
 
 # Then update the href of the dataset table page through a callback when the app starts
 @callback(
-    Output("dataset-table-link", "href"),
+    Output('dataset-table-link', 'href'),
     Input('url', 'pathname')
 )
 def update_table_link_href(_):
@@ -110,7 +119,7 @@ navbar_layout = dbc.Navbar(
         # Logo and brand section
         html.A(
             dbc.Row(children=[
-                dbc.Col(html.Img(src=ROMI_LOGO, height="35px")),
+                dbc.Col(html.Img(id="navbar-logo", height="35px")),
                 dbc.Col(
                     dbc.NavbarBrand(
                         id="navbar-brand",
@@ -134,7 +143,7 @@ navbar_layout = dbc.Navbar(
 
 # Callback to update NavbarBrand href
 @callback(
-    Output("navbar-brand", "href"),
+    Output('navbar-brand', 'href'),
     Input('plantdb-prefix', 'data')
 )
 def update_navbar_brand_href(prefix):

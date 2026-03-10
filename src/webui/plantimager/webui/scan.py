@@ -14,7 +14,6 @@ Key Features
 - Configuration file upload functionality
 - Comprehensive error handling and user feedback
 """
-
 import os
 import tomllib
 import traceback
@@ -30,9 +29,12 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import dcc
+from dash import get_asset_url
 from dash import html
 from dash.exceptions import PreventUpdate
+from plantdb.client.plantdb_client import PlantDBClient
 from plantdb.client.rest_api import plantdb_url
+from plantdb.commons.auth.models import Permission
 
 from plantimager.commons.RPC import NoResult
 from plantimager.webui.controller_proxy import RPCController
@@ -41,16 +43,11 @@ from plantimager.webui.utils import config_upload
 #: Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
 
+#: Get the directory where the current file is located
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
 cache = diskcache.Cache("./cache")
 background_callback_manager = DiskcacheManager(cache)
-
-#: Get the directory where the current script (scan.py) is located
-current_dir = os.path.dirname(os.path.abspath(__file__))
-#: Construct the path to the sample TOML config file (`assets` directory)
-default_toml_path = os.path.join(current_dir, 'assets', 'config_scan.toml')
-#: Load the default TOML configuration file into a string variable
-with open(default_toml_path, 'r') as f:
-    default_toml = f.read()
 
 # Card for scan configuration settings using TOML format
 configuration_card = [
@@ -60,7 +57,6 @@ configuration_card = [
             dbc.CardHeader(children=[html.I(className="bi bi-code-square me-2"), "Configuration"]),
             dbc.CardBody([
                 dbc.Textarea(id="scan-cfg-toml", class_name="mb-3", size='md',
-                             value=default_toml,
                              title="The scan configuration in TOML format.",
                              placeholder="Scan configuration (TOML).",
                              style={'height': "65vh"}, persistence=True),
@@ -174,7 +170,6 @@ scan_card = [
                 # --- Scan ProgressBar Section
                 dbc.Row([
                     dbc.Col([
-                        dcc.Interval(id='scan-progress-interval', disabled=True, interval=1000),
                         dbc.Progress(
                             id='scan-progress', style={"margin-top": "15px"}, className="mb-3"
                         ),
@@ -208,19 +203,22 @@ scan_layout = html.Div(
     ], id="scan-page-layout"
 )
 
-progress = 0
-max_progress = 100
+
+# Callback to update the default configuration file once the app is running
+@callback(
+    Output('scan-cfg-toml', 'value'),
+    Input('url', 'pathname')
+)
+def load_default_toml_cfg(_):
+    # Construct the path to the sample TOML config file (`assets` directory)
+    default_toml_path = get_asset_url('config_scan.toml')
+    # Load the default TOML configuration file into a string variable
+    with open(current_dir + "/.." + default_toml_path, 'r') as f:
+        default_toml = f.read()
+    return default_toml
+
+
 available_cameras = []
-
-
-def update_progress(val):
-    global progress
-    progress = val
-
-
-def update_max_progress(val):
-    global max_progress
-    max_progress = val
 
 
 def update_available_cameras(val):
@@ -229,8 +227,8 @@ def update_available_cameras(val):
 
 
 @callback(
-    Output("available-cameras", "children"),
-    Input("main-interval", "n_intervals"))
+    Output('available-cameras', 'children'),
+    Input('main-interval', 'n_intervals'))
 def update_interval(n_intervals):
     """Updates various components on a timer.
 
@@ -256,7 +254,7 @@ def update_interval(n_intervals):
         return "No camera connected"
 
 
-@callback(Output('scan-cfg-toml', 'value'),
+@callback(Output('scan-cfg-toml', 'value', allow_duplicate=True),
           Input('cfg-upload', 'contents'),
           prevent_initial_call=True)
 def update_toml_cfg(contents: str) -> str:
@@ -454,6 +452,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     State('plantdb-prefix', 'data'),
     State('plantdb-ssl', 'data'),
     State('access-token', 'data'),
+    State('refresh-token', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
     background=True,
@@ -472,8 +471,8 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
         Output('scan-progress', 'label'),
     ]
 )
-def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, access_token: str, cfg: str,
-             dataset_name: str):
+def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, access_token: str, refresh_token: str,
+             cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
 
     Parameters
@@ -490,6 +489,8 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
         Whether the PlantDB REST API server is using SSL.
     access_token : str
         The PlantDB REST API access token of the user.
+    refresh_token : str
+        The PlantDB REST API refresh token of the user.
     cfg : str
         The TOML configuration string for the scan.
     dataset_name : str
@@ -515,7 +516,19 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):
         return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
-    res: None | NoResult = controller.set_session_token(access_token)
+
+    client = PlantDBClient(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
+    client._access_token = access_token
+    client._refresh_token = refresh_token
+    if not client.validate_token(access_token):
+        return "Failed to authenticate with plantdb.", "Failed to authenticate with plantdb."
+    api_token = client.create_api_token(
+        600,
+        {dataset_name: (Permission.WRITE, Permission.CREATE, Permission.READ)}
+    )
+    if not api_token:
+        return "Failed to authenticate with plantdb.", "Failed to authenticate with plantdb and create the API token."
+    res: None | NoResult = controller.set_api_token(api_token)
     if isinstance(res, NoResult):
         return "Failed to connect to set access token.", res.traceback
     res: None | NoResult = controller.set_dataset_name(dataset_name)
@@ -615,12 +628,3 @@ def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, datase
 
     return "Scan configured", "Scan configured, ready to start"
 
-
-@callback(
-    Output('scan-progress', 'value'),
-    Output('scan-progress', 'max'),
-    Output('scan-progress', 'label'),
-    Input('scan-progress-interval', 'n_intervals'),
-)
-def progress_bar_update(n_int):
-    return progress, max_progress, f"{progress}/{max_progress}"

@@ -17,7 +17,7 @@ from plantimager.webui.visu import dash_boostrap_carousel
 
 @callback(
     Output('select-image-task', 'options'),
-    Input("carousel-modal", "is_open"),
+    Input('carousel-modal', 'is_open'),
     State('view-dataset', 'data'),
     State('plantdb-host', 'data'),
     State('plantdb-port', 'data'),
@@ -62,8 +62,8 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl, 
 
 @callback(Output('carousel', 'children'),
           # Output('carousel', 'figure'),
-          Input("carousel-modal", "is_open"),
-          Input("select-image-task", "value"),
+          Input('carousel-modal', 'is_open'),
+          Input('select-image-task', 'value'),
           State('view-dataset', 'data'),
           State('plantdb-host', 'data'),
           State('plantdb-port', 'data'),
