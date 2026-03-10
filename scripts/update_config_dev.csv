@@ -1,10 +1,10 @@
 ssh://romi@plant-imager.biologie.ens-lyon.fr/home/romi/plantdb, dev, src/commons, conda:plant-imager, --proxy socks5h://localhost:9090
 ssh://romi@plant-imager.biologie.ens-lyon.fr/home/romi/plantdb, dev, src/client, conda:plant-imager, --proxy socks5h://localhost:9090
-ssh://romi@plant-imager.biologie.ens-lyon.fr/home/romi/Plant-Imager3, dev, src/commons, conda:plant-imager, --proxy socks5h://localhost:9090
-ssh://romi@plant-imager.biologie.ens-lyon.fr/home/romi/Plant-Imager3, dev, src/controller, conda:plant-imager, --proxy socks5h://localhost:9090 --no-deps
-ssh://romi@plant-imager.biologie.ens-lyon.fr/home/romi/Plant-Imager3, dev, src/webui, conda:plant-imager, --proxy socks5h://localhost:9090
+ssh://romi@plant-imager.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/commons, conda:plant-imager, --proxy socks5h://localhost:9090
+ssh://romi@plant-imager.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/controller, conda:plant-imager, --proxy socks5h://localhost:9090 --no-deps
+ssh://romi@plant-imager.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/webui, conda:plant-imager, --proxy socks5h://localhost:9090
 
-ssh://romi@picamera1.biologie.ens-lyon.fr/home/romi/Plant-Imager3, dev, src/commons, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
-ssh://romi@picamera1.biologie.ens-lyon.fr/home/romi/Plant-Imager3, dev, src/picamera, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
-ssh://romi@picamera2.biologie.ens-lyon.fr/home/romi/Plant-Imager3, dev, src/commons, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
-ssh://romi@picamera2.biologie.ens-lyon.fr/home/romi/Plant-Imager3, dev, src/picamera, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
+ssh://romi@picamera1.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/commons, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
+ssh://romi@picamera1.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/picamera, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
+ssh://romi@picamera2.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/commons, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
+ssh://romi@picamera2.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/picamera, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
