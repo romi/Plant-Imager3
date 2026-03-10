@@ -2860,23 +2860,37 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/controller/camera/PiCameraComm.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">34</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">35</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">36</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">37</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">37</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">38</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, parent: QObject <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">44</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">45</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">47</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">48</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, parent: QObject <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
     QObject<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, parent)
     <span style="color: #008000">self</span><span style="color: #666">.</span>camera <span style="color: #666">=</span> PiCameraProxy(context, url)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_thread_pool <span style="color: #666">=</span> ThreadPoolExecutor(max_workers<span style="color: #666">=1</span>, thread_name_prefix<span style="color: #666">=</span><span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span><span style="color: #19177C">__class__</span><span style="color: #666">.</span><span style="color: #19177C">__name__</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">Thread&quot;</span>)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>modeChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> <span style="color: #666">*</span>args: <span style="color: #008000">self</span><span style="color: #666">.</span>modeChanged<span style="color: #666">.</span>emit(<span style="color: #666">*</span>args))
-    <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>videoUrlChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> <span style="color: #666">*</span>args: <span style="color: #008000">self</span><span style="color: #666">.</span>videoUrlChanged<span style="color: #666">.</span>emit(<span style="color: #666">*</span>args))
-    <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>rotationChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> <span style="color: #666">*</span>args: <span style="color: #008000">self</span><span style="color: #666">.</span>rotationChanged<span style="color: #666">.</span>emit(<span style="color: #666">*</span>args))
-    <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>resolutionChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> res: <span style="color: #008000">self</span><span style="color: #666">.</span>resolutionChanged<span style="color: #666">.</span>emit(<span style="color: #666">*</span>res))
-    finalize(<span style="color: #008000">self</span>, <span style="color: #008000">self</span><span style="color: #666">.</span>_finalize)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>modeChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> mode: <span style="color: #008000">self</span><span style="color: #666">.</span>modeChanged<span style="color: #666">.</span>emit(mode))
+    <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>videoUrlChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> u: <span style="color: #008000">self</span><span style="color: #666">.</span>videoUrlChanged<span style="color: #666">.</span>emit(u))
+    <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>rotationChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> rot: <span style="color: #008000">self</span><span style="color: #666">.</span>rotationChanged<span style="color: #666">.</span>emit(rot))
+    <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>resolutionChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> <span style="color: #666">*</span>res: <span style="color: #008000">self</span><span style="color: #666">.</span>resolutionChanged<span style="color: #666">.</span>emit(<span style="color: #666">*</span>res))
+    <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>encodingChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> e: <span style="color: #008000">self</span><span style="color: #666">.</span>encodingChanged<span style="color: #666">.</span>emit(e))
+    <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>configChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> c: <span style="color: #008000">self</span><span style="color: #666">.</span>configChanged<span style="color: #666">.</span>emit(c))
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_waiting_for_response <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
+
+    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_finalizer</span>(pool, camera):
+        pool<span style="color: #666">.</span>shutdown(wait<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+        camera<span style="color: #666">.</span>stop_server()
+    finalize(<span style="color: #008000">self</span>, _finalizer, <span style="color: #008000">self</span><span style="color: #666">.</span>_thread_pool, <span style="color: #008000">self</span><span style="color: #666">.</span>camera)
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -2935,13 +2949,7 @@ When camera.get_image() returns and the result is available, the signal imageRea
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/camera/PiCameraComm.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">48</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">54</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">54</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">55</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
@@ -2954,7 +2962,15 @@ When camera.get_image() returns and the result is available, the signal imageRea
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">64</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">bool</span>, result<span style="color: #666">=</span>Future)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">73</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">74</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">75</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">bool</span>, result<span style="color: #666">=</span>Future)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getImage</span>(<span style="color: #008000">self</span>, lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> Future[<span style="color: #008000">tuple</span>[<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>]]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Submits a call to camera.get_image() and returns a future representing the pending result.</span>
@@ -2970,7 +2986,9 @@ When camera.get_image() returns and the result is available, the signal imageRea
         res <span style="color: #666">=</span> ft_<span style="color: #666">.</span>result()
         <span style="color: #008000; font-weight: bold">if</span> res:
             buffer, buffer_info <span style="color: #666">=</span> res
+            <span style="color: #008000">self</span><span style="color: #666">.</span>waiting_for_response <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
             <span style="color: #008000">self</span><span style="color: #666">.</span>imageReady<span style="color: #666">.</span>emit(buffer, buffer_info)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>waiting_for_response <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
     ft <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_thread_pool<span style="color: #666">.</span>submit(<span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>get_image, lores<span style="color: #666">=</span>lores)
     ft<span style="color: #666">.</span>add_done_callback(_callback)
     <span style="color: #008000; font-weight: bold">return</span> ft

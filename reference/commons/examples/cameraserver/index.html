@@ -807,6 +807,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.commons.examples.cameraserver.DummyCamera.config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.commons.examples.cameraserver.DummyCamera.get_image" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2811,6 +2822,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.commons.examples.cameraserver.DummyCamera.config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.commons.examples.cameraserver.DummyCamera.get_image" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3015,16 +3037,20 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/commons/examples/cameraserver.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">73</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">74</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">74</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">75</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">76</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">77</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">78</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
     RPCServer<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context, url)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_mode <span style="color: #666">=</span> CameraMode<span style="color: #666">.</span>STILL
     <span style="color: #008000">self</span><span style="color: #666">.</span>_video_url <span style="color: #666">=</span> <span style="color: #BA2121">&quot;tcp://test_url:1234&quot;</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_rotation <span style="color: #666">=</span> <span style="color: #666">0</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding <span style="color: #666">=</span> <span style="color: #BA2121">&quot;jpeg&quot;</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_config <span style="color: #666">=</span> {}
     <span style="color: #008000">self</span><span style="color: #666">.</span>_image_provider <span style="color: #666">=</span> image_provider()
 </code></pre></div></td></tr></table></div>
                   </details>
@@ -3045,6 +3071,83 @@
 <div class="doc doc-object doc-function">
 
 
+<h4 id="plantimager.commons.examples.cameraserver.DummyCamera.config" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">config</span>
+
+
+<a href="#plantimager.commons.examples.cameraserver.DummyCamera.config" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>config(value)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="n">Sets</span><span class="w"> </span><span class="nb">camera</span><span class="w"> </span><span class="n">controls</span><span class="o">/</span><span class="n">parameters</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">Picamera2</span><span class="w"> </span><span class="n">Appendix</span><span class="w"> </span><span class="n">C</span><span class="o">.</span>
+</code></pre></div>
+
+
+<details class="--------parameters" open>
+  <summary><div class="codehilite"><pre><span></span><code>    Parameters
+</code></pre></div></summary>
+  <div class="codehilite"><pre><span></span><code>    value : dict
+        Control names and values (e.g., {&#39;Brightness&#39;: 0.5, &#39;Contrast&#39;: 1.2}).
+</code></pre></div>
+</details>
+
+<details class="--------see-also" open>
+  <summary><div class="codehilite"><pre><span></span><code>    See Also
+</code></pre></div></summary>
+  <div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="n">Picamera2</span><span class="w"> </span><span class="n">Manual</span><span class="w"> </span><span class="n">Appendix</span><span class="w"> </span><span class="n">C</span><span class="err">:</span>
+</code></pre></div>
+
+<p>https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf?disposition=inline#%5B%7B%22num%22%3A10333%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70.86614%2C781.0236%2C0%5D</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>plantimager/commons/examples/cameraserver.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">123</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">125</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">126</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">127</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">128</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">129</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">130</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">131</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">132</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">133</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">134</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">135</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">136</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code>    <span style="color: #A2F">@config</span><span style="color: #666">.</span>setter
+    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">config</span>(<span style="color: #008000">self</span>, value: <span style="color: #008000">dict</span>):
+<span style="color: #BBB">        </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">        Sets camera controls/parameters from Picamera2 Appendix C.</span>
+
+<span style="color: #BA2121; font-style: italic">        Parameters</span>
+<span style="color: #BA2121; font-style: italic">        ----------</span>
+<span style="color: #BA2121; font-style: italic">        value : dict</span>
+<span style="color: #BA2121; font-style: italic">            Control names and values (e.g., {&#39;Brightness&#39;: 0.5, &#39;Contrast&#39;: 1.2}).</span>
+
+<span style="color: #BA2121; font-style: italic">        See Also</span>
+<span style="color: #BA2121; font-style: italic">        --------</span>
+<span style="color: #BA2121; font-style: italic">        Picamera2 Manual Appendix C:</span>
+<span style="color: #BA2121; font-style: italic">https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf?disposition=inline#%5B%7B%22num%22%3A10333%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70.86614%2C781.0236%2C0%5D</span>
+<span style="color: #BA2121; font-style: italic">        &quot;&quot;&quot;</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_config<span style="color: #666">.</span>update(value)
+        <span style="color: #3D7B7B; font-style: italic"># Apply controls to the running camera</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>configChanged<span style="color: #666">.</span>emit(<span style="color: #008000">self</span><span style="color: #666">.</span>_config)
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h4 id="plantimager.commons.examples.cameraserver.DummyCamera.get_image" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">get_image</span>
 
@@ -3061,19 +3164,29 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/examples/cameraserver.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">76</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">77</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">78</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">81</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">84</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">85</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">86</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">87</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">88</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_buffer(timeout<span style="color: #666">=10000</span>)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 81</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 82</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 83</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 84</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 85</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 86</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 87</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 88</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 89</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 90</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 91</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 92</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 93</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 94</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 95</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 96</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 97</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 98</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 99</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">100</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">101</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">103</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_buffer(timeout<span style="color: #666">=10000</span>)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_image</span>(<span style="color: #008000">self</span>, lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> (<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return a JPEG‑encoded image (as a memoryview) and a metadata dict.</span>
 
@@ -3084,8 +3197,18 @@
     image <span style="color: #666">=</span> <span style="color: #008000">next</span>(<span style="color: #008000">self</span><span style="color: #666">.</span>_image_provider)
     <span style="color: #3D7B7B; font-style: italic"># image = block_mean(image, 5)</span>
     <span style="color: #3D7B7B; font-style: italic"># image = np.clip(image.astype(int) + np.round(np.random.normal(0.0, 0.5, image.shape)), 0, 255)</span>
-    buffer <span style="color: #666">=</span> encode_jpeg(image<span style="color: #666">.</span>astype(np<span style="color: #666">.</span>uint8), quality<span style="color: #666">=95</span>, colorsubsampling<span style="color: #666">=</span><span style="color: #BA2121">&quot;420&quot;</span>, fastdct<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
-    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">memoryview</span>(buffer), {<span style="color: #BA2121">&quot;format&quot;</span>: <span style="color: #BA2121">&quot;jpeg&quot;</span>, <span style="color: #BA2121">&quot;rotation&quot;</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>_rotation, <span style="color: #BA2121">&quot;size&quot;</span>: image<span style="color: #666">.</span>shape}
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding <span style="color: #666">==</span> <span style="color: #BA2121">&quot;jpeg&quot;</span>:
+        buffer <span style="color: #666">=</span> encode_jpeg(image<span style="color: #666">.</span>astype(np<span style="color: #666">.</span>uint8), quality<span style="color: #666">=95</span>, colorsubsampling<span style="color: #666">=</span><span style="color: #BA2121">&quot;420&quot;</span>, fastdct<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+    <span style="color: #008000; font-weight: bold">elif</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding <span style="color: #666">==</span> <span style="color: #BA2121">&quot;png&quot;</span>:
+        rgb_image <span style="color: #666">=</span> image[<span style="color: #666">...</span>, ::<span style="color: #666">-1</span>]
+        pil_img <span style="color: #666">=</span> Image<span style="color: #666">.</span>fromarray(rgb_image)
+        buf <span style="color: #666">=</span> io<span style="color: #666">.</span>BytesIO()
+        pil_img<span style="color: #666">.</span>save(buf, <span style="color: #008000">format</span><span style="color: #666">=</span><span style="color: #BA2121">&quot;PNG&quot;</span>)
+        buffer <span style="color: #666">=</span> buf<span style="color: #666">.</span>getvalue()
+    <span style="color: #008000; font-weight: bold">else</span>:
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">f&quot;Unknown encoding: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_encoding<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+    time<span style="color: #666">.</span>sleep(CAMERASERVER_LAG<span style="color: #666">/1000</span>)
+    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">memoryview</span>(buffer), {<span style="color: #BA2121">&quot;format&quot;</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding, <span style="color: #BA2121">&quot;rotation&quot;</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>_rotation, <span style="color: #BA2121">&quot;size&quot;</span>: image<span style="color: #666">.</span>shape}
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3879,11 +4002,7 @@ The generator loops indefinitely, restarting after the last image.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/examples/cameraserver.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">15</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">16</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">17</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">18</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">19</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">19</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">20</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
@@ -3903,7 +4022,11 @@ The generator loops indefinitely, restarting after the last image.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">36</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">37</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">38</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">image_provider</span>():
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">image_provider</span>():
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Generates an infinite sequence of images from a directory.</span>
 
 <span style="color: #BA2121; font-style: italic">    Yields</span>
