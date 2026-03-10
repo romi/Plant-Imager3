@@ -121,8 +121,8 @@ def execute_task(conn: Connection, task: Task):
     """Executes the update sequence for a single package."""
 
     # 1. Navigate to directory
-    with conn.cd(task.full_remote_path):
-        click.echo(f"  -> Processing {task.full_remote_path} @ {task.host_string}...")
+    with conn.cd(task.base_dir):
+        click.echo(f"  -> Processing {task.base_dir} - {task.package_subpath} @ {task.host_string}...")
 
         # 2. Fetch latest remote info so we know about new branches
         conn.run("git fetch origin", hide=True)
@@ -184,7 +184,7 @@ def execute_task(conn: Connection, task: Task):
                 activate_cmd = get_activation_command(task)
 
                 with conn.prefix(activate_cmd):
-                    cmd = f"pip install -e . {task.pip_options}"
+                    cmd = f"pip install -e {task.package_subpath} {task.pip_options}"
                     click.echo(f"     (Installing: {cmd})")
                     conn.run(cmd, hide=True)
             else:
@@ -192,7 +192,7 @@ def execute_task(conn: Connection, task: Task):
 
         except UnexpectedExit as e:
             # Re-raise to be caught by the host processor
-            raise Exception(f"Command failed: {e.result.command}\nStderr: {e.result.stderr}")
+            raise RuntimeError(f"Command failed: {e.result.command}\nStderr: {e.result.stderr}")
 
 
 def process_host(host_string: str, tasks: List[Task]) -> List[str]:
