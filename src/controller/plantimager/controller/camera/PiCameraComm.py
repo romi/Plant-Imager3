@@ -41,7 +41,7 @@ class PiCameraComm(QObject):
         self.camera.modeChanged.connect(lambda mode: self.modeChanged.emit(mode))
         self.camera.videoUrlChanged.connect(lambda u: self.videoUrlChanged.emit(u))
         self.camera.rotationChanged.connect(lambda rot: self.rotationChanged.emit(rot))
-        self.camera.resolutionChanged.connect(lambda *res: self.resolutionChanged.emit(*res))
+        self.camera.resolutionChanged.connect(lambda res: self.resolutionChanged.emit(*res))
         self.camera.encodingChanged.connect(lambda e: self.encodingChanged.emit(e))
         self.camera.configChanged.connect(lambda c: self.configChanged.emit(c))
         self._waiting_for_response = False
