@@ -1,3 +1,4 @@
+import io
 import os
 import subprocess
 import sys
@@ -6,6 +7,7 @@ import socket
 import av
 import numpy as np
 import zmq
+from PIL import Image
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
 from picamera2.outputs import PyavOutput
@@ -43,12 +45,14 @@ class RPCCamera(Camera, RPCServer):
         )
         self._mode = CameraMode.STILL
         self._video_url = ""
+        self._encoding = "jpeg"
+        self._config = {}  # camera parameters from Appendix C in the picamera2 doc.
         self.picam.configure(self.still_config)
         self.picam.start()
 
         # video stuff
-        self.encoder: H264Encoder = None
-        self.output: PyavOutput_nobuffer = None
+        self.encoder: H264Encoder | None = None
+        self.output: PyavOutput_nobuffer | None = None
 
         # config
         self._rotation = 90
@@ -62,7 +66,6 @@ class RPCCamera(Camera, RPCServer):
             print("switched to video mode")
             self.encoder = H264Encoder(bitrate=10_000_000)
             self.output = PyavOutput_nobuffer("tcp://0.0.0.0:8888\?listen=1", format="mpegts")
-            # self.output.error_callback = callback
             self.picam.start_encoder(self.encoder, self.output)
             print("Camera stream started")
             self._video_url = f"tcp://{socket.gethostname()}:8888"
@@ -99,11 +102,53 @@ class RPCCamera(Camera, RPCServer):
             V[::2, :] = image[width+width//4:, :height//2]
             V[1::2, :] = image[width+width//4:, height//2+padding//2:height+padding//2]
             buffer = encode_jpeg_yuv_planes(Y, U, V, quality=80, fastdct=True)
+            fmt = "jpeg"
         else:
             image: np.ndarray = self.picam.capture_array()
-            buffer = encode_jpeg(image, quality=95, colorsubsampling="420", fastdct=True)
-        # buffer = jpegxl_encode(image, lossless=True, effort=2)
-        return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape, "channel": "rgb"}
+            if self._encoding == "png":
+                # Convert BGR (picamera2 default for capture_array) to RGB for PIL
+                rgb_image = image[..., ::-1]
+                pil_img = Image.fromarray(rgb_image)
+                buf = io.BytesIO()
+                pil_img.save(buf, format="PNG")
+                buffer = buf.getvalue()
+                fmt = "png"
+            else:
+                buffer = encode_jpeg(image, quality=95, colorsubsampling="444", fastdct=True)
+                fmt = "jpeg"
+        return memoryview(buffer), {"format": fmt, "rotation": self._rotation, "size": image.shape, "channel": "rgb"}
+
+    @RPCProperty(notify=Camera.encodingChanged)
+    def encoding(self) -> str:
+        return self._encoding
+    @encoding.setter
+    def encoding(self, value: str):
+        if value in ["jpeg", "png"]:
+            self._encoding = value
+            self.encodingChanged.emit(value)
+
+    @RPCProperty(notify=Camera.configChanged)
+    def config(self) -> dict:
+        return self._config
+    @config.setter
+    def config(self, value: dict):
+        """
+        Sets camera controls/parameters from Picamera2 Appendix C.
+
+        Parameters
+        ----------
+        value : dict
+            Control names and values (e.g., {'Brightness': 0.5, 'Contrast': 1.2}).
+
+        See Also
+        --------
+        Picamera2 Manual Appendix C:
+https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf?disposition=inline#%5B%7B%22num%22%3A10333%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70.86614%2C781.0236%2C0%5D
+       """
+        self._config.update(value)
+        # Apply controls to the running camera
+        self.picam.set_controls(self._config)
+        self.configChanged.emit(self._config)
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self):

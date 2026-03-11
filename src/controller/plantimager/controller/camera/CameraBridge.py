@@ -22,16 +22,19 @@ class StatusClass(StrEnum):
     ERROR = "error"
     WARNING = "warning"
     INACTIVE = "inactive"
+    WAITING = "waiting"
 
-class States(StrEnum): # TODO: redo statuses when communication with picamera is figured out
+class States(StrEnum):
     DISCONNECTED = "disconnected"
     INVALID = "invalid"
     CONNECTED = "connected"
+    WAITING = "waiting"
 
 STATE_TO_CLASS = {
     States.DISCONNECTED: StatusClass.INACTIVE,
     States.INVALID: StatusClass.ERROR,
     States.CONNECTED: StatusClass.OK,
+    States.WAITING: StatusClass.WAITING,
 }
 
 class DisplayMode(StrEnum):
@@ -79,6 +82,7 @@ class CameraBridge(QObject):
             self._rotation = 0
             return
         self._status = States.DISCONNECTED
+        self.statusChanged.connect(lambda state: self.statusClassChanged.emit(STATE_TO_CLASS[state]))
 
         self.camera = PiCameraComm(context, address)
         self.camera.imageReady.connect(self._newImage)
@@ -88,19 +92,23 @@ class CameraBridge(QObject):
         self._rotation: int = self.camera.rotation
         self.camera.rotationChanged.connect(self._camera_rotation_change_handler)
         self._status = States.CONNECTED
-        finalize(self, self._stop)
         self._i = 0
 
-    def _stop(self):
-        """Handles termination of CameraBridge (to use with weakref.finalize)"""
-        logger.debug(f"finalizing bridge {self._name}")
-        self._video_source = ""
-        self._image_source = ""
-        self._status = States.INVALID
+        self.camera.waitingForResponseChanged.connect(self._camera_waiting_for_response_changed)
 
-        del self.camera
-        logger.debug(f"bridge {self._name} finalized")
+        def _finalizer(camera):
+            del camera
+            logger.debug(f"bridge {self._name} finalized")
+        finalize(self, _finalizer, self.camera)
 
+    @Slot(bool)
+    def _camera_waiting_for_response_changed(self, waiting: bool):
+        if waiting:
+            self._status = States.WAITING
+            self.statusChanged.emit(self._status)
+        else:
+            self._status = States.CONNECTED
+            self.statusChanged.emit(self._status)
 
     @Slot()
     def getImage(self):
@@ -206,16 +214,11 @@ class CameraBridge(QObject):
     def nextDisplayMode(self):
         if self._displayMode == DisplayMode.NORMAL:
             self.displayMode = DisplayMode.FOCUS
-            return
         elif self._displayMode == DisplayMode.FOCUS:
             self.displayMode = DisplayMode.ZOOMED
-            return
         elif self._displayMode == DisplayMode.ZOOMED:
             self.displayMode = DisplayMode.ZOOMED_FOCUS
-            return
         elif self._displayMode == DisplayMode.ZOOMED_FOCUS:
             self.displayMode = DisplayMode.ALIGN
-            return
         elif self._displayMode == DisplayMode.ALIGN:
             self.displayMode = DisplayMode.NORMAL
-            return

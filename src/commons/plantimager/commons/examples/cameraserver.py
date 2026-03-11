@@ -1,8 +1,11 @@
+import io
 import os
+import time
 
 import matplotlib.pyplot as plt
 import numpy as np
 import zmq
+from PIL import Image
 from plantdb.commons.test_database import get_test_dataset
 from plantimager.commons.RPC import RPCProperty
 from plantimager.commons.RPC import RPCServer
@@ -11,6 +14,7 @@ from plantimager.commons.cameradevice import CameraMode
 from scipy import ndimage
 from simplejpeg import encode_jpeg
 
+CAMERASERVER_LAG = int(os.getenv("PI3_CAMERASERVER_LAG", 0))  # in milliseconds
 
 def image_provider():
     """Generates an infinite sequence of images from a directory.
@@ -46,7 +50,6 @@ def block_mean(ar, fact):
     X, Y = np.ogrid[0:sx, 0:sy]
     regions = sy // fact * (X // fact) + Y // fact
     if others:
-        max_ = regions.max()
         regions = np.expand_dims(regions, axis=2).repeat(others[0], axis=2)
         regions *= others[0]
         for i in range(1, others[0]):
@@ -71,6 +74,8 @@ class DummyCamera(Camera, RPCServer):
         self._mode = CameraMode.STILL
         self._video_url = "tcp://test_url:1234"
         self._rotation = 0
+        self._encoding = "jpeg"
+        self._config = {}
         self._image_provider = image_provider()
 
     @RPCServer.register_method_buffer(timeout=10000)
@@ -84,8 +89,51 @@ class DummyCamera(Camera, RPCServer):
         image = next(self._image_provider)
         # image = block_mean(image, 5)
         # image = np.clip(image.astype(int) + np.round(np.random.normal(0.0, 0.5, image.shape)), 0, 255)
-        buffer = encode_jpeg(image.astype(np.uint8), quality=95, colorsubsampling="420", fastdct=True)
-        return memoryview(buffer), {"format": "jpeg", "rotation": self._rotation, "size": image.shape}
+        if self._encoding == "jpeg":
+            buffer = encode_jpeg(image.astype(np.uint8), quality=95, colorsubsampling="420", fastdct=True)
+        elif self._encoding == "png":
+            rgb_image = image[..., ::-1]
+            pil_img = Image.fromarray(rgb_image)
+            buf = io.BytesIO()
+            pil_img.save(buf, format="PNG")
+            buffer = buf.getvalue()
+        else:
+            raise ValueError(f"Unknown encoding: {self._encoding}")
+        time.sleep(CAMERASERVER_LAG/1000)
+        return memoryview(buffer), {"format": self._encoding, "rotation": self._rotation, "size": image.shape}
+
+    @RPCProperty(notify=Camera.encodingChanged)
+    def encoding(self) -> str:
+        return self._encoding
+
+    @encoding.setter
+    def encoding(self, value: str):
+        if value in ["jpeg", "png"]:
+            self._encoding = value
+            self.encodingChanged.emit(value)
+
+    @RPCProperty(notify=Camera.configChanged)
+    def config(self) -> dict:
+        return self._config
+
+    @config.setter
+    def config(self, value: dict):
+        """
+        Sets camera controls/parameters from Picamera2 Appendix C.
+
+        Parameters
+        ----------
+        value : dict
+            Control names and values (e.g., {'Brightness': 0.5, 'Contrast': 1.2}).
+
+        See Also
+        --------
+        Picamera2 Manual Appendix C:
+https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf?disposition=inline#%5B%7B%22num%22%3A10333%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70.86614%2C781.0236%2C0%5D
+        """
+        self._config.update(value)
+        # Apply controls to the running camera
+        self.configChanged.emit(self._config)
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self):

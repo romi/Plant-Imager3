@@ -331,6 +331,8 @@ class Scanner(QObject):
         Emits cameraNamesChanged and readyToScanChanged signals.
         """
         logger.debug(f"Adding camera {camera.name} to scanner.")
+        if self.config and camera.name in self.config:
+            self._configure_cameras([camera])
         self.cameras.append(camera)  # Add camera to list
         self.cameraNamesChanged.emit(self.camera_names)  # Update camera names
         self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state
@@ -493,10 +495,16 @@ class Scanner(QObject):
         self.hw_metadata = config["Metadata"]["hardware"]  # Hardware metadata
 
         # Configure cameras
-        for camera in self.cameras:
-            if camera.name in config:
-                res = config[camera.name]["res_x"], config[camera.name]["res_y"]
+        self._configure_cameras(self.cameras)
+
+    def _configure_cameras(self, cameras: list[PiCameraComm]):
+        """Configure the cameras for scanning."""
+        for camera in cameras:
+            if camera.name in self.config:
+                res = self.config[camera.name]["res_x"], self.config[camera.name]["res_y"]
                 camera.resolution = res
+                camera.encoding = self.config[camera.name]["encoding"]
+                camera.config = self.config[camera.name]["config"]
 
     @Property(bool, notify=readyToScanChanged)
     def ready_to_scan(self) -> bool:

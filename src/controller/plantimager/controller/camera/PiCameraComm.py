@@ -30,20 +30,26 @@ class PiCameraComm(QObject):
     videoUrlChanged = Signal(str)
     rotationChanged = Signal(int)
     resolutionChanged = Signal(int, int)
+    encodingChanged = Signal(str)
+    configChanged = Signal(dict)
+    waitingForResponseChanged = Signal(bool)
 
     def __init__(self, context: zmq.Context, url: str, parent: QObject = None):
         QObject.__init__(self, parent)
         self.camera = PiCameraProxy(context, url)
         self._thread_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"{self.__class__.__name__}Thread")
-        self.camera.modeChanged.connect(lambda *args: self.modeChanged.emit(*args))
-        self.camera.videoUrlChanged.connect(lambda *args: self.videoUrlChanged.emit(*args))
-        self.camera.rotationChanged.connect(lambda *args: self.rotationChanged.emit(*args))
-        self.camera.resolutionChanged.connect(lambda res: self.resolutionChanged.emit(*res))
-        finalize(self, self._finalize)
+        self.camera.modeChanged.connect(lambda mode: self.modeChanged.emit(mode))
+        self.camera.videoUrlChanged.connect(lambda u: self.videoUrlChanged.emit(u))
+        self.camera.rotationChanged.connect(lambda rot: self.rotationChanged.emit(rot))
+        self.camera.resolutionChanged.connect(lambda *res: self.resolutionChanged.emit(*res))
+        self.camera.encodingChanged.connect(lambda e: self.encodingChanged.emit(e))
+        self.camera.configChanged.connect(lambda c: self.configChanged.emit(c))
+        self._waiting_for_response = False
 
-    def _finalize(self):
-        self._thread_pool.shutdown(cancel_futures=True)
-        self.camera.stop_server()
+        def _finalizer(pool, camera):
+            pool.shutdown(wait=True)
+            camera.stop_server()
+        finalize(self, _finalizer, self._thread_pool, self.camera)
 
     @Slot(bool, result=Future)
     def getImage(self, lores=False) -> Future[tuple[memoryview, dict]]:
@@ -61,36 +67,92 @@ class PiCameraComm(QObject):
             res = ft_.result()
             if res:
                 buffer, buffer_info = res
+                self.waiting_for_response = False
                 self.imageReady.emit(buffer, buffer_info)
+        self.waiting_for_response = True
         ft = self._thread_pool.submit(self.camera.get_image, lores=lores)
         ft.add_done_callback(_callback)
         return ft
 
     @Property(str, notify=modeChanged)
     def mode(self) -> Literal["VIDEO", "STILL"]:
-        return self.camera.mode
+        self.waiting_for_response = True
+        val = self.camera.mode
+        self.waiting_for_response = False
+        return val
     @mode.setter
     def mode(self, value: Literal["VIDEO", "STILL"]):
-        self._thread_pool.submit(lambda : setattr(self.camera, "mode", value))
+        self.waiting_for_response = True
+        ft = self._thread_pool.submit(lambda : setattr(self.camera, "mode", value))
+        ft.add_done_callback(lambda *arg: setattr(self, "waiting_for_response", False))
 
     @Property(str, notify=videoUrlChanged)
     def videoUrl(self):
-        return self.camera.video_url
+        self.waiting_for_response = True
+        val = self.camera.video_url
+        self.waiting_for_response = False
+        return val
 
     @Property(int, notify=rotationChanged)
     def rotation(self):
-        return self.camera.rotation
+        self.waiting_for_response = True
+        val = self.camera.rotation
+        self.waiting_for_response = False
+        return val
     @rotation.setter
     def rotation(self, value: int):
-        self._thread_pool.submit(lambda : setattr(self.camera, "rotation", value))
+        self.waiting_for_response = True
+        ft = self._thread_pool.submit(lambda : setattr(self.camera, "rotation", value))
+        ft.add_done_callback(lambda *arg: setattr(self, "waiting_for_response", False))
 
     @Property(str)
     def name(self):
-        return self.camera.name
+        self.waiting_for_response = True
+        val = self.camera.name
+        self.waiting_for_response = False
+        return val
 
     @Property(int, notify=resolutionChanged)
     def resolution(self):
-        return self.camera.resolution
+        self.waiting_for_response = True
+        val = self.camera.resolution
+        self.waiting_for_response = False
+        return val
     @resolution.setter
     def resolution(self, value: tuple[int, int]):
-        self._thread_pool.submit(lambda : setattr(self.camera, "resolution", value))
+        self.waiting_for_response = True
+        ft = self._thread_pool.submit(lambda : setattr(self.camera, "resolution", value))
+        ft.add_done_callback(lambda *arg: setattr(self, "waiting_for_response", False))
+
+    @Property(int, notify=encodingChanged)
+    def encoding(self):
+        self.waiting_for_response = True
+        val = self.camera.encoding
+        self.waiting_for_response = False
+        return val
+    @encoding.setter
+    def encoding(self, value: tuple[int, int]):
+        self.waiting_for_response = True
+        ft = self._thread_pool.submit(lambda : setattr(self.camera, "encoding", value))
+        ft.add_done_callback(lambda *arg: setattr(self, "waiting_for_response", False))
+
+    @Property(int, notify=configChanged)
+    def config(self):
+        self.waiting_for_response = True
+        val = self.camera.config
+        self.waiting_for_response = False
+        return val
+    @config.setter
+    def config(self, value: tuple[int, int]):
+        self.waiting_for_response = True
+        ft = self._thread_pool.submit(lambda : setattr(self.camera, "config", value))
+        ft.add_done_callback(lambda *arg: setattr(self, "waiting_for_response", False))
+
+    @Property(bool, notify=waitingForResponseChanged)
+    def waiting_for_response(self):
+        return self._waiting_for_response
+    @waiting_for_response.setter
+    def waiting_for_response(self, value: bool):
+        if value != self._waiting_for_response:
+            self._waiting_for_response = value
+            self.waitingForResponseChanged.emit(self._waiting_for_response)
