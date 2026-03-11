@@ -106,9 +106,7 @@ class RPCCamera(Camera, RPCServer):
         else:
             image: np.ndarray = self.picam.capture_array()
             if self._encoding == "png":
-                # Convert BGR (picamera2 default for capture_array) to RGB for PIL
-                rgb_image = image[..., ::-1]
-                pil_img = Image.fromarray(rgb_image)
+                pil_img = Image.fromarray(image)
                 buf = io.BytesIO()
                 pil_img.save(buf, format="PNG")
                 buffer = buf.getvalue()

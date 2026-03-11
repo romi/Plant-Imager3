@@ -141,6 +141,13 @@ class ImageProvider(QQuickImageProvider):
                 image = image.transformed(transform, mode=Qt.TransformationMode.SmoothTransformation)
             self.images[id] = image
             logger.debug(f"Added image to id: {id}")
+        elif buffer_info["format"] == "png":
+            image = QImage.fromData(buffer.tobytes("C"), "PNG")
+            if "rotation" in buffer_info and buffer_info["rotation"] != 0:
+                transform = QTransform().rotate(buffer_info["rotation"])
+                image = image.transformed(transform, mode=Qt.TransformationMode.SmoothTransformation)
+            self.images[id] = image
+            logger.debug(f"Added image to id: {id}")
         else:
             logger.warning(f"Unknown image format: {buffer_info['format']} for id: {id}")
 
