@@ -4371,7 +4371,7 @@ existing datasets, <code>False</code> otherwise.</p>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> client<span style="color: #666">.</span>validate_token(access_token):
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;Failed to authenticate with plantdb.&quot;</span>, <span style="color: #BA2121">&quot;Failed to authenticate with plantdb.&quot;</span>
     api_token <span style="color: #666">=</span> client<span style="color: #666">.</span>create_api_token(
-        <span style="color: #666">600</span>,
+        <span style="color: #666">1800</span>,
         {dataset_name: (Permission<span style="color: #666">.</span>WRITE, Permission<span style="color: #666">.</span>CREATE, Permission<span style="color: #666">.</span>READ)}
     )
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> api_token:
