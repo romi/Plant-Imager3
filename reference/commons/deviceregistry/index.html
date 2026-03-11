@@ -3737,12 +3737,13 @@ value is included in the request payload.  Defaults to <code>ALIVE_TIMEOUT</code
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p><code>True</code> if the registry answered with <code>EventType.ACK</code>, otherwise
-<code>False</code>.</p>
+                <p>'ok' if alive check successfull
+'unreachable' if the check attempt timed out
+'unknown' if the registry does not know this service; might have already been removed</p>
               </div>
             </td>
           </tr>
@@ -3860,7 +3861,10 @@ connecting, sending, or receiving messages.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">484</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">485</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">486</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">send_alive_check</span>(context: zmq<span style="color: #666">.</span>Context, uuid: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, alive_timeout: <span style="color: #008000">int</span><span style="color: #666">=</span>ALIVE_TIMEOUT) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">488</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">489</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">send_alive_check</span>(context: zmq<span style="color: #666">.</span>Context, uuid: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, alive_timeout: <span style="color: #008000">int</span><span style="color: #666">=</span>ALIVE_TIMEOUT) \
+        <span style="color: #666">-&gt;</span> Literal[<span style="color: #BA2121">&quot;ok&quot;</span>, <span style="color: #BA2121">&quot;unreachable&quot;</span>, <span style="color: #BA2121">&quot;unknown&quot;</span>]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Check the liveness of a service with the registry.</span>
 
 <span style="color: #BA2121; font-style: italic">    Send an ``EventType.CHECK_ALIVE`` request to the registry and wait for an</span>
@@ -3885,9 +3889,10 @@ connecting, sending, or receiving messages.</p>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
-<span style="color: #BA2121; font-style: italic">    bool</span>
-<span style="color: #BA2121; font-style: italic">        ``True`` if the registry answered with ``EventType.ACK``, otherwise</span>
-<span style="color: #BA2121; font-style: italic">        ``False``.</span>
+<span style="color: #BA2121; font-style: italic">    str</span>
+<span style="color: #BA2121; font-style: italic">        &#39;ok&#39; if alive check successfull</span>
+<span style="color: #BA2121; font-style: italic">        &#39;unreachable&#39; if the check attempt timed out</span>
+<span style="color: #BA2121; font-style: italic">        &#39;unknown&#39; if the registry does not know this service; might have already been removed</span>
 
 <span style="color: #BA2121; font-style: italic">    Raises</span>
 <span style="color: #BA2121; font-style: italic">    ------</span>
@@ -3920,13 +3925,13 @@ connecting, sending, or receiving messages.</p>
                 }
             })
             <span style="color: #008000; font-weight: bold">if</span> socket<span style="color: #666">.</span>poll(<span style="color: #666">5000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
-                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;No answer from registry at address </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">. Closing&quot;</span>)
-                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;No answer from registry at address </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">.&quot;</span>)
+                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;unreachable&quot;</span>
             reply <span style="color: #666">=</span> socket<span style="color: #666">.</span>recv_json()
             event_type <span style="color: #666">=</span> reply[<span style="color: #BA2121">&quot;event&quot;</span>]
             <span style="color: #008000; font-weight: bold">if</span> event_type <span style="color: #666">==</span> EventType<span style="color: #666">.</span>ACK:
-                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>
-            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;ok&quot;</span>
+            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;unknown&quot;</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

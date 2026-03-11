@@ -3609,7 +3609,8 @@ of the local network interface ip which must be accessible from the client.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">462</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, alive_timeout: <span style="color: #008000">int</span> <span style="color: #666">=</span> <span style="color: #666">60</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">464</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, alive_timeout: <span style="color: #008000">int</span> <span style="color: #666">=</span> <span style="color: #666">60</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    RPCServer to use in combination with RPCClient.</span>
 <span style="color: #BA2121; font-style: italic">    The server holds the concrete implementation of an interface that is made available on the network.</span>
@@ -3646,6 +3647,7 @@ of the local network interface ip which must be accessible from the client.</p>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
 
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_type <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>context: zmq<span style="color: #666">.</span>Context <span style="color: #666">=</span> context
     <span style="color: #008000">self</span><span style="color: #666">.</span>url: <span style="color: #008000">str</span> <span style="color: #666">=</span> url
     <span style="color: #008000">self</span><span style="color: #666">.</span>alive_timeout <span style="color: #666">=</span> alive_timeout
@@ -3763,9 +3765,7 @@ as well as a buffer_info dictionary.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">598</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">599</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">600</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">600</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">601</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">602</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">603</span>
@@ -3791,7 +3791,9 @@ as well as a buffer_info dictionary.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">623</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">624</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">625</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">626</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">626</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">627</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">628</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_buffer</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output as a buffer-like object</span>
@@ -3904,9 +3906,7 @@ Arguments are also serialized via json.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">571</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">572</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">573</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">573</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">574</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">575</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">576</span>
@@ -3929,7 +3929,9 @@ Arguments are also serialized via json.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">593</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">594</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">595</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">596</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">596</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">597</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">598</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_json</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output via json.</span>
@@ -4083,8 +4085,7 @@ conflicting devices.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">530</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">531</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">531</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">532</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">533</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">534</span>
@@ -4121,7 +4122,9 @@ conflicting devices.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">565</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">566</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">567</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">568</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_to_registry</span>(<span style="color: #008000">self</span>, type_: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, overwrite<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">568</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">569</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">570</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_to_registry</span>(<span style="color: #008000">self</span>, type_: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, overwrite<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Register this RPCServer to the registry at `registry_address` as a device of type `type_` and name `name`.</span>
 
@@ -4147,6 +4150,7 @@ conflicting devices.</p>
 
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Register device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_type <span style="color: #666">=</span> type_
     <span style="color: #008000">self</span><span style="color: #666">.</span>name, <span style="color: #008000">self</span><span style="color: #666">.</span>uuid <span style="color: #666">=</span> register_device(
         <span style="color: #008000">self</span><span style="color: #666">.</span>context, type_,
         <span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>,
@@ -4185,9 +4189,7 @@ conflicting devices.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">692</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">693</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">694</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">694</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">695</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">696</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">697</span>
@@ -4299,7 +4301,12 @@ conflicting devices.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">803</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">804</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">805</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">806</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">serve_forever</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">806</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">807</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">808</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">809</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">810</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">811</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">serve_forever</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Starts serving requests for this RPCServer.</span>
 
@@ -4317,11 +4324,14 @@ conflicting devices.</p>
         notify_watchdog()
         <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr:
             res <span style="color: #666">=</span> send_alive_check(<span style="color: #008000">self</span><span style="color: #666">.</span>context, <span style="color: #008000">self</span><span style="color: #666">.</span>uuid, <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr, <span style="color: #008000">self</span><span style="color: #666">.</span>alive_timeout)
-            <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> res:
-                <span style="color: #3D7B7B; font-style: italic"># TODO: if res == False --&gt; do something (reset?)</span>
+            <span style="color: #008000; font-weight: bold">if</span> res <span style="color: #666">==</span> <span style="color: #BA2121">&quot;unreachable&quot;</span>:
                 logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f&quot;Check Alive failed. Registry at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> &quot;</span>
-                             <span style="color: #BA2121">f&quot;is unreachable or does not know this service.&quot;</span>)
+                             <span style="color: #BA2121">f&quot;is unreachable.&quot;</span>)
                 <span style="color: #008000; font-weight: bold">break</span>
+            <span style="color: #008000; font-weight: bold">elif</span> res <span style="color: #666">==</span> <span style="color: #BA2121">&quot;unregistered&quot;</span>:
+                logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f&quot;Check Alive failed. Registry at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> does not know this service.&quot;</span>
+                               <span style="color: #BA2121">f&quot; Trying to reregister.&quot;</span>)
+                <span style="color: #008000">self</span><span style="color: #666">.</span>register_to_registry(<span style="color: #008000">self</span><span style="color: #666">.</span>_type, <span style="color: #008000">self</span><span style="color: #666">.</span>name, <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr, <span style="color: #008000; font-weight: bold">False</span>)
         <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_socket<span style="color: #666">.</span>poll(<span style="color: #666">1000</span>, zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
             <span style="color: #008000; font-weight: bold">continue</span>
         request <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_socket<span style="color: #666">.</span>recv_json()
