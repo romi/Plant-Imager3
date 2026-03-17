@@ -439,6 +439,7 @@ class RPCServer:
         """
         super().__init__()
 
+        self._type = None
         self.context: zmq.Context = context
         self.url: str = url
         self.alive_timeout = alive_timeout
@@ -553,6 +554,7 @@ class RPCServer:
 
         """
         logger.debug(f"Register device {name} of type {type_} to {registry_url}")
+        self._type = type_
         self.name, self.uuid = register_device(
             self.context, type_,
             f"{self.url}:{self.port}",
@@ -707,11 +709,14 @@ class RPCServer:
             notify_watchdog()
             if self.registry_addr:
                 res = send_alive_check(self.context, self.uuid, self.registry_addr, self.alive_timeout)
-                if not res:
-                    # TODO: if res == False --> do something (reset?)
+                if res == "unreachable":
                     logger.error(f"Check Alive failed. Registry at {self.registry_addr} "
-                                 f"is unreachable or does not know this service.")
+                                 f"is unreachable.")
                     break
+                elif res == "unregistered":
+                    logger.warning(f"Check Alive failed. Registry at {self.registry_addr} does not know this service."
+                                   f" Trying to reregister.")
+                    self.register_to_registry(self._type, self.name, self.registry_addr, False)
             if self._socket.poll(1000, zmq.POLLIN) == 0:
                 continue
             request = self._socket.recv_json()

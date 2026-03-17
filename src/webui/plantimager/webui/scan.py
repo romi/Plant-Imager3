@@ -523,7 +523,7 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
     if not client.validate_token(access_token):
         return "Failed to authenticate with plantdb.", "Failed to authenticate with plantdb."
     api_token = client.create_api_token(
-        600,
+        1800,
         {dataset_name: (Permission.WRITE, Permission.CREATE, Permission.READ)}
     )
     if not api_token:
