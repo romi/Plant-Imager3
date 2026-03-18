@@ -45,6 +45,7 @@ class TestScanIntegration(unittest.TestCase):
         # Prepare Environment
         self.camera_env = os.environ.copy()
         self.camera_env["PI3_CAMERASERVER_IMAGE"] = self.images_path
+        self.camera_env["PI3_CAMERASERVER_LAG"] = "100"  # ms
 
         # Start Processes
         print("\n[SetUp] Spawning subprocesses...")

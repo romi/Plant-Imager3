@@ -238,7 +238,7 @@ class DeviceRegistry(Thread):
             if expiration_time < now
         ]
         for uuid in to_remove:
-            logger.info(f"Device {uuid} timed out. Removing.")
+            logger.warning(f"Device {uuid} of named {self.device_names[uuid]} timed out. Removing.")
             self._remove_device_by_uuid(uuid)
 
     def _handle_register(self, device_type: str, addr: str, proposed_name: str, overwrite: bool=False) -> str:
@@ -418,7 +418,8 @@ def unregister_device(context: zmq.Context, uuid: str, registry_addr: str) -> bo
                 return True
             return False
 
-def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_timeout: int=ALIVE_TIMEOUT) -> bool:
+def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_timeout: int=ALIVE_TIMEOUT) \
+        -> Literal["ok", "unreachable", "unknown"]:
     """Check the liveness of a service with the registry.
 
     Send an ``EventType.CHECK_ALIVE`` request to the registry and wait for an
@@ -443,9 +444,10 @@ def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_t
 
     Returns
     -------
-    bool
-        ``True`` if the registry answered with ``EventType.ACK``, otherwise
-        ``False``.
+    str
+        'ok' if alive check successfull
+        'unreachable' if the check attempt timed out
+        'unknown' if the registry does not know this service; might have already been removed
 
     Raises
     ------
@@ -478,10 +480,10 @@ def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_t
                 }
             })
             if socket.poll(5000, flags=zmq.POLLIN) == 0:
-                logger.debug(f"No answer from registry at address {registry_url}. Closing")
-                return False
+                logger.debug(f"No answer from registry at address {registry_url}.")
+                return "unreachable"
             reply = socket.recv_json()
             event_type = reply["event"]
             if event_type == EventType.ACK:
-                return True
-            return False
+                return "ok"
+            return "unknown"

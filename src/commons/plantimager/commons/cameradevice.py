@@ -16,7 +16,10 @@ class Camera(ABC):
     videoUrlChanged = RPCSignal(str)
     rotationChanged = RPCSignal(int)
     resolutionChanged = RPCSignal(tuple[int, int])
+    encodingChanged = RPCSignal(str)
+    configChanged = RPCSignal(dict)
 
+    @abstractmethod
     def __init__(self):
         pass
 
@@ -52,3 +55,20 @@ class Camera(ABC):
     def resolution(self, resolution: tuple[int, int]) -> None:
         pass
 
+    @RPCProperty(notify=encodingChanged)
+    @abstractmethod
+    def encoding(self) -> Literal["jpeg", "png"]:
+        pass
+    @encoding.setter
+    @abstractmethod
+    def encoding(self, value: Literal["jpeg", "png"]) -> None:
+        pass
+
+    @RPCProperty(notify=configChanged)
+    @abstractmethod
+    def config(self) -> dict:
+        pass
+    @config.setter
+    @abstractmethod
+    def config(self, value: dict) -> None:
+        pass

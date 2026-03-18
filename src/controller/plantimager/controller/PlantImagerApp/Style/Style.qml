@@ -40,6 +40,7 @@ QtObject {
 
         property color okColor: "#00A960"
         property color alertColor: "#e24c3e"
+        property color warningColor: "#fcaa0d"
         property color neutralColor: "#ACB7C9"
     }
     

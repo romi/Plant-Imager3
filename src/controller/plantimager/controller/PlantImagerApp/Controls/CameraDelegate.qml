@@ -83,6 +83,8 @@ ItemDelegate {
             return P.Icons.icons["check-circle"]
         } else if(bridge.statusClass === "error") {
             return P.Icons.icons["alert-circle"]
+        } else if(bridge.statusClass === "waiting") {
+            return P.Icons.icons["timer"]
         } else {
             return P.Icons.icons["panorama-fisheye"]
         }
@@ -93,6 +95,8 @@ ItemDelegate {
             return P.Style.colors.okColor
         } else if(bridge.statusClass === "error") {
             return P.Style.colors.alertColor
+        } else if(bridge.statusClass === "waiting") {
+            return P.Style.colors.warningColor
         } else {
             return P.Style.colors.neutralColor
         }
