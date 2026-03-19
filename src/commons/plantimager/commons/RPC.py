@@ -21,7 +21,6 @@ RPCServer
 import copy
 import inspect
 import json
-import logging
 import random
 import re
 import socket
@@ -40,7 +39,7 @@ from decorator import decorate
 from zmq import ZMQBindError
 
 from plantimager.commons.utils import is_instance_of_generic, coerce_to_generic
-from plantimager.commons.deviceregistry import register_device, unregister_device, send_alive_check
+from plantimager.commons.deviceregistry import register_device, unregister_device, send_alive_check, AliveCheckState
 from plantimager.commons.logging import create_logger
 from plantimager.commons.systemd import notify_watchdog
 
@@ -1382,18 +1381,37 @@ class RPCServer:
         return self._socket.recv_json()
 
     def _alive_check(self) -> bool:
+        """
+        Perform a health check to determine if the service is alive and registered.
+
+        This method sends an alive check request to the registry server. If the registry
+        is unreachable or does not recognize the current service, appropriate actions
+        are taken, such as logging errors or warnings and optionally re-registering
+        the service. If no registry address is provided, then no health check is performed.
+
+        Returns
+        -------
+        bool
+            A boolean value indicating the service's health status:
+            ``True`` if the service is deemed alive or no registry address is provided.
+            ``False`` if the registry is unreachable.
+        """
         if self.registry_addr:
             res = send_alive_check(self.context, self.uuid, self.registry_addr, self.alive_timeout)
-            if res == "unreachable":
+            if res == AliveCheckState.UNREACHABLE:
                 logger.error(f"Check Alive failed. Registry at {self.registry_addr} "
                              f"is unreachable.")
+                # removing name and uuid because the server is not registered anymore
+                self.name = ""
+                self.uuid = ""
                 return False
-            elif res == "unregistered":
+            elif res == AliveCheckState.UNKNOWN:
                 logger.warning(f"Check Alive failed. Registry at {self.registry_addr} does not know this service."
                                f" Trying to reregister.")
                 self.register_to_registry(self._type, self.name, self.registry_addr, False)
                 return True
         return True
+
     # --------------------------------------------------------------------- #
     #  Utility – error reporting
     # --------------------------------------------------------------------- #

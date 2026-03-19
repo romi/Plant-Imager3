@@ -299,7 +299,7 @@ class DeviceRegistry(Thread):
                 self._remove_device_by_name(name)
         return self._add_device(device_type, addr, proposed_name)
 
-    def _add_device(self, device_type: str, addr: str, proposed_name: str = None) -> str:
+    def _add_device(self, device_type: str, addr: str, proposed_name: str = None) -> tuple[str, str]:
         with self._lock:
             i = 0
             if not proposed_name:
@@ -418,8 +418,13 @@ def unregister_device(context: zmq.Context, uuid: str, registry_addr: str) -> bo
                 return True
             return False
 
+class AliveCheckState(StrEnum):
+    OK = "ok"
+    UNKNOWN = "unknown"
+    UNREACHABLE = "unreachable"
+
 def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_timeout: int=ALIVE_TIMEOUT) \
-        -> Literal["ok", "unreachable", "unknown"]:
+        -> AliveCheckState:
     """Check the liveness of a service with the registry.
 
     Send an ``EventType.CHECK_ALIVE`` request to the registry and wait for an
@@ -471,19 +476,19 @@ def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_t
     """
     with context.socket(zmq.REQ) as socket:
         socket: zmq.Socket
-        with socket.connect(registry_url):
-            socket.send_json({
-                "event": EventType.CHECK_ALIVE,
-                "payload": {
-                    "uuid": uuid,
-                    "alive_timeout": alive_timeout,
-                }
-            })
-            if socket.poll(5000, flags=zmq.POLLIN) == 0:
-                logger.debug(f"No answer from registry at address {registry_url}.")
-                return "unreachable"
-            reply = socket.recv_json()
-            event_type = reply["event"]
-            if event_type == EventType.ACK:
-                return "ok"
-            return "unknown"
+        socket.connect(registry_url)
+        socket.send_json({
+            "event": EventType.CHECK_ALIVE,
+            "payload": {
+                "uuid": uuid,
+                "alive_timeout": alive_timeout,
+            }
+        })
+        if socket.poll(5000, flags=zmq.POLLIN) == 0:
+            logger.debug(f"No answer from registry at address {registry_url}.")
+            return AliveCheckState.UNREACHABLE
+        reply = socket.recv_json()
+        event_type = reply["event"]
+        if event_type == EventType.ACK and reply.get("payload", {}).get("success", False):
+            return AliveCheckState.OK
+        return AliveCheckState.UNKNOWN
