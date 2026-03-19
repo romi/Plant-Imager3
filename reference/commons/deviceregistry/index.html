@@ -3795,12 +3795,7 @@ connecting, sending, or receiving messages.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/deviceregistry.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">421</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">422</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">423</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">424</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">425</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">426</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">426</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">428</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">429</span>
@@ -3863,8 +3858,13 @@ connecting, sending, or receiving messages.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">486</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">488</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">489</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">send_alive_check</span>(context: zmq<span style="color: #666">.</span>Context, uuid: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, alive_timeout: <span style="color: #008000">int</span><span style="color: #666">=</span>ALIVE_TIMEOUT) \
-        <span style="color: #666">-&gt;</span> Literal[<span style="color: #BA2121">&quot;ok&quot;</span>, <span style="color: #BA2121">&quot;unreachable&quot;</span>, <span style="color: #BA2121">&quot;unknown&quot;</span>]:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">489</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">490</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">491</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">492</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">494</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">send_alive_check</span>(context: zmq<span style="color: #666">.</span>Context, uuid: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, alive_timeout: <span style="color: #008000">int</span><span style="color: #666">=</span>ALIVE_TIMEOUT) \
+        <span style="color: #666">-&gt;</span> AliveCheckState:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Check the liveness of a service with the registry.</span>
 
 <span style="color: #BA2121; font-style: italic">    Send an ``EventType.CHECK_ALIVE`` request to the registry and wait for an</span>
@@ -3916,22 +3916,22 @@ connecting, sending, or receiving messages.</p>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">with</span> context<span style="color: #666">.</span>socket(zmq<span style="color: #666">.</span>REQ) <span style="color: #008000; font-weight: bold">as</span> socket:
         socket: zmq<span style="color: #666">.</span>Socket
-        <span style="color: #008000; font-weight: bold">with</span> socket<span style="color: #666">.</span>connect(registry_url):
-            socket<span style="color: #666">.</span>send_json({
-                <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>CHECK_ALIVE,
-                <span style="color: #BA2121">&quot;payload&quot;</span>: {
-                    <span style="color: #BA2121">&quot;uuid&quot;</span>: uuid,
-                    <span style="color: #BA2121">&quot;alive_timeout&quot;</span>: alive_timeout,
-                }
-            })
-            <span style="color: #008000; font-weight: bold">if</span> socket<span style="color: #666">.</span>poll(<span style="color: #666">5000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
-                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;No answer from registry at address </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">.&quot;</span>)
-                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;unreachable&quot;</span>
-            reply <span style="color: #666">=</span> socket<span style="color: #666">.</span>recv_json()
-            event_type <span style="color: #666">=</span> reply[<span style="color: #BA2121">&quot;event&quot;</span>]
-            <span style="color: #008000; font-weight: bold">if</span> event_type <span style="color: #666">==</span> EventType<span style="color: #666">.</span>ACK:
-                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;ok&quot;</span>
-            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;unknown&quot;</span>
+        socket<span style="color: #666">.</span>connect(registry_url)
+        socket<span style="color: #666">.</span>send_json({
+            <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>CHECK_ALIVE,
+            <span style="color: #BA2121">&quot;payload&quot;</span>: {
+                <span style="color: #BA2121">&quot;uuid&quot;</span>: uuid,
+                <span style="color: #BA2121">&quot;alive_timeout&quot;</span>: alive_timeout,
+            }
+        })
+        <span style="color: #008000; font-weight: bold">if</span> socket<span style="color: #666">.</span>poll(<span style="color: #666">5000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
+            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;No answer from registry at address </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">.&quot;</span>)
+            <span style="color: #008000; font-weight: bold">return</span> AliveCheckState<span style="color: #666">.</span>UNREACHABLE
+        reply <span style="color: #666">=</span> socket<span style="color: #666">.</span>recv_json()
+        event_type <span style="color: #666">=</span> reply[<span style="color: #BA2121">&quot;event&quot;</span>]
+        <span style="color: #008000; font-weight: bold">if</span> event_type <span style="color: #666">==</span> EventType<span style="color: #666">.</span>ACK <span style="color: #A2F; font-weight: bold">and</span> reply<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;payload&quot;</span>, {})<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;success&quot;</span>, <span style="color: #008000; font-weight: bold">False</span>):
+            <span style="color: #008000; font-weight: bold">return</span> AliveCheckState<span style="color: #666">.</span>OK
+        <span style="color: #008000; font-weight: bold">return</span> AliveCheckState<span style="color: #666">.</span>UNKNOWN
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
