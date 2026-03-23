@@ -21,10 +21,9 @@ RPCServer
 import copy
 import inspect
 import json
-import random
 import re
-import socket
 import sys
+import time
 import traceback
 import logging
 import weakref
@@ -57,7 +56,6 @@ class RPCEvents(StrEnum):
     METHOD_CALL = "METHOD_CALL"
     GET_INVENTORY = "GET_INVENTORY"
     STOP_SERVER = "STOP_SERVER"
-    FIND_PEER_ADDRESS = "FIND_PEER_ADDRESS"
     INIT_SIGNALS_HANDLING = "INIT_SIGNALS_HANDLING"
     EMIT_SIGNAL = "EMIT_SIGNAL"
 
@@ -409,11 +407,12 @@ class RPCSignalReceiver(Thread):
     def __init__(self, context: zmq.Context, url: str, signals: dict[str, RPCSignal]):
         super().__init__(name="RPCSignalReceiver")
         self.context = context
-        self.url = url
+        self.url = url  # now the server's PUB endpoint
         self._stop_flag = False
         self.signals = signals
-        self.socket: zmq.Socket = context.socket(zmq.REP)
-        self.port = self.socket.bind_to_random_port(url)
+        self.socket: zmq.Socket = context.socket(zmq.SUB)
+        self.socket.connect(url)
+        self.socket.setsockopt_string(zmq.SUBSCRIBE, "")  # subscribe to all
 
     def run(self):
         """
@@ -448,17 +447,11 @@ class RPCSignalReceiver(Thread):
                 request = self.socket.recv_json()
                 if request["event"] != RPCEvents.EMIT_SIGNAL:
                     logger.error(f"Expected event {RPCEvents.EMIT_SIGNAL}, got {request['event']} instead.")
-                    self.socket.send_json({"success": False})
                     continue
                 signal = request["signal"]
                 args = request["args"]
                 logger.debug(f"Emitting signal {signal} with args {args}")
-                if request["blocking"]:
-                    self.signals[signal].emit(*args)
-                    self.socket.send_json({"success": True})
-                else:
-                    self.socket.send_json({"success": True})
-                    self.signals[signal].emit(*args)
+                self.signals[signal].emit(*args)
         finally:
             self.socket.close()
             del self.socket
@@ -495,7 +488,7 @@ class RPCClient:
         The designated name of the connected RPC server.
     """
 
-    def __init__(self, context: zmq.Context, url: str):
+    def __init__(self, context: zmq.Context, url: str, timeout=1000):
         super().__init__()
         self.context: zmq.Context = context
         self.url: str = url
@@ -508,22 +501,14 @@ class RPCClient:
                 if isinstance(value, RPCSignal):
                     setattr(self, key, copy.deepcopy(value))
 
-        # Finding peer address (zmq abstract addresses so we use native sockets here)
-        self.socket.send_json({"event": RPCEvents.FIND_PEER_ADDRESS})
-        reply = self.socket.recv_json()
-        if not reply["success"]:
-            raise RuntimeError("FIND_PEER_ADDRESS failed")
-        _, ip_addr, _ = url_parser.match(url).groups()
-        s = socket.create_connection((ip_addr, reply["port"]))
-        self.own_address = s.getsockname()[0]
-        self.peer_address = s.getpeername()[0]
-        s.close()
-        logger.debug(f"Client at address {self.own_address} connected to server at {self.peer_address}")
-
         # Getting RPCServer inventory
+        logger.debug("--> Getting Inventory")
         self.socket.send_json({
             "event": RPCEvents.GET_INVENTORY
         })
+        if self.socket.poll(timeout=timeout, flags=zmq.POLLIN) == 0:
+            logger.error("Failed to get inventory. Server did not respond.")
+            raise TimeoutError("Failed to get inventory.")
         reply = self.socket.recv_json()
         logger.debug(f"Got inv: {reply}",)
         self._json_methods: dict[str, int|None] = reply["json_methods"]
@@ -531,25 +516,32 @@ class RPCClient:
         self._signals = {sig: getattr(self, sig) for sig in reply["signals"] if hasattr(self, sig)}
         self._properties: list = reply["properties"]
         self.name: str = reply["name"]
+        logger.debug("<-- Inventory Received")
 
         # If signals initiate
         self._signal_receiver = None
         if self._signals:
             logger.info("Initializing signal handling")
-            self._signal_receiver = RPCSignalReceiver(
-                context=self.context, url=f"tcp://{self.own_address}", signals=self._signals
-            )
-            self._signal_receiver.daemon = True  # FIXME: Should be False!
-            self._signal_receiver.start()
-            signal_port = self._signal_receiver.port
-            self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING, "address": self.own_address, "port": signal_port})
+            logger.debug("--> Initializing Signals Handling")
+            self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING})
+
+            if self.socket.poll(timeout=timeout, flags=zmq.POLLIN) == 0:
+                logger.error("Failed to initialize signals. Server did not respond.")
+                raise TimeoutError("Failed to initialize signals.")
             reply = self.socket.recv_json()
             if not reply["success"]:
-                self._signal_receiver.stop()
-                self._signal_receiver.join(2)
-                self._signal_receiver = None
                 raise RuntimeError("INIT_SIGNALS_HANDLING failed")
-            logger.info("Successfully initialized signal handling")
+
+            signal_port = reply["signal_port"]
+            proto, addr, _ = url_parser.search(self.url).groups()
+            self._signal_receiver = RPCSignalReceiver(
+                context=self.context,
+                url=f"{proto}://{addr}:{signal_port}",
+                signals=self._signals
+            )
+            self._signal_receiver.daemon = True
+            self._signal_receiver.start()
+            logger.info("<-- Successfully initialized signal handling")
 
         def _finalizer(sock, receiver):
             sock.close()
@@ -770,9 +762,8 @@ class RPCServer:
         context: zmq.Context
             ZMQ context used to make the various sockets necessary for communicating with the client.
         url: str
-            Url where the RPCServer is opened.
-        port: int
-            Port where the RPCServer is opened.
+            Url where the RPCServer is opened. The url should include the port in the form
+            ``tcp://<ip>:<port>``.
         name: str
             Name of the RPCServer as given by the deviceregistry once registered
         uuid: str
@@ -791,6 +782,7 @@ class RPCServer:
         self.name = ""
         self.registry_addr = ""
         self.peer_addr: str | None = None
+        self._unreachable_counter = 0
 
         # Containers for RPC members
         self._json_methods: dict[str, Callable] = {}
@@ -912,6 +904,8 @@ class RPCServer:
         self._cleanup_state["uuid"] = self.uuid
         self._cleanup_state["registry_addr"] = self.registry_addr
 
+        logger.info(f"Successfully registered device {name} of type {type_} to {registry_url}")
+
         return self.name
 
 
@@ -986,9 +980,6 @@ class RPCServer:
             "args": args,
             "blocking": False,
         })
-        reply = self._signal_socket.recv_json()
-        if not reply["success"]:
-            logger.error(f"Signal {signal_name} failed with {reply}")
 
     def _exec_json(self, method: Callable, params: dict) -> dict:
         args = params["args"]
@@ -1109,9 +1100,9 @@ class RPCServer:
             if not request:
                 continue
             try:
+                logger.debug(f"Received request: {request['event']}")
+                t0 = time.monotonic()
                 match request["event"]:
-                    case RPCEvents.FIND_PEER_ADDRESS:
-                        self._handle_find_peer_address()
                     case RPCEvents.GET_INVENTORY:
                         reply = self._handle_get_inventory()
                         self._send_reply(reply)
@@ -1130,6 +1121,7 @@ class RPCServer:
                     case RPCEvents.STOP_SERVER:
                         self._socket.send_json({"success": True})
                         self._stop = True
+                logger.debug(f"Event {request['event']} treated in {time.monotonic() - t0}s")
             except Exception as exc:
                 logger.error(f"Unexpected error while handling request: {exc}")
                 # If we have a request, we can at least try to answer with a generic error.
@@ -1312,15 +1304,18 @@ class RPCServer:
             entries.
         """
         logger.info("Initializing signal handling")
-        address, port = request["address"], request["port"]
-        self._signal_socket = self.context.socket(zmq.REQ)
-        self._signal_socket.connect(f"tcp://{address}:{port}")
-        self._cleanup_state["signal_socket"] = self._signal_socket
+        if self._signal_socket is None:
+            self._signal_socket = self.context.socket(zmq.PUB)
+            protocol, addr, _ = url_parser.search(self.url).groups()
+            self._signal_port = self._signal_socket.bind_to_random_port(f"{protocol}://{addr}")
+            self._cleanup_state["signal_socket"] = self._signal_socket
+
         weak_send_signal = WeakMethod(self._send_signal)
         for sig_name, sig in self._signals.items():
-            sig.connect(lambda *args, sig_name=sig_name, **kwargs: weak_send_signal()(sig_name, *args, **kwargs))
+            sig.connect(lambda *args, _sig_name=sig_name, **kwargs: weak_send_signal()(_sig_name, *args, **kwargs))
+
         logger.info("Successfully initialized signal handling")
-        return {"success": True}
+        return {"success": True, "signal_port": self._signal_port}
 
     def _handle_get_inventory(self) -> dict:
         """
@@ -1348,35 +1343,8 @@ class RPCServer:
         logger.debug(response)
         return response
 
-    def _handle_find_peer_address(self):
-        """
-        Find a free port, inform the peer, accept a connection, and record the peer's
-        address.
-        """
-        logger.info("Finding peer address")
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        port = random.randint(49152, 65535)
-
-        s.bind(("", port))  # may crash if unlucky
-        s.settimeout(20.0)  # s
-        s.listen(1)
-        self._send_reply({"success": True, "port": port})
-        try:
-            c, addr_info = s.accept()
-        except socket.timeout:
-            s.close()
-            logger.error("No peer connected to discovery socket after 20s – giving up.")
-            raise RuntimeError("Failed to find peer address")
-        self.peer_addr = addr_info[0]
-        c.shutdown(socket.SHUT_RDWR)
-        c.close()
-        s.shutdown(socket.SHUT_RDWR)
-        s.close()
-        del s
-        logger.info("Connected to peer at address: {}".format(self.peer_addr))
-
     def _wait_for_request(self) -> dict | None:
-        if self._socket.poll(500, zmq.POLLIN) == 0:
+        if self._socket.poll(2000, zmq.POLLIN) == 0:
             return None
         return self._socket.recv_json()
 
@@ -1399,17 +1367,23 @@ class RPCServer:
         if self.registry_addr:
             res = send_alive_check(self.context, self.uuid, self.registry_addr, self.alive_timeout)
             if res == AliveCheckState.UNREACHABLE:
-                logger.error(f"Check Alive failed. Registry at {self.registry_addr} "
-                             f"is unreachable.")
-                # removing name and uuid because the server is not registered anymore
-                self.name = ""
-                self.uuid = ""
-                return False
+                logger.warning("Check Alive failed. Got no response from registry.")
+                self._unreachable_counter += 1
             elif res == AliveCheckState.UNKNOWN:
                 logger.warning(f"Check Alive failed. Registry at {self.registry_addr} does not know this service."
                                f" Trying to reregister.")
                 self.register_to_registry(self._type, self.name, self.registry_addr, False)
+                self._unreachable_counter = 0
                 return True
+            else:
+                self._unreachable_counter = 0
+                return True
+            if self._unreachable_counter >= 3:
+                logger.error(f"Failed to reach registry {self._unreachable_counter} times.")
+                # removing name and uuid because the server is not registered anymore
+                self.name = ""
+                self.uuid = ""
+                return False
         return True
 
     # --------------------------------------------------------------------- #

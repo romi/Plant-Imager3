@@ -116,7 +116,7 @@ class RPCController(ControllerDevice, RPCClient):
         url : str
             The URL to connect to for RPC communication.
         """
-        RPCClient.__init__(self, context, url)
+        RPCClient.__init__(self, context, url, timeout=120_000)
         self.__class__._instance = self
 
     @classmethod

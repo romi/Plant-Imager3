@@ -106,24 +106,20 @@ sequenceDiagram
     activate client
     Note over server: The method serve_forever() must have been called
     Note over client: in __init__ after <br/> the socket is connected
-    client->>+server: FIND_PEER_ADDRESS
-    Note right of server: Creates a socket server
-    server->>client: url
-    client<<-->>server: connects to temp server
-    deactivate server
+
     
     
     Note over client,server: Getting peer address and <br/> closing connection and temporary server
     client->>+server: GET_INVENTORY
-    server->>-client: methods, properties and signals inventory
+    server->>-client: methods, timeouts, properties and signals inventory
 
     opt RPCSignals declared
-    Note over signal_recv, client: Start Signal Receiver thread
+    client->>+server: INIT_SIGNALS_HANDLING
+    Note right of server: Creates signal publisher socket and <br/> connect signals to _send_signal()
+    server->>-client: success, signal_port
+    Note over signal_recv, client: Start Signal Receiver thread <br/> and subsrcibe to publisher
     client->>+signal_recv: __init__()
     signal_recv-->>-client: 
-    client->>+server: INIT_SIGNALS_HANDLING
-    Note right of server: Connect to signal socket and <br/> connect signals to _send_signal()
-    server->>-client: success
 
     end
 
@@ -175,24 +171,13 @@ sequenceDiagram
     Note over recv, server: server.serve_forever() called <br/> and client connected
 
     Note over server_signal: emit() called
-    activate server_signal
     server_signal->>+server: _send_signal()
     server->>+recv: EMIT_SIGNAL
-    Note over recv: select corresponding signal
-    alt is blocking
-        recv->>+client_signal: emit()
-        client_signal-->>-recv: 
-        recv->>server: success
-    else
-        recv->>server: success
-        recv->>+client_signal: emit()
-        client_signal-->>-recv: 
-        deactivate recv
-    end
-    
-
     server-->>-server_signal: 
-    deactivate server_signal
+    Note over recv: select corresponding signal
+    recv->>+client_signal: emit()
+    client_signal-->>-recv: 
+    deactivate recv
 ```
 
 ### Property getter
