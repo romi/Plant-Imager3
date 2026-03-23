@@ -25,6 +25,7 @@ import random
 import re
 import socket
 import sys
+import time
 import traceback
 import logging
 import weakref
@@ -509,8 +510,10 @@ class RPCClient:
                     setattr(self, key, copy.deepcopy(value))
 
         # Finding peer address (zmq abstract addresses so we use native sockets here)
+        logger.debug("--> Finding peer address")
         self.socket.send_json({"event": RPCEvents.FIND_PEER_ADDRESS})
         reply = self.socket.recv_json()
+        logger.debug("-- got reply")
         if not reply["success"]:
             raise RuntimeError("FIND_PEER_ADDRESS failed")
         _, ip_addr, _ = url_parser.match(url).groups()
@@ -518,9 +521,10 @@ class RPCClient:
         self.own_address = s.getsockname()[0]
         self.peer_address = s.getpeername()[0]
         s.close()
-        logger.debug(f"Client at address {self.own_address} connected to server at {self.peer_address}")
+        logger.debug(f"<-- Client at address {self.own_address} connected to server at {self.peer_address}")
 
         # Getting RPCServer inventory
+        logger.debug("--> Getting Inventory")
         self.socket.send_json({
             "event": RPCEvents.GET_INVENTORY
         })
@@ -531,6 +535,7 @@ class RPCClient:
         self._signals = {sig: getattr(self, sig) for sig in reply["signals"] if hasattr(self, sig)}
         self._properties: list = reply["properties"]
         self.name: str = reply["name"]
+        logger.debug("<-- Inventory Received")
 
         # If signals initiate
         self._signal_receiver = None
@@ -542,6 +547,7 @@ class RPCClient:
             self._signal_receiver.daemon = True  # FIXME: Should be False!
             self._signal_receiver.start()
             signal_port = self._signal_receiver.port
+            logger.debug("--> Initializing Signals Handling")
             self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING, "address": self.own_address, "port": signal_port})
             reply = self.socket.recv_json()
             if not reply["success"]:
@@ -549,7 +555,7 @@ class RPCClient:
                 self._signal_receiver.join(2)
                 self._signal_receiver = None
                 raise RuntimeError("INIT_SIGNALS_HANDLING failed")
-            logger.info("Successfully initialized signal handling")
+            logger.info("<-- Successfully initialized signal handling")
 
         def _finalizer(sock, receiver):
             sock.close()
@@ -1111,6 +1117,8 @@ class RPCServer:
             if not request:
                 continue
             try:
+                logger.debug(f"Received request: {request['event']}")
+                t0 = time.monotonic()
                 match request["event"]:
                     case RPCEvents.FIND_PEER_ADDRESS:
                         self._handle_find_peer_address()
@@ -1132,6 +1140,7 @@ class RPCServer:
                     case RPCEvents.STOP_SERVER:
                         self._socket.send_json({"success": True})
                         self._stop = True
+                logger.debug(f"Event {request['event']} treated in {time.monotonic() - t0}s")
             except Exception as exc:
                 logger.error(f"Unexpected error while handling request: {exc}")
                 # If we have a request, we can at least try to answer with a generic error.
