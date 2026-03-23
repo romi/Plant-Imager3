@@ -797,6 +797,7 @@ class RPCServer:
         self.name = ""
         self.registry_addr = ""
         self.peer_addr: str | None = None
+        self._unreachable_counter = 0
 
         # Containers for RPC members
         self._json_methods: dict[str, Callable] = {}
@@ -1387,7 +1388,7 @@ class RPCServer:
         logger.info("Connected to peer at address: {}".format(self.peer_addr))
 
     def _wait_for_request(self) -> dict | None:
-        if self._socket.poll(500, zmq.POLLIN) == 0:
+        if self._socket.poll(2000, zmq.POLLIN) == 0:
             return None
         return self._socket.recv_json()
 
@@ -1410,17 +1411,23 @@ class RPCServer:
         if self.registry_addr:
             res = send_alive_check(self.context, self.uuid, self.registry_addr, self.alive_timeout)
             if res == AliveCheckState.UNREACHABLE:
-                logger.error(f"Check Alive failed. Registry at {self.registry_addr} "
-                             f"is unreachable.")
-                # removing name and uuid because the server is not registered anymore
-                self.name = ""
-                self.uuid = ""
-                return False
+                logger.warning(f"Check Alive failed. Got no response from registry.")
+                self._unreachable_counter += 1
             elif res == AliveCheckState.UNKNOWN:
                 logger.warning(f"Check Alive failed. Registry at {self.registry_addr} does not know this service."
                                f" Trying to reregister.")
                 self.register_to_registry(self._type, self.name, self.registry_addr, False)
+                self._unreachable_counter = 0
                 return True
+            else:
+                self._unreachable_counter = 0
+                return True
+            if self._unreachable_counter >= 3:
+                logger.error(f"Failed to reach registry {self._unreachable_counter} times.")
+                # removing name and uuid because the server is not registered anymore
+                self.name = ""
+                self.uuid = ""
+                return False
         return True
 
     # --------------------------------------------------------------------- #
