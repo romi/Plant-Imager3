@@ -126,7 +126,7 @@ class AppBridge(QObject):
 
         Meant to be connected to the signal `_registryNewDevice` as a QueuedConnection.
         """
-        logger.debug(f"New device for {addr}: {device_type}, {name}")
+        logger.debug(f"--> New device for {addr}: {device_type}, {name}")
         if device_type.lower() == "camera":
             logger.debug("New camera, creating bridge and adding to scanner.")
             new_bridge = CameraBridge(name, addr, self.context)
@@ -137,6 +137,7 @@ class AppBridge(QObject):
             if not self._currentCamera:
                 self.currentCamera = new_bridge
                 self.currentCameraChanged.emit(new_bridge)
+        logger.debug(f"<-- New device for {addr}: {device_type}, {name}")
 
     def _new_device_callback(self, device_type: str, addr: str, name: str):
         """
@@ -164,6 +165,7 @@ class AppBridge(QObject):
 
         Meant to be connected to the signal `_registryRemoveDevice` as a QueuedConnection.
         """
+        logger.debug(f"--> Removing device {name} of type {device_type} at {addr}")
         idx = self.device_list.index(name)
         device = self.device_bridges[idx]
         self.scanner.remove_camera(device.camera)
@@ -173,6 +175,7 @@ class AppBridge(QObject):
             self._currentCamera = CameraBridge("", "", self.context)
             self.currentCameraChanged.emit(self._currentCamera)
         self.deviceListChanged.emit()
+        logger.debug(f"<-- Removing device {name} of type {device_type} at {addr}")
 
     def _remove_device_callback(self, device_type: str, addr: str, name: str):
         """

@@ -55,9 +55,9 @@ def create_logger(name: str, level=logging.DEBUG) -> logging.Logger:
     # Create a LevelFormatter that uses different format strings based on log level
     # The log_color prefix enables colored output for each level
     formatter = colorlog.LevelFormatter(fmt={
-        logging.getLevelName(logging.DEBUG):    "{log_color} {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
-        logging.getLevelName(logging.INFO):     "{log_color} {name} {threadName} - {levelname}: {message}",
-        logging.getLevelName(logging.WARNING):  "{log_color} {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
+        logging.getLevelName(logging.DEBUG):    "[{log_color}] {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
+        logging.getLevelName(logging.INFO):     "[{log_color}] {name} {threadName} - {levelname}: {message}",
+        logging.getLevelName(logging.WARNING):  "[{log_color}] {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
         logging.getLevelName(logging.ERROR):    "[{log_color}] {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
         logging.getLevelName(logging.CRITICAL): "[{log_color}] {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
     }, style="{")

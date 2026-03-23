@@ -134,10 +134,12 @@ class DeviceRegistry(Thread):
                 for device_type, addr, name in self._callback_events_to_process["removed"]:
                     for callback in self._device_removed_callbacks:
                         callback(device_type, addr, name)
+                    logger.debug(f"Processed REMOVE callback for {device_type}, {addr}, {name}")
                 self._callback_events_to_process["removed"].clear()
                 for device_type, addr, name in self._callback_events_to_process["added"]:
                     for callback in self._new_device_callbacks:
                         callback(device_type, addr, name)
+                    logger.debug(f"Processed ADDED callback for {device_type}, {addr}, {name}")
                 self._callback_events_to_process["added"].clear()
 
                 # in order for the thread to stop properly, it must not block indefinitely while waiting for
@@ -147,7 +149,7 @@ class DeviceRegistry(Thread):
                 message = socket.recv_json()
                 event_type: str = message["event"]
                 payload: dict = message["payload"]
-                # logger.debug(f"Received event: {event_type}, {payload}")
+                logger.debug(f"Received event: {event_type}, {payload}")
                 match event_type:
                     case EventType.REGISTER:
                         device_type = payload["device_type"]

@@ -912,6 +912,8 @@ class RPCServer:
         self._cleanup_state["uuid"] = self.uuid
         self._cleanup_state["registry_addr"] = self.registry_addr
 
+        logger.info(f"Successfully registered device {name} of type {type_} to {registry_url}")
+
         return self.name
 
 
