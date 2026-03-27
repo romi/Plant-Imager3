@@ -25,7 +25,7 @@ class CameraStates(StrEnum):
 class PiCameraProxy(Camera, RPCClient):
     def __init__(self, context: zmq.Context, url: str):
         Camera.__init__(self)
-        RPCClient.__init__(self, context, url)
+        RPCClient.__init__(self, context, url, timeout=5000)
 
 
 class PiCameraComm(QObject):
@@ -79,7 +79,7 @@ class PiCameraComm(QObject):
             else:
                 #logger.warning("Connection failed")
                 s._attempt_connection()
-        future = self._thread_pool.submit(lambda :PiCameraProxy(self._context, self.url, timeout=5000))
+        future = self._thread_pool.submit(lambda :PiCameraProxy(self._context, self.url))
         future.add_done_callback(_attempt_connection_callback)
 
     @contextmanager
