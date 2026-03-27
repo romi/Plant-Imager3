@@ -46,7 +46,7 @@ from plantimager.commons.systemd import notify_watchdog
 
 __all__ = ["RPCClient", "RPCServer", "RPCProperty", "RPCSignal", "NoResult"]
 
-logger = create_logger("RPC", level=logging.DEBUG)
+logger = create_logger("RPC")
 
 class RPCEvents(StrEnum):
     """

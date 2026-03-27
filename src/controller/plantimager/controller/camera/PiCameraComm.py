@@ -56,7 +56,7 @@ class PiCameraComm(QObject):
         self._attempt_connection()
 
         def _finalizer(pool, camera):
-            pool.shutdown(wait=True)
+            pool.shutdown(wait=False)
             camera.stop_server()
         finalize(self, _finalizer, self._thread_pool, self._camera)
     
@@ -77,9 +77,9 @@ class PiCameraComm(QObject):
                 s._camera.configChanged.connect(lambda c: (obj := weak_self()) and obj.configChanged.emit(c))
                 s._set_state(CameraStates.CONNECTED)
             else:
-                logger.warning("Connection failed")
+                #logger.warning("Connection failed")
                 s._attempt_connection()
-        future = self._thread_pool.submit(lambda :PiCameraProxy(self._context, self.url))
+        future = self._thread_pool.submit(lambda :PiCameraProxy(self._context, self.url, timeout=5000))
         future.add_done_callback(_attempt_connection_callback)
 
     @contextmanager
