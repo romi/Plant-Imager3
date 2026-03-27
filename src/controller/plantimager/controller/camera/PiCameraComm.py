@@ -68,7 +68,7 @@ class PiCameraComm(QObject):
             self._camera.resolutionChanged.connect(lambda res: self.resolutionChanged.emit(*res))
             self._camera.encodingChanged.connect(lambda e: self.encodingChanged.emit(e))
             self._camera.configChanged.connect(lambda c: self.configChanged.emit(c))
-            self._state = CameraStates.CONNECTED
+            self._set_state(CameraStates.CONNECTED)
         else:
             logger.warning("Connection failed")
             self._attempt_connection()
@@ -129,10 +129,10 @@ class PiCameraComm(QObject):
             res = ft_.result()
             if res:
                 buffer, buffer_info = res
-                self._state = CameraStates.CONNECTED
+                self._set_state(CameraStates.CONNECTED)
                 self.imageReady.emit(buffer, buffer_info)
         if self._camera and self.state == CameraStates.CONNECTED:
-            self._state = CameraStates.WAITING
+            self._set_state(CameraStates.WAITING)
             ft = self._thread_pool.submit(self._camera.get_image, lores=lores)
             ft.add_done_callback(_callback)
             return ft
