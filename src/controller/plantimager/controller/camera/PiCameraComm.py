@@ -105,7 +105,7 @@ class PiCameraComm(QObject):
             else:
                 self._set_state(CameraStates.CONNECTED)
         if self._camera and self.state == CameraStates.CONNECTED:
-            self.state_set_state(CameraStates.WAITING)
+            self._set_state(CameraStates.WAITING)
             ft = self._thread_pool.submit(lambda: setattr(self._camera, attr_name, value))
             ft.add_done_callback(callback)
         
