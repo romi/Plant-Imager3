@@ -1,3 +1,4 @@
+import weakref
 from concurrent.futures import ThreadPoolExecutor, Future
 from enum import StrEnum
 from typing import Literal, Any
@@ -58,24 +59,28 @@ class PiCameraComm(QObject):
             pool.shutdown(wait=True)
             camera.stop_server()
         finalize(self, _finalizer, self._thread_pool, self._camera)
-        
-    def _attempt_connection_callback(self, ft: Future[PiCameraProxy]):
-        if ft.exception() is None:
-            self._camera = ft.result()
-            self._camera.modeChanged.connect(lambda mode: self.modeChanged.emit(mode))
-            self._camera.videoUrlChanged.connect(lambda u: self.videoUrlChanged.emit(u))
-            self._camera.rotationChanged.connect(lambda rot: self.rotationChanged.emit(rot))
-            self._camera.resolutionChanged.connect(lambda res: self.resolutionChanged.emit(*res))
-            self._camera.encodingChanged.connect(lambda e: self.encodingChanged.emit(e))
-            self._camera.configChanged.connect(lambda c: self.configChanged.emit(c))
-            self._set_state(CameraStates.CONNECTED)
-        else:
-            logger.warning("Connection failed")
-            self._attempt_connection()
     
     def _attempt_connection(self):
+        weak_self = weakref.ref(self)
+        def _attempt_connection_callback(ft: Future[PiCameraProxy]):
+            s = weak_self()
+            if s is None:
+                return
+            if ft.exception() is None:
+                s._camera = ft.result()
+                s._camera.modeChanged.connect(lambda mode: (obj := weak_self()) and obj.modeChanged.emit(mode))
+                s._camera.videoUrlChanged.connect(lambda u: (obj := weak_self()) and obj.videoUrlChanged.emit(u))
+                s._camera.rotationChanged.connect(lambda rot: (obj := weak_self()) and obj.rotationChanged.emit(rot))
+                s._camera.resolutionChanged.connect(
+                    lambda res: (obj := weak_self()) and obj.resolutionChanged.emit(*res))
+                s._camera.encodingChanged.connect(lambda e: (obj := weak_self()) and obj.encodingChanged.emit(e))
+                s._camera.configChanged.connect(lambda c: (obj := weak_self()) and obj.configChanged.emit(c))
+                s._set_state(CameraStates.CONNECTED)
+            else:
+                logger.warning("Connection failed")
+                s._attempt_connection()
         future = self._thread_pool.submit(lambda :PiCameraProxy(self._context, self.url))
-        future.add_done_callback(self._attempt_connection_callback)
+        future.add_done_callback(_attempt_connection_callback)
 
     @contextmanager
     def camera(self):
