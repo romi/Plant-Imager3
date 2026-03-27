@@ -2882,7 +2882,7 @@
     <span style="color: #008000">self</span><span style="color: #666">.</span>_attempt_connection()
 
     <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_finalizer</span>(pool, camera):
-        pool<span style="color: #666">.</span>shutdown(wait<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+        pool<span style="color: #666">.</span>shutdown(wait<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>)
         camera<span style="color: #666">.</span>stop_server()
     finalize(<span style="color: #008000">self</span>, _finalizer, <span style="color: #008000">self</span><span style="color: #666">.</span>_thread_pool, <span style="color: #008000">self</span><span style="color: #666">.</span>_camera)
 </code></pre></div></td></tr></table></div>
