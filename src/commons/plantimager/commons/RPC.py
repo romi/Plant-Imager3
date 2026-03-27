@@ -46,7 +46,7 @@ from plantimager.commons.systemd import notify_watchdog
 
 __all__ = ["RPCClient", "RPCServer", "RPCProperty", "RPCSignal", "NoResult"]
 
-logger = create_logger("RPC")
+logger = create_logger("RPC", level=logging.DEBUG)
 
 class RPCEvents(StrEnum):
     """
@@ -512,6 +512,9 @@ class RPCClient:
         # Finding peer address (zmq abstract addresses so we use native sockets here)
         logger.debug("--> Finding peer address")
         self.socket.send_json({"event": RPCEvents.FIND_PEER_ADDRESS})
+        if self.socket.poll(timeout=1000, flags=zmq.POLLIN) == 0:
+            logger.error("Failed to find peer address. Server did not respond.")
+            raise TimeoutError("Failed to find peer address.")
         reply = self.socket.recv_json()
         logger.debug("-- got reply")
         if not reply["success"]:
@@ -528,6 +531,9 @@ class RPCClient:
         self.socket.send_json({
             "event": RPCEvents.GET_INVENTORY
         })
+        if self.socket.poll(timeout=1000, flags=zmq.POLLIN) == 0:
+            logger.error("Failed to get inventory. Server did not respond.")
+            raise TimeoutError("Failed to get inventory.")
         reply = self.socket.recv_json()
         logger.debug(f"Got inv: {reply}",)
         self._json_methods: dict[str, int|None] = reply["json_methods"]
@@ -549,6 +555,10 @@ class RPCClient:
             signal_port = self._signal_receiver.port
             logger.debug("--> Initializing Signals Handling")
             self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING, "address": self.own_address, "port": signal_port})
+
+            if self.socket.poll(timeout=1000, flags=zmq.POLLIN) == 0:
+                logger.error("Failed to initialize signals. Server did not respond.")
+                raise TimeoutError("Failed to initialize signals.")
             reply = self.socket.recv_json()
             if not reply["success"]:
                 self._signal_receiver.stop()

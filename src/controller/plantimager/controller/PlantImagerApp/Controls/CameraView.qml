@@ -81,7 +81,7 @@ Control {
                 format: "mpegts"
                 videoSink: videoOutput.videoSink
                 autoPlay: false
-                rotation: bridge.rotation
+                rotation: bridge ? bridge.rotation : 0
                 Component.onCompleted: {
                     componentComplete()
                 }
@@ -140,6 +140,7 @@ Control {
             autoExclusive: true
             checkable: true
             checked: false
+            enabled: bridge ? bridge.status === "connected" : false
             onClicked: {
                 bridge.mode = "VIDEO"
             }
@@ -154,7 +155,7 @@ Control {
             id: focus_highlight_button
             Layout.fillWidth: true
             Layout.fillHeight: true
-            //enabled: bridge
+            enabled: bridge ? bridge.status !== "invalid" : false
             text: bridge ? bridge.displayMode : ""
             onClicked: {
                 if(bridge) {
@@ -171,6 +172,7 @@ Control {
             autoExclusive: true
             checkable: true
             checked: false
+            enabled: bridge ? bridge.status === "connected" : false
 
             onClicked: {
                 bridge.mode = "STILL"
@@ -185,6 +187,7 @@ Control {
         Button {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            enabled: bridge ? bridge.status === "connected" : false
             text: "Take Picture"
             onClicked: {
                 bridge.getLoresImage()

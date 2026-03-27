@@ -10,7 +10,7 @@ from threading import Thread
 from plantimager.commons import deviceregistry
 from plantimager.commons.logging import create_logger
 from plantimager.commons.systemd import is_systemd_process
-from plantimager.controller.camera.CameraBridge import CameraBridge
+from plantimager.controller.camera.CameraBridge import CameraBridge, DummyCameraBridge
 from plantimager.controller.scanner.rpc_controller import RPCControllerServer
 from plantimager.controller.scanner.scanner import Scanner
 
@@ -64,7 +64,7 @@ class AppBridge(QObject):
         self.device_list: list[str] = []
         self.device_bridges: list[CameraBridge] = []
 
-        self._currentCamera = CameraBridge("", "", self.context)
+        self._currentCamera = DummyCameraBridge(self)
         self._scanner = Scanner()
 
         self._controller_server = RPCControllerServer(self.context, "tcp://localhost:14567", self._scanner)

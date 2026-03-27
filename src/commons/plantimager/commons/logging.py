@@ -10,11 +10,14 @@ tracking application events, errors, and performance metrics across different co
 
 import logging
 import sys
+import os
 
 import colorlog
 
+LOG_LEVEL = os.getenv("PI3_LOG_LEVEL", "INFO")
 
-def create_logger(name: str, level=logging.DEBUG) -> logging.Logger:
+
+def create_logger(name: str, level=LOG_LEVEL) -> logging.Logger:
     """Create a logger with the given name and specified logging level.
 
     Parameters
