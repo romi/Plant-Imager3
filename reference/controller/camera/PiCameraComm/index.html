@@ -2985,10 +2985,10 @@ When camera.get_image() returns and the result is available, the signal imageRea
         res <span style="color: #666">=</span> ft_<span style="color: #666">.</span>result()
         <span style="color: #008000; font-weight: bold">if</span> res:
             buffer, buffer_info <span style="color: #666">=</span> res
-            <span style="color: #008000">self</span><span style="color: #666">.</span>_state <span style="color: #666">=</span> CameraStates<span style="color: #666">.</span>CONNECTED
+            <span style="color: #008000">self</span><span style="color: #666">.</span>_set_state(CameraStates<span style="color: #666">.</span>CONNECTED)
             <span style="color: #008000">self</span><span style="color: #666">.</span>imageReady<span style="color: #666">.</span>emit(buffer, buffer_info)
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_camera <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">self</span><span style="color: #666">.</span>state <span style="color: #666">==</span> CameraStates<span style="color: #666">.</span>CONNECTED:
-        <span style="color: #008000">self</span><span style="color: #666">.</span>_state <span style="color: #666">=</span> CameraStates<span style="color: #666">.</span>WAITING
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_set_state(CameraStates<span style="color: #666">.</span>WAITING)
         ft <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_thread_pool<span style="color: #666">.</span>submit(<span style="color: #008000">self</span><span style="color: #666">.</span>_camera<span style="color: #666">.</span>get_image, lores<span style="color: #666">=</span>lores)
         ft<span style="color: #666">.</span>add_done_callback(_callback)
         <span style="color: #008000; font-weight: bold">return</span> ft
