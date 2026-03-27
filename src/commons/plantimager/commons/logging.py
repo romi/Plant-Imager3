@@ -53,6 +53,8 @@ def create_logger(name: str, level=LOG_LEVEL) -> logging.Logger:
     # Create a new logger instance with the specified name
     logger = logging.Logger(name)
     # Set the minimum logging level
+    if isinstance(level, str):
+        level = logging.getLevelNamesMapping().get(level, logging.INFO)
     logger.setLevel(level)
 
     # Create a LevelFormatter that uses different format strings based on log level
