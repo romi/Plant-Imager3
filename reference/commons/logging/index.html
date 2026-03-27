@@ -2806,7 +2806,7 @@ tracking application events, errors, and performance metrics across different co
 
 
 <a href="#plantimager.commons.logging.create_logger" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>create_logger(name, level<span style="color: #666">=</span><a class="autorefs autorefs-external" title="logging.DEBUG" href="https://docs.python.org/3/library/logging.html#logging.DEBUG">DEBUG</a>)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>create_logger(name, level<span style="color: #666">=</span><span title="plantimager.commons.logging.LOG_LEVEL">LOG_LEVEL</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2855,7 +2855,7 @@ from the logging module. Default is logging.DEBUG.</p>
               </div>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-external" title="logging.DEBUG" href="https://docs.python.org/3/library/logging.html#logging.DEBUG">DEBUG</a></code>
+                  <code><span title="plantimager.commons.logging.LOG_LEVEL">LOG_LEVEL</span></code>
             </td>
           </tr>
       </tbody>
@@ -2908,10 +2908,7 @@ from the logging module. Default is logging.DEBUG.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/logging.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">17</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">18</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">19</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">20</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">20</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span>
@@ -2961,7 +2958,10 @@ from the logging module. Default is logging.DEBUG.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">create_logger</span>(name: <span style="color: #008000">str</span>, level<span style="color: #666">=</span>logging<span style="color: #666">.</span>DEBUG) <span style="color: #666">-&gt;</span> logging<span style="color: #666">.</span>Logger:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">73</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">create_logger</span>(name: <span style="color: #008000">str</span>, level<span style="color: #666">=</span>LOG_LEVEL) <span style="color: #666">-&gt;</span> logging<span style="color: #666">.</span>Logger:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a logger with the given name and specified logging level.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>

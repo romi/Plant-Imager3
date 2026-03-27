@@ -3033,7 +3033,7 @@ appropriate bridge for the application.</p>
     <span style="color: #008000">self</span><span style="color: #666">.</span>device_list: <span style="color: #008000">list</span>[<span style="color: #008000">str</span>] <span style="color: #666">=</span> []
     <span style="color: #008000">self</span><span style="color: #666">.</span>device_bridges: <span style="color: #008000">list</span>[CameraBridge] <span style="color: #666">=</span> []
 
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_currentCamera <span style="color: #666">=</span> CameraBridge(<span style="color: #BA2121">&quot;&quot;</span>, <span style="color: #BA2121">&quot;&quot;</span>, <span style="color: #008000">self</span><span style="color: #666">.</span>context)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_currentCamera <span style="color: #666">=</span> DummyCameraBridge(<span style="color: #008000">self</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_scanner <span style="color: #666">=</span> Scanner()
 
     <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server <span style="color: #666">=</span> RPCControllerServer(<span style="color: #008000">self</span><span style="color: #666">.</span>context, <span style="color: #BA2121">&quot;tcp://localhost:14567&quot;</span>, <span style="color: #008000">self</span><span style="color: #666">.</span>_scanner)
