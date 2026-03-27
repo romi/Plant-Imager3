@@ -172,7 +172,7 @@ class AppBridge(QObject):
         del self.device_list[idx]
         del self.device_bridges[idx]
         if len(self.device_bridges) == 0:
-            self._currentCamera = CameraBridge("", "", self.context)
+            self._currentCamera = DummyCameraBridge(self)
             self.currentCameraChanged.emit(self._currentCamera)
         self.deviceListChanged.emit()
         logger.debug(f"<-- Removing device {name} of type {device_type} at {addr}")
