@@ -3481,7 +3481,7 @@ about where and why the failure occurred.</p>
 
 
 <a href="#plantimager.commons.RPC.RPCClient" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>RPCClient(context, url)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>RPCClient(context, url, timeout<span style="color: #666">=1000</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3674,7 +3674,7 @@ and this class, and decorate it with <code>@RPCClient.register_interface</code>.
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">574</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">575</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">576</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">577</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">577</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, timeout<span style="color: #666">=1000</span>):
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000">self</span><span style="color: #666">.</span>context: zmq<span style="color: #666">.</span>Context <span style="color: #666">=</span> context
     <span style="color: #008000">self</span><span style="color: #666">.</span>url: <span style="color: #008000">str</span> <span style="color: #666">=</span> url
@@ -3690,7 +3690,7 @@ and this class, and decorate it with <code>@RPCClient.register_interface</code>.
     <span style="color: #3D7B7B; font-style: italic"># Finding peer address (zmq abstract addresses so we use native sockets here)</span>
     logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">&quot;--&gt; Finding peer address&quot;</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>send_json({<span style="color: #BA2121">&quot;event&quot;</span>: RPCEvents<span style="color: #666">.</span>FIND_PEER_ADDRESS})
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=1000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=</span>timeout, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
         logger<span style="color: #666">.</span>error(<span style="color: #BA2121">&quot;Failed to find peer address. Server did not respond.&quot;</span>)
         <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">&quot;Failed to find peer address.&quot;</span>)
     reply <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>recv_json()
@@ -3709,7 +3709,7 @@ and this class, and decorate it with <code>@RPCClient.register_interface</code>.
     <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>send_json({
         <span style="color: #BA2121">&quot;event&quot;</span>: RPCEvents<span style="color: #666">.</span>GET_INVENTORY
     })
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=1000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=</span>timeout, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
         logger<span style="color: #666">.</span>error(<span style="color: #BA2121">&quot;Failed to get inventory. Server did not respond.&quot;</span>)
         <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">&quot;Failed to get inventory.&quot;</span>)
     reply <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>recv_json()
@@ -3734,7 +3734,7 @@ and this class, and decorate it with <code>@RPCClient.register_interface</code>.
         logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">&quot;--&gt; Initializing Signals Handling&quot;</span>)
         <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>send_json({<span style="color: #BA2121">&quot;event&quot;</span>: RPCEvents<span style="color: #666">.</span>INIT_SIGNALS_HANDLING, <span style="color: #BA2121">&quot;address&quot;</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>own_address, <span style="color: #BA2121">&quot;port&quot;</span>: signal_port})
 
-        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=1000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
+        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=</span>timeout, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
             logger<span style="color: #666">.</span>error(<span style="color: #BA2121">&quot;Failed to initialize signals. Server did not respond.&quot;</span>)
             <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">&quot;Failed to initialize signals.&quot;</span>)
         reply <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>recv_json()
