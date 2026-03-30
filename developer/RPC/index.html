@@ -2998,12 +2998,12 @@ classDiagram
     server-&gt;&gt;-client: methods, properties and signals inventory
 
     opt RPCSignals declared
-    Note over signal_recv, client: Start Signal Receiver thread
+    client-&gt;&gt;+server: INIT_SIGNALS_HANDLING
+    Note right of server: Creates signal publisher socket and &lt;br/&gt; connect signals to _send_signal()
+    server-&gt;&gt;-client: success, signal_port
+    Note over signal_recv, client: Start Signal Receiver thread &lt;br/&gt; and subsrcibe to publisher
     client-&gt;&gt;+signal_recv: __init__()
     signal_recv--&gt;&gt;-client: 
-    client-&gt;&gt;+server: INIT_SIGNALS_HANDLING
-    Note right of server: Connect to signal socket and &lt;br/&gt; connect signals to _send_signal()
-    server-&gt;&gt;-client: success
 
     end
 
@@ -3047,24 +3047,13 @@ sequenceDiagram
     Note over recv, server: server.serve_forever() called &lt;br/&gt; and client connected
 
     Note over server_signal: emit() called
-    activate server_signal
     server_signal-&gt;&gt;+server: _send_signal()
     server-&gt;&gt;+recv: EMIT_SIGNAL
-    Note over recv: select corresponding signal
-    alt is blocking
-        recv-&gt;&gt;+client_signal: emit()
-        client_signal--&gt;&gt;-recv: 
-        recv-&gt;&gt;server: success
-    else
-        recv-&gt;&gt;server: success
-        recv-&gt;&gt;+client_signal: emit()
-        client_signal--&gt;&gt;-recv: 
-        deactivate recv
-    end
-
-
     server--&gt;&gt;-server_signal: 
-    deactivate server_signal</code></pre>
+    Note over recv: select corresponding signal
+    recv-&gt;&gt;+client_signal: emit()
+    client_signal--&gt;&gt;-recv: 
+    deactivate recv</code></pre>
 <h3 id="property-getter">Property getter<a class="headerlink" href="#property-getter" title="Permanent link">Link</a></h3>
 <pre class="mermaid"><code>sequenceDiagram
     participant other
