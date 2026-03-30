@@ -21,9 +21,7 @@ RPCServer
 import copy
 import inspect
 import json
-import random
 import re
-import socket
 import sys
 import time
 import traceback
@@ -58,7 +56,6 @@ class RPCEvents(StrEnum):
     METHOD_CALL = "METHOD_CALL"
     GET_INVENTORY = "GET_INVENTORY"
     STOP_SERVER = "STOP_SERVER"
-    FIND_PEER_ADDRESS = "FIND_PEER_ADDRESS"
     INIT_SIGNALS_HANDLING = "INIT_SIGNALS_HANDLING"
     EMIT_SIGNAL = "EMIT_SIGNAL"
 
@@ -504,23 +501,6 @@ class RPCClient:
                 if isinstance(value, RPCSignal):
                     setattr(self, key, copy.deepcopy(value))
 
-        # Finding peer address (zmq abstract addresses so we use native sockets here)
-        logger.debug("--> Finding peer address")
-        self.socket.send_json({"event": RPCEvents.FIND_PEER_ADDRESS})
-        if self.socket.poll(timeout=timeout, flags=zmq.POLLIN) == 0:
-            logger.error("Failed to find peer address. Server did not respond.")
-            raise TimeoutError("Failed to find peer address.")
-        reply = self.socket.recv_json()
-        logger.debug("-- got reply")
-        if not reply["success"]:
-            raise RuntimeError("FIND_PEER_ADDRESS failed")
-        _, ip_addr, _ = url_parser.match(url).groups()
-        s = socket.create_connection((ip_addr, reply["port"]))
-        self.own_address = s.getsockname()[0]
-        self.peer_address = s.getpeername()[0]
-        s.close()
-        logger.debug(f"<-- Client at address {self.own_address} connected to server at {self.peer_address}")
-
         # Getting RPCServer inventory
         logger.debug("--> Getting Inventory")
         self.socket.send_json({
@@ -553,9 +533,10 @@ class RPCClient:
                 raise RuntimeError("INIT_SIGNALS_HANDLING failed")
 
             signal_port = reply["signal_port"]
+            proto, addr, _ = url_parser.search(self.url).groups()
             self._signal_receiver = RPCSignalReceiver(
                 context=self.context,
-                url=f"tcp://{self.peer_address}:{signal_port}",
+                url=f"{proto}://{addr}:{signal_port}",
                 signals=self._signals
             )
             self._signal_receiver.daemon = True
@@ -1122,8 +1103,6 @@ class RPCServer:
                 logger.debug(f"Received request: {request['event']}")
                 t0 = time.monotonic()
                 match request["event"]:
-                    case RPCEvents.FIND_PEER_ADDRESS:
-                        self._handle_find_peer_address()
                     case RPCEvents.GET_INVENTORY:
                         reply = self._handle_get_inventory()
                         self._send_reply(reply)
@@ -1363,33 +1342,6 @@ class RPCServer:
         }
         logger.debug(response)
         return response
-
-    def _handle_find_peer_address(self):
-        """
-        Find a free port, inform the peer, accept a connection, and record the peer's
-        address.
-        """
-        logger.info("Finding peer address")
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        port = random.randint(49152, 65535)
-
-        s.bind(("", port))  # may crash if unlucky
-        s.settimeout(20.0)  # s
-        s.listen(1)
-        self._send_reply({"success": True, "port": port})
-        try:
-            c, addr_info = s.accept()
-        except socket.timeout:
-            s.close()
-            logger.error("No peer connected to discovery socket after 20s – giving up.")
-            raise RuntimeError("Failed to find peer address")
-        self.peer_addr = addr_info[0]
-        c.shutdown(socket.SHUT_RDWR)
-        c.close()
-        s.shutdown(socket.SHUT_RDWR)
-        s.close()
-        del s
-        logger.info("Connected to peer at address: {}".format(self.peer_addr))
 
     def _wait_for_request(self) -> dict | None:
         if self._socket.poll(2000, zmq.POLLIN) == 0:

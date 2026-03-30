@@ -106,16 +106,12 @@ sequenceDiagram
     activate client
     Note over server: The method serve_forever() must have been called
     Note over client: in __init__ after <br/> the socket is connected
-    client->>+server: FIND_PEER_ADDRESS
-    Note right of server: Creates a socket server
-    server->>client: url
-    client<<-->>server: connects to temp server
-    deactivate server
+
     
     
     Note over client,server: Getting peer address and <br/> closing connection and temporary server
     client->>+server: GET_INVENTORY
-    server->>-client: methods, properties and signals inventory
+    server->>-client: methods, timeouts, properties and signals inventory
 
     opt RPCSignals declared
     client->>+server: INIT_SIGNALS_HANDLING
