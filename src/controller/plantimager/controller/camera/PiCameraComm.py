@@ -57,7 +57,8 @@ class PiCameraComm(QObject):
 
         def _finalizer(pool, camera):
             pool.shutdown(wait=False)
-            camera.stop_server()
+            if camera:
+                camera.stop_server()
         finalize(self, _finalizer, self._thread_pool, self._camera)
     
     def _attempt_connection(self):
