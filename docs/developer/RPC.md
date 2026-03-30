@@ -118,12 +118,12 @@ sequenceDiagram
     server->>-client: methods, properties and signals inventory
 
     opt RPCSignals declared
-    Note over signal_recv, client: Start Signal Receiver thread
+    client->>+server: INIT_SIGNALS_HANDLING
+    Note right of server: Creates signal publisher socket and <br/> connect signals to _send_signal()
+    server->>-client: success, signal_port
+    Note over signal_recv, client: Start Signal Receiver thread <br/> and subsrcibe to publisher
     client->>+signal_recv: __init__()
     signal_recv-->>-client: 
-    client->>+server: INIT_SIGNALS_HANDLING
-    Note right of server: Connect to signal socket and <br/> connect signals to _send_signal()
-    server->>-client: success
 
     end
 
@@ -175,24 +175,13 @@ sequenceDiagram
     Note over recv, server: server.serve_forever() called <br/> and client connected
 
     Note over server_signal: emit() called
-    activate server_signal
     server_signal->>+server: _send_signal()
     server->>+recv: EMIT_SIGNAL
-    Note over recv: select corresponding signal
-    alt is blocking
-        recv->>+client_signal: emit()
-        client_signal-->>-recv: 
-        recv->>server: success
-    else
-        recv->>server: success
-        recv->>+client_signal: emit()
-        client_signal-->>-recv: 
-        deactivate recv
-    end
-    
-
     server-->>-server_signal: 
-    deactivate server_signal
+    Note over recv: select corresponding signal
+    recv->>+client_signal: emit()
+    client_signal-->>-recv: 
+    deactivate recv
 ```
 
 ### Property getter

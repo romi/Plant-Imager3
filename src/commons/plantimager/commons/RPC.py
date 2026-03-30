@@ -410,11 +410,12 @@ class RPCSignalReceiver(Thread):
     def __init__(self, context: zmq.Context, url: str, signals: dict[str, RPCSignal]):
         super().__init__(name="RPCSignalReceiver")
         self.context = context
-        self.url = url
+        self.url = url  # now the server's PUB endpoint
         self._stop_flag = False
         self.signals = signals
-        self.socket: zmq.Socket = context.socket(zmq.REP)
-        self.port = self.socket.bind_to_random_port(url)
+        self.socket: zmq.Socket = context.socket(zmq.SUB)
+        self.socket.connect(url)
+        self.socket.setsockopt_string(zmq.SUBSCRIBE, "")  # subscribe to all
 
     def run(self):
         """
@@ -449,17 +450,11 @@ class RPCSignalReceiver(Thread):
                 request = self.socket.recv_json()
                 if request["event"] != RPCEvents.EMIT_SIGNAL:
                     logger.error(f"Expected event {RPCEvents.EMIT_SIGNAL}, got {request['event']} instead.")
-                    self.socket.send_json({"success": False})
                     continue
                 signal = request["signal"]
                 args = request["args"]
                 logger.debug(f"Emitting signal {signal} with args {args}")
-                if request["blocking"]:
-                    self.signals[signal].emit(*args)
-                    self.socket.send_json({"success": True})
-                else:
-                    self.socket.send_json({"success": True})
-                    self.signals[signal].emit(*args)
+                self.signals[signal].emit(*args)
         finally:
             self.socket.close()
             del self.socket
@@ -547,24 +542,24 @@ class RPCClient:
         self._signal_receiver = None
         if self._signals:
             logger.info("Initializing signal handling")
-            self._signal_receiver = RPCSignalReceiver(
-                context=self.context, url=f"tcp://{self.own_address}", signals=self._signals
-            )
-            self._signal_receiver.daemon = True  # FIXME: Should be False!
-            self._signal_receiver.start()
-            signal_port = self._signal_receiver.port
             logger.debug("--> Initializing Signals Handling")
-            self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING, "address": self.own_address, "port": signal_port})
+            self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING})
 
             if self.socket.poll(timeout=timeout, flags=zmq.POLLIN) == 0:
                 logger.error("Failed to initialize signals. Server did not respond.")
                 raise TimeoutError("Failed to initialize signals.")
             reply = self.socket.recv_json()
             if not reply["success"]:
-                self._signal_receiver.stop()
-                self._signal_receiver.join(2)
-                self._signal_receiver = None
                 raise RuntimeError("INIT_SIGNALS_HANDLING failed")
+
+            signal_port = reply["signal_port"]
+            self._signal_receiver = RPCSignalReceiver(
+                context=self.context,
+                url=f"tcp://{self.peer_address}:{signal_port}",
+                signals=self._signals
+            )
+            self._signal_receiver.daemon = True
+            self._signal_receiver.start()
             logger.info("<-- Successfully initialized signal handling")
 
         def _finalizer(sock, receiver):
@@ -786,9 +781,8 @@ class RPCServer:
         context: zmq.Context
             ZMQ context used to make the various sockets necessary for communicating with the client.
         url: str
-            Url where the RPCServer is opened.
-        port: int
-            Port where the RPCServer is opened.
+            Url where the RPCServer is opened. The url should include the port in the form
+            ``tcp://<ip>:<port>``.
         name: str
             Name of the RPCServer as given by the deviceregistry once registered
         uuid: str
@@ -1005,9 +999,6 @@ class RPCServer:
             "args": args,
             "blocking": False,
         })
-        reply = self._signal_socket.recv_json()
-        if not reply["success"]:
-            logger.error(f"Signal {signal_name} failed with {reply}")
 
     def _exec_json(self, method: Callable, params: dict) -> dict:
         args = params["args"]
@@ -1334,15 +1325,18 @@ class RPCServer:
             entries.
         """
         logger.info("Initializing signal handling")
-        address, port = request["address"], request["port"]
-        self._signal_socket = self.context.socket(zmq.REQ)
-        self._signal_socket.connect(f"tcp://{address}:{port}")
-        self._cleanup_state["signal_socket"] = self._signal_socket
+        if self._signal_socket is None:
+            self._signal_socket = self.context.socket(zmq.PUB)
+            protocol, addr, _ = url_parser.search(self.url).groups()
+            self._signal_port = self._signal_socket.bind_to_random_port(f"{protocol}://{addr}")
+            self._cleanup_state["signal_socket"] = self._signal_socket
+
         weak_send_signal = WeakMethod(self._send_signal)
         for sig_name, sig in self._signals.items():
-            sig.connect(lambda *args, sig_name=sig_name, **kwargs: weak_send_signal()(sig_name, *args, **kwargs))
+            sig.connect(lambda *args, _sig_name=sig_name, **kwargs: weak_send_signal()(_sig_name, *args, **kwargs))
+
         logger.info("Successfully initialized signal handling")
-        return {"success": True}
+        return {"success": True, "signal_port": self._signal_port}
 
     def _handle_get_inventory(self) -> dict:
         """
@@ -1421,7 +1415,7 @@ class RPCServer:
         if self.registry_addr:
             res = send_alive_check(self.context, self.uuid, self.registry_addr, self.alive_timeout)
             if res == AliveCheckState.UNREACHABLE:
-                logger.warning(f"Check Alive failed. Got no response from registry.")
+                logger.warning("Check Alive failed. Got no response from registry.")
                 self._unreachable_counter += 1
             elif res == AliveCheckState.UNKNOWN:
                 logger.warning(f"Check Alive failed. Registry at {self.registry_addr} does not know this service."
