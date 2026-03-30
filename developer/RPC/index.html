@@ -2986,16 +2986,12 @@ classDiagram
     activate client
     Note over server: The method serve_forever() must have been called
     Note over client: in __init__ after &lt;br/&gt; the socket is connected
-    client-&gt;&gt;+server: FIND_PEER_ADDRESS
-    Note right of server: Creates a socket server
-    server-&gt;&gt;client: url
-    client&lt;&lt;--&gt;&gt;server: connects to temp server
-    deactivate server
+
 
 
     Note over client,server: Getting peer address and &lt;br/&gt; closing connection and temporary server
     client-&gt;&gt;+server: GET_INVENTORY
-    server-&gt;&gt;-client: methods, properties and signals inventory
+    server-&gt;&gt;-client: methods, timeouts, properties and signals inventory
 
     opt RPCSignals declared
     client-&gt;&gt;+server: INIT_SIGNALS_HANDLING
