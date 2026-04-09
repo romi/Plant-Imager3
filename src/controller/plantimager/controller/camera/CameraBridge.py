@@ -1,21 +1,26 @@
 import os.path
-import sys
 from enum import StrEnum
 from typing import Literal
 from weakref import finalize
 
 import zmq
-from PySide6.QtCore import QObject, Signal, Slot, Property
-from PySide6.QtQml import QmlElement, QmlUncreatable
+from PySide6.QtCore import Property
+from PySide6.QtCore import QObject
+from PySide6.QtCore import Signal
+from PySide6.QtCore import Slot
+from PySide6.QtQml import QmlElement
+from PySide6.QtQml import QmlUncreatable
 
 from plantimager.commons.logging import create_logger
-from plantimager.controller.camera.PiCameraComm import PiCameraComm, CameraStates
 from plantimager.controller.ImageProvider import imageProvider
+from plantimager.controller.camera.PiCameraComm import CameraStates
+from plantimager.controller.camera.PiCameraComm import PiCameraComm
 
 QML_IMPORT_NAME = "PlantImagerApp.Camera"
 QML_IMPORT_MAJOR_VERSION = 1
 
 logger = create_logger("CameraBridge")
+
 
 class StatusClass(StrEnum):
     OK = "ok"
@@ -24,6 +29,7 @@ class StatusClass(StrEnum):
     INACTIVE = "inactive"
     WAITING = "waiting"
 
+
 STATE_TO_CLASS = {
     CameraStates.DISCONNECTED: StatusClass.INACTIVE,
     CameraStates.INVALID: StatusClass.ERROR,
@@ -31,12 +37,14 @@ STATE_TO_CLASS = {
     CameraStates.WAITING: StatusClass.WAITING,
 }
 
+
 class DisplayMode(StrEnum):
     NORMAL = "normal"
     FOCUS = "focus"
     ZOOMED = "zoomed"
     ZOOMED_FOCUS = "zoomed-focus"
     ALIGN = "align"
+
 
 @QmlElement
 @QmlUncreatable("Camera bridge cannot be created from QML")
@@ -79,7 +87,7 @@ class CameraBridge(QObject):
         self.camera.videoUrlChanged.connect(self._videoUrlChanged)
         self.camera.stateChanged.connect(self.statusChanged)
 
-        self._mode: Literal["VIDEO", "STILL"]  = self.camera.mode
+        self._mode: Literal["VIDEO", "STILL"] = self.camera.mode
         self._rotation: int = self.camera.rotation
         self.camera.rotationChanged.connect(self._camera_rotation_change_handler)
         self._i = 0
@@ -87,8 +95,8 @@ class CameraBridge(QObject):
         def _finalizer(camera):
             del camera
             logger.debug(f"bridge {self._name} finalized")
-        finalize(self, _finalizer, self.camera)
 
+        finalize(self, _finalizer, self.camera)
 
     @Slot()
     def getImage(self):
@@ -105,6 +113,7 @@ class CameraBridge(QObject):
     @Property(str, notify=modeChanged)
     def mode(self):
         return self._mode
+
     @mode.setter
     def mode(self, value: Literal["VIDEO", "STILL"]):
         if self._mode != value and self.camera:
@@ -126,7 +135,7 @@ class CameraBridge(QObject):
         imageProvider.addImageFromBuffer(f"{self._name}-{self._i}", buffer, buffer_info)
         self._image_source = f"image://provider/{self._name}-{self._i}"
         self.imageSourceChanged.emit(self._image_source)
-        self._i  = (self._i + 1) % 2
+        self._i = (self._i + 1) % 2
 
     @Property(str, notify=nameChanged)
     def name(self) -> str:
@@ -174,6 +183,7 @@ class CameraBridge(QObject):
     @Property(int, notify=rotationChanged)
     def rotation(self) -> int:
         return self._rotation
+
     @rotation.setter
     def rotation(self, value: int):
         if self.camera:
@@ -182,6 +192,7 @@ class CameraBridge(QObject):
     @Property(str, notify=displayModeChanged)
     def displayMode(self) -> DisplayMode:
         return self._displayMode
+
     @displayMode.setter
     def displayMode(self, value: DisplayMode):
         if self._displayMode != value:
