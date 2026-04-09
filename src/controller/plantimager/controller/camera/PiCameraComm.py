@@ -1,18 +1,24 @@
 import weakref
-from concurrent.futures import ThreadPoolExecutor, Future
-from enum import StrEnum
-from typing import Literal, Any
-from weakref import finalize
+from concurrent.futures import Future
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
+from enum import StrEnum
+from typing import Any
+from typing import Literal
+from weakref import finalize
 
 import zmq
-from PySide6.QtCore import QObject, Slot, Signal, Property
+from PySide6.QtCore import Property
+from PySide6.QtCore import QObject
+from PySide6.QtCore import Signal
+from PySide6.QtCore import Slot
 
 from plantimager.commons.RPC import RPCClient
 from plantimager.commons.cameradevice import Camera
 from plantimager.commons.logging import create_logger
 
 logger = create_logger(__name__)
+
 
 class CameraStates(StrEnum):
     DISCONNECTED = "disconnected"
@@ -59,10 +65,12 @@ class PiCameraComm(QObject):
             pool.shutdown(wait=False)
             if camera:
                 camera.stop_server()
+
         finalize(self, _finalizer, self._thread_pool, self._camera)
-    
+
     def _attempt_connection(self):
         weak_self = weakref.ref(self)
+
         def _attempt_connection_callback(ft: Future[PiCameraProxy]):
             s = weak_self()
             if s is None:
@@ -78,9 +86,10 @@ class PiCameraComm(QObject):
                 s._camera.configChanged.connect(lambda c: (obj := weak_self()) and obj.configChanged.emit(c))
                 s._set_state(CameraStates.CONNECTED)
             else:
-                #logger.warning("Connection failed")
+                # logger.warning("Connection failed")
                 s._attempt_connection()
-        future = self._thread_pool.submit(lambda :PiCameraProxy(self._context, self.url))
+
+        future = self._thread_pool.submit(lambda: PiCameraProxy(self._context, self.url))
         future.add_done_callback(_attempt_connection_callback)
 
     @contextmanager
@@ -105,14 +114,16 @@ class PiCameraComm(QObject):
                 self._attempt_connection()
             else:
                 self._set_state(CameraStates.CONNECTED)
+
         if self._camera and self.state == CameraStates.CONNECTED:
             self._set_state(CameraStates.WAITING)
             ft = self._thread_pool.submit(lambda: setattr(self._camera, attr_name, value))
             ft.add_done_callback(callback)
-        
+
     @Property(str, notify=stateChanged)
     def state(self) -> CameraStates:
         return self._state
+
     def _set_state(self, state: CameraStates):
         if state != self._state and state in CameraStates:
             self._state = state
@@ -126,10 +137,10 @@ class PiCameraComm(QObject):
 
         Returns
         -------
-        future or None : Future[tuple[memoryview, dict]] or None
-            returns None when the camera is unavailable
-
+        Future[tuple[memoryview, dict]] or None
+            Returns ``None`` when the camera is unavailable
         """
+
         def _callback(ft_: Future):
             if ft_.cancelled(): return
             res = ft_.result()
@@ -137,6 +148,7 @@ class PiCameraComm(QObject):
                 buffer, buffer_info = res
                 self._set_state(CameraStates.CONNECTED)
                 self.imageReady.emit(buffer, buffer_info)
+
         if self._camera and self.state == CameraStates.CONNECTED:
             self._set_state(CameraStates.WAITING)
             ft = self._thread_pool.submit(self._camera.get_image, lores=lores)
@@ -150,6 +162,7 @@ class PiCameraComm(QObject):
         with self.camera() as camera:
             val = camera.mode if camera is not None else "STILL"
         return val
+
     @mode.setter
     def mode(self, value: Literal["VIDEO", "STILL"]):
         self._set_attr_async("mode", value)
@@ -165,6 +178,7 @@ class PiCameraComm(QObject):
         with self.camera() as camera:
             val = camera.rotation if camera is not None else 0
         return val
+
     @rotation.setter
     def rotation(self, value: int):
         self._set_attr_async("rotation", value)
@@ -180,6 +194,7 @@ class PiCameraComm(QObject):
         with self.camera() as camera:
             val = camera.resolution if camera else (-1, -1)
         return val
+
     @resolution.setter
     def resolution(self, value: tuple[int, int]):
         self._set_attr_async("resolution", value)
@@ -189,6 +204,7 @@ class PiCameraComm(QObject):
         with self.camera() as camera:
             val = camera.encoding if camera else ""
         return val
+
     @encoding.setter
     def encoding(self, value: tuple[int, int]):
         self._set_attr_async("encoding", value)
@@ -198,8 +214,7 @@ class PiCameraComm(QObject):
         with self.camera() as camera:
             val = camera.config if camera else {}
         return val
+
     @config.setter
     def config(self, value: tuple[int, int]):
         self._set_attr_async("config", value)
-
-
