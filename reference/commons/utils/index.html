@@ -2853,9 +2853,9 @@
 
         <p>Coerce a value to a specified generic type or type hint.</p>
 <p>This utility attempts to convert <code>value</code> into the type described by
-<code>generic_type</code>.  It supports plain types, <code>typing</code> constructs such as
+<code>generic_type</code>. It supports plain types, <code>typing</code> constructs such as
 <code>Union</code> and <code>Tuple</code>, as well as generic container types like <code>list</code>,
-<code>dict</code> and <code>set</code>.  The function recurses as necessary to coerce nested
+<code>dict</code> and <code>set</code>. The function recurses as necessary to coerce nested
 structures and raises a <code>TypeError</code> when conversion is impossible.</p>
 
 
@@ -2895,7 +2895,7 @@ structures and raises a <code>TypeError</code> when conversion is impossible.</p
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The target type or type hint.  May be a concrete class, a <code>typing</code>
+                <p>The target type or type hint. May be a concrete class, a <code>typing</code>
 generic (e.g., <code>list[int]</code>), a union (e.g., <code>int | str</code>), or
 <code>typing.Any</code>.</p>
               </div>
@@ -2978,23 +2978,23 @@ succeeds.</p>
   <p>The coercion logic proceeds through several ordered steps:</p>
 <ol>
 <li>
-<p><strong>Union handling</strong> – If <code>generic_type</code> is a tuple of types, each
+<p><strong>Union handling</strong> - If <code>generic_type</code> is a tuple of types, each
    member is tried in turn; the first successful conversion is returned.
    The same strategy is used for <code>typing.Union</code> and the <code>|</code> syntax
    introduced in Python 3.10.</p>
 </li>
 <li>
-<p><strong>Any</strong> – When <code>generic_type</code> is <code>typing.Any</code> the function returns
+<p><strong>Any</strong> - When <code>generic_type</code> is <code>typing.Any</code> the function returns
    <code>value</code> unchanged.</p>
 </li>
 <li>
-<p><strong>Simple types</strong> – For non‑generic classes (e.g., <code>int</code>, <code>str</code>) the
+<p><strong>Simple types</strong> - For non‑generic classes (e.g., <code>int</code>, <code>str</code>) the
    function first checks <code>isinstance</code>; if the check fails it attempts to
    call the type as a constructor (<code>generic_type(value)</code>).</p>
 </li>
 <li>
-<p><strong>Tuples</strong> – <code>tuple</code> generics are distinguished between variadic
-   (<code>tuple[int, ...]</code>) and fixed‑size (<code>tuple[int, str]</code>) forms.  The
+<p><strong>Tuples</strong> - <code>tuple</code> generics are distinguished between variadic
+   (<code>tuple[int, ...]</code>) and fixed‑size (<code>tuple[int, str]</code>) forms. The
    function validates iterability, then coerces each element according to
    the specified element type.</p>
 </li>
@@ -3003,14 +3003,7 @@ succeeds.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/utils.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">123</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">125</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">125</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">126</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">127</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">128</span>
@@ -3134,14 +3127,21 @@ succeeds.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">246</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">248</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">coerce_to_generic</span>(value: Any, generic_type: Any) <span style="color: #666">-&gt;</span> Any:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">253</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">254</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">255</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">coerce_to_generic</span>(value: Any, generic_type: Any) <span style="color: #666">-&gt;</span> Any:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Coerce a value to a specified generic type or type hint.</span>
 
 <span style="color: #BA2121; font-style: italic">    This utility attempts to convert ``value`` into the type described by</span>
-<span style="color: #BA2121; font-style: italic">    ``generic_type``.  It supports plain types, ``typing`` constructs such as</span>
+<span style="color: #BA2121; font-style: italic">    ``generic_type``. It supports plain types, ``typing`` constructs such as</span>
 <span style="color: #BA2121; font-style: italic">    ``Union`` and ``Tuple``, as well as generic container types like ``list``,</span>
-<span style="color: #BA2121; font-style: italic">    ``dict`` and ``set``.  The function recurses as necessary to coerce nested</span>
+<span style="color: #BA2121; font-style: italic">    ``dict`` and ``set``. The function recurses as necessary to coerce nested</span>
 <span style="color: #BA2121; font-style: italic">    structures and raises a ``TypeError`` when conversion is impossible.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -3149,7 +3149,7 @@ succeeds.</p>
 <span style="color: #BA2121; font-style: italic">    value</span>
 <span style="color: #BA2121; font-style: italic">        The object to be coerced.</span>
 <span style="color: #BA2121; font-style: italic">    generic_type</span>
-<span style="color: #BA2121; font-style: italic">        The target type or type hint.  May be a concrete class, a ``typing``</span>
+<span style="color: #BA2121; font-style: italic">        The target type or type hint. May be a concrete class, a ``typing``</span>
 <span style="color: #BA2121; font-style: italic">        generic (e.g., ``list[int]``), a union (e.g., ``int | str``), or</span>
 <span style="color: #BA2121; font-style: italic">        ``typing.Any``.</span>
 
@@ -3176,20 +3176,20 @@ succeeds.</p>
 <span style="color: #BA2121; font-style: italic">    -----</span>
 <span style="color: #BA2121; font-style: italic">    The coercion logic proceeds through several ordered steps:</span>
 
-<span style="color: #BA2121; font-style: italic">    1. **Union handling** – If ``generic_type`` is a tuple of types, each</span>
+<span style="color: #BA2121; font-style: italic">    1. **Union handling** - If ``generic_type`` is a tuple of types, each</span>
 <span style="color: #BA2121; font-style: italic">       member is tried in turn; the first successful conversion is returned.</span>
 <span style="color: #BA2121; font-style: italic">       The same strategy is used for ``typing.Union`` and the ``|`` syntax</span>
 <span style="color: #BA2121; font-style: italic">       introduced in Python 3.10.</span>
 
-<span style="color: #BA2121; font-style: italic">    2. **Any** – When ``generic_type`` is ``typing.Any`` the function returns</span>
+<span style="color: #BA2121; font-style: italic">    2. **Any** - When ``generic_type`` is ``typing.Any`` the function returns</span>
 <span style="color: #BA2121; font-style: italic">       ``value`` unchanged.</span>
 
-<span style="color: #BA2121; font-style: italic">    3. **Simple types** – For non‑generic classes (e.g., ``int``, ``str``) the</span>
+<span style="color: #BA2121; font-style: italic">    3. **Simple types** - For non‑generic classes (e.g., ``int``, ``str``) the</span>
 <span style="color: #BA2121; font-style: italic">       function first checks ``isinstance``; if the check fails it attempts to</span>
 <span style="color: #BA2121; font-style: italic">       call the type as a constructor (``generic_type(value)``).</span>
 
-<span style="color: #BA2121; font-style: italic">    4. **Tuples** – ``tuple`` generics are distinguished between variadic</span>
-<span style="color: #BA2121; font-style: italic">       (``tuple[int, ...]``) and fixed‑size (``tuple[int, str]``) forms.  The</span>
+<span style="color: #BA2121; font-style: italic">    4. **Tuples** - ``tuple`` generics are distinguished between variadic</span>
+<span style="color: #BA2121; font-style: italic">       (``tuple[int, ...]``) and fixed‑size (``tuple[int, str]``) forms. The</span>
 <span style="color: #BA2121; font-style: italic">       function validates iterability, then coerces each element according to</span>
 <span style="color: #BA2121; font-style: italic">       the specified element type.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
@@ -3288,9 +3288,9 @@ succeeds.</p>
         <p>Determine whether <code>value</code> conforms to a typing generic specification.</p>
 <p>This utility inspects <code>generic_type</code> using :func:<code>typing.get_origin</code> and
 :func:<code>typing.get_args</code> and recursively validates <code>value</code> against the
-resolved origin and its type arguments.  It supports built‑in container
+resolved origin and its type arguments. It supports built‑in container
 types (<code>list</code>, <code>set</code>, <code>tuple</code>, <code>dict</code>) as well as user‑defined
-generic classes.  When <code>generic_type</code> is a tuple, each element may be a
+generic classes. When <code>generic_type</code> is a tuple, each element may be a
 distinct type specification; an ellipsis (<code>...</code>) as the last element
 denotes a variadic element type that applies to all items of the tuple.</p>
 
@@ -3332,7 +3332,7 @@ denotes a variadic element type that applies to all items of the tuple.</p>
             <td>
               <div class="doc-md-description">
                 <p>A concrete type, a typing generic (e.g. <code>list[int]</code>), or a tuple of
-such specifications.  If a tuple is provided, the function returns
+such specifications. If a tuple is provided, the function returns
 <code>True</code> when <code>value</code> matches <strong>any</strong> of the contained specifications.</p>
               </div>
             </td>
@@ -3419,15 +3419,7 @@ isinstance</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/utils.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">253</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">254</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">255</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">257</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span>
@@ -3520,15 +3512,23 @@ isinstance</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">349</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">350</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">351</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">352</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_instance_of_generic</span>(value, generic_type):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">352</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">353</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">354</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">355</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">356</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">357</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">358</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">359</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">360</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_instance_of_generic</span>(value, generic_type):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Determine whether ``value`` conforms to a typing generic specification.</span>
 
 <span style="color: #BA2121; font-style: italic">    This utility inspects ``generic_type`` using :func:`typing.get_origin` and</span>
 <span style="color: #BA2121; font-style: italic">    :func:`typing.get_args` and recursively validates ``value`` against the</span>
-<span style="color: #BA2121; font-style: italic">    resolved origin and its type arguments.  It supports built‑in container</span>
+<span style="color: #BA2121; font-style: italic">    resolved origin and its type arguments. It supports built‑in container</span>
 <span style="color: #BA2121; font-style: italic">    types (``list``, ``set``, ``tuple``, ``dict``) as well as user‑defined</span>
-<span style="color: #BA2121; font-style: italic">    generic classes.  When ``generic_type`` is a tuple, each element may be a</span>
+<span style="color: #BA2121; font-style: italic">    generic classes. When ``generic_type`` is a tuple, each element may be a</span>
 <span style="color: #BA2121; font-style: italic">    distinct type specification; an ellipsis (``...``) as the last element</span>
 <span style="color: #BA2121; font-style: italic">    denotes a variadic element type that applies to all items of the tuple.</span>
 
@@ -3538,7 +3538,7 @@ isinstance</p>
 <span style="color: #BA2121; font-style: italic">        The object whose type is being checked.</span>
 <span style="color: #BA2121; font-style: italic">    generic_type : type or tuple of types</span>
 <span style="color: #BA2121; font-style: italic">        A concrete type, a typing generic (e.g. ``list[int]``), or a tuple of</span>
-<span style="color: #BA2121; font-style: italic">        such specifications.  If a tuple is provided, the function returns</span>
+<span style="color: #BA2121; font-style: italic">        such specifications. If a tuple is provided, the function returns</span>
 <span style="color: #BA2121; font-style: italic">        ``True`` when ``value`` matches **any** of the contained specifications.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
@@ -3602,7 +3602,7 @@ isinstance</p>
     <span style="color: #3D7B7B; font-style: italic"># For tuple check if it is a fixed size spec (Ellipsis in args otherwise)</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">issubclass</span>(origin, <span style="color: #008000">tuple</span>):
         <span style="color: #3D7B7B; font-style: italic"># Validates tuple elements against variadic or fixed type spec</span>
-        <span style="color: #008000; font-weight: bold">if</span> args <span style="color: #A2F; font-weight: bold">and</span> args[<span style="color: #666">-1</span>] <span style="color: #A2F; font-weight: bold">is</span>  <span style="color: #008000">Ellipsis</span>:
+        <span style="color: #008000; font-weight: bold">if</span> args <span style="color: #A2F; font-weight: bold">and</span> args[<span style="color: #666">-1</span>] <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000">Ellipsis</span>:
             <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">all</span>(
                 is_instance_of_generic(val, <span style="color: #008000">tuple</span>(args[:<span style="color: #666">-1</span>])) <span style="color: #008000; font-weight: bold">for</span> val <span style="color: #A2F; font-weight: bold">in</span> value
             )
@@ -3805,9 +3805,7 @@ with expiration and capacity constraints.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/utils.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">  9</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 10</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 11</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 11</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 12</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 13</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 14</span>
@@ -3911,7 +3909,14 @@ with expiration and capacity constraints.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ttl_cache</span>(maxsize: <span style="color: #008000">int</span><span style="color: #666">=16</span>, ttl: <span style="color: #008000">float</span><span style="color: #666">=300</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">116</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ttl_cache</span>(maxsize: <span style="color: #008000">int</span> <span style="color: #666">=</span> <span style="color: #666">16</span>, ttl: <span style="color: #008000">float</span> <span style="color: #666">=</span> <span style="color: #666">300</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    A decorator to cache the results of a function with a time-to-live (TTL) mechanism.</span>
 
@@ -3991,8 +3996,10 @@ with expiration and capacity constraints.</p>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; multiply(2, 3)</span>
 <span style="color: #BA2121; font-style: italic">    6  # Cache was cleared, so the result is recomputed</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+
     <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ttl_cache_inner</span>(func):
         cache: <span style="color: #008000">dict</span> <span style="color: #666">=</span> {}
+
         <span style="color: #A2F">@wraps</span>(func)
         <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">wrapper</span>(<span style="color: #666">*</span>args, <span style="color: #666">**</span>kwargs):
             <span style="color: #3D7B7B; font-style: italic"># clean every expired item</span>
@@ -4012,11 +4019,14 @@ with expiration and capacity constraints.</p>
                     <span style="color: #008000; font-weight: bold">del</span> cache[oldest]
                 cache[key] <span style="color: #666">=</span> (time(), val)
                 <span style="color: #008000; font-weight: bold">return</span> val
+
         <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">clear_cache</span>():
 <span style="color: #BBB">            </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Clears the attached cache.&quot;&quot;&quot;</span>
             cache<span style="color: #666">.</span>clear()
+
         wrapper<span style="color: #666">.</span>clear_cache <span style="color: #666">=</span> clear_cache
         <span style="color: #008000; font-weight: bold">return</span> wrapper
+
     <span style="color: #008000; font-weight: bold">return</span> ttl_cache_inner
 </code></pre></div></td></tr></table></div>
             </details>

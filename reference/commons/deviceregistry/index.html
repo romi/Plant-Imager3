@@ -3642,10 +3642,10 @@ The uuid must be kept to unregister the device later.</p>
 
         <p>Check the liveness of a service with the registry.</p>
 <p>Send an <code>EventType.CHECK_ALIVE</code> request to the registry and wait for an
-<code>EventType.ACK</code> reply.  The function opens a <code>REQ</code> socket on the provided
+<code>EventType.ACK</code> reply. The function opens a <code>REQ</code> socket on the provided
 ZeroMQ <code>context</code>, sends the payload containing <code>uuid</code> and <code>alive_timeout</code>,
 and returns <code>True</code> only when an acknowledgement is received within the
-socket poll timeout (5s).  Any other reply or the lack of a reply results in
+socket poll timeout (5s). Any other reply or the lack of a reply results in
 <code>False</code>.</p>
 
 
@@ -3718,8 +3718,8 @@ is sent.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Timeout (in seconds) that the service claims it will stay alive.  The
-value is included in the request payload.  Defaults to <code>ALIVE_TIMEOUT</code>.</p>
+                <p>Timeout (in seconds) that the service claims it will stay alive. The
+value is included in the request payload. Defaults to <code>ALIVE_TIMEOUT</code>.</p>
               </div>
             </td>
             <td>
@@ -3783,9 +3783,9 @@ connecting, sending, or receiving messages.</p>
   <summary>Notes</summary>
   <ul>
 <li>The socket is created inside a <code>with</code> block, guaranteeing that it is
-  closed when the block exits.  The explicit <code>socket.close()</code> calls are
+  closed when the block exits. The explicit <code>socket.close()</code> calls are
   retained for clarity but are not strictly required.</li>
-<li>The function uses a fixed poll timeout of 5 seconds; this value is not
+<li>The function uses a fixed poll timeout of 5 seconds; this value is not
   configurable via the public API.</li>
 <li><code>alive_timeout</code> is merely echoed back to the registry and is not used by
   this function to enforce any timing constraints.</li>
@@ -3794,7 +3794,7 @@ connecting, sending, or receiving messages.</p>
 
 <details class="see-also" open>
   <summary>See Also</summary>
-  <p><code>EventType</code> – enumeration of supported event types.</p>
+  <p><code>EventType</code> - enumeration of supported event types.</p>
 </details>
 
             <details class="mkdocstrings-source">
@@ -3872,10 +3872,10 @@ connecting, sending, or receiving messages.</p>
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Check the liveness of a service with the registry.</span>
 
 <span style="color: #BA2121; font-style: italic">    Send an ``EventType.CHECK_ALIVE`` request to the registry and wait for an</span>
-<span style="color: #BA2121; font-style: italic">    ``EventType.ACK`` reply.  The function opens a ``REQ`` socket on the provided</span>
+<span style="color: #BA2121; font-style: italic">    ``EventType.ACK`` reply. The function opens a ``REQ`` socket on the provided</span>
 <span style="color: #BA2121; font-style: italic">    ZeroMQ ``context``, sends the payload containing ``uuid`` and ``alive_timeout``,</span>
 <span style="color: #BA2121; font-style: italic">    and returns ``True`` only when an acknowledgement is received within the</span>
-<span style="color: #BA2121; font-style: italic">    socket poll timeout (5s).  Any other reply or the lack of a reply results in</span>
+<span style="color: #BA2121; font-style: italic">    socket poll timeout (5s). Any other reply or the lack of a reply results in</span>
 <span style="color: #BA2121; font-style: italic">    ``False``.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -3888,8 +3888,8 @@ connecting, sending, or receiving messages.</p>
 <span style="color: #BA2121; font-style: italic">        URL of the registry (e.g., ``tcp://127.0.0.1:5555``) to which the request</span>
 <span style="color: #BA2121; font-style: italic">        is sent.</span>
 <span style="color: #BA2121; font-style: italic">    alive_timeout</span>
-<span style="color: #BA2121; font-style: italic">        Timeout (in seconds) that the service claims it will stay alive.  The</span>
-<span style="color: #BA2121; font-style: italic">        value is included in the request payload.  Defaults to ``ALIVE_TIMEOUT``.</span>
+<span style="color: #BA2121; font-style: italic">        Timeout (in seconds) that the service claims it will stay alive. The</span>
+<span style="color: #BA2121; font-style: italic">        value is included in the request payload. Defaults to ``ALIVE_TIMEOUT``.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
@@ -3907,16 +3907,16 @@ connecting, sending, or receiving messages.</p>
 <span style="color: #BA2121; font-style: italic">    Notes</span>
 <span style="color: #BA2121; font-style: italic">    -----</span>
 <span style="color: #BA2121; font-style: italic">    * The socket is created inside a ``with`` block, guaranteeing that it is</span>
-<span style="color: #BA2121; font-style: italic">      closed when the block exits.  The explicit ``socket.close()`` calls are</span>
+<span style="color: #BA2121; font-style: italic">      closed when the block exits. The explicit ``socket.close()`` calls are</span>
 <span style="color: #BA2121; font-style: italic">      retained for clarity but are not strictly required.</span>
-<span style="color: #BA2121; font-style: italic">    * The function uses a fixed poll timeout of 5 seconds; this value is not</span>
+<span style="color: #BA2121; font-style: italic">    * The function uses a fixed poll timeout of 5 seconds; this value is not</span>
 <span style="color: #BA2121; font-style: italic">      configurable via the public API.</span>
 <span style="color: #BA2121; font-style: italic">    * ``alive_timeout`` is merely echoed back to the registry and is not used by</span>
 <span style="color: #BA2121; font-style: italic">      this function to enforce any timing constraints.</span>
 
 <span style="color: #BA2121; font-style: italic">    See Also</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
-<span style="color: #BA2121; font-style: italic">    `EventType` – enumeration of supported event types.</span>
+<span style="color: #BA2121; font-style: italic">    `EventType` - enumeration of supported event types.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">with</span> context<span style="color: #666">.</span>socket(zmq<span style="color: #666">.</span>REQ) <span style="color: #008000; font-weight: bold">as</span> socket:
         socket: zmq<span style="color: #666">.</span>Socket
