@@ -1,12 +1,14 @@
+import collections.abc
+import types
+import typing
 from functools import wraps
 from time import time
-import typing
-import types
-import collections.abc
-from typing import Any, get_origin, get_args
+from typing import Any
+from typing import get_args
+from typing import get_origin
 
 
-def ttl_cache(maxsize: int=16, ttl: float=300):
+def ttl_cache(maxsize: int = 16, ttl: float = 300):
     """
     A decorator to cache the results of a function with a time-to-live (TTL) mechanism.
 
@@ -86,8 +88,10 @@ def ttl_cache(maxsize: int=16, ttl: float=300):
     >>> multiply(2, 3)
     6  # Cache was cleared, so the result is recomputed
     """
+
     def ttl_cache_inner(func):
         cache: dict = {}
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             # clean every expired item
@@ -107,11 +111,14 @@ def ttl_cache(maxsize: int=16, ttl: float=300):
                     del cache[oldest]
                 cache[key] = (time(), val)
                 return val
+
         def clear_cache():
             """Clears the attached cache."""
             cache.clear()
+
         wrapper.clear_cache = clear_cache
         return wrapper
+
     return ttl_cache_inner
 
 
@@ -120,9 +127,9 @@ def coerce_to_generic(value: Any, generic_type: Any) -> Any:
     Coerce a value to a specified generic type or type hint.
 
     This utility attempts to convert ``value`` into the type described by
-    ``generic_type``.  It supports plain types, ``typing`` constructs such as
+    ``generic_type``. It supports plain types, ``typing`` constructs such as
     ``Union`` and ``Tuple``, as well as generic container types like ``list``,
-    ``dict`` and ``set``.  The function recurses as necessary to coerce nested
+    ``dict`` and ``set``. The function recurses as necessary to coerce nested
     structures and raises a ``TypeError`` when conversion is impossible.
 
     Parameters
@@ -130,7 +137,7 @@ def coerce_to_generic(value: Any, generic_type: Any) -> Any:
     value
         The object to be coerced.
     generic_type
-        The target type or type hint.  May be a concrete class, a ``typing``
+        The target type or type hint. May be a concrete class, a ``typing``
         generic (e.g., ``list[int]``), a union (e.g., ``int | str``), or
         ``typing.Any``.
 
@@ -157,20 +164,20 @@ def coerce_to_generic(value: Any, generic_type: Any) -> Any:
     -----
     The coercion logic proceeds through several ordered steps:
 
-    1. **Union handling** – If ``generic_type`` is a tuple of types, each
+    1. **Union handling** - If ``generic_type`` is a tuple of types, each
        member is tried in turn; the first successful conversion is returned.
        The same strategy is used for ``typing.Union`` and the ``|`` syntax
        introduced in Python 3.10.
 
-    2. **Any** – When ``generic_type`` is ``typing.Any`` the function returns
+    2. **Any** - When ``generic_type`` is ``typing.Any`` the function returns
        ``value`` unchanged.
 
-    3. **Simple types** – For non‑generic classes (e.g., ``int``, ``str``) the
+    3. **Simple types** - For non‑generic classes (e.g., ``int``, ``str``) the
        function first checks ``isinstance``; if the check fails it attempts to
        call the type as a constructor (``generic_type(value)``).
 
-    4. **Tuples** – ``tuple`` generics are distinguished between variadic
-       (``tuple[int, ...]``) and fixed‑size (``tuple[int, str]``) forms.  The
+    4. **Tuples** - ``tuple`` generics are distinguished between variadic
+       (``tuple[int, ...]``) and fixed‑size (``tuple[int, str]``) forms. The
        function validates iterability, then coerces each element according to
        the specified element type.
     """
@@ -248,15 +255,16 @@ def coerce_to_generic(value: Any, generic_type: Any) -> Any:
     except Exception as e:
         raise TypeError(f"Could not coerce {value!r} to {generic_type}: {e}")
 
+
 def is_instance_of_generic(value, generic_type):
     """
     Determine whether ``value`` conforms to a typing generic specification.
 
     This utility inspects ``generic_type`` using :func:`typing.get_origin` and
     :func:`typing.get_args` and recursively validates ``value`` against the
-    resolved origin and its type arguments.  It supports built‑in container
+    resolved origin and its type arguments. It supports built‑in container
     types (``list``, ``set``, ``tuple``, ``dict``) as well as user‑defined
-    generic classes.  When ``generic_type`` is a tuple, each element may be a
+    generic classes. When ``generic_type`` is a tuple, each element may be a
     distinct type specification; an ellipsis (``...``) as the last element
     denotes a variadic element type that applies to all items of the tuple.
 
@@ -266,7 +274,7 @@ def is_instance_of_generic(value, generic_type):
         The object whose type is being checked.
     generic_type : type or tuple of types
         A concrete type, a typing generic (e.g. ``list[int]``), or a tuple of
-        such specifications.  If a tuple is provided, the function returns
+        such specifications. If a tuple is provided, the function returns
         ``True`` when ``value`` matches **any** of the contained specifications.
 
     Returns
@@ -330,7 +338,7 @@ def is_instance_of_generic(value, generic_type):
     # For tuple check if it is a fixed size spec (Ellipsis in args otherwise)
     if issubclass(origin, tuple):
         # Validates tuple elements against variadic or fixed type spec
-        if args and args[-1] is  Ellipsis:
+        if args and args[-1] is Ellipsis:
             return all(
                 is_instance_of_generic(val, tuple(args[:-1])) for val in value
             )
