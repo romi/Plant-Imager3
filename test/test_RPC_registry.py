@@ -1,19 +1,20 @@
 import gc
-import unittest
+import logging
 import threading
 import time
+import unittest
+from typing import Tuple
+
 import zmq
-import logging
-import uuid
-from typing import Tuple, Literal
 
 # Adjust imports based on your actual package structure
-from plantimager.commons.RPC import (
-    RPCClient, RPCServer, RPCSignal, RPCProperty, NoResult, RPCEvents
-)
-from plantimager.commons.deviceregistry import (
-    DeviceRegistry, EventType, ALIVE_TIMEOUT
-)
+from plantimager.commons.RPC import RPCClient
+from plantimager.commons.RPC import RPCEvents
+from plantimager.commons.RPC import RPCProperty
+from plantimager.commons.RPC import RPCServer
+from plantimager.commons.RPC import RPCSignal
+from plantimager.commons.deviceregistry import DeviceRegistry
+from plantimager.commons.deviceregistry import EventType
 
 
 # --- Test Fixtures & Interfaces ---
@@ -352,7 +353,8 @@ class TestRobustness(BaseRPCTest):
         self.registry.join()
 
         # 5. Check if Server stopped
-        self.assertFalse(self.server_thread.is_alive(), "Server's 'alive check' fails, detects registration loss, and exits.")
+        self.assertFalse(self.server_thread.is_alive(),
+                         "Server's 'alive check' fails, detects registration loss, and exits.")
 
     def test_client_timeout_handling_on_call(self):
         """
