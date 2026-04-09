@@ -134,10 +134,12 @@ class DeviceRegistry(Thread):
                 for device_type, addr, name in self._callback_events_to_process["removed"]:
                     for callback in self._device_removed_callbacks:
                         callback(device_type, addr, name)
+                    logger.debug(f"Processed REMOVE callback for {device_type}, {addr}, {name}")
                 self._callback_events_to_process["removed"].clear()
                 for device_type, addr, name in self._callback_events_to_process["added"]:
                     for callback in self._new_device_callbacks:
                         callback(device_type, addr, name)
+                    logger.debug(f"Processed ADDED callback for {device_type}, {addr}, {name}")
                 self._callback_events_to_process["added"].clear()
 
                 # in order for the thread to stop properly, it must not block indefinitely while waiting for
@@ -147,7 +149,7 @@ class DeviceRegistry(Thread):
                 message = socket.recv_json()
                 event_type: str = message["event"]
                 payload: dict = message["payload"]
-                # logger.debug(f"Received event: {event_type}, {payload}")
+                logger.debug(f"Received event: {event_type}, {payload}")
                 match event_type:
                     case EventType.REGISTER:
                         device_type = payload["device_type"]
@@ -214,7 +216,7 @@ class DeviceRegistry(Thread):
         This internal helper scans the ``device_health_timeout`` mapping for
         entries whose expiration timestamp is greater than the current Unix
         epoch time and removes the corresponding devices via
-        ``_remove_device_by_uuid``.  It is typically invoked by a maintenance
+        ``_remove_device_by_uuid``. It is typically invoked by a maintenance
         routine to keep the device registry up‑to‑date.
 
         Notes
@@ -246,11 +248,11 @@ class DeviceRegistry(Thread):
         Register a device while resolving address or name conflicts.
 
         This method checks the current device registry for existing entries that
-        share the same address or name as the proposed registration.  If a conflict
+        share the same address or name as the proposed registration. If a conflict
         is found and ``overwrite`` is ``False``, the conflicting device is removed
-        and a warning is logged.  When ``overwrite`` is ``True`` the method will
+        and a warning is logged. When ``overwrite`` is ``True`` the method will
         replace any device that matches either the address or the name with the
-        new registration.  After handling conflicts the device is added via
+        new registration. After handling conflicts the device is added via
         ``_add_device`` and the final stored name is returned.
 
         Parameters
@@ -299,7 +301,7 @@ class DeviceRegistry(Thread):
                 self._remove_device_by_name(name)
         return self._add_device(device_type, addr, proposed_name)
 
-    def _add_device(self, device_type: str, addr: str, proposed_name: str = None) -> str:
+    def _add_device(self, device_type: str, addr: str, proposed_name: str = None) -> tuple[str, str]:
         with self._lock:
             i = 0
             if not proposed_name:
@@ -418,15 +420,20 @@ def unregister_device(context: zmq.Context, uuid: str, registry_addr: str) -> bo
                 return True
             return False
 
+class AliveCheckState(StrEnum):
+    OK = "ok"
+    UNKNOWN = "unknown"
+    UNREACHABLE = "unreachable"
+
 def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_timeout: int=ALIVE_TIMEOUT) \
-        -> Literal["ok", "unreachable", "unknown"]:
+        -> AliveCheckState:
     """Check the liveness of a service with the registry.
 
     Send an ``EventType.CHECK_ALIVE`` request to the registry and wait for an
-    ``EventType.ACK`` reply.  The function opens a ``REQ`` socket on the provided
+    ``EventType.ACK`` reply. The function opens a ``REQ`` socket on the provided
     ZeroMQ ``context``, sends the payload containing ``uuid`` and ``alive_timeout``,
     and returns ``True`` only when an acknowledgement is received within the
-    socket poll timeout (5s).  Any other reply or the lack of a reply results in
+    socket poll timeout (5s). Any other reply or the lack of a reply results in
     ``False``.
 
     Parameters
@@ -439,8 +446,8 @@ def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_t
         URL of the registry (e.g., ``tcp://127.0.0.1:5555``) to which the request
         is sent.
     alive_timeout
-        Timeout (in seconds) that the service claims it will stay alive.  The
-        value is included in the request payload.  Defaults to ``ALIVE_TIMEOUT``.
+        Timeout (in seconds) that the service claims it will stay alive. The
+        value is included in the request payload. Defaults to ``ALIVE_TIMEOUT``.
 
     Returns
     -------
@@ -458,32 +465,32 @@ def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_t
     Notes
     -----
     * The socket is created inside a ``with`` block, guaranteeing that it is
-      closed when the block exits.  The explicit ``socket.close()`` calls are
+      closed when the block exits. The explicit ``socket.close()`` calls are
       retained for clarity but are not strictly required.
-    * The function uses a fixed poll timeout of 5 seconds; this value is not
+    * The function uses a fixed poll timeout of 5 seconds; this value is not
       configurable via the public API.
     * ``alive_timeout`` is merely echoed back to the registry and is not used by
       this function to enforce any timing constraints.
 
     See Also
     --------
-    `EventType` – enumeration of supported event types.
+    `EventType` - enumeration of supported event types.
     """
     with context.socket(zmq.REQ) as socket:
         socket: zmq.Socket
-        with socket.connect(registry_url):
-            socket.send_json({
-                "event": EventType.CHECK_ALIVE,
-                "payload": {
-                    "uuid": uuid,
-                    "alive_timeout": alive_timeout,
-                }
-            })
-            if socket.poll(5000, flags=zmq.POLLIN) == 0:
-                logger.debug(f"No answer from registry at address {registry_url}.")
-                return "unreachable"
-            reply = socket.recv_json()
-            event_type = reply["event"]
-            if event_type == EventType.ACK:
-                return "ok"
-            return "unknown"
+        socket.connect(registry_url)
+        socket.send_json({
+            "event": EventType.CHECK_ALIVE,
+            "payload": {
+                "uuid": uuid,
+                "alive_timeout": alive_timeout,
+            }
+        })
+        if socket.poll(5000, flags=zmq.POLLIN) == 0:
+            logger.debug(f"No answer from registry at address {registry_url}.")
+            return AliveCheckState.UNREACHABLE
+        reply = socket.recv_json()
+        event_type = reply["event"]
+        if event_type == EventType.ACK and reply.get("payload", {}).get("success", False):
+            return AliveCheckState.OK
+        return AliveCheckState.UNKNOWN

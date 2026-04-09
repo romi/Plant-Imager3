@@ -1,40 +1,74 @@
+"""
+Remote Procedure Call (RPC) Framework.
+
+This module provides a lightweight RPC framework built on top of ZeroMQ.
+It supports method execution (both JSON-serializable and binary buffers),
+property proxying, and a publish-subscribe signaling mechanism.
+
+Classes
+-------
+NoResult
+    Represents an operation failure with error details.
+RPCSignal
+    Lightweight publish-subscribe signal implementation.
+RPCProperty
+    RPC-enabled property descriptor for proxying attribute access.
+RPCClient
+    Abstract client class for connecting to and interacting with an RPC server.
+RPCServer
+    Server class that exposes methods, properties, and signals over the network.
+"""
 import copy
 import inspect
 import json
 import logging
-import random
 import re
-import socket
 import sys
+import time
 import traceback
+import weakref
 from enum import StrEnum
-from functools import wraps, partial
+from functools import partial
+from functools import wraps
 from threading import Thread
-from typing import Callable, Any
-from weakref import finalize, WeakMethod
+from typing import Any
+from typing import Callable
+from weakref import WeakMethod
+from weakref import finalize
 
 import zmq
 from decorator import decorate
 from zmq import ZMQBindError
 
-from plantimager.commons.utils import is_instance_of_generic, coerce_to_generic
-from plantimager.commons.deviceregistry import register_device, unregister_device, send_alive_check
+from plantimager.commons.deviceregistry import AliveCheckState
+from plantimager.commons.deviceregistry import register_device
+from plantimager.commons.deviceregistry import send_alive_check
+from plantimager.commons.deviceregistry import unregister_device
 from plantimager.commons.logging import create_logger
 from plantimager.commons.systemd import notify_watchdog
+from plantimager.commons.utils import coerce_to_generic
+from plantimager.commons.utils import is_instance_of_generic
+
+__all__ = ["RPCClient", "RPCServer", "RPCProperty", "RPCSignal", "NoResult"]
 
 logger = create_logger("RPC")
 
+
 class RPCEvents(StrEnum):
+    """
+    Enumeration of valid RPC event types used for communication
+    between clients and servers.
+    """
     PROPERTY_GET = "PROPERTY_GET"
     PROPERTY_SET = "PROPERTY_SET"
     METHOD_CALL = "METHOD_CALL"
     GET_INVENTORY = "GET_INVENTORY"
     STOP_SERVER = "STOP_SERVER"
-    FIND_PEER_ADDRESS = "FIND_PEER_ADDRESS"
     INIT_SIGNALS_HANDLING = "INIT_SIGNALS_HANDLING"
     EMIT_SIGNAL = "EMIT_SIGNAL"
 
-url_parser = re.compile("([a-zA-Z]*)://([a-zA-Z.0-9]*):?([0-9]*)")
+
+url_parser = re.compile(r"([a-zA-Z]*)://([a-zA-Z.0-9]*):?(\d*)")
 
 
 class NoResult:
@@ -57,6 +91,7 @@ class NoResult:
         A string containing the traceback or detailed information
         about where and why the failure occurred.
     """
+
     def __init__(self, error: str, traceback: str):
         self.error = error
         self.traceback = traceback
@@ -64,15 +99,113 @@ class NoResult:
     def __bool__(self):
         return False
 
+
 class RPCSignal:
+    """
+    Lightweight publish‑subscribe signal implementation.
+
+    This class stores either strong or weak references to callables and invokes
+    them with supplied arguments.
+
+    Instances are created with a variable number of *type specifications* that
+    describe the expected arguments for the signal. These specifications are
+    stored unchanged in the :attr:`args` attribute; they are **not** validated at
+    runtime but may be used by callers for documentation or static checking.
+
+    Connections are added via :meth:`connect` and removed via :meth:`disconnect`.
+    When the signal is emitted with :meth:`emit`, each stored connection is called
+    in the order it was added. Weak references that have been garbage‑collected
+    are silently ignored.
+
+    Parameters
+    ----------
+    *arg_types : tuple
+        Positional argument type specifications supplied at construction time.
+        The contents are opaque to the implementation - they are kept only for
+        external introspection.
+
+    Attributes
+    ----------
+    arg_types : tuple
+        The positional argument type specifications supplied to ``__init__``.
+        Callers may inspect this attribute for documentation or validation
+        purposes.
+    connections : list
+        A mutable list of connected callables or weak references. Each entry is
+        either a callable object or a :class:`weakref.WeakMethod`. The list is
+        modified by :meth:`connect` and :meth:`disconnect`. Callables are
+        invoked in the order they were added when :meth:`emit` is called.
+
+    See Also
+    --------
+    weakref.WeakMethod : Standard library class used to store weak references to bound methods.
+
+    Examples
+    --------
+    >>> from plantimager.commons.RPC import RPCSignal
+    >>> def listener(x, y): print(f"Received: {x}, {y}")
+    >>> signal = RPCSignal(int, str)
+    >>> signal.connect(listener)
+    >>> signal.emit(10, "hello")
+    Received: 10, hello
+    >>> signal.disconnect(listener)
+    """
+
     def __init__(self, *arg_types):
+        """
+        Initialize a new ``RPCSignal`` instance.
+
+        Parameters
+        ----------
+        *arg_types : tuple
+            Positional argument type specifications. The values are stored in
+            :attr:`args` but are otherwise not interpreted by the signal.
+
+        Notes
+        -----
+        ``arg_types`` can be any hashable objects (e.g., ``int``, ``str``,
+        ``numpy.ndarray``) that the user wishes to document as the expected
+        argument types for the signal.
+        """
         self.arg_types = arg_types
-        self.connections = []
+        self.connections: list[Callable | WeakMethod] = []
 
     def emit(self, *args):
+        """
+        Emit the signal, invoking all connected callables.
+
+        Parameters
+        ----------
+        *args : tuple
+            Positional arguments that will be forwarded to each connected
+            callable. The number and type of arguments should match the
+            specifications stored in :attr:`args`, but this is not enforced.
+
+        Notes
+        -----
+        - Weak references stored as :class:`weakref.WeakMethod` are dereferenced
+          before the call; if the underlying object has been garbage‑collected,
+          the entry is simply skipped.
+        - Any exception raised by a connected callable propagates to the caller
+          of :meth:`emit`. The method does **not** catch or suppress errors.
+
+        Examples
+        --------
+        >>> from plantimager.commons.RPC import RPCSignal
+        >>> def listener(x, y): print(f"Received: {x}, {y}")
+        >>> signal = RPCSignal(int, str)
+        >>> signal.connect(listener)
+        >>> signal.emit(10, "hello")
+        Received: 10, hello
+        """
         args = self.validate_args(*args, coerce=True)
         for conn in self.connections:
-            conn(*args)
+            if isinstance(conn, WeakMethod) and (func := conn()):
+                # If the onnection is a WeakMethod and the method still lives
+                func(*args)
+            elif not isinstance(conn, weakref.WeakMethod):
+                # If this is not a weak method (ergo an actual method)
+                conn(*args)
 
     def validate_args(self, *args, coerce=False) -> tuple:
         """
@@ -126,46 +259,278 @@ class RPCSignal:
                 raise TypeError(f"Argument {i} of type {type(arg)} is not an instance of {arg_type}.")
         return tuple(new_args)
 
-    def connect(self, conn: Callable):
-        if not conn in self.connections:
+    def connect(self, conn: Callable | WeakMethod):
+        """
+        Connect a callable (or weak reference) to the signal.
+
+        Parameters
+        ----------
+        conn : Callable or weakref.WeakMethod
+            The function, bound method, or weak reference that should be called
+            when the signal is emitted.
+
+        Raises
+        ------
+        TypeError
+            If ``conn`` is neither a callable nor a :class:`weakref.WeakMethod`.
+
+        Notes
+        -----
+        The same ``conn`` is added only once; duplicate connections are ignored.
+
+        Examples
+        --------
+        >>> from plantimager.commons.RPC import RPCSignal
+        >>> def listener(x, y): print(f"Received: {x}, {y}")
+        >>> signal = RPCSignal(int, str)
+        >>> signal.connect(listener)
+        >>> signal.emit(10, "hello")
+        Received: 10, hello
+        """
+        if not isinstance(conn, (weakref.WeakMethod, Callable)):
+            raise TypeError("Expected callable or weakref.WeakMethod, got {}".format(type(conn)))
+        if conn not in self.connections:
             self.connections.append(conn)
 
-    def disconnect(self, conn: Callable=None):
+    def disconnect(self, conn: Callable = None):
+        """
+        Remove a previously connected callable or clear all connections.
+
+        Parameters
+        ----------
+        conn : Callable, optional
+            The specific callable or weak reference to remove. If omitted (or
+            ``None``), *all* connections are cleared.
+
+        Raises
+        ------
+        ValueError
+            If ``conn`` is provided but is not present in :attr:`connections`.
+
+        Notes
+        -----
+        After a successful call, the target is no longer invoked by future
+        :meth:`emit` calls.
+
+        Examples
+        --------
+        >>> from plantimager.commons.RPC import RPCSignal
+        >>> def listener(x, y): print(f"Received: {x}, {y}")
+        >>> signal = RPCSignal(int, str)
+        >>> signal.connect(listener)
+        >>> signal.emit(10, "hello")
+        Received: 10, hello
+        >>> signal.disconnect(listener)
+        >>> signal.emit(10, "hello")
+        """
         if conn:
             self.connections.remove(conn)
         else:
             self.connections.clear()
 
 
-
 class RPCProperty(property):
     """
-    Declares a property for RPC usage. When the notify signal is emitted the proxy on the RPC Client is updated.
-    The signal provided in notify must be emitted in the setter when the property changes.
+    RPC-enabled property descriptor.
+
+    This subclass of :class:`property` adds optional notification support
+    via an :class:`RPCSignal`. When a property created with ``RPCProperty``
+    is assigned a new value, the supplied ``notify`` signal (if provided)
+    can be emitted to inform remote listeners of the change. The class is
+    typically used as a decorator on a getter function; the optional
+    ``notify`` argument is stored on the resulting property object and can
+    be accessed by custom setter implementations.
+    The setter must explicitly emit the ''notify'' signal if a change occurred.
+
+    Attributes
+    ----------
+    _notifier : RPCSignal or None
+        Signal that will be emitted when the property's value changes.
+        It is initialized from the ``notify`` argument of ``__init__`` and
+        may be ``None`` when no notification is required.
+    _auto_notify: bool
+        When True, when the setter of the property is called and the value is
+          modified, the _notifier is emitted.
     """
-    def __init__(self, fget=None, fset=None, fdel=None, doc=None, notify: RPCSignal = None):
+
+    def __init__(self, fget=None, fset=None, fdel=None, doc=None, notify: RPCSignal = None, auto_notify=False):
+        """
+        Initialize the property with optional RPC notification.
+
+        This subclass of ``property`` adds support for emitting an RPC signal
+        when the property value changes. If ``auto_notify`` is ``True`` the
+        signal provided via ``notify`` is emitted automatically after a successful
+        set operation; otherwise the caller must trigger the notification
+        manually.
+
+        Parameters
+        ----------
+        fget : callable, optional
+            Getter function that receives the instance and returns the attribute
+            value.
+        fset : callable, optional
+            Setter function that receives the instance and the value to assign.
+        fdel : callable, optional
+            Deleter function that receives the instance and removes the attribute.
+        doc : str, optional
+            Documentation string for the property.
+        notify : RPCSignal, optional
+            RPC signal emitted when the property value is changed.
+        auto_notify : bool, default: ``False``
+            When ``True``, automatically emit ``notify`` after a successful set.
+
+        See Also
+        --------
+        property
+            Built‑in ``property`` class that this class extends.
+        """
         super().__init__(fget=fget, fset=fset, fdel=fdel, doc=doc)
-        self._notifier = notify
+        self._notifier: RPCSignal | None = notify
+        self._auto_notify: bool = auto_notify
 
     def __call__(self, func: Callable):
         return RPCProperty(fget=func, notify=self._notifier)
 
+    def __set__(self, obj, value):
+        """
+        Set the property on *obj* and emit the ``_notifier`` signal if the
+        observable value actually changes.
+
+        The logic is:
+        1. Retrieve the old value via the getter (if any).
+        2. Call the original setter.
+        3. Retrieve the new value via the getter.
+        4. If ``old != new`` and a notifier exists, emit the signal with the
+           new value.
+        """
+        # Step 1 - capture the old value (may be None if no getter)
+        old_val = None
+        if self._auto_notify and self.fget is not None:
+            try:
+                old_val = self.fget(obj)
+            except Exception:
+                # If the getter fails we simply ignore the old value;
+                # the change‑detection will fall back to always emit.
+                old_val = object()  # unique sentinel
+
+        # Step 2 - invoke the original setter (if any)
+        super().__set__(obj, value)
+
+        # Step 3 - capture the new value via the getter (if any)
+        new_val = None
+        if self._auto_notify and self.fget is not None:
+            try:
+                new_val = self.fget(obj)
+            except Exception:
+                new_val = object()  # unique sentinel
+
+        # Step 4 - emit if changed and a notifier is present
+        if self._auto_notify and self._notifier is not None and old_val != new_val:
+            try:
+                self._notifier.emit(new_val)
+            except Exception as exc:
+                # We never want a notification failure to break the setter.
+                logger.error(f"Failed to emit RPCProperty change signal: {exc}")
+
 
 class RPCSignalReceiver(Thread):
     """
-    A receiver thread for RPCClient to listen for and receive RPC Signals from the server and in turn
-    emit the same signals in the proxy.
+    Background thread that listens for and dispatches RPC signals from the server.
+
+    This thread binds a ZeroMQ `REP` socket to a random port and continuously
+    polls for incoming signal events. When a signal is received, it emits the
+    corresponding proxy signal on the client side.
+
+    Attributes
+    ----------
+    context : zmq.Context
+        The ZeroMQ context used to create the socket.
+    url : str
+        The base URL to bind the receiver socket (e.g., "tcp://127.0.0.1").
+    signals : dict[str, RPCSignal]
+        A dictionary mapping signal names to their corresponding `RPCSignal`
+        instances on the client.
+    socket : zmq.Socket
+        A ZeroMQ SUB socket that receives broadcasted signal events from the server.
+    _stop_flag : bool
+        A flag used by `run()` to know when to exit the loop.
     """
+
     def __init__(self, context: zmq.Context, url: str, signals: dict[str, RPCSignal]):
+        """
+        Initialize a new `RPCSignalReceiver`.
+
+        Parameters
+        ----------
+        context : zmq.Context
+            The ZeroMQ context used to create the socket.
+        url : str
+            The base URL of the server's ``PUB`` endpoint (e.g. ``"tcp://127.0.0.1"``).
+        signals : dict[str, RPCSignal]
+            Dictionary mapping signal names to the corresponding
+            `RPCSignal` instances on the client.
+
+        Notes
+        -----
+        The underlying socket is a ``SUB`` socket that subscribes to *all*
+        topics (``socket.setsockopt_string(zmq.SUBSCRIBE, "")``). This class
+        does not expose the socket directly; use the public attributes if
+        custom behaviour is required.
+
+        Raises
+        ------
+        TypeError
+            If ``context`` is not a :class:`zmq.Context` instance, ``url`` is not
+            a string, or ``signals`` is not a ``dict`` with string keys.
+        """
         super().__init__(name="RPCSignalReceiver")
         self.context = context
-        self.url = url
+        self.url = url  # now the server's PUB endpoint
         self._stop_flag = False
         self.signals = signals
-        self.socket: zmq.Socket = context.socket(zmq.REP)
-        self.port = self.socket.bind_to_random_port(url)
+        self.socket: zmq.Socket = context.socket(zmq.SUB)
+        self.socket.connect(url)  # connect to the server's PUB endpoint
+        self.socket.setsockopt_string(zmq.SUBSCRIBE, "")  # subscribe to all
 
     def run(self):
+        """
+        Continuously processes incoming socket requests to emit signals.
+
+        This method runs an event loop that listens for incoming JSON requests via
+        a ZeroMQ socket. Requests are expected to contain an event key and
+        associated data such as signals and arguments. If a request matches the
+        expected event type (`RPCEvents.EMIT_SIGNAL`), a corresponding signal
+        is emitted. The loop runs until the `_stop_flag` is set to `True`.
+
+        Notes
+        -----
+        - If the `"blocking"` flag in the request is `True`, the signal emission is
+          performed before sending back a success response. Otherwise, the success
+          response is sent immediately, and the signal emission happens afterward.
+
+        Raises
+        ------
+        KeyError
+            If the incoming request JSON does not contain the required keys.
+        zmq.ZMQError
+            If there is an issue receiving or sending data via the ZeroMQ socket.
+        RuntimeError
+            If an error occurs while emitting a signal.
+
+        Examples
+        --------
+        >>> import zmq
+        >>> from threading import Thread
+        >>> from plantimager.commons.RPC import RPCSignal
+        >>> from plantimager.commons.RPC import RPCSignalReceiver
+        >>> ctx = zmq.Context()
+        >>> signals = {"update": RPCSignal()}
+        >>> receiver = RPCSignalReceiver(ctx, "tcp://127.0.0.1:5555", signals)
+        >>> receiver.start()               # start the background thread
+        >>> # ... elsewhere, the server publishes a signal ...
+        >>> receiver.stop()                # request graceful shutdown
+        >>> receiver.join()                # wait for the thread to finish
+        """
         try:
             while not self._stop_flag:
                 if self.socket.poll(100, zmq.POLLIN) == 0:
@@ -173,34 +538,73 @@ class RPCSignalReceiver(Thread):
                 request = self.socket.recv_json()
                 if request["event"] != RPCEvents.EMIT_SIGNAL:
                     logger.error(f"Expected event {RPCEvents.EMIT_SIGNAL}, got {request['event']} instead.")
-                    self.socket.send_json({"success": False})
                     continue
                 signal = request["signal"]
                 args = request["args"]
                 logger.debug(f"Emitting signal {signal} with args {args}")
-                if request["blocking"]:
-                    self.signals[signal].emit(*args)
-                    self.socket.send_json({"success": True})
-                else:
-                    self.socket.send_json({"success": True})
-                    self.signals[signal].emit(*args)
+                self.signals[signal].emit(*args)
         finally:
             self.socket.close()
             del self.socket
         logger.debug(f"Stopping signal receiver {self}")
 
     def stop(self):
+        """
+        Signal the receiver thread to stop polling and shut down.
+        """
         self._stop_flag = True
+
 
 class RPCClient:
     """
-    Abstract class for RPC clients.
-    To use, create a class inheriting from the interface and this.
-    This new class must be decorated with `@RPCClient.register_interface`
+    Abstract base class for RPC clients.
 
+    This class sets up a ZeroMQ `REQ` socket to communicate with an `RPCServer`.
+    To use this, create a subclass that inherits from both a target interface
+    and this class, and decorate it with `@RPCClient.register_interface`.
+
+    Attributes
+    ----------
+    context : zmq.Context
+        The ZeroMQ context used for creating sockets and managing connections.
+    url : str
+        The full URL (e.g., ``tcp://127.0.0.1:5555``) of the target RPC server.
+    socket : zmq.Socket
+        A ``REQ`` socket connected to ``url`` used for all RPC communication.
+    _json_methods : dict[str, int | None]
+        Mapping of JSON‑serialisable remote method names to their timeout values
+        (in milliseconds). Populated from the server inventory.
+    _buffer_methods : dict[str, int | None]
+        Mapping of buffer‑based remote method names to their timeout values.
+        Populated from the server inventory.
+    _signals : dict[str, RPCSignal]
+        Signals discovered from the server inventory; keys are signal names and
+        values are the corresponding ``RPCSignal`` instances bound to this client.
+    _properties : list
+        List of property names exposed by the server.
+    name : str
+        The designated name of the connected RPC server (provided by the server
+        during inventory exchange).
+    own_address : str
+        The local IP address of the client (retrieved from the server inventory).
+    peer_address : str
+        The IP address of the connected RPC server (retrieved from the server inventory).
+    _signal_receiver : RPCSignalReceiver | None
+        Background thread that receives and dispatches signals from the server.
+        ``None`` if the server does not expose any signals.
     """
 
-    def __init__(self, context: zmq.Context, url: str):
+    def __init__(self, context: zmq.Context, url: str, timeout=1000):
+        """
+        Initialize a new RPCClient.
+
+        Parameters
+        ----------
+        context : zmq.Context
+            The ZeroMQ context used for networking.
+        url : str
+            The URL of the target RPC server to connect to.
+        """
         super().__init__()
         self.context: zmq.Context = context
         self.url: str = url
@@ -213,48 +617,47 @@ class RPCClient:
                 if isinstance(value, RPCSignal):
                     setattr(self, key, copy.deepcopy(value))
 
-        # Finding peer address (zmq abstract addresses so we use native sockets here)
-        self.socket.send_json({"event": RPCEvents.FIND_PEER_ADDRESS})
-        reply = self.socket.recv_json()
-        if not reply["success"]:
-            raise RuntimeError(f"FIND_PEER_ADDRESS failed")
-        protocol, ip_addr, port = url_parser.match(url).groups()
-        s = socket.create_connection((ip_addr, reply["port"]))
-        self.own_address = s.getsockname()[0]
-        self.peer_address = s.getpeername()[0]
-        s.close()
-        logger.debug(f"Client at address {self.own_address} connected to server at {self.peer_address}")
-
         # Getting RPCServer inventory
+        logger.debug("--> Getting Inventory")
         self.socket.send_json({
             "event": RPCEvents.GET_INVENTORY
         })
+        if self.socket.poll(timeout=timeout, flags=zmq.POLLIN) == 0:
+            logger.error("Failed to get inventory. Server did not respond.")
+            raise TimeoutError("Failed to get inventory.")
         reply = self.socket.recv_json()
-        logger.debug(f"Got inv: {reply}",)
-        self._json_methods: dict[str, int|None] = reply["json_methods"]
-        self._buffer_methods: dict[str, int|None] = reply["buffer_methods"]
+        logger.debug(f"Got inv: {reply}", )
+        self._json_methods: dict[str, int | None] = reply["json_methods"]
+        self._buffer_methods: dict[str, int | None] = reply["buffer_methods"]
         self._signals = {sig: getattr(self, sig) for sig in reply["signals"] if hasattr(self, sig)}
         self._properties: list = reply["properties"]
         self.name: str = reply["name"]
+        logger.debug("<-- Inventory Received")
 
         # If signals initiate
         self._signal_receiver = None
         if self._signals:
             logger.info("Initializing signal handling")
-            self._signal_receiver = RPCSignalReceiver(
-                context=self.context, url=f"tcp://{self.own_address}", signals=self._signals
-            )
-            self._signal_receiver.daemon = True  # FIXME: Should be False!
-            self._signal_receiver.start()
-            signal_port = self._signal_receiver.port
-            self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING, "address": self.own_address, "port": signal_port})
+            logger.debug("--> Initializing Signals Handling")
+            self.socket.send_json({"event": RPCEvents.INIT_SIGNALS_HANDLING})
+
+            if self.socket.poll(timeout=timeout, flags=zmq.POLLIN) == 0:
+                logger.error("Failed to initialize signals. Server did not respond.")
+                raise TimeoutError("Failed to initialize signals.")
             reply = self.socket.recv_json()
             if not reply["success"]:
-                self._signal_receiver.stop()
-                self._signal_receiver.join(2)
-                self._signal_receiver = None
-                raise RuntimeError(f"INIT_SIGNALS_HANDLING failed")
-            logger.info("Successfully initialized signal handling")
+                raise RuntimeError("INIT_SIGNALS_HANDLING failed")
+
+            signal_port = reply["signal_port"]
+            proto, addr, _ = url_parser.search(self.url).groups()
+            self._signal_receiver = RPCSignalReceiver(
+                context=self.context,
+                url=f"{proto}://{addr}:{signal_port}",
+                signals=self._signals
+            )
+            self._signal_receiver.daemon = True
+            self._signal_receiver.start()
+            logger.info("<-- Successfully initialized signal handling")
 
         def _finalizer(sock, receiver):
             sock.close()
@@ -267,6 +670,30 @@ class RPCClient:
 
     @classmethod
     def register_interface(cls, interface: type):
+        """
+        Class decorator to bind an interface to an RPCClient subclass.
+
+        This decorator inspects the provided `interface` and dynamically
+        proxies its methods and properties so that calls are forwarded
+        over the network to the RPC server.
+
+        Parameters
+        ----------
+        interface : type
+            The interface class defining the methods and properties to proxy.
+
+        Returns
+        -------
+        callable
+            A class decorator that applies the proxy logic.
+
+        Raises
+        ------
+        RuntimeError
+            If the decorated class does not inherit from both `interface`
+            and `RPCClient`.
+        """
+
         def _decorator(target_cls: type):
             if interface not in target_cls.__bases__ or cls not in target_cls.__bases__:
                 raise RuntimeError(f"{target_cls} must inherit from {interface} and {cls}.")
@@ -277,7 +704,7 @@ class RPCClient:
                     func.__isabstractmethod__ = False  # Counts as en actual implementation
                     setattr(target_cls, key, func)
                 elif isinstance(val, RPCSignal):
-                    pass # nothing to do at this stage
+                    pass  # nothing to do at this stage
                 elif isinstance(val, RPCProperty):
                     fget = wraps(val.fget)(partial(cls._property_getter_proxy, property_name=key))
                     fset = wraps(val.fset)(partial(cls._property_setter_proxy, property_name=key))
@@ -287,6 +714,7 @@ class RPCClient:
             target_cls.__abstractmethods__ = frozenset()
             target_cls._interface = interface.__name__
             return target_cls
+
         return _decorator
 
     @staticmethod
@@ -303,15 +731,19 @@ class RPCClient:
             err, trace = res
             logger.error(f"Failed to execute {method} on remote due to {err}")
             if logger.level == logging.DEBUG:
-                print("Traceback from remote --->", file=sys.stderr)
-                print(trace, file=sys.stderr, end="")
-                print("<------------", file=sys.stderr)
+                RPCClient._print_traceback_from_remote(trace)
             return NoResult(err, trace)
+
+    @staticmethod
+    def _print_traceback_from_remote(trace: str):
+        print("Traceback from remote --->", file=sys.stderr)
+        print(trace, file=sys.stderr, end="")
+        print("<------------", file=sys.stderr)
 
     def _property_getter_proxy(self, property_name: str) -> Any:
         package = {
             "event": RPCEvents.PROPERTY_GET,
-            "property":  property_name
+            "property": property_name
         }
         logger.debug(f"getting property {property_name}")
         self.socket.send_json(package, flags=zmq.NOBLOCK)
@@ -325,15 +757,13 @@ class RPCClient:
             err, traceback_ = reply["error"], reply["traceback"]
             logger.error(f"Failed to get property {property_name} on remote due to {err}")
             if logger.level == logging.DEBUG:
-                print("Traceback from remote --->", file=sys.stderr)
-                print(traceback_, file=sys.stderr, end="")
-                print("<------------", file=sys.stderr)
+                RPCClient._print_traceback_from_remote(traceback_)
             return NoResult(err, traceback_)
 
     def _property_setter_proxy(self, value: Any, property_name: str) -> None:
         package = {
             "event": RPCEvents.PROPERTY_SET,
-            "property":  property_name,
+            "property": property_name,
             "value": value
         }
         logger.debug(f"setting property {property_name} to {value}")
@@ -346,37 +776,55 @@ class RPCClient:
             err, traceback_ = reply["error"], reply["traceback"]
             logger.error(f"Failed to get property {property_name} on remote due to {err}")
             if logger.level == logging.DEBUG:
-                print("Traceback from remote --->", file=sys.stderr)
-                print(traceback_, file=sys.stderr, end="")
-                print("<------------", file=sys.stderr)
-            return
-
+                RPCClient._print_traceback_from_remote(traceback_)
 
     def execute(self, method_name: str, params: dict) -> tuple[bool, object]:
+        """
+        Execute a remote method on the RPC server.
+
+        Parameters
+        ----------
+        method_name : str
+            The name of the method to execute.
+        params : dict
+            A dictionary containing the `args` and `kwargs` for the method.
+
+        Returns
+        -------
+        tuple
+            A 2-tuple `(success, result)`. If `success` is True, `result`
+            contains the return value of the method. If False, `result`
+            is a tuple containing the `(error_message, traceback)`.
+
+        Raises
+        ------
+        TimeoutError
+            If the server does not respond within the configured timeout.
+        """
         package = {
             "event": RPCEvents.METHOD_CALL,
             "method": method_name,
             "params": params,
         }
         if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
-            logger.warning(f"Proxy of {self._interface} at {self.url} did not respond")
-            return False, (Warning(f"Proxy of {self._interface} at {self.url} did not respond"), "")
+            logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
+            raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
         logger.debug(f"Executing {package}")
         self.socket.send_json(package, flags=zmq.NOBLOCK)
 
         if method_name in self._json_methods:
             if self.socket.poll(timeout=self._json_methods[method_name], flags=zmq.POLLIN) == 0:
-                logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
-                return False, (Warning(f"Proxy of {self._interface} at {self.url} did not respond"), "")
-            reply =  self.socket.recv_json()
+                logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
+                raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
+            reply = self.socket.recv_json()
             if reply["success"]:
                 return True, reply["result"]
             else:
                 return False, (reply["error"], reply["traceback"])
         elif method_name in self._buffer_methods:
             if self.socket.poll(timeout=self._buffer_methods[method_name], flags=zmq.POLLIN) == 0:
-                logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
-                return False, (Warning(f"Proxy of {self._interface} at {self.url} did not respond"), "")
+                logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
+                raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
             reply_frames: list[zmq.Frame] = self.socket.recv_multipart(copy=False)
             buffer_info = json.loads(reply_frames[0].bytes)
             if "error" in buffer_info:
@@ -386,6 +834,12 @@ class RPCClient:
         return False, (Warning(f"Unknown method {method_name}"), "")
 
     def stop_server(self):
+        """
+        Request the connected RPC server to shut down.
+
+        Sends a non-blocking `STOP_SERVER` event to the remote server.
+        If the server responds, it logs the reply.
+        """
         logger.info(f"Stopping server {self.url}")
         if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
             logger.info(f"Server {self.url} could not be joined (might already be dead)")
@@ -401,15 +855,69 @@ class RPCClient:
 
 
 class RPCServer:
+    """
+    RPCServer to use in combination with RPCClient.
 
+    The server holds the concrete implementation of an interface that is made available on the network.
+    To create an RPCServer create a class inheriting from an interface and RPCServer. Callable
+    methods must be decorated using `RPCServer.register_method_buffer` or `RPCServer.register_method_json`.
+    The server is also capable of sending signals defined by the RPCSignal class and proxying properties
+    defined with RPCProperty.
+
+    Attributes
+    ----------
+    context: zmq.Context
+        ZMQ context used to make the various sockets necessary for communicating with the client.
+    url: str
+        The base URL where the RPCServer is opened.
+        The url should include the port in the form ``tcp://<ip>:<port>``.
+    alive_timeout : int
+        Timeout (in seconds) used for ``alive`` checks against the device
+        registry. If the server cannot be reached for three consecutive checks
+        it is considered dead and will stop serving.    uuid : str | None
+        Unique identifier provided by the registry.  ``None`` until the server
+        is registered.
+    uuid : str | None
+        Unique identifier provided by the registry.  ``None`` until the server
+        is registered.
+    name: str
+        Name of the RPCServer assigned by the device registry after successful registration.
+    registry_addr : str
+        URL of the device registry to which the server is registered.
+        Empty string if the server has not been registered.
+    peer_addr : str | None
+        IP address of the connected client once a peer discovery request has
+        been processed.
+    _unreachable_counter : int
+        Counter of consecutive failed ``alive`` checks against the registry.
+        When the count reaches ``3`` the server is considered dead and will stop serving.
+    _json_methods : dict[str, Callable]
+        Mapping of method names to the underlying callables that are exposed as
+        JSON‑based RPC procedures.
+    _buffer_methods : dict[str, Callable]
+        Mapping of method names to the underlying callables that are exposed as
+        buffer‑based RPC procedures.
+    _rpc_properties : dict[str, RPCProperty]
+        RPC properties discovered on the class.
+    _signals : dict[str, RPCSignal]
+        Signal objects discovered on the class.
+    _socket : zmq.Socket[zmq.REP]
+        REP socket bound to ``url`` (or to a randomly chosen port when ``url`` does not
+        specify one) that receives incoming RPC requests.
+    port : int
+        The TCP port selected by :meth:`_bind_socket`. If the ``url`` does not
+        contain an explicit port, a random one in the range 10000-12000 is
+        chosen.
+    _signal_socket : zmq.Socket[zmq.REQ] | None
+        Socket used for sending signal notifications to the client.
+    _stop : bool
+        Flag controlling the termination of :meth:`serve_forever`.
+    _dead : bool
+        Indicates whether the server has already been shut down.
+    """
     def __init__(self, context: zmq.Context, url: str, alive_timeout: int = 60):
         """
-        RPCServer to use in combination with RPCClient.
-        The server holds the concrete implementation of an interface that is made available on the network.
-        To create an RPCServer create a class inheriting from an interface and RPCServer. Callable
-        methods must be decorated using `RPCServer.register_method_buffer` or `RPCServer.register_method_json`.
-        The server is also capable of sending signals defined by the RPCSignal class and proxying properties
-        defined with RPCProperty.
+        Initialize a new RPCServer.
 
         Parameters
         ----------
@@ -420,22 +928,6 @@ class RPCServer:
             of the local network interface ip which must be accessible from the client.
         alive_timeout: int, optional
             Time in seconds after which the device_registry will consider this service dead or unreachable.
-
-        Attributes
-        ----------
-        context: zmq.Context
-            ZMQ context used to make the various sockets necessary for communicating with the client.
-        url: str
-            Url where the RPCServer is opened.
-        port: int
-            Port where the RPCServer is opened.
-        name: int
-            Name of the RPCServer as given by the deviceregistry once registered
-        uuid: str
-            Unique identifier of this RPCServer given by the registry once registered..
-        peer_addr: str
-            Ip address of the client once connected.
-
         """
         super().__init__()
 
@@ -447,6 +939,7 @@ class RPCServer:
         self.name = ""
         self.registry_addr = ""
         self.peer_addr: str | None = None
+        self._unreachable_counter = 0
 
         # Containers for RPC members
         self._json_methods: dict[str, Callable] = {}
@@ -488,16 +981,15 @@ class RPCServer:
     def _bind_socket(self, url: str) -> tuple[zmq.Socket, int]:
         """Creates and binds the ZMQ REP socket."""
         socket: zmq.Socket[zmq.REP] = self.context.socket(zmq.REP)
-        protocol, ip_addr, port_str = url_parser.match(url).groups()
+        _, ip_addr, port_str = url_parser.match(url).groups()
 
         if port_str:
             port = int(port_str)
             try:
                 socket.bind(url)
-            except ZMQBindError as e:
-                logger.critical(f"Failed to bind to {url}")
-                logger.critical(e)
-                sys.exit(1)
+            except ZMQBindError:
+                logger.error(f"Failed to bind to {url}")
+                raise
         else:
             port = socket.bind_to_random_port(url, 10000, 12000)
 
@@ -514,9 +1006,9 @@ class RPCServer:
             "signal_socket": None
         }
 
-        def _server_finalizer(state):
+        def _server_finalizer(state, signals):
             # This function does not capture 'self'
-            for signal in self._signals.values():
+            for signal in signals.values():
                 signal.disconnect()
             if state["uuid"] and state["registry_addr"]:
                 unregister_device(state["context"], state["uuid"], state["registry_addr"])
@@ -526,7 +1018,7 @@ class RPCServer:
                 state["signal_socket"].close()
             logger.info("Server deleted")
 
-        finalize(self, _server_finalizer, self._cleanup_state)
+        finalize(self, _server_finalizer, self._cleanup_state, self._signals)
 
     def register_to_registry(self, type_: str, name: str, registry_url: str, overwrite=True) -> str:
         """
@@ -549,9 +1041,8 @@ class RPCServer:
 
         Returns
         -------
-        accepted_name: str
+        str
             Name of this device as accepted by the registry.
-
         """
         logger.debug(f"Register device {name} of type {type_} to {registry_url}")
         self._type = type_
@@ -561,19 +1052,23 @@ class RPCServer:
             name, registry_url,
             overwrite=overwrite,
         )
+        if not self.name:
+            logger.warning(f"Failed to register device {name} of type {type_} as {registry_url}")
         self.registry_addr = registry_url if self.name else ""
 
         # Update cleanup state so finalizer knows what to unregister
         self._cleanup_state["uuid"] = self.uuid
         self._cleanup_state["registry_addr"] = self.registry_addr
 
-        return self.name
+        logger.info(f"Successfully registered device {name} of type {type_} to {registry_url}")
 
+        return self.name
 
     @staticmethod
     def register_method_json(timeout: int | None = 10000):
         """
         Registers this method as remote callable procedure which will transmit its output via json.
+
         It is advised to only send basic types and containers as output (int, float, str, bool, list, tuple, dict, ...)
         Arguments are also serialized via json.
 
@@ -584,17 +1079,19 @@ class RPCServer:
 
         Returns
         -------
-        decorator: Callable[Callable[..., Any], Callable[..., Any]]
+        Callable[Callable[..., Any], Callable[..., Any]]
 
         """
         if inspect.isfunction(timeout):
             timeout._is_json_method = True
             timeout._timeout = 10000
             return timeout
+
         def _decorator(method: Callable[..., Any]):
             method._is_json_method = True
             method._timeout = timeout
             return method
+
         return _decorator
 
     @staticmethod
@@ -621,16 +1118,18 @@ class RPCServer:
             timeout._is_buffer_method = True
             timeout._timeout = 10000
             return timeout
-        def _decorator(method: Callable[..., tuple[memoryview|bytes, dict]]):
+
+        def _decorator(method: Callable[..., tuple[memoryview | bytes, dict]]):
             method._is_buffer_method = True
             method._timeout = timeout
             return method
+
         return _decorator
 
     def _send_signal(self, signal_name: str, *args):
         if not self._signal_socket:
-            logger.error(f"Signal socket not initialized")
-            raise RuntimeError(f"Signal socket not initialized")
+            logger.error("Signal socket not initialized")
+            raise RuntimeError("Signal socket not initialized")
         # Validate that we send a signal with arguments matching the expected types
         signal: RPCSignal = getattr(self, signal_name)
         signal.validate_args(*args)
@@ -641,43 +1140,64 @@ class RPCServer:
             "args": args,
             "blocking": False,
         })
-        reply = self._signal_socket.recv_json()
-        if not reply["success"]:
-            logger.error(f"Signal {signal_name} failed with {reply}")
 
-    def _exec_json(self, method: Callable, params: dict):
+    def _exec_json(self, method: Callable, params: dict) -> dict:
         args = params["args"]
         kwargs = params["kwargs"]
         try:
-            result = method(self, *args, **kwargs)
+            result = method(*args, **kwargs)
         except Exception as e:
             logger.error(f"Failed to execute {method} due to {e}")
             traceback_str = traceback.format_exc(limit=10)
             print(traceback_str, file=sys.stderr)
             print(e, file=sys.stderr)
-            self._socket.send_json({"success": False, "error": str(e), "traceback": traceback_str})
+            return {"success": False, "error": str(e), "traceback": traceback_str}
         else:
-            self._socket.send_json({"success": True, "result": result})
+            return {"success": True, "result": result}
 
-    def _exec_buffer(self, method: Callable, params: dict):
+    def _exec_buffer(self, method: Callable, params: dict) -> list[bytes]:
         args = params["args"]
         kwargs = params["kwargs"]
         try:
-            buffer, buffer_info = method(self, *args, **kwargs)
+            buffer, buffer_info = method(*args, **kwargs)
         except Exception as e:
             logger.error(f"Failed to execute {method} due to {e}")
             traceback_str = traceback.format_exc(limit=10)
             print(traceback_str, file=sys.stderr)
             print(e, file=sys.stderr)
-            self._socket.send_multipart(
-                [json.dumps({"success": False, "error": str(e), "traceback": traceback_str}).encode("utf-8")],
-            )
+            return [json.dumps({"success": False, "error": str(e), "traceback": traceback_str}).encode("utf-8")]
         else:
-            self._socket.send_multipart(
-                [json.dumps(buffer_info).encode("utf-8"), buffer], copy=False
-            )
+            return [json.dumps(buffer_info).encode("utf-8"), buffer]
 
     def stop_server(self):
+        """
+        Stop the server and unregister the device if it has been registered.
+
+        The method sets the internal stop flag, optionally calls
+        :func:`unregister_device` to remove the device from a remote registry,
+        clears the identifying attributes (``name``, ``uuid``, ``registry_addr``),
+        and resets the corresponding entries in ``_cleanup_state`` to ``None``.
+        This prevents a second unregister attempt during cleanup.
+
+        Raises
+        ------
+        Exception
+            Propagates any exception raised by :func:`unregister_device`, e.g.
+            network errors or authentication failures.
+
+        Notes
+        -----
+        * The device is only unregistered when all three attributes
+          ``self.name``, ``self.registry_addr`` and ``self.uuid`` evaluate to
+          ``True``. If any of them is falsy, the function simply sets the
+          stop flag and returns.
+        * ``self._cleanup_state`` is updated after a successful unregister to
+          avoid duplicate cleanup actions later in the object's lifecycle.
+
+        See Also
+        --------
+        unregister_device : Function that removes a device from the registry.
+        """
         self._stop = True
         if self.name and self.registry_addr and self.uuid:
             unregister_device(self.context, self.uuid, self.registry_addr)
@@ -693,119 +1213,401 @@ class RPCServer:
 
     def serve_forever(self):
         """
-        Starts serving requests for this RPCServer.
+        Serve the RPC server indefinitely, handling incoming requests until a stop signal is
+        received.
+
+        The method enters a loop that repeatedly notifies the watchdog, checks the server's
+        liveness, waits for a request, and dispatches the request based on its ``event`` field.
+        Supported events include peer discovery, inventory retrieval, signal handling
+        initialization, method invocation, property access, and server shutdown. Upon receiving
+        a ``STOP_SERVER`` event the loop terminates, sockets are closed, and a log entry is
+        written.
 
         If registered to the registry and the check_alive fails, exits the loop
 
         Returns
         -------
+        None
+            The server runs until it is stopped; no value is returned.
 
+        Notes
+        -----
+        * The private attribute ``_stop`` controls the loop termination. It is set to
+          ``True`` only when a ``STOP_SERVER`` request is processed.
+        * ``_socket`` and ``_signal_socket`` are closed during cleanup; if either attribute is
+          ``None`` the corresponding ``close`` call is skipped.
+        * ``notify_watchdog`` and ``_alive_check`` are called on every iteration to maintain
+          server health monitoring.
+        * The method assumes that ``_wait_for_request`` returns a mapping with an ``event``
+          key; a falsy return value causes the loop to continue without processing.
+
+        See Also
+        --------
+        RPCEvents : Enum defining the possible request events.
+        _handle_find_peer_address, _handle_get_inventory, _handle_init_signal_handling,
+        _handle_method_call, _handle_property_get, _handle_property_set :
+            Private helper methods that implement the handling logic for each event type.
         """
         if self._dead:
             logger.error("RPCServer is in dead state. A new instance must be created.")
-            raise RuntimeError(f"RPCServer is in dead state. A new instance must be created.")
+            raise RuntimeError("RPCServer is in dead state. A new instance must be created.")
         self._stop = False
         while not self._stop:
             notify_watchdog()
-            if self.registry_addr:
-                res = send_alive_check(self.context, self.uuid, self.registry_addr, self.alive_timeout)
-                if res == "unreachable":
-                    logger.error(f"Check Alive failed. Registry at {self.registry_addr} "
-                                 f"is unreachable.")
-                    break
-                elif res == "unregistered":
-                    logger.warning(f"Check Alive failed. Registry at {self.registry_addr} does not know this service."
-                                   f" Trying to reregister.")
-                    self.register_to_registry(self._type, self.name, self.registry_addr, False)
-            if self._socket.poll(1000, zmq.POLLIN) == 0:
+            if not self._alive_check():
+                break
+            request = self._wait_for_request()
+            if not request:
                 continue
-            request = self._socket.recv_json()
-            match request["event"]:
-                case RPCEvents.FIND_PEER_ADDRESS:
-                    logger.info("Finding peer address")
-                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    port = random.randint(49152, 65535)
-                    s.bind(("", port))  # may crash if unlucky
-                    s.listen(1)
-                    self._socket.send_json({"success": True, "port": port})
-                    c, addr_info = s.accept()
-                    self.peer_addr = addr_info[0]
-                    c.shutdown(socket.SHUT_RDWR)
-                    c.close()
-                    s.shutdown(socket.SHUT_RDWR)
-                    s.close()
-                    del s
-                    logger.info("Connected to peer at address: {}".format(self.peer_addr))
-                case RPCEvents.GET_INVENTORY:
-                    logger.info("Sending inventory")
-                    response = {
-                        "json_methods": {name: func._timeout for name, func in self._json_methods.items()},
-                        "buffer_methods": {name: func._timeout for name, func in self._buffer_methods.items()},
-                        "signals": list(self._signals.keys()),
-                        "properties": list(self._rpc_properties.keys()),
-                        "name": self.name,
-                    }
-                    logger.info(response)
-                    self._socket.send_json(response)
-                case RPCEvents.INIT_SIGNALS_HANDLING:
-                    logger.info("Initializing signal handling")
-                    address, port = request["address"], request["port"]
-                    self._signal_socket = self.context.socket(zmq.REQ)
-                    self._signal_socket.connect(f"tcp://{address}:{port}")
-                    self._cleanup_state["signal_socket"] = self._signal_socket
-                    weak_send_signal = WeakMethod(self._send_signal)
-                    for sig_name, sig in self._signals.items():
-                        sig.connect(lambda *args, sig_name=sig_name, **kwargs: weak_send_signal()(sig_name, *args, **kwargs))
-                    self._socket.send_json({"success": True})
-                    logger.info("Successfully initialized signal handling")
-                case RPCEvents.METHOD_CALL:
-                    method: str = request["method"]
-                    params: dict[str, bytes] = request["params"]
-                    logger.info(f"Executing {method} with params {params}")
-                    if method in self._json_methods:
-                        self._exec_json(self._json_methods[method], params)
-                    elif method in self._buffer_methods:
-                        self._exec_buffer(self._buffer_methods[method], params)
-                    else:
-                        logger.error(f"Method {method} not implemented")
-                        self._socket.send_json({"success": False, "error": f"Method {method} not implemented"})
-                case RPCEvents.PROPERTY_GET:
-                    prop_name: str = request["property"]
-                    logger.debug(f"Getting property {prop_name}")
-                    try:
-                        val = getattr(self, prop_name)
-                    except Exception as e:
-                        logger.error(f"Failed to execute 'get property' for property {prop_name}")
-                        traceback_str = traceback.format_exc(limit=10)
-                        print(traceback_str, file=sys.stderr)
-                        self._socket.send_json({"success": False, "error": str(e), "traceback": traceback_str})
-                    else:
-                        self._socket.send_json({
-                            "success": True, "value": val,
-                        })
-                case RPCEvents.PROPERTY_SET:
-                    prop_name: str = request["property"]
-                    val = request["value"]
-                    logger.debug(f"Setting property {prop_name} to {val}")
-                    try:
-                        setattr(self, prop_name, val)
-                    except Exception as e:
-                        logger.error(f"Failed to execute 'set property' for property {prop_name}")
-                        traceback_str = traceback.format_exc(limit=10)
-                        print(traceback_str, file=sys.stderr)
-                        self._socket.send_json({"success": False, "error": str(e), "traceback": traceback_str})
-                    else:
-                        self._socket.send_json({
-                            "success": True,
-                        })
-                case RPCEvents.STOP_SERVER:
-                    self._socket.send_json({"success": True})
-                    break
-        self._dead = True
-        for signal in self._signals.values():
-            signal.disconnect()
-        if self._signal_socket:
-            self._signal_socket.close()
+            try:
+                logger.debug(f"Received request: {request['event']}")
+                t0 = time.monotonic()
+                match request["event"]:
+                    case RPCEvents.GET_INVENTORY:
+                        reply = self._handle_get_inventory()
+                        self._send_reply(reply)
+                    case RPCEvents.INIT_SIGNALS_HANDLING:
+                        reply = self._handle_init_signal_handling(request)
+                        self._send_reply(reply)
+                    case RPCEvents.METHOD_CALL:
+                        reply, use_multipart = self._handle_method_call(request)
+                        self._send_reply(reply, use_multipart)
+                    case RPCEvents.PROPERTY_GET:
+                        reply = self._handle_property_get(request)
+                        self._send_reply(reply)
+                    case RPCEvents.PROPERTY_SET:
+                        reply = self._handle_property_set(request)
+                        self._send_reply(reply)
+                    case RPCEvents.STOP_SERVER:
+                        self._socket.send_json({"success": True})
+                        self._stop = True
+                logger.debug(f"Event {request['event']} treated in {time.monotonic() - t0}s")
+            except Exception as exc:
+                logger.error(f"Unexpected error while handling request: {exc}")
+                # If we have a request, we can at least try to answer with a generic error.
+                if isinstance(request, dict) and "event" in request:
+                    self._send_reply(self._make_error_reply(exc, "serve_forever"))
+                break  # abort the loop - we are in an inconsistent state
+
+        # cleanup
         if self._socket:
             self._socket.close()
+        if self._signal_socket:
+            self._signal_socket.close()
+        self._dead = True
         logger.info("Server stopped")
+
+    def _handle_property_set(self, request: dict) -> dict:
+        """
+        Set an attribute on the instance based on a request dictionary.
+
+        Parameters
+        ----------
+        request
+            Mapping containing the keys ``"property"`` and ``"value"``. The
+            ``"property"`` entry specifies the name of the attribute to set on
+            ``self`` and ``"value"`` is the value to assign.
+
+        Returns
+        -------
+        dict
+            ``{"success": True}`` if the attribute was set successfully, or an
+            error reply dictionary generated by :meth:`_make_error_reply` when an
+            exception occurs.
+        """
+        prop_name: str = request["property"]
+        val = request["value"]
+        logger.debug(f"Setting property {prop_name} to {val}")
+        try:
+            setattr(self, prop_name, val)
+        except Exception as e:
+            return self._make_error_reply(e, "set_property")
+        else:
+            return {"success": True}
+
+    def _handle_property_get(self, request: dict) -> dict:
+        """
+        Retrieve the value of a named attribute from the instance.
+
+        The function expects ``request`` to contain a ``"property"`` key whose
+        value is the name of the attribute to read. It logs the operation, attempts
+        to obtain the attribute via :func:`getattr`, and returns a JSON‑serialisable
+        response. Any exception raised while accessing the attribute is caught and
+        transformed into an error reply using :meth:`_make_error_reply`.
+
+        Parameters
+        ----------
+        request
+            Mapping that must include the key ``"property"`` identifying the
+            attribute whose value should be returned.
+
+        Returns
+        -------
+        dict
+            A dictionary with the shape ``{"success": True, "value": <attr>}`` when
+            the attribute is successfully retrieved, where ``<attr>`` is the value
+            of the requested property. If an exception occurs, the dictionary is
+            the result of ``_make_error_reply`` and contains error information.
+
+        Notes
+        -----
+        * The method never propagates exceptions; all errors are captured and
+          reported via the error‑reply structure.
+        * The returned dictionary is intended to be JSON‑serialisable.
+
+        See Also
+        --------
+        _make_error_reply : Helper that formats a standardized error reply for
+            failed property accesses.
+
+        Examples
+        --------
+        >>> class Demo:
+        ...     def __init__(self):
+        ...         self.answer = 42
+        ...     def _make_error_reply(self, exc, op):
+        ...         return {"success": False, "error": str(exc), "operation": op}
+        ...     _handle_property_get = _handle_property_get
+        >>> d = Demo()
+        >>> d._handle_property_get({"property": "answer"})
+        {'success': True, 'value': 42}
+        >>> d._handle_property_get({"property": "missing"})
+        {'success': False, 'error': "...'"}  # error reply generated by _make_error_reply
+        """
+        prop_name: str = request["property"]
+        logger.debug(f"Getting property {prop_name}")
+        try:
+            val = getattr(self, prop_name)
+        except Exception as e:
+            return self._make_error_reply(e, "get_property")
+        else:
+            return {"success": True, "value": val}
+
+    def _handle_method_call(self, request: dict) -> tuple[dict | list[bytes], bool]:
+        """
+        Dispatch a JSON‑RPC request to the appropriate handler.
+
+        The function extracts the ``method`` name and ``params`` from *request*,
+        looks up the method in the internal registries and executes it using the
+        appropriate execution helper. The return value indicates both the reply
+        payload and whether the payload should be sent as a multipart (buffer)
+        response.
+
+        Parameters
+        ----------
+        request : dict
+            Mapping that must contain the keys ``"method"`` (a ``str``) and
+            ``"params"`` (a ``dict`` mapping ``str`` to ``bytes``). The method name
+            determines which registered handler is invoked.
+
+        Returns
+        -------
+        tuple
+            ``(reply, use_buffer)`` where:
+
+            * ``reply`` : ``dict`` or ``list[bytes]``
+                If the method is registered as a JSON handler, ``reply`` is a JSON‑
+                serialisable ``dict`` produced by :meth:`_exec_json`. If the method
+                is a buffer handler, ``reply`` is a ``list`` of ``bytes`` objects
+                returned by :meth:`_exec_buffer`.
+
+            * ``use_buffer`` : ``bool``
+                ``True`` if the reply should be transmitted as a multipart/buffer
+                response, ``False`` for a regular JSON response.
+
+        See Also
+        --------
+        _exec_json : Execute a method that returns a JSON‑serialisable payload.
+        _exec_buffer : Execute a method that returns raw byte buffers.
+        """
+        method: str = request["method"]
+        params: dict[str, bytes] = request["params"]
+        logger.debug(f"Executing {method} with params {params}")
+        if method in self._json_methods:
+            reply = self._exec_json(getattr(self, method), params)
+            return reply, False  # use json
+        elif method in self._buffer_methods:
+            reply = self._exec_buffer(getattr(self, method), params)
+            return reply, True  # use multipart
+        else:
+            err = f"Method {method} not implemented"
+            logger.error(err)
+            return {"success": False, "error": err}, False
+
+    def _handle_init_signal_handling(self, request: dict) -> dict:
+        """
+        Initialize ZeroMQ signal handling based on the supplied request.
+
+        The method creates a ``REQ`` socket, connects it to the address and port
+        specified in ``request``, stores the socket in ``self._cleanup_state`` for
+        later cleanup, and registers a weak callback for each signal in
+        ``self._signals``. The weak callback forwards the signal name and any
+        positional or keyword arguments to ``_send_signal`` without creating a
+        reference cycle.
+
+        Parameters
+        ----------
+        request
+            Mapping containing the keys ``'address'`` (str) and ``'port'`` (int)
+            that specify the endpoint to which the signal socket should connect.
+
+        Returns
+        -------
+        dict
+            ``{'success': True}`` indicating that the socket was successfully
+            created and all signal handlers were attached.
+
+        Raises
+        ------
+        KeyError
+            If ``request`` does not contain the required ``'address'`` or ``'port'``
+            entries.
+        """
+        logger.info("Initializing signal handling")
+        if self._signal_socket is None:
+            self._signal_socket = self.context.socket(zmq.PUB)
+            protocol, addr, _ = url_parser.search(self.url).groups()
+            self._signal_port = self._signal_socket.bind_to_random_port(f"{protocol}://{addr}")
+            self._cleanup_state["signal_socket"] = self._signal_socket
+
+        weak_send_signal = WeakMethod(self._send_signal)
+        for sig_name, sig in self._signals.items():
+            sig.connect(lambda *args, _sig_name=sig_name, **kwargs: weak_send_signal()(_sig_name, *args, **kwargs))
+
+        logger.info("Successfully initialized signal handling")
+        return {"success": True, "signal_port": self._signal_port}
+
+    def _handle_get_inventory(self) -> dict:
+        """
+        Retrieve a dictionary describing the current RPC inventory.
+
+        Returns
+        -------
+        dict
+            Mapping with the following keys:
+
+            - ``json_methods``: ``dict`` mapping method names to their timeout values.
+            - ``buffer_methods``: ``dict`` mapping method names to their timeout values.
+            - ``signals``: ``list`` of registered signal names.
+            - ``properties``: ``list`` of RPCProperty names.
+            - ``name``: ``str`` representing the RPC object's identifier.
+        """
+        logger.info("Sending inventory")
+        response = {
+            "json_methods": {name: func._timeout for name, func in self._json_methods.items()},
+            "buffer_methods": {name: func._timeout for name, func in self._buffer_methods.items()},
+            "signals": list(self._signals.keys()),
+            "properties": list(self._rpc_properties.keys()),
+            "name": self.name,
+        }
+        logger.debug(response)
+        return response
+
+    def _wait_for_request(self) -> dict | None:
+        if self._socket.poll(2000, zmq.POLLIN) == 0:
+            return None
+        return self._socket.recv_json()
+
+    def _alive_check(self) -> bool:
+        """
+        Perform a health check to determine if the service is alive and registered.
+
+        This method sends an alive check request to the registry server. If the registry
+        is unreachable or does not recognize the current service, appropriate actions
+        are taken, such as logging errors or warnings and optionally re-registering
+        the service. If no registry address is provided, then no health check is performed.
+
+        Returns
+        -------
+        bool
+            A boolean value indicating the service's health status:
+            ``True`` if the service is deemed alive or no registry address is provided.
+            ``False`` if the registry is unreachable.
+        """
+        if self.registry_addr:
+            res = send_alive_check(self.context, self.uuid, self.registry_addr, self.alive_timeout)
+            if res == AliveCheckState.UNREACHABLE:
+                logger.warning("Check Alive failed. Got no response from registry.")
+                self._unreachable_counter += 1
+            elif res == AliveCheckState.UNKNOWN:
+                logger.warning(f"Check Alive failed. Registry at {self.registry_addr} does not know this service."
+                               f" Trying to reregister.")
+                self.register_to_registry(self._type, self.name, self.registry_addr, False)
+                self._unreachable_counter = 0
+                return True
+            else:
+                self._unreachable_counter = 0
+                return True
+            if self._unreachable_counter >= 3:
+                logger.error(f"Failed to reach registry {self._unreachable_counter} times.")
+                # removing name and uuid because the server is not registered anymore
+                self.name = ""
+                self.uuid = ""
+                return False
+        return True
+
+    # --------------------------------------------------------------------- #
+    #  Utility - error reporting
+    # --------------------------------------------------------------------- #
+    @staticmethod
+    def _make_error_reply(exc: Exception, context: str) -> dict:
+        """
+        Generate a structured error reply dictionary for logging and debugging.
+
+        When an exception occurs during execution of a particular operation, this
+        helper creates a response containing a failure flag, a string representation
+        of the exception, and a truncated traceback. The traceback is limited to the
+        most recent ten frames to keep the output concise.
+
+        Parameters
+        ----------
+        `exc`
+            The caught :class:`Exception` instance.
+        `context`
+            Description of the operation being performed when ``exc`` was raised.
+
+        Returns
+        -------
+        dict
+            Mapping with keys ``success`` (always ``False``), ``error`` containing the
+            exception message, and ``traceback`` containing the formatted traceback.
+
+        Notes
+        -----
+        The function logs the error via the module‑level ``logger`` and prints the
+        traceback to ``stderr`` to aid post‑mortem analysis.
+        """
+        logger.error(f"Failed to execute '{context}' - {exc}")
+        tb = traceback.format_exc(limit=10)
+        print(tb, file=sys.stderr)
+        return {"success": False, "error": str(exc), "traceback": tb}
+
+    def _send_reply(self, msg: dict | list[bytes], multipart=False) -> None:
+        """
+        Send a reply message through the internal ZeroMQ socket.
+
+        Parameters
+        ----------
+        msg
+            Message to be transmitted. If ``multipart`` is ``True`` the value
+            must be a ``list`` of ``bytes`` objects; otherwise a JSON‑serialisable
+            ``dict`` is expected.
+        multipart
+            When ``True`` use ``send_multipart``; otherwise use ``send_json``.
+            Defaults to ``False``.
+
+        Returns
+        -------
+        None
+            No value is returned; the message is sent directly on the socket.
+
+        Raises
+        ------
+        zmq.ZMQError
+            Propagated from the underlying ZeroMQ socket if the send operation
+            fails.
+        """
+        if multipart:
+            self._socket.send_multipart(msg, copy=False)
+        else:
+            self._socket.send_json(msg)

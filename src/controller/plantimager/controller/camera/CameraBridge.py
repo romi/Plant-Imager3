@@ -1,21 +1,26 @@
 import os.path
-import sys
 from enum import StrEnum
 from typing import Literal
 from weakref import finalize
 
 import zmq
-from PySide6.QtCore import QObject, Signal, Slot, Property
-from PySide6.QtQml import QmlElement, QmlUncreatable
+from PySide6.QtCore import Property
+from PySide6.QtCore import QObject
+from PySide6.QtCore import Signal
+from PySide6.QtCore import Slot
+from PySide6.QtQml import QmlElement
+from PySide6.QtQml import QmlUncreatable
 
 from plantimager.commons.logging import create_logger
-from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.ImageProvider import imageProvider
+from plantimager.controller.camera.PiCameraComm import CameraStates
+from plantimager.controller.camera.PiCameraComm import PiCameraComm
 
 QML_IMPORT_NAME = "PlantImagerApp.Camera"
 QML_IMPORT_MAJOR_VERSION = 1
 
 logger = create_logger("CameraBridge")
+
 
 class StatusClass(StrEnum):
     OK = "ok"
@@ -24,18 +29,14 @@ class StatusClass(StrEnum):
     INACTIVE = "inactive"
     WAITING = "waiting"
 
-class States(StrEnum):
-    DISCONNECTED = "disconnected"
-    INVALID = "invalid"
-    CONNECTED = "connected"
-    WAITING = "waiting"
 
 STATE_TO_CLASS = {
-    States.DISCONNECTED: StatusClass.INACTIVE,
-    States.INVALID: StatusClass.ERROR,
-    States.CONNECTED: StatusClass.OK,
-    States.WAITING: StatusClass.WAITING,
+    CameraStates.DISCONNECTED: StatusClass.INACTIVE,
+    CameraStates.INVALID: StatusClass.ERROR,
+    CameraStates.CONNECTED: StatusClass.OK,
+    CameraStates.WAITING: StatusClass.WAITING,
 }
+
 
 class DisplayMode(StrEnum):
     NORMAL = "normal"
@@ -43,6 +44,7 @@ class DisplayMode(StrEnum):
     ZOOMED = "zoomed"
     ZOOMED_FOCUS = "zoomed-focus"
     ALIGN = "align"
+
 
 @QmlElement
 @QmlUncreatable("Camera bridge cannot be created from QML")
@@ -76,39 +78,25 @@ class CameraBridge(QObject):
         self._image_source = ""
         self._displayMode = DisplayMode.NORMAL
         if name == "empty" or address == "":
-            self._status = States.INVALID
-            self.camera = None
-            self._mode = "STILL"
-            self._rotation = 0
-            return
-        self._status = States.DISCONNECTED
+            raise RuntimeError("Empty camera bridge cannot be created.")
         self.statusChanged.connect(lambda state: self.statusClassChanged.emit(STATE_TO_CLASS[state]))
 
         self.camera = PiCameraComm(context, address)
         self.camera.imageReady.connect(self._newImage)
         self.camera.modeChanged.connect(self._modeChanged)
         self.camera.videoUrlChanged.connect(self._videoUrlChanged)
-        self._mode: Literal["VIDEO", "STILL"]  = self.camera.mode
+        self.camera.stateChanged.connect(self.statusChanged)
+
+        self._mode: Literal["VIDEO", "STILL"] = self.camera.mode
         self._rotation: int = self.camera.rotation
         self.camera.rotationChanged.connect(self._camera_rotation_change_handler)
-        self._status = States.CONNECTED
         self._i = 0
-
-        self.camera.waitingForResponseChanged.connect(self._camera_waiting_for_response_changed)
 
         def _finalizer(camera):
             del camera
             logger.debug(f"bridge {self._name} finalized")
-        finalize(self, _finalizer, self.camera)
 
-    @Slot(bool)
-    def _camera_waiting_for_response_changed(self, waiting: bool):
-        if waiting:
-            self._status = States.WAITING
-            self.statusChanged.emit(self._status)
-        else:
-            self._status = States.CONNECTED
-            self.statusChanged.emit(self._status)
+        finalize(self, _finalizer, self.camera)
 
     @Slot()
     def getImage(self):
@@ -125,6 +113,7 @@ class CameraBridge(QObject):
     @Property(str, notify=modeChanged)
     def mode(self):
         return self._mode
+
     @mode.setter
     def mode(self, value: Literal["VIDEO", "STILL"]):
         if self._mode != value and self.camera:
@@ -141,13 +130,12 @@ class CameraBridge(QObject):
         self.videoSourceChanged.emit(self._video_source)
         if videoUrl: self.videoReady.emit()
 
-
     @Slot(memoryview, dict)
     def _newImage(self, buffer: memoryview, buffer_info: dict):
         imageProvider.addImageFromBuffer(f"{self._name}-{self._i}", buffer, buffer_info)
         self._image_source = f"image://provider/{self._name}-{self._i}"
         self.imageSourceChanged.emit(self._image_source)
-        self._i  = (self._i + 1) % 2
+        self._i = (self._i + 1) % 2
 
     @Property(str, notify=nameChanged)
     def name(self) -> str:
@@ -159,11 +147,11 @@ class CameraBridge(QObject):
 
     @Property(str, notify=statusChanged)
     def status(self) -> str:
-        return self._status
+        return self.camera.state
 
     @Property(str, notify=statusClassChanged)
     def statusClass(self) -> str:
-        return STATE_TO_CLASS[self._status]
+        return STATE_TO_CLASS[self.status]
 
     @Property(str, notify=videoSourceChanged)
     def videoSource(self) -> str:
@@ -195,6 +183,7 @@ class CameraBridge(QObject):
     @Property(int, notify=rotationChanged)
     def rotation(self) -> int:
         return self._rotation
+
     @rotation.setter
     def rotation(self, value: int):
         if self.camera:
@@ -203,6 +192,7 @@ class CameraBridge(QObject):
     @Property(str, notify=displayModeChanged)
     def displayMode(self) -> DisplayMode:
         return self._displayMode
+
     @displayMode.setter
     def displayMode(self, value: DisplayMode):
         if self._displayMode != value:
@@ -222,3 +212,23 @@ class CameraBridge(QObject):
             self.displayMode = DisplayMode.ALIGN
         elif self._displayMode == DisplayMode.ALIGN:
             self.displayMode = DisplayMode.NORMAL
+
+
+@QmlElement
+@QmlUncreatable("Camera bridge cannot be created from QML")
+class DummyCameraBridge(CameraBridge):
+    """
+    DummyCameraBridge class serves as a placeholder when no camera is available.
+    """
+    statusChanged = Signal(str)
+
+    def __init__(self, parent: QObject):
+        self._status = CameraStates.INVALID
+        self.camera = None
+        self._mode = "STILL"
+        self._rotation = 0
+        self._displayMode = DisplayMode.NORMAL
+
+    @Property(str, notify=statusChanged)
+    def status(self) -> str:
+        return self._status

@@ -10,11 +10,14 @@ tracking application events, errors, and performance metrics across different co
 
 import logging
 import sys
+import os
 
 import colorlog
 
+LOG_LEVEL = os.getenv("PI3_LOG_LEVEL", "INFO")
 
-def create_logger(name: str, level=logging.DEBUG) -> logging.Logger:
+
+def create_logger(name: str, level=LOG_LEVEL) -> logging.Logger:
     """Create a logger with the given name and specified logging level.
 
     Parameters
@@ -50,14 +53,16 @@ def create_logger(name: str, level=logging.DEBUG) -> logging.Logger:
     # Create a new logger instance with the specified name
     logger = logging.Logger(name)
     # Set the minimum logging level
+    if isinstance(level, str):
+        level = logging.getLevelNamesMapping().get(level, logging.INFO)
     logger.setLevel(level)
 
     # Create a LevelFormatter that uses different format strings based on log level
     # The log_color prefix enables colored output for each level
     formatter = colorlog.LevelFormatter(fmt={
-        logging.getLevelName(logging.DEBUG):    "{log_color} {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
-        logging.getLevelName(logging.INFO):     "{log_color} {name} {threadName} - {levelname}: {message}",
-        logging.getLevelName(logging.WARNING):  "{log_color} {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
+        logging.getLevelName(logging.DEBUG):    "[{log_color}] {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
+        logging.getLevelName(logging.INFO):     "[{log_color}] {name} {threadName} - {levelname}: {message}",
+        logging.getLevelName(logging.WARNING):  "[{log_color}] {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
         logging.getLevelName(logging.ERROR):    "[{log_color}] {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
         logging.getLevelName(logging.CRITICAL): "[{log_color}] {name} {threadName} - {levelname}: {message} ({filename}:{lineno})",
     }, style="{")

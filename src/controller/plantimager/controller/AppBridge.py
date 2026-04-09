@@ -1,16 +1,22 @@
 import subprocess
+from threading import Thread
 from weakref import finalize
 
 import zmq
-from PySide6.QtCore import QObject, QThread, Signal, Slot, QAbstractListModel, Property, QModelIndex, Qt, QStringListModel
-from PySide6.QtQml import QmlSingleton, QmlElement
-
-from threading import Thread
+from PySide6.QtCore import Property
+from PySide6.QtCore import QObject
+from PySide6.QtCore import QStringListModel
+from PySide6.QtCore import Qt
+from PySide6.QtCore import Signal
+from PySide6.QtCore import Slot
+from PySide6.QtQml import QmlElement
+from PySide6.QtQml import QmlSingleton
 
 from plantimager.commons import deviceregistry
 from plantimager.commons.logging import create_logger
 from plantimager.commons.systemd import is_systemd_process
 from plantimager.controller.camera.CameraBridge import CameraBridge
+from plantimager.controller.camera.CameraBridge import DummyCameraBridge
 from plantimager.controller.scanner.rpc_controller import RPCControllerServer
 from plantimager.controller.scanner.scanner import Scanner
 
@@ -18,7 +24,8 @@ logger = create_logger("AppBridge")
 
 QML_IMPORT_NAME = "PlantImagerApp"
 QML_IMPORT_MAJOR_VERSION = 1
-QML_IMPORT_MINOR_VERSION = 0 # Optional
+QML_IMPORT_MINOR_VERSION = 0  # Optional
+
 
 @QmlElement
 @QmlSingleton
@@ -40,7 +47,6 @@ class AppBridge(QObject):
         List of device names.
     device_bridges: list[CameraBridge]
         List of camera bridges.
-
     """
 
     currentCameraChanged = Signal(QObject)
@@ -64,7 +70,7 @@ class AppBridge(QObject):
         self.device_list: list[str] = []
         self.device_bridges: list[CameraBridge] = []
 
-        self._currentCamera = CameraBridge("", "", self.context)
+        self._currentCamera = DummyCameraBridge(self)
         self._scanner = Scanner()
 
         self._controller_server = RPCControllerServer(self.context, "tcp://localhost:14567", self._scanner)
@@ -84,11 +90,13 @@ class AppBridge(QObject):
             controller_thread.join()
             context.term()
             logger.debug("AppBridge finalized")
+
         finalize(self, finalizer, self.registry, self._controller_server, self._controller_thread, self.context)
 
     @Property(QObject, notify=currentCameraChanged)
     def currentCamera(self) -> CameraBridge:
         return self._currentCamera
+
     @currentCamera.setter
     def currentCamera(self, camera: CameraBridge):
         if self._currentCamera is not camera:
@@ -103,6 +111,7 @@ class AppBridge(QObject):
     def getCameraBridgeAtIndex(self, index: int) -> CameraBridge:
         """
         (Slot) Returns the camera bridge at a given index.
+
         Parameters
         ----------
         index: int
@@ -126,7 +135,7 @@ class AppBridge(QObject):
 
         Meant to be connected to the signal `_registryNewDevice` as a QueuedConnection.
         """
-        logger.debug(f"New device for {addr}: {device_type}, {name}")
+        logger.debug(f"--> New device for {addr}: {device_type}, {name}")
         if device_type.lower() == "camera":
             logger.debug("New camera, creating bridge and adding to scanner.")
             new_bridge = CameraBridge(name, addr, self.context)
@@ -137,12 +146,14 @@ class AppBridge(QObject):
             if not self._currentCamera:
                 self.currentCamera = new_bridge
                 self.currentCameraChanged.emit(new_bridge)
+        logger.debug(f"<-- New device for {addr}: {device_type}, {name}")
 
     def _new_device_callback(self, device_type: str, addr: str, name: str):
         """
         Callback called by deviceregistry when a new device is registered.
 
         This must return immediately as to avoid deadlocks.
+
         Parameters
         ----------
         device_type
@@ -164,15 +175,17 @@ class AppBridge(QObject):
 
         Meant to be connected to the signal `_registryRemoveDevice` as a QueuedConnection.
         """
+        logger.debug(f"--> Removing device {name} of type {device_type} at {addr}")
         idx = self.device_list.index(name)
         device = self.device_bridges[idx]
         self.scanner.remove_camera(device.camera)
         del self.device_list[idx]
         del self.device_bridges[idx]
         if len(self.device_bridges) == 0:
-            self._currentCamera = CameraBridge("", "", self.context)
+            self._currentCamera = DummyCameraBridge(self)
             self.currentCameraChanged.emit(self._currentCamera)
         self.deviceListChanged.emit()
+        logger.debug(f"<-- Removing device {name} of type {device_type} at {addr}")
 
     def _remove_device_callback(self, device_type: str, addr: str, name: str):
         """
@@ -213,4 +226,5 @@ class AppBridge(QObject):
 
     @Property(bool, constant=True)
     def is_systemd_service(self) -> bool:
-        return subprocess.run(["systemctl", "--user", "is-active", "plant-imager-app.service", "-q"]).returncode == 0 and is_systemd_process()
+        return subprocess.run(["systemctl", "--user", "is-active", "plant-imager-app.service",
+                               "-q"]).returncode == 0 and is_systemd_process()
