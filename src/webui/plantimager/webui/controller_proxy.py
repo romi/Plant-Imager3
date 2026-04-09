@@ -44,13 +44,6 @@ class RPCController(ControllerDevice, RPCClient):
     Only one instance of this class can exist at a time, and it can be accessed through
     the `instance` class method.
 
-    Parameters
-    ----------
-    context : zmq.Context
-        The ZeroMQ context to use for communication.
-    url : str
-        The URL to connect to for RPC communication.
-
     Attributes
     ----------
     _instance : RPCController or None
