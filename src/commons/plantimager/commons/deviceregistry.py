@@ -216,7 +216,7 @@ class DeviceRegistry(Thread):
         This internal helper scans the ``device_health_timeout`` mapping for
         entries whose expiration timestamp is greater than the current Unix
         epoch time and removes the corresponding devices via
-        ``_remove_device_by_uuid``.  It is typically invoked by a maintenance
+        ``_remove_device_by_uuid``. It is typically invoked by a maintenance
         routine to keep the device registry up‑to‑date.
 
         Notes
@@ -248,11 +248,11 @@ class DeviceRegistry(Thread):
         Register a device while resolving address or name conflicts.
 
         This method checks the current device registry for existing entries that
-        share the same address or name as the proposed registration.  If a conflict
+        share the same address or name as the proposed registration. If a conflict
         is found and ``overwrite`` is ``False``, the conflicting device is removed
-        and a warning is logged.  When ``overwrite`` is ``True`` the method will
+        and a warning is logged. When ``overwrite`` is ``True`` the method will
         replace any device that matches either the address or the name with the
-        new registration.  After handling conflicts the device is added via
+        new registration. After handling conflicts the device is added via
         ``_add_device`` and the final stored name is returned.
 
         Parameters
@@ -430,10 +430,10 @@ def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_t
     """Check the liveness of a service with the registry.
 
     Send an ``EventType.CHECK_ALIVE`` request to the registry and wait for an
-    ``EventType.ACK`` reply.  The function opens a ``REQ`` socket on the provided
+    ``EventType.ACK`` reply. The function opens a ``REQ`` socket on the provided
     ZeroMQ ``context``, sends the payload containing ``uuid`` and ``alive_timeout``,
     and returns ``True`` only when an acknowledgement is received within the
-    socket poll timeout (5s).  Any other reply or the lack of a reply results in
+    socket poll timeout (5s). Any other reply or the lack of a reply results in
     ``False``.
 
     Parameters
@@ -446,8 +446,8 @@ def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_t
         URL of the registry (e.g., ``tcp://127.0.0.1:5555``) to which the request
         is sent.
     alive_timeout
-        Timeout (in seconds) that the service claims it will stay alive.  The
-        value is included in the request payload.  Defaults to ``ALIVE_TIMEOUT``.
+        Timeout (in seconds) that the service claims it will stay alive. The
+        value is included in the request payload. Defaults to ``ALIVE_TIMEOUT``.
 
     Returns
     -------
@@ -465,16 +465,16 @@ def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_t
     Notes
     -----
     * The socket is created inside a ``with`` block, guaranteeing that it is
-      closed when the block exits.  The explicit ``socket.close()`` calls are
+      closed when the block exits. The explicit ``socket.close()`` calls are
       retained for clarity but are not strictly required.
-    * The function uses a fixed poll timeout of 5 seconds; this value is not
+    * The function uses a fixed poll timeout of 5 seconds; this value is not
       configurable via the public API.
     * ``alive_timeout`` is merely echoed back to the registry and is not used by
       this function to enforce any timing constraints.
 
     See Also
     --------
-    `EventType` – enumeration of supported event types.
+    `EventType` - enumeration of supported event types.
     """
     with context.socket(zmq.REQ) as socket:
         socket: zmq.Socket
