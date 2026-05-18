@@ -12,28 +12,28 @@
         <meta name="author" content="ROMI Team">
       
       
-        <link rel="canonical" href="https://github.com/romi/Plant-Imager3/reference/controller/main/">
+        <link rel="canonical" href="https://github.com/romi/Plant-Imager3/reference/controller/scanner/powermanager/">
       
       
-        <link rel="prev" href="../camera/pyav_receiver/">
+        <link rel="prev" href="../path/">
       
       
-        <link rel="next" href="../scanner/">
+        <link rel="next" href="../rpc_controller/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/images/ROMI_ICON_green.png">
+      <link rel="icon" href="../../../../assets/images/ROMI_ICON_green.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>main - Plant-Imager3</title>
+        <title>powermanager - Plant-Imager3</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
       
       
 
@@ -52,15 +52,15 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_markdown_exec_pyodide.css">
+      <link rel="stylesheet" href="../../../../assets/_markdown_exec_pyodide.css">
     
-      <link rel="stylesheet" href="../../../assets/_markdown_exec_ansi.css">
+      <link rel="stylesheet" href="../../../../assets/_markdown_exec_ansi.css">
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../assets/css/extra.css">
+      <link rel="stylesheet" href="../../../../assets/css/extra.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#plantimager.controller.main" class="md-skip">
+        <a href="#plantimager.controller.scanner.powermanager" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="https://github.com/romi/Plant-Imager3" title="Plant-Imager3" class="md-header__button md-logo" aria-label="Plant-Imager3" data-md-component="logo">
       
-  <img src="../../../assets/images/ROMI_logo_white.svg" alt="logo">
+  <img src="../../../../assets/images/ROMI_logo_white.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              main
+              powermanager
             
           </span>
         </div>
@@ -192,7 +192,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../../../.." class="md-tabs__link">
         
   
   
@@ -224,7 +224,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../commons/" class="md-tabs__link">
+        <a href="../../../commons/" class="md-tabs__link">
           
   
   
@@ -247,7 +247,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../usage/services_overview/" class="md-tabs__link">
+        <a href="../../../../usage/services_overview/" class="md-tabs__link">
           
   
   
@@ -265,7 +265,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../developer/" class="md-tabs__link">
+      <a href="../../../../developer/" class="md-tabs__link">
         
   
   
@@ -308,7 +308,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="https://github.com/romi/Plant-Imager3" title="Plant-Imager3" class="md-nav__button md-logo" aria-label="Plant-Imager3" data-md-component="logo">
       
-  <img src="../../../assets/images/ROMI_logo_white.svg" alt="logo">
+  <img src="../../../../assets/images/ROMI_logo_white.svg" alt="logo">
 
     </a>
     Plant-Imager3
@@ -335,7 +335,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         
   
   
@@ -482,7 +482,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../commons/" class="md-nav__link ">
+            <a href="../../../commons/" class="md-nav__link ">
               
   
   
@@ -524,7 +524,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commons/RPC/" class="md-nav__link">
+      <a href="../../../commons/RPC/" class="md-nav__link">
         
   
   
@@ -552,7 +552,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commons/cameradevice/" class="md-nav__link">
+      <a href="../../../commons/cameradevice/" class="md-nav__link">
         
   
   
@@ -580,7 +580,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commons/controller_device/" class="md-nav__link">
+      <a href="../../../commons/controller_device/" class="md-nav__link">
         
   
   
@@ -608,7 +608,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commons/deviceregistry/" class="md-nav__link">
+      <a href="../../../commons/deviceregistry/" class="md-nav__link">
         
   
   
@@ -651,7 +651,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../commons/examples/" class="md-nav__link ">
+            <a href="../../../commons/examples/" class="md-nav__link ">
               
   
   
@@ -693,7 +693,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commons/examples/cameraclient/" class="md-nav__link">
+      <a href="../../../commons/examples/cameraclient/" class="md-nav__link">
         
   
   
@@ -721,7 +721,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commons/examples/cameraserver/" class="md-nav__link">
+      <a href="../../../commons/examples/cameraserver/" class="md-nav__link">
         
   
   
@@ -757,7 +757,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commons/logging/" class="md-nav__link">
+      <a href="../../../commons/logging/" class="md-nav__link">
         
   
   
@@ -785,7 +785,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commons/systemd/" class="md-nav__link">
+      <a href="../../../commons/systemd/" class="md-nav__link">
         
   
   
@@ -813,7 +813,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commons/utils/" class="md-nav__link">
+      <a href="../../../commons/utils/" class="md-nav__link">
         
   
   
@@ -926,7 +926,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../" class="md-nav__link ">
               
   
   
@@ -968,7 +968,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../AppBridge/" class="md-nav__link">
+      <a href="../../AppBridge/" class="md-nav__link">
         
   
   
@@ -996,7 +996,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ImageProvider/" class="md-nav__link">
+      <a href="../../ImageProvider/" class="md-nav__link">
         
   
   
@@ -1039,7 +1039,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../PlantImagerApp/" class="md-nav__link ">
+            <a href="../../PlantImagerApp/" class="md-nav__link ">
               
   
   
@@ -1081,7 +1081,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../PlantImagerApp/Controls/" class="md-nav__link">
+      <a href="../../PlantImagerApp/Controls/" class="md-nav__link">
         
   
   
@@ -1109,7 +1109,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../PlantImagerApp/Style/" class="md-nav__link">
+      <a href="../../PlantImagerApp/Style/" class="md-nav__link">
         
   
   
@@ -1137,7 +1137,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../PlantImagerApp/rc_style/" class="md-nav__link">
+      <a href="../../PlantImagerApp/rc_style/" class="md-nav__link">
         
   
   
@@ -1180,7 +1180,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../PlantImagerApp/ttf/" class="md-nav__link ">
+            <a href="../../PlantImagerApp/ttf/" class="md-nav__link ">
               
   
   
@@ -1222,7 +1222,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../PlantImagerApp/ttf/rc_ttf/" class="md-nav__link">
+      <a href="../../PlantImagerApp/ttf/rc_ttf/" class="md-nav__link">
         
   
   
@@ -1281,7 +1281,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../camera/" class="md-nav__link ">
+            <a href="../../camera/" class="md-nav__link ">
               
   
   
@@ -1323,7 +1323,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../camera/CameraBridge/" class="md-nav__link">
+      <a href="../../camera/CameraBridge/" class="md-nav__link">
         
   
   
@@ -1351,7 +1351,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../camera/CameraVideoReceiver/" class="md-nav__link">
+      <a href="../../camera/CameraVideoReceiver/" class="md-nav__link">
         
   
   
@@ -1379,7 +1379,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../camera/PiCameraComm/" class="md-nav__link">
+      <a href="../../camera/PiCameraComm/" class="md-nav__link">
         
   
   
@@ -1407,7 +1407,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../camera/pyav_receiver/" class="md-nav__link">
+      <a href="../../camera/pyav_receiver/" class="md-nav__link">
         
   
   
@@ -1440,35 +1440,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    main
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../main/" class="md-nav__link">
         
   
   
@@ -1484,52 +1459,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#plantimager.controller.main" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;main
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" main">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#plantimager.controller.main.sigint_handler" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;sigint_handler
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1539,6 +1468,8 @@
                 
   
   
+    
+  
   
   
     
@@ -1549,15 +1480,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1_6" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../scanner/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -1581,7 +1512,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_1_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_1_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2_1_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1599,7 +1530,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scanner/dummy_cnc/" class="md-nav__link">
+      <a href="../dummy_cnc/" class="md-nav__link">
         
   
   
@@ -1627,7 +1558,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scanner/grbl/" class="md-nav__link">
+      <a href="../grbl/" class="md-nav__link">
         
   
   
@@ -1655,7 +1586,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scanner/hal/" class="md-nav__link">
+      <a href="../hal/" class="md-nav__link">
         
   
   
@@ -1683,7 +1614,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scanner/path/" class="md-nav__link">
+      <a href="../path/" class="md-nav__link">
         
   
   
@@ -1708,10 +1639,35 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../scanner/powermanager/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    powermanager
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1727,6 +1683,52 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.powermanager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;powermanager
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" powermanager">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.powermanager.activity_monitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;activity_monitor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1739,7 +1741,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scanner/rpc_controller/" class="md-nav__link">
+      <a href="../rpc_controller/" class="md-nav__link">
         
   
   
@@ -1767,7 +1769,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scanner/scan/" class="md-nav__link">
+      <a href="../scan/" class="md-nav__link">
         
   
   
@@ -1795,7 +1797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scanner/scanner/" class="md-nav__link">
+      <a href="../scanner/" class="md-nav__link">
         
   
   
@@ -1823,7 +1825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scanner/timelapse/" class="md-nav__link">
+      <a href="../timelapse/" class="md-nav__link">
         
   
   
@@ -1851,7 +1853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scanner/units/" class="md-nav__link">
+      <a href="../units/" class="md-nav__link">
         
   
   
@@ -1968,7 +1970,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../webui/" class="md-nav__link ">
+            <a href="../../../webui/" class="md-nav__link ">
               
   
   
@@ -2010,7 +2012,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/app/" class="md-nav__link">
+      <a href="../../../webui/app/" class="md-nav__link">
         
   
   
@@ -2038,7 +2040,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/carousel/" class="md-nav__link">
+      <a href="../../../webui/carousel/" class="md-nav__link">
         
   
   
@@ -2066,7 +2068,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/config/" class="md-nav__link">
+      <a href="../../../webui/config/" class="md-nav__link">
         
   
   
@@ -2094,7 +2096,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/controller_proxy/" class="md-nav__link">
+      <a href="../../../webui/controller_proxy/" class="md-nav__link">
         
   
   
@@ -2122,7 +2124,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/login/" class="md-nav__link">
+      <a href="../../../webui/login/" class="md-nav__link">
         
   
   
@@ -2150,7 +2152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/nav/" class="md-nav__link">
+      <a href="../../../webui/nav/" class="md-nav__link">
         
   
   
@@ -2178,7 +2180,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/new_user/" class="md-nav__link">
+      <a href="../../../webui/new_user/" class="md-nav__link">
         
   
   
@@ -2221,7 +2223,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../webui/pages/" class="md-nav__link ">
+            <a href="../../../webui/pages/" class="md-nav__link ">
               
   
   
@@ -2263,7 +2265,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/pages/home/" class="md-nav__link">
+      <a href="../../../webui/pages/home/" class="md-nav__link">
         
   
   
@@ -2291,7 +2293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/pages/table/" class="md-nav__link">
+      <a href="../../../webui/pages/table/" class="md-nav__link">
         
   
   
@@ -2327,7 +2329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/scan/" class="md-nav__link">
+      <a href="../../../webui/scan/" class="md-nav__link">
         
   
   
@@ -2355,7 +2357,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/utils/" class="md-nav__link">
+      <a href="../../../webui/utils/" class="md-nav__link">
         
   
   
@@ -2383,7 +2385,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/visu/" class="md-nav__link">
+      <a href="../../../webui/visu/" class="md-nav__link">
         
   
   
@@ -2411,7 +2413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/wsgi/" class="md-nav__link">
+      <a href="../../../webui/wsgi/" class="md-nav__link">
         
   
   
@@ -2512,7 +2514,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/services_overview/" class="md-nav__link">
+      <a href="../../../../usage/services_overview/" class="md-nav__link">
         
   
   
@@ -2540,7 +2542,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/services_startup/" class="md-nav__link">
+      <a href="../../../../usage/services_startup/" class="md-nav__link">
         
   
   
@@ -2568,7 +2570,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/services_usage/" class="md-nav__link">
+      <a href="../../../../usage/services_usage/" class="md-nav__link">
         
   
   
@@ -2618,7 +2620,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../developer/" class="md-nav__link ">
+            <a href="../../../../developer/" class="md-nav__link ">
               
   
   
@@ -2660,7 +2662,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../developer/guidelines/" class="md-nav__link">
+      <a href="../../../../developer/guidelines/" class="md-nav__link">
         
   
   
@@ -2688,7 +2690,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../developer/architecture/" class="md-nav__link">
+      <a href="../../../../developer/architecture/" class="md-nav__link">
         
   
   
@@ -2716,7 +2718,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../developer/RPC/" class="md-nav__link">
+      <a href="../../../../developer/RPC/" class="md-nav__link">
         
   
   
@@ -2744,7 +2746,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../developer/NTP_server.md.md" class="md-nav__link">
+      <a href="../../../../developer/NTP_server.md.md" class="md-nav__link">
         
   
   
@@ -2797,22 +2799,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#plantimager.controller.main" class="md-nav__link">
+  <a href="#plantimager.controller.scanner.powermanager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;main
+        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;powermanager
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" main">
+    <nav class="md-nav" aria-label=" powermanager">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#plantimager.controller.main.sigint_handler" class="md-nav__link">
+  <a href="#plantimager.controller.scanner.powermanager.activity_monitor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;sigint_handler
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;activity_monitor
       
     </span>
   </a>
@@ -2844,19 +2846,21 @@
   
 
 
-  <h1>main</h1>
+  <h1>powermanager</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<h2 id="plantimager.controller.main" class="doc doc-heading">
-            <span class="doc doc-object-name doc-module-name">plantimager.controller.main</span>
+<h2 id="plantimager.controller.scanner.powermanager" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">plantimager.controller.scanner.powermanager</span>
 
 
-<a href="#plantimager.controller.main" class="headerlink" title="Permanent link">Link</a></h2>
+<a href="#plantimager.controller.scanner.powermanager" class="headerlink" title="Permanent link">Link</a></h2>
 
     <div class="doc doc-contents first">
+
+        <p>Manages the switching on and off of the various components of the scanner via the GPIO</p>
 
 
 
@@ -2881,26 +2885,277 @@
 <div class="doc doc-object doc-function">
 
 
-<h3 id="plantimager.controller.main.sigint_handler" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">sigint_handler</span>
+<h3 id="plantimager.controller.scanner.powermanager.activity_monitor" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">activity_monitor</span>
 
 
-<a href="#plantimager.controller.main.sigint_handler" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>sigint_handler(sig, frame)
+<a href="#plantimager.controller.scanner.powermanager.activity_monitor" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>activity_monitor(obj, callback)
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Handle SIGINT (ctrl+c)</p>
+        <p>Wraps all methods of the given <code>obj</code> to trigger a specified callback before executing
+the original method. This is useful for monitoring or observing object activity, such
+as logging or tracking method calls.</p>
+<p>This function dynamically intercepts all methods of the input <code>obj</code> object and wraps
+them such that the <code>callback</code> function is executed prior to the method's actual
+invocation. The wrapped methods retain their arguments, return values, and
+attributes.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>obj</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#object">object</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The target object whose methods are to be monitored. All methods of this object
+will be wrapped to include the <code>callback</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>callback</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" title="typing.Callable" href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[], None]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A zero-argument callable that is executed before any method of <code>obj</code> is invoked.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#object">object</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The original <code>obj</code>, with its methods wrapped to call <code>callback</code> before
+execution.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/exceptions.html#AttributeError">AttributeError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If an attribute of <code>obj</code> cannot be fetched or set while wrapping methods.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The <code>callback</code> function is expected to handle side-effects or monitoring concerns
+(e.g., logging, notifications). This function does not guarantee thread safety if
+the <code>obj</code>'s methods are accessed simultaneously from multiple threads.</p>
+</details>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>functools.update_wrapper : Used internally to update the wrapped function's
+    metadata to match the original function.</p>
+</details>
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">functools</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> partial
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">MyClass</span>:
+<span style="color: #000080; font-weight: bold">... </span>    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">method</span>(<span style="color: #008000">self</span>, x):
+<span style="color: #000080; font-weight: bold">... </span>        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&#39;Method called with </span><span style="color: #A45A77; font-weight: bold">{</span>x<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&#39;</span>)
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>obj <span style="color: #666">=</span> MyClass()
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">my_callback</span>():
+<span style="color: #000080; font-weight: bold">... </span>    <span style="color: #008000">print</span>(<span style="color: #BA2121">&#39;Callback triggered!&#39;</span>)
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>monitored_obj <span style="color: #666">=</span> activity_monitor(obj, my_callback)
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>monitored_obj<span style="color: #666">.</span>method(<span style="color: #666">10</span>)
+<span style="color: #717171">Callback triggered!</span>
+<span style="color: #717171">Method called with 10</span>
+</code></pre></div>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>plantimager/controller/main.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
+              <summary>Source code in <code>plantimager/controller/scanner/powermanager.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">20</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">sigint_handler</span>(sig, frame):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Handle SIGINT (ctrl+c)&quot;&quot;&quot;</span>
-    QGuiApplication<span style="color: #666">.</span>quit()
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">24</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">25</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">26</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">27</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">28</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">29</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">30</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">31</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">32</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">33</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">34</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">35</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">36</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">37</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">38</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">44</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">45</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">47</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">48</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">54</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">55</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">61</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">62</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">63</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">64</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">73</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">74</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">75</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">76</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">77</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">78</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">81</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">activity_monitor</span>(obj: <span style="color: #008000">object</span>, callback: Callable[[], <span style="color: #008000; font-weight: bold">None</span>]):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    Wraps all methods of the given `obj` to trigger a specified callback before executing</span>
+<span style="color: #BA2121; font-style: italic">    the original method. This is useful for monitoring or observing object activity, such</span>
+<span style="color: #BA2121; font-style: italic">    as logging or tracking method calls.</span>
+
+<span style="color: #BA2121; font-style: italic">    This function dynamically intercepts all methods of the input `obj` object and wraps</span>
+<span style="color: #BA2121; font-style: italic">    them such that the `callback` function is executed prior to the method&#39;s actual</span>
+<span style="color: #BA2121; font-style: italic">    invocation. The wrapped methods retain their arguments, return values, and</span>
+<span style="color: #BA2121; font-style: italic">    attributes.</span>
+
+<span style="color: #BA2121; font-style: italic">    Parameters</span>
+<span style="color: #BA2121; font-style: italic">    ----------</span>
+<span style="color: #BA2121; font-style: italic">    obj : object</span>
+<span style="color: #BA2121; font-style: italic">        The target object whose methods are to be monitored. All methods of this object</span>
+<span style="color: #BA2121; font-style: italic">        will be wrapped to include the `callback`.</span>
+<span style="color: #BA2121; font-style: italic">    callback : Callable[[], None]</span>
+<span style="color: #BA2121; font-style: italic">        A zero-argument callable that is executed before any method of `obj` is invoked.</span>
+
+<span style="color: #BA2121; font-style: italic">    Returns</span>
+<span style="color: #BA2121; font-style: italic">    -------</span>
+<span style="color: #BA2121; font-style: italic">    object</span>
+<span style="color: #BA2121; font-style: italic">        The original `obj`, with its methods wrapped to call `callback` before</span>
+<span style="color: #BA2121; font-style: italic">        execution.</span>
+
+<span style="color: #BA2121; font-style: italic">    Raises</span>
+<span style="color: #BA2121; font-style: italic">    ------</span>
+<span style="color: #BA2121; font-style: italic">    AttributeError</span>
+<span style="color: #BA2121; font-style: italic">        If an attribute of `obj` cannot be fetched or set while wrapping methods.</span>
+
+<span style="color: #BA2121; font-style: italic">    Notes</span>
+<span style="color: #BA2121; font-style: italic">    -----</span>
+<span style="color: #BA2121; font-style: italic">    The `callback` function is expected to handle side-effects or monitoring concerns</span>
+<span style="color: #BA2121; font-style: italic">    (e.g., logging, notifications). This function does not guarantee thread safety if</span>
+<span style="color: #BA2121; font-style: italic">    the `obj`&#39;s methods are accessed simultaneously from multiple threads.</span>
+
+<span style="color: #BA2121; font-style: italic">    See Also</span>
+<span style="color: #BA2121; font-style: italic">    --------</span>
+<span style="color: #BA2121; font-style: italic">    functools.update_wrapper : Used internally to update the wrapped function&#39;s</span>
+<span style="color: #BA2121; font-style: italic">        metadata to match the original function.</span>
+
+<span style="color: #BA2121; font-style: italic">    Examples</span>
+<span style="color: #BA2121; font-style: italic">    --------</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; from functools import partial</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; class MyClass:</span>
+<span style="color: #BA2121; font-style: italic">    ...     def method(self, x):</span>
+<span style="color: #BA2121; font-style: italic">    ...         print(f&#39;Method called with {x}&#39;)</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; obj = MyClass()</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; def my_callback():</span>
+<span style="color: #BA2121; font-style: italic">    ...     print(&#39;Callback triggered!&#39;)</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; monitored_obj = activity_monitor(obj, my_callback)</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; monitored_obj.method(10)</span>
+<span style="color: #BA2121; font-style: italic">    Callback triggered!</span>
+<span style="color: #BA2121; font-style: italic">    Method called with 10</span>
+<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+    <span style="color: #008000; font-weight: bold">for</span> attr <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">dir</span>(obj):
+        <span style="color: #008000; font-weight: bold">if</span> inspect<span style="color: #666">.</span>ismethod(<span style="color: #008000">getattr</span>(obj, attr)):
+            original_method <span style="color: #666">=</span> <span style="color: #008000">getattr</span>(obj, attr)
+
+            <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">f</span>(<span style="color: #666">*</span>args, <span style="color: #666">**</span>kwargs):
+                callback()
+                original_method(<span style="color: #666">*</span>args, <span style="color: #666">**</span>kwargs)
+            <span style="color: #008000">setattr</span>(obj, attr, update_wrapper(f, original_method))
+    <span style="color: #008000; font-weight: bold">return</span> obj
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3016,12 +3271,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../../../assets/_markdown_exec_pyodide.js"></script>
+        <script src="../../../../assets/_markdown_exec_pyodide.js"></script>
       
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
       

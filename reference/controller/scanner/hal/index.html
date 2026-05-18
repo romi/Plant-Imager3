@@ -1662,6 +1662,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" AbstractCNC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.hal.AbstractCNC.ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ready
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.hal.AbstractCNC.standby" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;standby
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1713,6 +1741,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../powermanager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    powermanager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../rpc_controller/" class="md-nav__link">
         
   
@@ -1741,6 +1797,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../scanner/" class="md-nav__link">
         
   
@@ -1749,6 +1833,34 @@
     
   
     scanner
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timelapse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    timelapse
   
 
     
@@ -2735,6 +2847,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" AbstractCNC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.hal.AbstractCNC.ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ready
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.hal.AbstractCNC.standby" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;standby
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -2834,8 +2974,10 @@ data handling, enabling hardware independence in the scanning process.</p>
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/controller/scanner/hal.py</code></summary>
                     <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>):
-    <span style="color: #008000; font-weight: bold">pass</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">54</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>):
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_ready <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_standby <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -2848,6 +2990,54 @@ data handling, enabling hardware independence in the scanning process.</p>
 
 
 
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="plantimager.controller.scanner.hal.AbstractCNC.ready" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">ready</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#plantimager.controller.scanner.hal.AbstractCNC.ready" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>ready
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Returns True if the hardware component is ready to be used</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="plantimager.controller.scanner.hal.AbstractCNC.standby" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">standby</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#plantimager.controller.scanner.hal.AbstractCNC.standby" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>standby
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Returns True if the hardware component is on standby.</p>
+
+    </div>
+
+</div>
 
 
 

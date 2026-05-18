@@ -1638,6 +1638,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.grbl.CNC.ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ready
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.grbl.CNC.standby" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;standby
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.controller.scanner.grbl.CNC.x" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1906,6 +1928,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../powermanager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    powermanager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../rpc_controller/" class="md-nav__link">
         
   
@@ -1934,6 +1984,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../scanner/" class="md-nav__link">
         
   
@@ -1942,6 +2020,34 @@
     
   
     scanner
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timelapse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    timelapse
   
 
     
@@ -2932,6 +3038,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.grbl.CNC.ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ready
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.grbl.CNC.standby" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;standby
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.controller.scanner.grbl.CNC.x" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3446,7 +3574,8 @@ position queries, and both synchronous and asynchronous operations.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">177</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">178</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">179</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">180</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, port: <span style="color: #008000">str</span><span style="color: #666">=</span><span style="color: #BA2121">&quot;/dev/ttyUSB0&quot;</span>, baud_rate: <span style="color: #008000">int</span><span style="color: #666">=115200</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">180</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">181</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, port: <span style="color: #008000">str</span><span style="color: #666">=</span><span style="color: #BA2121">&quot;/dev/ttyUSB0&quot;</span>, baud_rate: <span style="color: #008000">int</span><span style="color: #666">=115200</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Initializes the GRBL controller.&quot;&quot;&quot;</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000">self</span><span style="color: #666">.</span>port <span style="color: #666">=</span> port
@@ -3461,6 +3590,7 @@ position queries, and both synchronous and asynchronous operations.</p>
     <span style="color: #008000">self</span><span style="color: #666">.</span>grbl_settings <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_start()
     finalize(<span style="color: #008000">self</span>, <span style="color: #008000">self</span><span style="color: #666">.</span>stop)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_ready, <span style="color: #008000">self</span><span style="color: #666">.</span>_standby <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>, <span style="color: #008000; font-weight: bold">True</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -3473,6 +3603,54 @@ position queries, and both synchronous and asynchronous operations.</p>
 
 
 
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="plantimager.controller.scanner.grbl.CNC.ready" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">ready</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#plantimager.controller.scanner.grbl.CNC.ready" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>ready
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Returns True if the hardware component is ready to be used</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="plantimager.controller.scanner.grbl.CNC.standby" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">standby</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#plantimager.controller.scanner.grbl.CNC.standby" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>standby
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Returns True if the hardware component is on standby.</p>
+
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-attribute">
 
@@ -3762,10 +3940,7 @@ position queries, and both synchronous and asynchronous operations.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">263</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span>
@@ -3788,7 +3963,10 @@ position queries, and both synchronous and asynchronous operations.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">284</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">285</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">286</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">287</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">compute_move_time</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg) <span style="color: #666">-&gt;</span> time_s:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">287</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">288</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">289</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">290</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">compute_move_time</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg) <span style="color: #666">-&gt;</span> time_s:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Compute the estimated time required to move the CNC machine to the specified coordinates.&quot;&quot;&quot;</span>
     pos <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>get_position() <span style="color: #3D7B7B; font-style: italic"># [mm, mm, deg]</span>
     logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;position: </span><span style="color: #A45A77; font-weight: bold">{</span>pos<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, desired position: (</span><span style="color: #A45A77; font-weight: bold">{</span>x<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>y<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>z<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">)&quot;</span>)
@@ -3874,15 +4052,7 @@ position queries, and both synchronous and asynchronous operations.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">826</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">827</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">828</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">829</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">830</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">831</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">832</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">833</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">834</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">834</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">835</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">836</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">837</span>
@@ -3920,7 +4090,15 @@ position queries, and both synchronous and asynchronous operations.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">869</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">870</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">871</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">872</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_grbl_settings</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">872</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">873</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">874</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">875</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">876</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">877</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">878</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">879</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">880</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_grbl_settings</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Returns the GRBL firmware settings as a dictionary.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
@@ -4077,10 +4255,7 @@ position queries, and both synchronous and asynchronous operations.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">289</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">290</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">291</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">292</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">292</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">294</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">295</span>
@@ -4125,7 +4300,10 @@ position queries, and both synchronous and asynchronous operations.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">334</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">335</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">336</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">337</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_position</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[length_mm, length_mm, deg]:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">337</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">338</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">339</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">340</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_position</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[length_mm, length_mm, deg]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Get the current XYZ position of the CNC machine by querying GRBL controller.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
@@ -4235,15 +4413,7 @@ position queries, and both synchronous and asynchronous operations.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">768</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">769</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">770</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">771</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">772</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">773</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">774</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">775</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">776</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">776</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">777</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">778</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">779</span>
@@ -4291,7 +4461,15 @@ position queries, and both synchronous and asynchronous operations.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">821</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">822</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">823</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">824</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_status</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">824</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">825</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">826</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">827</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">828</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">829</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">830</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">831</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">832</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_status</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Query and parse the current status of the GRBL controller.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
@@ -4414,10 +4592,7 @@ position queries, and both synchronous and asynchronous operations.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">411</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">412</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">413</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">414</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">414</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">415</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">416</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">417</span>
@@ -4458,7 +4633,13 @@ position queries, and both synchronous and asynchronous operations.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">452</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">453</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">454</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">455</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">home</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">455</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">456</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">457</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">458</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">459</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">home</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Performs the GRBL homing cycle and sets machine coordinates.</span>
 
 <span style="color: #BA2121; font-style: italic">    Notes</span>
@@ -4482,6 +4663,8 @@ position queries, and both synchronous and asynchronous operations.</p>
 <span style="color: #BA2121; font-style: italic">    - GRBL Homing Cycle: https://github.com/gnea/grbl/wiki/Grbl-v1.1-Commands#h---run-homing-cycle</span>
 <span style="color: #BA2121; font-style: italic">    - ``G92`` Reference: http://linuxcnc.org/docs/html/gcode/g-code.html#gcode:g92</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+    prior_ready_state <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>ready
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_standby <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #3D7B7B; font-style: italic"># Execute GRBL homing cycle to find machine zero</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>send_cmd(<span style="color: #BA2121">&quot;$H&quot;</span>, wait<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, timeout<span style="color: #666">=60</span>)
 
@@ -4503,6 +4686,7 @@ position queries, and both synchronous and asynchronous operations.</p>
     y_init <span style="color: #666">=</span> sign_y <span style="color: #666">*</span> (y_max <span style="color: #666">-</span> pulloff) <span style="color: #008000; font-weight: bold">if</span> pulloff_mask <span style="color: #666">&amp;</span> <span style="color: #666">2</span> <span style="color: #008000; font-weight: bold">else</span> sign_y <span style="color: #666">*</span> pulloff
     z_init <span style="color: #666">=</span> sign_z <span style="color: #666">*</span> (z_max <span style="color: #666">-</span> pulloff) <span style="color: #008000; font-weight: bold">if</span> pulloff_mask <span style="color: #666">&amp;</span> <span style="color: #666">4</span> <span style="color: #008000; font-weight: bold">else</span> sign_z <span style="color: #666">*</span> pulloff
     <span style="color: #008000">self</span><span style="color: #666">.</span>send_cmd(<span style="color: #BA2121">f&quot;g92 x</span><span style="color: #A45A77; font-weight: bold">{</span>x_init<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> y</span><span style="color: #A45A77; font-weight: bold">{</span>y_init<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> z</span><span style="color: #A45A77; font-weight: bold">{</span>z_init<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>, wait<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, timeout<span style="color: #666">=10</span>)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_standby <span style="color: #666">=</span> prior_ready_state
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4636,13 +4820,7 @@ in x_lims, y_lims, or z_lims.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">479</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">480</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">481</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">482</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">483</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">484</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">485</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">485</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">486</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">487</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">488</span>
@@ -4687,7 +4865,15 @@ in x_lims, y_lims, or z_lims.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">527</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">528</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">529</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">530</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">530</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">531</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">532</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">533</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">534</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">535</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">536</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">537</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">538</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Move the CNC machine to specified coordinates and wait until the target position is reached.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -4716,6 +4902,7 @@ in x_lims, y_lims, or z_lims.</p>
 <span style="color: #BA2121; font-style: italic">    - Units are in millimeters (``G21`` mode)</span>
 <span style="color: #BA2121; font-style: italic">    - The method will block until the movement is complete</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_standby <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #3D7B7B; font-style: italic"># Validate that the target coordinates are within machine limits</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_check_move(x, y, z)
 
@@ -4739,6 +4926,7 @@ in x_lims, y_lims, or z_lims.</p>
     <span style="color: #008000; font-weight: bold">if</span> time<span style="color: #666">.</span>time() <span style="color: #666">-</span> t0 <span style="color: #666">&lt;</span> travel_time:
         time<span style="color: #666">.</span>sleep(travel_time <span style="color: #666">-</span> (time<span style="color: #666">.</span>time() <span style="color: #666">-</span> t0))
     <span style="color: #008000">self</span><span style="color: #666">.</span>wait_until_immobile(<span style="color: #666">30</span>)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_standby <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4872,15 +5060,7 @@ machine's z_lims range.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">532</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">533</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">534</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">535</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">536</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">537</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">538</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">539</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">540</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">540</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">541</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">542</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">543</span>
@@ -4922,7 +5102,15 @@ machine's z_lims range.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">579</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">580</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">581</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">582</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto_async</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg) <span style="color: #666">-&gt;</span> <span style="color: #008000">bytes</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">582</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">583</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">584</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">585</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">586</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">587</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">588</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">589</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">590</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto_async</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg) <span style="color: #666">-&gt;</span> <span style="color: #008000">bytes</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Asynchronously move the CNC machine to specified coordinates using G0 rapid positioning.</span>
 
 <span style="color: #BA2121; font-style: italic">    This method executes a rapid linear movement (G0) to the specified position without</span>
@@ -5014,15 +5202,7 @@ get_grbl_settings : Method that retrieves current GRBL settings</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">874</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">875</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">876</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">877</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">878</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">879</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">880</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">881</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">882</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">882</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">883</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">884</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">885</span>
@@ -5043,7 +5223,15 @@ get_grbl_settings : Method that retrieves current GRBL settings</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">900</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">901</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">902</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">903</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">print_grbl_settings</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">903</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">904</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">905</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">906</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">907</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">908</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">909</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">910</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">911</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">print_grbl_settings</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Print the GRBL firmware settings in a formatted, human-readable form.</span>
 
 <span style="color: #BA2121; font-style: italic">    Notes</span>
@@ -5162,15 +5350,7 @@ get_grbl_settings : Method that retrieves current GRBL settings</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">675</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">676</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">677</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">678</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">679</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">680</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">681</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">682</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">683</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">683</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">684</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">685</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">686</span>
@@ -5253,7 +5433,15 @@ get_grbl_settings : Method that retrieves current GRBL settings</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">763</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">764</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">765</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">766</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">send_cmd</span>(<span style="color: #008000">self</span>, cmd: <span style="color: #008000">str</span>, wait<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, timeout<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">766</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">767</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">768</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">769</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">770</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">771</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">772</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">773</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">774</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">send_cmd</span>(<span style="color: #008000">self</span>, cmd: <span style="color: #008000">str</span>, wait<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, timeout<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Send a command to the GRBL controller and return its response.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -5397,10 +5585,7 @@ get_grbl_settings : Method that retrieves current GRBL settings</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">246</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">248</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span>
@@ -5410,7 +5595,10 @@ get_grbl_settings : Method that retrieves current GRBL settings</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">257</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Close the serial connection to the GRBL controller.</span>
 
 <span style="color: #BA2121; font-style: italic">    Notes</span>
@@ -5501,15 +5689,7 @@ get_grbl_settings : Method that retrieves current GRBL settings</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">584</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">585</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">586</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">587</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">588</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">589</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">590</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">591</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">592</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">592</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">593</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">594</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">595</span>
@@ -5547,7 +5727,15 @@ get_grbl_settings : Method that retrieves current GRBL settings</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">627</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">628</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">629</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">630</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">wait</span>(<span style="color: #008000">self</span>, timeout: <span style="color: #008000">int</span><span style="color: #666">=60</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">630</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">631</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">632</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">633</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">634</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">635</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">636</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">637</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">638</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">wait</span>(<span style="color: #008000">self</span>, timeout: <span style="color: #008000">int</span><span style="color: #666">=60</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Wait for the CNC machine to complete any ongoing operations and returns the last response.</span>
 
 <span style="color: #BA2121; font-style: italic">    Notes</span>
@@ -5685,15 +5873,7 @@ It handles interleaving 'ok' responses from previous asynchronous commands.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/grbl.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">632</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">633</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">634</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">635</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">636</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">637</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">638</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">639</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">640</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">640</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">641</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">642</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">643</span>
@@ -5726,7 +5906,15 @@ It handles interleaving 'ok' responses from previous asynchronous commands.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">670</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">671</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">672</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">673</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">wait_until_immobile</span>(<span style="color: #008000">self</span>, timeout: <span style="color: #008000">int</span><span style="color: #666">=60</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">673</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">674</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">675</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">676</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">677</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">678</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">679</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">680</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">681</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">wait_until_immobile</span>(<span style="color: #008000">self</span>, timeout: <span style="color: #008000">int</span><span style="color: #666">=60</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Wait for the CNC machine to stop moving by monitoring real-time position.</span>
 
 <span style="color: #BA2121; font-style: italic">    This method repeatedly queries the machine status and waits until the reported</span>
