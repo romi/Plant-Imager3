@@ -1822,6 +1822,34 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.timelapse.TimeLapse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TimeLapse
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" TimeLapse">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.timelapse.TimeLapse.scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.controller.scanner.timelapse.parse_duration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2811,6 +2839,34 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.timelapse.TimeLapse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TimeLapse
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" TimeLapse">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.timelapse.TimeLapse.scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.controller.scanner.timelapse.parse_duration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2881,6 +2937,355 @@
 
 
 
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="plantimager.controller.scanner.timelapse.TimeLapse" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">TimeLapse</span>
+
+
+<a href="#plantimager.controller.scanner.timelapse.TimeLapse" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>TimeLapse(cnc, db_url, cameras, path, timelapse_name, config, power_manager, parent<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="PySide6.QtCore.QObject">QObject</span></code></p>
+
+
+
+
+
+
+
+
+
+
+                  <details class="mkdocstrings-source">
+                    <summary>Source code in <code>plantimager/controller/scanner/timelapse.py</code></summary>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">138</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">139</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">141</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">142</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">143</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">144</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">145</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">146</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">147</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">149</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">151</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">152</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">153</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">154</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">155</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">156</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">159</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">161</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">162</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">163</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">164</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">165</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">171</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">172</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">174</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">175</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">176</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">177</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">178</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, cnc: AbstractCNC, db_url: <span style="color: #008000">str</span>, cameras: <span style="color: #008000">list</span>[PiCameraComm], path: Path,
+             timelapse_name: <span style="color: #008000">str</span>, config: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, Any], power_manager: PowerManager, parent<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>):
+    <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>(parent)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>cnc <span style="color: #666">=</span> cnc
+    <span style="color: #008000">self</span><span style="color: #666">.</span>db_url <span style="color: #666">=</span> db_url
+    <span style="color: #008000">self</span><span style="color: #666">.</span>cameras <span style="color: #666">=</span> cameras
+    <span style="color: #008000">self</span><span style="color: #666">.</span>path <span style="color: #666">=</span> path
+    <span style="color: #008000">self</span><span style="color: #666">.</span>id <span style="color: #666">=</span> timelapse_name
+    <span style="color: #008000">self</span><span style="color: #666">.</span>config <span style="color: #666">=</span> config
+
+    <span style="color: #3D7B7B; font-style: italic"># timelapse settings</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_setup_timelapse_settings()
+
+    <span style="color: #3D7B7B; font-style: italic"># Dynamically import and instantiate the path class</span>
+    path_module <span style="color: #666">=</span> importlib<span style="color: #666">.</span>import_module(<span style="color: #BA2121">&quot;plantimager.controller.scanner.path&quot;</span>)
+    path_cfg <span style="color: #666">=</span> config[<span style="color: #BA2121">&quot;ScanPath&quot;</span>]
+    <span style="color: #008000">self</span><span style="color: #666">.</span>scan_path <span style="color: #666">=</span> <span style="color: #008000">getattr</span>(path_module, path_cfg[<span style="color: #BA2121">&quot;class_name&quot;</span>])(<span style="color: #666">**</span>path_cfg[<span style="color: #BA2121">&quot;kwargs&quot;</span>])
+    <span style="color: #008000">self</span><span style="color: #666">.</span>pathInfoChanged<span style="color: #666">.</span>emit(<span style="color: #008000">self</span><span style="color: #666">.</span>path_info)
+
+    <span style="color: #3D7B7B; font-style: italic"># Update progress tracking based on path length</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_max_progress <span style="color: #666">=</span> <span style="color: #008000">len</span>(<span style="color: #008000">self</span><span style="color: #666">.</span>scan_path)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>progressChanged<span style="color: #666">.</span>emit(<span style="color: #008000">self</span><span style="color: #666">.</span>current_idx, <span style="color: #008000">self</span><span style="color: #666">.</span>_max_progress)
+
+    <span style="color: #3D7B7B; font-style: italic"># Store metadata for the scan</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>dataset_metadata <span style="color: #666">=</span> config[<span style="color: #BA2121">&quot;Metadata&quot;</span>][<span style="color: #BA2121">&quot;object&quot;</span>]  <span style="color: #3D7B7B; font-style: italic"># Biological metadata</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>hw_metadata <span style="color: #666">=</span> config[<span style="color: #BA2121">&quot;Metadata&quot;</span>][<span style="color: #BA2121">&quot;hardware&quot;</span>]  <span style="color: #3D7B7B; font-style: italic"># Hardware metadata</span>
+
+    <span style="color: #3D7B7B; font-style: italic"># Configure cameras</span>
+    <span style="color: #008000; font-weight: bold">for</span> camera <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>cameras:
+        <span style="color: #008000; font-weight: bold">if</span> camera<span style="color: #666">.</span>name <span style="color: #A2F; font-weight: bold">in</span> config:
+            res <span style="color: #666">=</span> config[camera<span style="color: #666">.</span>name][<span style="color: #BA2121">&quot;res_x&quot;</span>], config[camera<span style="color: #666">.</span>name][<span style="color: #BA2121">&quot;res_y&quot;</span>]
+            camera<span style="color: #666">.</span>resolution <span style="color: #666">=</span> res
+
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_state <span style="color: #666">=</span> TimeLapseState<span style="color: #666">.</span>STANDBY
+    <span style="color: #008000">self</span><span style="color: #666">.</span>power_manager <span style="color: #666">=</span> power_manager
+
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_next_scan_timer <span style="color: #666">=</span> QTimer(<span style="color: #008000">self</span>, singleShot<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_next_scan_timer<span style="color: #666">.</span>timeout<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>_trigger_next_scan)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_powerup_timer <span style="color: #666">=</span> QTimer(<span style="color: #008000">self</span>, singleShot<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_powerup_timer<span style="color: #666">.</span>timeout<span style="color: #666">.</span>connect(power_manager<span style="color: #666">.</span>prepare_for_scan)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_setup_next_scan_timer()
+</code></pre></div></td></tr></table></div>
+                  </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="plantimager.controller.scanner.timelapse.TimeLapse.scan" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">scan</span>
+
+
+<a href="#plantimager.controller.scanner.timelapse.TimeLapse.scan" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>scan(index)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Executes a scheduled scan based on the provided index.</p>
+<p>This method updates the current scanning index and triggers the <code>progressChanged</code> signal.
+It determines the interval to the next scheduled time and either waits for the appropriate
+time, proceeds with the scan, or skips it if the grace period has been violated.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>index</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The index of the scan to execute.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/exceptions.html#ValueError">ValueError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the provided <code>index</code> is invalid.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <ul>
+<li>The method computes the interval between the current time and the next scheduled time.
+  If the interval is greater than the <code>grace_period</code>, the method pauses execution until
+  the scheduled time.</li>
+<li>If the time has already passed and exceeded the grace period, the scan is skipped.</li>
+<li>Sleeps the thread until the scheduled time arrives if the scan occurs too early.</li>
+</ul>
+</details>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>Scan.scan : Executes the actual scan process.</p>
+</details>
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <p>Suppose you have a scheduler with predefined <code>schedule_times</code> and <code>grace_period</code>, you can
+invoke the following method by supplying a valid scan index:</p>
+    <div class="language-pycon highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>scheduler<span style="color: #666">.</span>scan(<span style="color: #666">2</span>)
+</code></pre></div>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>plantimager/controller/scanner/timelapse.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">268</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">270</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">271</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">272</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">273</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">274</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">275</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">276</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">277</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">278</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">279</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">280</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">281</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">282</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">283</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">284</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">285</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">286</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">287</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">288</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">289</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">290</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">291</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">292</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">294</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">295</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">296</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">297</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">298</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">299</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">300</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">301</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">302</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">303</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">304</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">305</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">306</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">307</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">308</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">309</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">310</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">311</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">312</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">313</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">314</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">315</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">316</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">317</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">318</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">319</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">320</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">321</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">int</span>)
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">scan</span>(<span style="color: #008000">self</span>, index: <span style="color: #008000">int</span>):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    Executes a scheduled scan based on the provided index.</span>
+
+<span style="color: #BA2121; font-style: italic">    This method updates the current scanning index and triggers the `progressChanged` signal.</span>
+<span style="color: #BA2121; font-style: italic">    It determines the interval to the next scheduled time and either waits for the appropriate</span>
+<span style="color: #BA2121; font-style: italic">    time, proceeds with the scan, or skips it if the grace period has been violated.</span>
+
+<span style="color: #BA2121; font-style: italic">    Parameters</span>
+<span style="color: #BA2121; font-style: italic">    ----------</span>
+<span style="color: #BA2121; font-style: italic">    index : int</span>
+<span style="color: #BA2121; font-style: italic">        The index of the scan to execute.</span>
+
+<span style="color: #BA2121; font-style: italic">    Raises</span>
+<span style="color: #BA2121; font-style: italic">    ------</span>
+<span style="color: #BA2121; font-style: italic">    ValueError</span>
+<span style="color: #BA2121; font-style: italic">        If the provided `index` is invalid.</span>
+
+<span style="color: #BA2121; font-style: italic">    Notes</span>
+<span style="color: #BA2121; font-style: italic">    -----</span>
+<span style="color: #BA2121; font-style: italic">    - The method computes the interval between the current time and the next scheduled time.</span>
+<span style="color: #BA2121; font-style: italic">      If the interval is greater than the `grace_period`, the method pauses execution until</span>
+<span style="color: #BA2121; font-style: italic">      the scheduled time.</span>
+<span style="color: #BA2121; font-style: italic">    - If the time has already passed and exceeded the grace period, the scan is skipped.</span>
+<span style="color: #BA2121; font-style: italic">    - Sleeps the thread until the scheduled time arrives if the scan occurs too early.</span>
+
+<span style="color: #BA2121; font-style: italic">    See Also</span>
+<span style="color: #BA2121; font-style: italic">    --------</span>
+<span style="color: #BA2121; font-style: italic">    Scan.scan : Executes the actual scan process.</span>
+
+<span style="color: #BA2121; font-style: italic">    Examples</span>
+<span style="color: #BA2121; font-style: italic">    --------</span>
+<span style="color: #BA2121; font-style: italic">    Suppose you have a scheduler with predefined `schedule_times` and `grace_period`, you can</span>
+<span style="color: #BA2121; font-style: italic">    invoke the following method by supplying a valid scan index:</span>
+
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; scheduler.scan(2)</span>
+<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>current_idx <span style="color: #666">=</span> index
+    <span style="color: #008000">self</span><span style="color: #666">.</span>progressChanged<span style="color: #666">.</span>emit(<span style="color: #008000">self</span><span style="color: #666">.</span>current_idx, <span style="color: #008000">self</span><span style="color: #666">.</span>max_progress)
+
+    next_time <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>schedule_times[<span style="color: #008000">self</span><span style="color: #666">.</span>next_idx]
+    current_time <span style="color: #666">=</span> datetime<span style="color: #666">.</span>datetime<span style="color: #666">.</span>now()
+    interval <span style="color: #666">=</span> next_time <span style="color: #666">-</span> current_time
+    <span style="color: #008000; font-weight: bold">if</span> interval<span style="color: #666">.</span>total_seconds() <span style="color: #666">&gt;</span> <span style="color: #008000">self</span><span style="color: #666">.</span>grace_period:
+        logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">&quot;Woke up too early, sleeping until time.&quot;</span>)
+        time<span style="color: #666">.</span>sleep(interval<span style="color: #666">.</span>total_seconds())
+    <span style="color: #008000; font-weight: bold">elif</span> interval<span style="color: #666">.</span>total_seconds() <span style="color: #666">&lt;=</span> <span style="color: #666">-</span><span style="color: #008000">self</span><span style="color: #666">.</span>grace_period:
+        <span style="color: #3D7B7B; font-style: italic"># date and grace period have passed</span>
+        logger<span style="color: #666">.</span>warning(
+            <span style="color: #BA2121">f&quot;Scan </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>next_idx<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> planned at </span><span style="color: #A45A77; font-weight: bold">{</span>next_time<span style="color: #666">.</span>isoformat()<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> timed out at </span><span style="color: #A45A77; font-weight: bold">{</span>current_time<span style="color: #666">.</span>isoformat()<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">. Skipping.&quot;</span>
+        )
+        <span style="color: #008000; font-weight: bold">return</span>
+    scan <span style="color: #666">=</span> Scan(
+        <span style="color: #008000">self</span><span style="color: #666">.</span>power_manager<span style="color: #666">.</span>cnc, <span style="color: #008000">self</span><span style="color: #666">.</span>db_url, <span style="color: #008000">self</span><span style="color: #666">.</span>cameras, <span style="color: #008000">self</span><span style="color: #666">.</span>path, <span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>id<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">_</span><span style="color: #A45A77; font-weight: bold">{</span>current_time<span style="color: #666">.</span>isoformat()<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>, <span style="color: #008000">self</span><span style="color: #666">.</span>config, parent<span style="color: #666">=</span><span style="color: #008000">self</span>
+    )
+    scan<span style="color: #666">.</span>scan()
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
 
 <div class="doc doc-object doc-function">
 
@@ -2940,7 +3345,9 @@ may be omitted if not needed (e.g., <code>3h-20m</code>).</p>
             <td>
               <div class="doc-md-description">
                 <p>A compiled regular expression pattern used to match and extract components from
-<code>duration_string</code>. Defaults to <code>DURATION_REGEXP</code>.</p>
+<code>duration_string</code>. Defaults to <code>DURATION_REGEXP</code>.
+Group Names must be keyword arguments of the datetime.timedelta objects constructor.
+(e.g., days, hours, minutes, seconds)</p>
               </div>
             </td>
             <td>
@@ -3025,13 +3432,7 @@ may be omitted if not needed (e.g., <code>3h-20m</code>).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/timelapse.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">26</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">27</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">28</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">29</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">30</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">31</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">32</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">32</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">33</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">34</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">35</span>
@@ -3081,7 +3482,15 @@ may be omitted if not needed (e.g., <code>3h-20m</code>).</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">81</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parse_duration</span>(duration_string, <span style="color: #666">/</span>, duration_regexp: re<span style="color: #666">.</span>Pattern <span style="color: #666">=</span> DURATION_REGEXP):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">84</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">85</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">86</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">87</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">88</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">89</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">90</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parse_duration</span>(duration_string, <span style="color: #666">/</span>, duration_regexp: re<span style="color: #666">.</span>Pattern <span style="color: #666">=</span> DURATION_REGEXP):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Parses a duration string and converts it into a `datetime.timedelta` object.</span>
 
@@ -3098,6 +3507,8 @@ may be omitted if not needed (e.g., <code>3h-20m</code>).</p>
 <span style="color: #BA2121; font-style: italic">    duration_regexp : re.Pattern, optional</span>
 <span style="color: #BA2121; font-style: italic">        A compiled regular expression pattern used to match and extract components from</span>
 <span style="color: #BA2121; font-style: italic">        `duration_string`. Defaults to `DURATION_REGEXP`.</span>
+<span style="color: #BA2121; font-style: italic">        Group Names must be keyword arguments of the datetime.timedelta objects constructor.</span>
+<span style="color: #BA2121; font-style: italic">        (e.g., days, hours, minutes, seconds)</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>

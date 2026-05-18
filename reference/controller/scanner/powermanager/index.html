@@ -3029,11 +3029,7 @@ the <code>obj</code>'s methods are accessed simultaneously from multiple threads
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/powermanager.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">20</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">24</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">24</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">25</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">26</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">27</span>
@@ -3092,7 +3088,11 @@ the <code>obj</code>'s methods are accessed simultaneously from multiple threads
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">81</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">activity_monitor</span>(obj: <span style="color: #008000">object</span>, callback: Callable[[], <span style="color: #008000; font-weight: bold">None</span>]):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">84</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">85</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">86</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">87</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">activity_monitor</span>(obj: <span style="color: #008000">object</span>, callback: Callable[[], <span style="color: #008000; font-weight: bold">None</span>]):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Wraps all methods of the given `obj` to trigger a specified callback before executing</span>
 <span style="color: #BA2121; font-style: italic">    the original method. This is useful for monitoring or observing object activity, such</span>
