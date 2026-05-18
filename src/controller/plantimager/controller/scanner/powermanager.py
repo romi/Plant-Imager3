@@ -3,6 +3,7 @@ Manages the switching on and off of the various components of the scanner via th
 """
 import os
 import inspect
+from enum import StrEnum
 from typing import Callable
 from functools import update_wrapper
 
@@ -10,7 +11,10 @@ import serial
 from PySide6.QtCore import QObject, Signal, Slot, Property, QTimer
 import gpio
 
+from plantimager.commons.logging import create_logger
 from plantimager.controller.scanner.grbl import CNC
+
+logger = create_logger(__name__)
 
 GPIO_CNC_PIN = int(os.getenv("GPIO_CNC_PIN", 17))
 GPIO_LIGHTS_PIN = int(os.getenv("GPIO_LIGHTS_PIN", 27))
@@ -82,10 +86,15 @@ def activity_monitor(obj: object, callback: Callable[[], None]):
             setattr(obj, attr, update_wrapper(f, original_method))
     return obj
 
+class PowerManagerMode(StrEnum):
+    SCAN = "scan"
+    AUTO = "auto"  # automatic light schedule
+
 class PowerManager(QObject):
 
     cnc: CNC | None
     cnc_ready = Signal(CNC)
+    modeChanged = Signal(str)
 
     def __init__(self, warmup_period: int, parent=None):
         super().__init__(parent)
@@ -100,6 +109,8 @@ class PowerManager(QObject):
         self.cnc_timer.timeout.connect(self.cnc_power_off)
         self.cnc_connect_timer = QTimer(parent=self, singleShot=False, interval=1200)
         self.cnc_connect_timer.timeout.connect(self._cnc_connect)
+        self._mode: PowerManagerMode = PowerManagerMode.AUTO
+        self.modeChanged.connect(self._on_mode_changed)
 
     @Slot
     def _cnc_connect(self):
@@ -144,11 +155,37 @@ class PowerManager(QObject):
     def glights_power_off(self):
         gpio.write(GPIO_GROWTH_LIGHTS_PIN, True)
 
-    @Slot
-    def prepare_for_scan(self):
+    @Property(str, notify=modeChanged)
+    def mode(self) -> PowerManagerMode:
+        return self._mode
+    @mode.setter
+    def mode(self, mode: PowerManagerMode):
+        if self._mode != mode:
+            self._mode = mode
+            self.modeChanged.emit(mode)
+
+    @Slot(str)
+    def _on_mode_changed(self, mode):
+        if mode == PowerManagerMode.AUTO:
+            self._resume_auto()
+        elif mode == PowerManagerMode.SCAN:
+            self._prepare_for_scan()
+        else:
+            logger.error(f"Unknown mode: {mode}")
+
+    def _prepare_for_scan(self):
         self.cnc_power_on()
         self.lights_power_on()
         self.glights_power_off()
 
+    def _resume_auto(self):
+        self.cnc_power_on()
+        self.lights_power_off()
+        self.glights_power_on()
+
     def get_cnc(self):
         return self.cnc
+
+    def set_light_policy(self, policy: dict):
+        # For future automatic light management
+        pass
