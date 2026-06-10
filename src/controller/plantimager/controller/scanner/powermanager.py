@@ -112,7 +112,7 @@ class PowerManager(QObject):
         self._mode: PowerManagerMode = PowerManagerMode.AUTO
         self.modeChanged.connect(self._on_mode_changed)
 
-    @Slot
+    @Slot()
     def _cnc_connect(self):
         try:
             if self.cnc is None: self.cnc = CNC()
@@ -126,12 +126,12 @@ class PowerManager(QObject):
             self.cnc_timer.start()
             self.cnc_ready.emit(self.cnc)
 
-    @Slot
+    @Slot()
     def cnc_power_on(self):
         gpio.write(GPIO_CNC_PIN, True)
         self.cnc_connect_timer.start()
 
-    @Slot
+    @Slot()
     def cnc_power_off(self):
         self.cnc.stop()
         self.cnc_timer.stop()
@@ -139,19 +139,19 @@ class PowerManager(QObject):
         self.cnc = None
         gpio.write(GPIO_CNC_PIN, False)
 
-    @Slot
+    @Slot()
     def lights_power_on(self):
         gpio.write(GPIO_LIGHTS_PIN, True)
 
-    @Slot
+    @Slot()
     def lights_power_off(self):
         gpio.write(GPIO_LIGHTS_PIN, True)
 
-    @Slot
+    @Slot()
     def glights_power_on(self):
         gpio.write(GPIO_GROWTH_LIGHTS_PIN, True)
 
-    @Slot
+    @Slot()
     def glights_power_off(self):
         gpio.write(GPIO_GROWTH_LIGHTS_PIN, True)
 
