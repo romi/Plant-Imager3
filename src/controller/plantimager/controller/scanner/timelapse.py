@@ -319,6 +319,7 @@ class TimeLapse(QObject):
             self.power_manager.cnc, self.db_url, self.cameras, self.path, f"{self.id}_{current_time.isoformat()}", self.config, parent=self
         )
         scan.scan()
+        self.scans.append(scan)
 
     @Slot()
     def _trigger_next_scan(self):

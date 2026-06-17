@@ -205,12 +205,11 @@ class Scan(QObject):
     progressChanged = Signal(int)
     maxProgressChanged = Signal(int)
 
-    def __init__(self, cnc: AbstractCNC, db_url: str, cameras: list[PiCameraComm], path: Path, scan_id: str,
+    def __init__(self, cnc: AbstractCNC, db_client: PlantDBClient, cameras: list[PiCameraComm], path: Path, scan_id: str,
                  config: dict[str, Any], parent=None):
         super().__init__(parent)
         self.cnc = cnc
-        self.db_url = db_url
-        self.db_client = PlantDBClient(db_url)
+        self.db_client = db_client
         self.uploader = DataUploader(self.db_client, queue_size=DB_UPLOADER_QUEUE_SIZE)
         self.cameras = cameras
         self.path = path
@@ -412,7 +411,6 @@ class Scan(QObject):
         # Validate all required components are available
         if not self.config: raise RuntimeError("Config not set for scan")
         if not self.path: raise RuntimeError("Path not set for scan")
-        if not self.db_url: raise RuntimeError("DB url not set for scan")
         if not self.db_client: raise RuntimeError("DB client not set for scan")
         if not self.uploader: raise RuntimeError("Uploader not set for scan")
         if not self.scan_id: raise RuntimeError("Scan id not set for scan")
