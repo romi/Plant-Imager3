@@ -3243,7 +3243,8 @@ invoke the following method by supplying a valid scan index:</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">318</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">319</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">320</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">321</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">int</span>)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">321</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">322</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">int</span>)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">scan</span>(<span style="color: #008000">self</span>, index: <span style="color: #008000">int</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Executes a scheduled scan based on the provided index.</span>
@@ -3300,6 +3301,7 @@ invoke the following method by supplying a valid scan index:</p>
         <span style="color: #008000">self</span><span style="color: #666">.</span>power_manager<span style="color: #666">.</span>cnc, <span style="color: #008000">self</span><span style="color: #666">.</span>db_url, <span style="color: #008000">self</span><span style="color: #666">.</span>cameras, <span style="color: #008000">self</span><span style="color: #666">.</span>path, <span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>id<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">_</span><span style="color: #A45A77; font-weight: bold">{</span>current_time<span style="color: #666">.</span>isoformat()<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>, <span style="color: #008000">self</span><span style="color: #666">.</span>config, parent<span style="color: #666">=</span><span style="color: #008000">self</span>
     )
     scan<span style="color: #666">.</span>scan()
+    <span style="color: #008000">self</span><span style="color: #666">.</span>scans<span style="color: #666">.</span>append(scan)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

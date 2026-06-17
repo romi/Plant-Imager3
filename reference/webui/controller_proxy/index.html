@@ -3711,8 +3711,7 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">781</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">782</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">782</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">783</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">784</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">785</span>
@@ -3764,7 +3763,8 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">831</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">832</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">833</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">834</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">execute</span>(<span style="color: #008000">self</span>, method_name: <span style="color: #008000">str</span>, params: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">object</span>]:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">834</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">835</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">execute</span>(<span style="color: #008000">self</span>, method_name: <span style="color: #008000">str</span>, params: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">object</span>]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Execute a remote method on the RPC server.</span>
 
@@ -4145,8 +4145,7 @@ and <code>RPCClient</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">671</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">672</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">672</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">673</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">674</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">675</span>
@@ -4192,7 +4191,8 @@ and <code>RPCClient</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">715</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">716</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">717</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">718</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@classmethod</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">718</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">719</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@classmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_interface</span>(<span style="color: #008000">cls</span>, interface: <span style="color: #008000">type</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Class decorator to bind an interface to an RPCClient subclass.</span>
@@ -4441,8 +4441,7 @@ If the server responds, it logs the reply.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">836</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">837</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">837</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">838</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">839</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">840</span>
@@ -4459,7 +4458,8 @@ If the server responds, it logs the reply.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">851</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">852</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">853</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">854</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop_server</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">854</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">855</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop_server</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Request the connected RPC server to shut down.</span>
 

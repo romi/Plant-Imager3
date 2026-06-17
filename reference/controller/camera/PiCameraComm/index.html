@@ -2972,8 +2972,7 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/controller/camera/PiCameraComm.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">55</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
@@ -2986,7 +2985,9 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, parent: QObject <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, parent: QObject <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
     QObject<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, parent)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_state <span style="color: #666">=</span> CameraStates<span style="color: #666">.</span>DISCONNECTED
     <span style="color: #008000">self</span><span style="color: #666">.</span>_context <span style="color: #666">=</span> context
@@ -2999,6 +3000,7 @@
         pool<span style="color: #666">.</span>shutdown(wait<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>)
         <span style="color: #008000; font-weight: bold">if</span> camera:
             camera<span style="color: #666">.</span>stop_server()
+        <span style="color: #008000; font-weight: bold">if</span> os<span style="color: #666">.</span>getenv(<span style="color: #BA2121">&quot;PI_LOG_FINALIZE&quot;</span>): logger<span style="color: #666">.</span>info(<span style="color: #BA2121">&quot;PiCameraComm finalized&quot;</span>)
 
     finalize(<span style="color: #008000">self</span>, _finalizer, <span style="color: #008000">self</span><span style="color: #666">.</span>_thread_pool, <span style="color: #008000">self</span><span style="color: #666">.</span>_camera)
 </code></pre></div></td></tr></table></div>
@@ -3059,9 +3061,7 @@ When camera.get_image() returns and the result is available, the signal imageRea
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/camera/PiCameraComm.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">132</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">133</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">134</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">134</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">135</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">136</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">137</span>
@@ -3085,7 +3085,9 @@ When camera.get_image() returns and the result is available, the signal imageRea
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">155</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">156</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">bool</span>, result<span style="color: #666">=</span>Future)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">159</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">bool</span>, result<span style="color: #666">=</span>Future)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getImage</span>(<span style="color: #008000">self</span>, lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> Future[<span style="color: #008000">tuple</span>[<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>]] <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Submits a call to camera.get_image() and returns a future representing the pending result.</span>

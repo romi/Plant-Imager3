@@ -3555,9 +3555,9 @@ about where and why the failure occurred.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">95</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">96</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">97</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, error: <span style="color: #008000">str</span>, traceback: <span style="color: #008000">str</span>):
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">96</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">97</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">98</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, error: <span style="color: #008000">str</span>, traceback: <span style="color: #008000">str</span>):
     <span style="color: #008000">self</span><span style="color: #666">.</span>error <span style="color: #666">=</span> error
     <span style="color: #008000">self</span><span style="color: #666">.</span>traceback <span style="color: #666">=</span> traceback
 </code></pre></div></td></tr></table></div>
@@ -3803,8 +3803,7 @@ during inventory exchange).</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">597</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">598</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">598</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">599</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">600</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">601</span>
@@ -3875,7 +3874,8 @@ during inventory exchange).</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">666</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">667</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">668</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">669</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, timeout<span style="color: #666">=1000</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">669</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">670</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, timeout<span style="color: #666">=1000</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Initialize a new RPCClient.</span>
 
@@ -3945,7 +3945,7 @@ during inventory exchange).</p>
         <span style="color: #008000; font-weight: bold">if</span> receiver:
             receiver<span style="color: #666">.</span>stop()
             receiver<span style="color: #666">.</span>join(<span style="color: #666">2</span>)
-        logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">&quot;Client finalized&quot;</span>)
+        <span style="color: #008000; font-weight: bold">if</span> os<span style="color: #666">.</span>getenv(<span style="color: #BA2121">&quot;PI_LOG_FINALIZE&quot;</span>) : logger<span style="color: #666">.</span>info(<span style="color: #BA2121">&quot;RPCClient finalized&quot;</span>)
 
     finalize(<span style="color: #008000">self</span>, _finalizer, <span style="color: #008000">self</span><span style="color: #666">.</span>socket, <span style="color: #008000">self</span><span style="color: #666">.</span>_signal_receiver)
 </code></pre></div></td></tr></table></div>
@@ -4077,8 +4077,7 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">781</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">782</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">782</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">783</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">784</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">785</span>
@@ -4130,7 +4129,8 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">831</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">832</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">833</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">834</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">execute</span>(<span style="color: #008000">self</span>, method_name: <span style="color: #008000">str</span>, params: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">object</span>]:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">834</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">835</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">execute</span>(<span style="color: #008000">self</span>, method_name: <span style="color: #008000">str</span>, params: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">object</span>]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Execute a remote method on the RPC server.</span>
 
@@ -4293,8 +4293,7 @@ and <code>RPCClient</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">671</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">672</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">672</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">673</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">674</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">675</span>
@@ -4340,7 +4339,8 @@ and <code>RPCClient</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">715</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">716</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">717</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">718</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@classmethod</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">718</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">719</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@classmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_interface</span>(<span style="color: #008000">cls</span>, interface: <span style="color: #008000">type</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Class decorator to bind an interface to an RPCClient subclass.</span>
@@ -4414,8 +4414,7 @@ If the server responds, it logs the reply.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">836</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">837</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">837</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">838</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">839</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">840</span>
@@ -4432,7 +4431,8 @@ If the server responds, it logs the reply.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">851</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">852</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">853</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">854</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop_server</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">854</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">855</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop_server</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Request the connected RPC server to shut down.</span>
 
@@ -4715,8 +4715,7 @@ value.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">356</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">357</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">357</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">358</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">359</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">360</span>
@@ -4748,7 +4747,8 @@ value.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">386</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">387</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">388</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">389</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, fget<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, fset<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, fdel<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, doc<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, notify: RPCSignal <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>, auto_notify<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">389</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">390</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, fget<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, fset<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, fdel<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, doc<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, notify: RPCSignal <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>, auto_notify<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Initialize the property with optional RPC notification.</span>
 
@@ -4823,8 +4823,7 @@ observable value actually changes.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">394</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">395</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">395</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">396</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">397</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">398</span>
@@ -4862,7 +4861,8 @@ observable value actually changes.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">430</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">431</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">432</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">433</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__set__</span>(<span style="color: #008000">self</span>, obj, value):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">433</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">434</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__set__</span>(<span style="color: #008000">self</span>, obj, value):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Set the property on *obj* and emit the ``_notifier`` signal if the</span>
 <span style="color: #BA2121; font-style: italic">    observable value actually changes.</span>
@@ -5229,8 +5229,7 @@ of the local network interface ip which must be accessible from the client.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">918</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">919</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">919</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">920</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">921</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">922</span>
@@ -5268,7 +5267,8 @@ of the local network interface ip which must be accessible from the client.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">954</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">955</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">956</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">957</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, alive_timeout: <span style="color: #008000">int</span> <span style="color: #666">=</span> <span style="color: #666">60</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">957</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">958</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, alive_timeout: <span style="color: #008000">int</span> <span style="color: #666">=</span> <span style="color: #666">60</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Initialize a new RPCServer.</span>
 
@@ -5403,8 +5403,7 @@ as well as a buffer_info dictionary.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1097</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1098</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1098</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1099</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1100</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1101</span>
@@ -5433,7 +5432,8 @@ as well as a buffer_info dictionary.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1124</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1125</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1126</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1127</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1127</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1128</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_buffer</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output as a buffer-like object</span>
@@ -5548,8 +5548,7 @@ Arguments are also serialized via json.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1067</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1068</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1068</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1069</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1070</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1071</span>
@@ -5576,7 +5575,8 @@ Arguments are also serialized via json.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1092</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1093</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1094</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1095</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1095</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1096</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_json</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output via json.</span>
@@ -5733,8 +5733,7 @@ conflicting devices.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1023</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1024</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1024</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1025</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1026</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1027</span>
@@ -5775,7 +5774,8 @@ conflicting devices.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1062</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1063</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1064</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1065</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_to_registry</span>(<span style="color: #008000">self</span>, type_: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, overwrite<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1065</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1066</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_to_registry</span>(<span style="color: #008000">self</span>, type_: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, overwrite<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Register this RPCServer to the registry at `registry_address` as a device of type `type_` and name `name`.</span>
 
@@ -5895,8 +5895,7 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1214</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1215</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1215</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1216</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1217</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1218</span>
@@ -5979,7 +5978,8 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1295</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1296</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1297</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1298</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">serve_forever</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1298</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1299</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">serve_forever</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Serve the RPC server indefinitely, handling incoming requests until a stop signal is</span>
 <span style="color: #BA2121; font-style: italic">    received.</span>
@@ -6134,8 +6134,7 @@ network errors or authentication failures.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1172</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1173</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1173</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1174</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1175</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1176</span>
@@ -6174,7 +6173,8 @@ network errors or authentication failures.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1209</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1210</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1211</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1212</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop_server</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1212</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1213</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop_server</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Stop the server and unregister the device if it has been registered.</span>
 
@@ -6397,8 +6397,7 @@ argument types for the signal.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">154</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">155</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">155</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">156</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
@@ -6414,7 +6413,8 @@ argument types for the signal.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">171</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, <span style="color: #666">*</span>arg_types):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">171</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">172</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, <span style="color: #666">*</span>arg_types):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Initialize a new ``RPCSignal`` instance.</span>
 
@@ -6536,8 +6536,7 @@ when the signal is emitted.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">263</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">263</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
@@ -6567,7 +6566,8 @@ when the signal is emitted.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">290</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">291</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">292</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">connect</span>(<span style="color: #008000">self</span>, conn: Callable <span style="color: #666">|</span> WeakMethod):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">294</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">connect</span>(<span style="color: #008000">self</span>, conn: Callable <span style="color: #666">|</span> WeakMethod):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Connect a callable (or weak reference) to the signal.</span>
 
@@ -6696,8 +6696,7 @@ when the signal is emitted.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">295</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">296</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">296</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">297</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">298</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">299</span>
@@ -6730,7 +6729,8 @@ when the signal is emitted.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">326</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">327</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">328</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">329</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">disconnect</span>(<span style="color: #008000">self</span>, conn: Callable <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">329</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">330</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">disconnect</span>(<span style="color: #008000">self</span>, conn: Callable <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Remove a previously connected callable or clear all connections.</span>
 
@@ -6843,8 +6843,7 @@ specifications stored in :attr:<code>args</code>, but this is not enforced.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">174</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">174</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">175</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">176</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">177</span>
@@ -6878,7 +6877,8 @@ specifications stored in :attr:<code>args</code>, but this is not enforced.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">207</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">emit</span>(<span style="color: #008000">self</span>, <span style="color: #666">*</span>args):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">209</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">emit</span>(<span style="color: #008000">self</span>, <span style="color: #666">*</span>args):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Emit the signal, invoking all connected callables.</span>
 
@@ -7054,8 +7054,7 @@ is_instance_of_generic : Function to check whether an argument matches an expect
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">210</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">211</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">211</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">212</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">213</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
@@ -7104,7 +7103,8 @@ is_instance_of_generic : Function to check whether an argument matches an expect
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">257</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">validate_args</span>(<span style="color: #008000">self</span>, <span style="color: #666">*</span>args, coerce<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">validate_args</span>(<span style="color: #008000">self</span>, <span style="color: #666">*</span>args, coerce<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Validates and coerces input arguments based on expected types.</span>
 
@@ -7369,8 +7369,7 @@ a string, or <code>signals</code> is not a <code>dict</code> with string keys.</
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">459</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">462</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
@@ -7403,7 +7402,8 @@ a string, or <code>signals</code> is not a <code>dict</code> with string keys.</
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">490</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">491</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">492</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, signals: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, RPCSignal]):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">493</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">494</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, signals: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, RPCSignal]):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Initialize a new `RPCSignalReceiver`.</span>
 
@@ -7544,8 +7544,7 @@ is emitted. The loop runs until the <code>_stop_flag</code> is set to <code>True
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">495</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">497</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">498</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">499</span>
@@ -7598,7 +7597,8 @@ is emitted. The loop runs until the <code>_stop_flag</code> is set to <code>True
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">546</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">547</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">548</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">549</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">run</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">549</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">550</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">run</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Continuously processes incoming socket requests to emit signals.</span>
 
@@ -7677,11 +7677,11 @@ is emitted. The loop runs until the <code>_stop_flag</code> is set to <code>True
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/RPC.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">551</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">552</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">552</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">553</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">554</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">555</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop</span>(<span style="color: #008000">self</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">555</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">556</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Signal the receiver thread to stop polling and shut down.</span>
 <span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
