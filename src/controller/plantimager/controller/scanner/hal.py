@@ -15,7 +15,7 @@ Key Features:
 - Standardized data formats for database storage
 """
 
-from abc import ABC, ABCMeta, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod, abstractproperty
 from typing import List, Tuple, Union
 
 import numpy as np
@@ -50,7 +50,8 @@ class AbstractCNC(metaclass=ABCMeta):
     """Abstract CNC class."""
 
     def __init__(self):
-        pass
+        self._ready = False
+        self._standby = False
 
     @abstractmethod
     def home(self) -> None:
@@ -71,3 +72,14 @@ class AbstractCNC(metaclass=ABCMeta):
     @abstractmethod
     def wait(self) -> None:
         pass
+
+    @property
+    def ready(self) -> bool:
+        """Returns True if the hardware component is ready to be used"""
+        return self._ready
+
+    @property
+    def standby(self) -> bool:
+        """Returns True if the hardware component is on standby."""
+        return self._standby
+
