@@ -163,7 +163,7 @@ class CNC(AbstractCNC):
     - G-Code Reference: http://linuxcnc.org/docs/html/gcode/g-code.html
     """
 
-    def __init__(self, port: str="/dev/ttyUSB0", baud_rate: int=115200) -> None:
+    def __init__(self, port: str | None=None, baud_rate: int=115200) -> None:
         """Initializes the GRBL controller."""
         super().__init__()
         self.port = port
@@ -210,7 +210,10 @@ class CNC(AbstractCNC):
             If GRBL settings cannot be retrieved or applied
         """
         # Initialize serial connection with timeout of 1 second
-        self.serial_port = serial.Serial(self.port, self.baud_rate, timeout=1)
+        if self.serial_port:
+            self.serial_port = serial.Serial(self.port, self.baud_rate, timeout=1)
+        else:
+            self.serial_port = self._find_and_connect_cnc()
         self.has_started = True
 
         # Send carriage returns to wake up GRBL
@@ -245,6 +248,51 @@ class CNC(AbstractCNC):
         self.y_lims = (0, self.grbl_settings["$131"])
         self.z_lims = (0, self.grbl_settings["$132"])
 
+    def _find_and_connect_cnc(self):
+        """
+        Attempts to detect and establish a serial connection with a CNC controller
+        running GRBL firmware.
+
+        This method scans available serial ports to find one associated with a CNC
+        controller. It checks for a specific GRBL identification string in the
+        response from the serial port. If no valid connection can be established,
+        an `IOError` is raised.
+
+        Returns
+        -------
+        serial.Serial
+            An open `serial.Serial` object connected to the CNC controller. The
+            `serial.Serial` object is configured using the instance's `baud_rate`.
+
+        Raises
+        ------
+        IOError
+            If no serial ports matching the expected criteria are found or if no
+            GRBL-compatible device is detected on the available ports.
+
+        Notes
+        -----
+        - This method assumes that the CNC controller uses the GRBL firmware and
+          communicates over a serial port identified by names starting with
+          ``"ttyUSB"``.
+        - The `baud_rate` attribute must be defined in the instance prior to using
+          this method.
+
+        """
+        from serial.tools.list_ports import comports
+        for port in comports():
+            if port.name.startswith("ttyUSB"):
+                try:
+                    s = serial.Serial(port.device, self.baud_rate, timeout=1)
+                except serial.SerialException:
+                    continue
+                response = s.read_all()
+                if "\r\nGrbl 1.1h" in response.decode():
+                    return s
+                else:
+                    s.close()
+        raise IOError("Could not find GRBL serial port")
+
     def stop(self) -> None:
         """Close the serial connection to the GRBL controller.
 
@@ -260,6 +308,13 @@ class CNC(AbstractCNC):
         self.reset_pos()
         if self.has_started:
             self.serial_port.close()
+
+    def reset_pos(self):
+        """
+        Resets the position of the CNC to the initial position. (20, 20, min angle)
+        """
+        self._move(20, 20, self._min_angle - 5)
+        self.wait_until_immobile()
 
     def compute_move_time(self, x: length_mm, y: length_mm, z: deg) -> time_s:
         """Compute the estimated time required to move the CNC machine to the specified coordinates."""
