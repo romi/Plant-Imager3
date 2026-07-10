@@ -39,9 +39,9 @@ from dash import Dash
 from dash import dcc
 from dash import html
 from dotenv import load_dotenv
-from plantdb.client.rest_api import PLANTDB_HOST
-from plantdb.client.rest_api import PLANTDB_PORT
-from plantdb.client.rest_api import PLANTDB_PREFIX
+from plantdb.client.rest_api.urls import PLANTDB_HOST
+from plantdb.client.rest_api.urls import PLANTDB_PORT
+from plantdb.client.rest_api.urls import PLANTDB_PREFIX
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from plantimager.webui.carousel import caroussel_modal

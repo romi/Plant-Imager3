@@ -31,10 +31,10 @@ from dash import dcc
 from dash import html
 from dash import no_update
 from dash_bootstrap_components import NavLink
-from plantdb.client.rest_api import PLANTDB_HOST
-from plantdb.client.rest_api import PLANTDB_PORT
-from plantdb.client.rest_api import plantdb_url
-from plantdb.client.rest_api import request_scan_names_list
+from plantdb.client.rest_api.urls import PLANTDB_HOST
+from plantdb.client.rest_api.urls import PLANTDB_PORT
+from plantdb.client.rest_api.urls import plantdb_url
+from plantdb.client.rest_api.requests import request_scan_names_list
 from plantdb.client.url import is_server_available
 from requests import RequestException
 

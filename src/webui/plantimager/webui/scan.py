@@ -33,7 +33,7 @@ from dash import get_asset_url
 from dash import html
 from dash.exceptions import PreventUpdate
 from plantdb.client.plantdb_client import PlantDBClient
-from plantdb.client.rest_api import plantdb_url
+from plantdb.client.rest_api.urls import plantdb_url
 from plantdb.commons.auth.models import Permission
 
 from plantimager.commons.RPC import NoResult

@@ -8,8 +8,8 @@ from dash import State
 from dash import callback
 from dash import dcc
 from dash import html
-from plantdb.client.rest_api import request_scan_tasks_fileset
-from plantdb.client.rest_api import list_task_images_uri
+from plantdb.client.rest_api.requests import request_scan_tasks_fileset
+from plantdb.client.rest_api.urls import list_task_images_uri
 
 from plantimager.webui.utils import IMAGE_TASKS
 from plantimager.webui.visu import dash_boostrap_carousel
