@@ -5041,10 +5041,10 @@ creates a DataItem, and uploads it to the database.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">814</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">815</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">816</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">817</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">float</span>, <span style="color: #008000">float</span>, <span style="color: #008000">float</span>)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">812</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">813</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">814</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">815</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">float</span>, <span style="color: #008000">float</span>, <span style="color: #008000">float</span>)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">move_arm</span>(<span style="color: #008000">self</span>, x: <span style="color: #008000">float</span>, y: <span style="color: #008000">float</span>, z: <span style="color: #008000">float</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Move the arm to the specified position.&quot;&quot;&quot;</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>set_position(Pose(x<span style="color: #666">=</span>x, y<span style="color: #666">=</span>y, z<span style="color: #666">=0</span>, pan<span style="color: #666">=</span>z, tilt<span style="color: #666">=0</span>))
@@ -5072,7 +5072,9 @@ creates a DataItem, and uploads it to the database.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">819</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">817</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">818</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">819</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">820</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">821</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">822</span>
@@ -5084,9 +5086,7 @@ creates a DataItem, and uploads it to the database.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">828</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">829</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">830</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">831</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">832</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">833</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">831</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">move_to_center</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Move the arm to the center&quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scan_path <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">isinstance</span>(<span style="color: #008000">self</span><span style="color: #666">.</span>scan_path, Circle):
@@ -5125,13 +5125,13 @@ creates a DataItem, and uploads it to the database.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">835</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">833</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">834</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">835</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">836</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">837</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">838</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">839</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">840</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">841</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">int</span>)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">839</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">int</span>)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">move_to_position_in_path</span>(<span style="color: #008000">self</span>, i: <span style="color: #008000">int</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Move the arm to the i-th position of the scan path.&quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scan_path:
@@ -5162,16 +5162,16 @@ creates a DataItem, and uploads it to the database.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">843</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">841</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">842</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">843</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">844</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">845</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">846</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">847</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">848</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">849</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">850</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">851</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">852</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Property</span>(<span style="color: #008000">str</span>, notify<span style="color: #666">=</span>pathInfoChanged)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">850</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Property</span>(<span style="color: #008000">str</span>, notify<span style="color: #666">=</span>pathInfoChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">path_info</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Get information about the scan path.&quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scan_path:
@@ -5695,9 +5695,7 @@ creates a DataItem, and uploads it to the database.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">807</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">808</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">809</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">810</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">811</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">812</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">scan</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">810</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">scan</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Execute the complete scanning process.</span>
 
 <span style="color: #BA2121; font-style: italic">    This method performs a full scan by:</span>
@@ -5812,10 +5810,8 @@ creates a DataItem, and uploads it to the database.</p>
             wait(jobs, return_when<span style="color: #666">=</span>ALL_COMPLETED)
 
     <span style="color: #3D7B7B; font-style: italic"># Move the arm back close to origin</span>
-    <span style="color: #3D7B7B; font-style: italic"># self.cnc.moveto(10, 10,-10)</span>
     time<span style="color: #666">.</span>sleep(<span style="color: #666">1</span>)
-    <span style="color: #3D7B7B; font-style: italic"># self.cnc.home()</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>move_arm(<span style="color: #666">20</span>, <span style="color: #666">20</span>, <span style="color: #666">45</span>)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>cnc<span style="color: #666">.</span>reset_pos()
     <span style="color: #008000">self</span><span style="color: #666">.</span>_scan_in_progress <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>scanInProgressChanged<span style="color: #666">.</span>emit(<span style="color: #008000">self</span><span style="color: #666">.</span>scan_in_progress)
     logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f&quot;Scan completed&quot;</span>)  <span style="color: #3D7B7B; font-style: italic"># Log completion</span>
@@ -5905,14 +5901,14 @@ creates a DataItem, and uploads it to the database.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">854</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">852</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">853</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">854</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">855</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">856</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">857</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">858</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">859</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">860</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">861</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_api_token</span>(<span style="color: #008000">self</span>, token: <span style="color: #008000">str</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">859</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_api_token</span>(<span style="color: #008000">self</span>, token: <span style="color: #008000">str</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the API token and re-create the PlantDBClient to access the plantdb server.&quot;&quot;&quot;</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_api_token <span style="color: #666">=</span> token
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>db_client:
