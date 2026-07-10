@@ -803,10 +803,8 @@ class Scanner(QObject):
                 wait(jobs, return_when=ALL_COMPLETED)
 
         # Move the arm back close to origin
-        # self.cnc.moveto(10, 10,-10)
         time.sleep(1)
-        # self.cnc.home()
-        self.move_arm(20, 20, 45)
+        self.cnc.reset_pos()
         self._scan_in_progress = False
         self.scanInProgressChanged.emit(self.scan_in_progress)
         logger.info(f"Scan completed")  # Log completion
