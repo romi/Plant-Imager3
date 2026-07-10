@@ -15,10 +15,10 @@ except ImportError:
 from typing import Any
 
 from dash import dcc
-from plantdb.client.rest_api import make_api_request
-from plantdb.client.rest_api import parse_scans_info
-from plantdb.client.rest_api import request_check_username
-from plantdb.client.rest_api import request_scan_names_list
+from plantdb.client.rest_api.parsers import parse_scans_info
+from plantdb.client.rest_api.requests import make_api_request
+from plantdb.client.rest_api.requests import request_check_username
+from plantdb.client.rest_api.requests import request_scan_names_list
 
 FONT_FAMILY = '"Nunito Sans", sans-serif'
 

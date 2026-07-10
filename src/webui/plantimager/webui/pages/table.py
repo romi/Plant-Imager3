@@ -13,7 +13,7 @@ from dash import dcc
 from dash import get_relative_path
 from dash import html
 from dash import register_page
-from plantdb.client.rest_api import plantdb_url
+from plantdb.client.rest_api.urls import plantdb_url
 
 from plantimager.webui.utils import get_dataset_dict
 from plantimager.webui.utils import load_image_from_url
