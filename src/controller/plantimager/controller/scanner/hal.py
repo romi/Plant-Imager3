@@ -57,6 +57,10 @@ class AbstractCNC(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def reset_pos(self):
+        pass
+
+    @abstractmethod
     def get_position(self) -> Tuple[length_mm, length_mm, length_mm]:
         pass
 
