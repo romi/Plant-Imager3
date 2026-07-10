@@ -281,17 +281,23 @@ class CNC(AbstractCNC):
         """
         from serial.tools.list_ports import comports
         for port in comports():
+            logger.debug(f"Checking serial port '{port}'")
             if port.name.startswith("ttyUSB"):
                 try:
                     s = serial.Serial(port.device, self.baud_rate, timeout=1)
                 except serial.SerialException:
+                    logger.debug(f"Could not connect to '{port.device}'")
                     continue
                 response = s.read_all()
+                logger.debug(f"GRBL response '{response}'")
                 if "\r\nGrbl 1.1h" in response.decode():
+                    logger.info(f"Found GRBL device at {port.device}")
                     return s
                 else:
+                    logger.debug(f"Could not find GRBL device at {port.device}")
                     s.close()
-        raise IOError("Could not find GRBL serial port")
+        logger.error(f"No GRBL device found in {[port.name for port in comports()]}")
+        raise IOError(f"No GRBL device found in {[port.name for port in comports()]}")
 
     def stop(self) -> None:
         """Close the serial connection to the GRBL controller.
