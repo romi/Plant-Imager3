@@ -80,7 +80,7 @@ GRBL_SETTINGS = {
     "$122": ("Z Acceleration", "deg/sec^2", 50),
     "$130": ("X Max travel", "mm", 740),
     "$131": ("Y Max travel", "mm", 740),
-    "$132": ("Z Max travel", "deg", 360 - 52)  # 52 degree offset from encoder 0
+    "$132": ("Z Max travel", "deg", 360 - 0)  # 0 degree offset from encoder 0
 }
 
 def angle_min_travel(current_angle: deg, desired_angle: deg) -> deg:
@@ -288,7 +288,8 @@ class CNC(AbstractCNC):
                 except serial.SerialException:
                     logger.debug(f"Could not connect to '{port.device}'")
                     continue
-                time.sleep(2)
+                s.write(b"\r\n\r\n")
+                time.sleep(1.4)
                 response = s.read_all()
                 logger.debug(f"GRBL response '{response}'")
                 if "\r\nGrbl 1.1h" in response.decode():
