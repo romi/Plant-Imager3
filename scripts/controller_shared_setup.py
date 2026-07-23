@@ -3,7 +3,7 @@
 controller_shared_setup.py
 --------------------------
 
-Configure the Raspberry Pi 4 to act as the USB‑ethernet controller:
+Configure the Raspberry Pi 4 to act as the USB‑ethernet controller:
 
 * Create a NetworkManager *shared* connection on interface usb0
   (static address 10.10.11.1/24, DHCP handed out by dnsmasq).

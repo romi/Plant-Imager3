@@ -19,7 +19,7 @@ Only the client‑side NetworkManager profile is created – the controller will
 
 ### 1. Load the kernel modules  
 
-```shell script
+```shell
 # Load the modules for the current session (optional – they will be loaded automatically after reboot)
 modprobe dwc2
 modprobe g_ether
@@ -34,14 +34,14 @@ modprobe g_ether
 
 Edit (or create) **`/etc/modules-load.d/usb-gadget.conf`** with **nano**:
 
-```shell script
+```shell
 sudo nano /etc/modules-load.d/usb-gadget.conf
 ```
 
 
 Add the two module names, one per line:
 
-```plain text
+```
 dwc2
 g_ether
 ```
@@ -102,17 +102,17 @@ if __name__ == '__main__':
 
 ### 3. Enable the peripheral overlay  
 
-The Raspberry Pi must be put into **gadget (peripheral) mode**.  
+The Raspberry Pi must be put into **gadget (peripheral) mode**.  
 Edit the boot‑configuration file that matches your firmware layout.
 
-```shell script
+```shell
 sudo nano /boot/firmware/config.txt
 ```
 
 
 Add (or ensure the line exists) at the **end** of the file:
 
-```plain text
+```
 dtoverlay=dwc2,dr_mode=peripheral
 ```
 
@@ -120,14 +120,14 @@ dtoverlay=dwc2,dr_mode=peripheral
 
 ### 4. Re‑boot (or reload the overlay)  
 
-```shell script
+```shell
 sudo reboot
 ```
 
 
 After the reboot you should see a new network interface called **`usb0`**:
 
-```shell script
+```shell
 ip link show usb0
 ```
 
@@ -138,11 +138,11 @@ If the interface exists, the gadget side is active.
 
 ### 5. (Optional) Create the **NetworkManager client** profile (`nmcli`)  
 
->> If a NetworkManager connection already exists for the _usb0_ interface, skip this part
+> If a NetworkManager connection already exists for the _usb0_ interface, skip this part
 
 The controller will hand out an address via DHCP, so the Pi only needs a **client** profile.
 
-```shell script
+```shell
 # Variables (feel free to change the name)
 NM_IFACE="usb0"
 CLIENT_NAME="USB Gadget (client)"
@@ -150,7 +150,7 @@ CLIENT_DHCP_TIMEOUT=6          # seconds
 CLIENT_ROUTE_METRIC=100        # lower metric → preferred over other interfaces
 ```
 
-```shell script
+```shell
 nmcli connection add type ethernet \
     ifname "$NM_IFACE" \
     con-name "$CLIENT_NAME" \
@@ -165,13 +165,13 @@ nmcli connection add type ethernet \
 
 ### 6. Set the  *usb0* device to `managed`:
 
-```shell script
+```shell
 nmcli device set "$NM_IFACE" managed yes
 nmcli device set "$NM_IFACE" autoconnect yes
 ```
 
 This will ensure the device is always managed after a reboot:
-```shell script
+```shell
 sudo tee /etc/NetworkManager/conf.d/10-usb0-managed.conf > /dev/null <<'EOF'
 [device]
 match-device=interface-name:usb0
@@ -184,14 +184,14 @@ EOF
 
 ### 7. Bring the client profile up (or let a script bring it up later)  
 
-```shell script
+```shell
 nmcli device up usb0"
 ```
 
 
 If the controller’s DHCP server is reachable, `usb0` will obtain an IP address (e.g. `10.10.11.x`) and you’ll see it with:
 
-```shell script
+```shell
 ip -4 addr show dev usb0
 ```
 
@@ -200,7 +200,7 @@ ip -4 addr show dev usb0
 
 ## TL;DR – Quick command list  
 
-```shell script
+```shell
 # 1. Load modules now (optional)
 modprobe dwc2 && modprobe g_ether
 

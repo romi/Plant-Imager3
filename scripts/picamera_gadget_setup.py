@@ -3,7 +3,7 @@
 picamera_gadget_setup.py
 ------------------------
 
-Configure a Pi Zero 2 W to act as a USB‑ethernet (g_ether) gadget
+Configure a Pi Zero 2 W to act as a USB‑ethernet (g_ether) gadget
 and create the NetworkManager client profile for the virtual
 interface *usb0*.
 
