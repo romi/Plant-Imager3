@@ -91,9 +91,5 @@ managed_conf.write_text(
 )
 print(f"Wrote persistent NM managed rule to {managed_conf}")
 
-# ----------------------------------------------------------------------
-# 6. Bring the connection up now (optional – will also happen on boot)
-# ----------------------------------------------------------------------
-#run(["nmcli", "connection", "up", CLIENT_NAME])
 
-print("\n✅ Gadget configuration completed. Reboot the Pi for a clean start.")
+print("\nConfiguration completed. Reboot to apply the changes.")

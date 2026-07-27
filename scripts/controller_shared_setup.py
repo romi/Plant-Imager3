@@ -186,5 +186,4 @@ if __name__ == "__main__":
     run(["nmcli", "connection", "up", BRIDGE_NAME])
     run(["nmcli", "connection", "up", SLAVE_NAME])
 
-    print("\n✅ Controller configuration completed. The USB‑gadget clients should now receive"
-          "\n   an IP address from 10.10.11.2‑10.10.11.254 and use 10.10.11.1 as gateway.")
+    print("\nController configuration completed.")
