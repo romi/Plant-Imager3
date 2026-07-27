@@ -592,20 +592,33 @@ class CNC(AbstractCNC):
             time.sleep(travel_time - (time.time() - t0))
         self.wait_until_immobile(30)
 
-    def _move(self, x, y, z, timeout=None):
+    def _move(self, x, y, z, timeout=10, wait=True):
         """
         Move to absolute positions (absolute angle for z)
 
+        Send a G0 command to move the device to the target position at maximum
+        speed in a straight line.
+
         Parameters
         ----------
-        x
-        y
-        z
-        timeout
+        x : float
+            Target X coordinate for the move.
+        y : float
+            Target Y coordinate for the move.
+        z : float
+            Target Z coordinate for the move.
+        timeout : float, optional
+            Maximum time to wait for the command response in seconds.
+        wait : bool, optional
+            If ``True``, waits for the command to complete before returning.
+            If ``False``, sends the command and returns immediately. Default is
+            ``True``.
 
         Returns
         -------
-
+        Any
+            The result of the command execution, typically the response from the
+            device or ``None`` if ``wait=False``.
         """
         self._check_move(x, y, z)
 
@@ -615,7 +628,7 @@ class CNC(AbstractCNC):
 
         # Send G0 rapid positioning command with target coordinates
         # G0 moves at maximum speed in a straight line
-        return self.send_cmd(f"g0 x{x} y{y} z{z}", wait=True, timeout=timeout)
+        return self.send_cmd(f"g0 x{x} y{y} z{z}", wait=wait, timeout=timeout)
 
     def moveto_async(self, x: length_mm, y: length_mm, z: deg) -> bytes:
         """Asynchronously move the CNC machine to specified coordinates using G0 rapid positioning.
@@ -654,20 +667,15 @@ class CNC(AbstractCNC):
         ----------
         http://linuxcnc.org/docs/html/gcode/g-code.html#gcode:g0
         """
-        # Validate that the target coordinates are within machine limits
-        self._check_move(x, y, z)
 
         z = angle_min_travel(self.z, z)
+        # check for bounds for angles, if too much go the other way
+        if z < self._min_angle:
+            z += 360
+        elif z > self._max_angle:
+            z -= 360
 
-        # Apply axis inversions based on machine configuration
-        # Convert coordinates to integers for GRBL compatibility
-        x = int(-x) if self.invert_x else int(x)
-        y = int(-y) if self.invert_y else int(y)
-        z = int(-z) if self.invert_z else int(z)
-
-        # Send G0 rapid positioning command with target coordinates
-        # G0 moves at maximum speed in a straight line
-        return self.send_cmd(f"g0 x{x} y{y} z{z}", wait=False)
+        return self._move(x, y, z, wait=False)
 
     def wait(self, timeout: int=60) -> None:
         """Wait for the CNC machine to complete any ongoing operations and returns the last response.
@@ -760,7 +768,7 @@ class CNC(AbstractCNC):
             # Small delay to prevent CPU flooding
             time.sleep(0.05)
 
-    def send_cmd(self, cmd: str, wait=False, timeout=None) -> str:
+    def send_cmd(self, cmd: str, wait=False, timeout=10) -> str:
         """Send a command to the GRBL controller and return its response.
 
         Parameters
@@ -823,7 +831,7 @@ class CNC(AbstractCNC):
                 logger.debug("cnc -> response pending (async)")
                 return ""
             elif not grbl_out and wait:
-                grbl_out = self.wait(timeout=timeout)
+                self.wait(timeout=timeout)
 
             logger.debug(f"cnc -> {grbl_out.strip()}")
             grbl_out = grbl_out.decode("ascii").strip()
