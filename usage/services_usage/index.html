@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/ROMI_ICON_green.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -2895,8 +2895,8 @@ address=/dev.mellitus.local/127.0.0.1
 <li>
 <p><strong>Switch to the production network</strong><br />
    In <code>docker-compose.yml</code> set <code>plantimager-net</code> to <code>external: true</code> and create the network beforehand:</p>
-<p><code>shell script
-docker network create plantimager-net</code></p>
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>docker<span style="color: #BBB"> </span>network<span style="color: #BBB"> </span>create<span style="color: #BBB"> </span>plantimager-net
+</code></pre></div>
 </li>
 <li>
 <p><strong>Use a real SSL certificate</strong> – Replace the <code>ssl_cert</code> volume with a persistent cert volume mounted to <code>/etc/nginx/ssl/</code>.</p>
@@ -2909,8 +2909,8 @@ docker network create plantimager-net</code></p>
 </li>
 <li>
 <p><strong>Deploy</strong> –</p>
-<p><code>shell script
-docker compose -f docker-compose.yml up -d</code></p>
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>docker<span style="color: #BBB"> </span>compose<span style="color: #BBB"> </span>-f<span style="color: #BBB"> </span>docker-compose.yml<span style="color: #BBB"> </span>up<span style="color: #BBB"> </span>-d
+</code></pre></div>
 </li>
 </ol>
 <p>The stack will now be reachable from the internet over HTTPS, with all services properly isolated on the <code>plantimager-net</code>.</p>
@@ -3026,7 +3026,7 @@ docker compose -f docker-compose.yml up -d</code></p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../assets/_markdown_exec_pyodide.js"></script>
       
