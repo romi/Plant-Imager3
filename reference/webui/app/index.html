@@ -18,7 +18,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../carousel/">
+        <link rel="next" href="../auth/">
       
       
         
@@ -1998,6 +1998,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    auth
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../carousel/" class="md-nav__link">
         
   
@@ -2177,7 +2205,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2199,14 +2227,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_8">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2943,9 +2971,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/app.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">207</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
@@ -2977,7 +3003,9 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">234</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">235</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">236</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">237</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">237</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">238</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">239</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Run the Plant Imager Web Interface application.</span>
 
 <span style="color: #BA2121; font-style: italic">    This function serves as the entry point for the Plant Imager Web UI. It:</span>
@@ -3426,7 +3454,9 @@ user authentication, and dataset management.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(plantdb_host: <span style="color: #008000">str</span>, plantdb_port: <span style="color: #008000">int</span>, plantdb_prefix: <span style="color: #008000">str</span>, plantdb_ssl: <span style="color: #008000">str</span>,
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(plantdb_host: <span style="color: #008000">str</span>, plantdb_port: <span style="color: #008000">int</span>, plantdb_prefix: <span style="color: #008000">str</span>, plantdb_ssl: <span style="color: #008000">str</span>,
                   proxy: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>, url_prefix: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&#39;/webui&#39;</span>) <span style="color: #666">-&gt;</span> Dash:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Initialize and configure the Plant Imager Dash web application.</span>
 
@@ -3502,6 +3532,8 @@ user authentication, and dataset management.</p>
         dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;logged-fullname&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># real name of the logged user</span>
         dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;access-token&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># access token of the logged user</span>
         dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;refresh-token&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># refresh token of the logged user</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;scan-api-token&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># scoped API token for the current scan</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;scan-job-id&#39;</span>, data<span style="color: #666">=0</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># trigger to launch the background scan</span>
         dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-list&#39;</span>, data<span style="color: #666">=</span>[]),  <span style="color: #3D7B7B; font-style: italic"># list of datasets known to the database</span>
         dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-id&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># name of the dataset to create (scan operation)</span>
         dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-dict&#39;</span>, data<span style="color: #666">=</span>{}, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),
