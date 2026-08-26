@@ -200,7 +200,7 @@ To make the system and browser trust the certificate, follow these steps:
 
 First, download the certificate from the server:
 
-```shell script
+```shell
 echo | openssl s_client -servername mellitus.biologie.ens-lyon.fr -connect mellitus.biologie.ens-lyon.fr:443 2>/dev/null | openssl x509 -outform PEM > mellitus.crt
 ```
 
@@ -209,11 +209,11 @@ echo | openssl s_client -servername mellitus.biologie.ens-lyon.fr -connect melli
 Ubuntu uses the `ca-certificates` package to manage trusted CAs.
 
 1. Copy the certificate to the local trusted directory:
-   ```shell script
+   ```shell
    sudo cp mellitus.crt /usr/local/share/ca-certificates/mellitus.crt
    ```
 2. Update the certificate store:
-   ```shell script
+   ```shell
    sudo update-ca-certificates
    ```
    > Note: This command expects a file with a `.crt` extension.

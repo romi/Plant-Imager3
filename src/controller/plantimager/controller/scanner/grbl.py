@@ -80,7 +80,7 @@ GRBL_SETTINGS = {
     "$122": ("Z Acceleration", "deg/sec^2", 50),
     "$130": ("X Max travel", "mm", 740),
     "$131": ("Y Max travel", "mm", 740),
-    "$132": ("Z Max travel", "deg", 360 - 8)  # 8 degree offset from encoder 0
+    "$132": ("Z Max travel", "deg", 360 - 0)  # 0 degree offset from encoder 0
 }
 
 def angle_min_travel(current_angle: deg, desired_angle: deg) -> deg:
@@ -163,7 +163,7 @@ class CNC(AbstractCNC):
     - G-Code Reference: http://linuxcnc.org/docs/html/gcode/g-code.html
     """
 
-    def __init__(self, port: str="/dev/ttyUSB0", baud_rate: int=115200) -> None:
+    def __init__(self, port: str | None=None, baud_rate: int=115200) -> None:
         """Initializes the GRBL controller."""
         super().__init__()
         self.port = port
@@ -176,6 +176,8 @@ class CNC(AbstractCNC):
         self.invert_z = False
         self.serial_port = None
         self.grbl_settings = None
+        self._min_angle = 0 # set at homing (should be Z Max travel - homing pull-off | $132 - $27)
+        self._max_angle = 360*3
         self._start()
         finalize(self, self.stop)
 
@@ -208,7 +210,10 @@ class CNC(AbstractCNC):
             If GRBL settings cannot be retrieved or applied
         """
         # Initialize serial connection with timeout of 1 second
-        self.serial_port = serial.Serial(self.port, self.baud_rate, timeout=1)
+        if self.serial_port:
+            self.serial_port = serial.Serial(self.port, self.baud_rate, timeout=1)
+        else:
+            self.serial_port = self._find_and_connect_cnc()
         self.has_started = True
 
         # Send carriage returns to wake up GRBL
@@ -243,6 +248,59 @@ class CNC(AbstractCNC):
         self.y_lims = (0, self.grbl_settings["$131"])
         self.z_lims = (0, self.grbl_settings["$132"])
 
+    def _find_and_connect_cnc(self):
+        """
+        Attempts to detect and establish a serial connection with a CNC controller
+        running GRBL firmware.
+
+        This method scans available serial ports to find one associated with a CNC
+        controller. It checks for a specific GRBL identification string in the
+        response from the serial port. If no valid connection can be established,
+        an `IOError` is raised.
+
+        Returns
+        -------
+        serial.Serial
+            An open `serial.Serial` object connected to the CNC controller. The
+            `serial.Serial` object is configured using the instance's `baud_rate`.
+
+        Raises
+        ------
+        IOError
+            If no serial ports matching the expected criteria are found or if no
+            GRBL-compatible device is detected on the available ports.
+
+        Notes
+        -----
+        - This method assumes that the CNC controller uses the GRBL firmware and
+          communicates over a serial port identified by names starting with
+          ``"ttyUSB"``.
+        - The `baud_rate` attribute must be defined in the instance prior to using
+          this method.
+
+        """
+        from serial.tools.list_ports import comports
+        for port in comports():
+            logger.debug(f"Checking serial port '{port}'")
+            if port.name.startswith("ttyUSB"):
+                try:
+                    s = serial.Serial(port.device, self.baud_rate, timeout=1)
+                except serial.SerialException:
+                    logger.debug(f"Could not connect to '{port.device}'")
+                    continue
+                s.write(b"\r\n\r\n")
+                time.sleep(1.4)
+                response = s.read_all()
+                logger.debug(f"GRBL response '{response}'")
+                if "\r\nGrbl 1.1h" in response.decode():
+                    logger.info(f"Found GRBL device at {port.device}")
+                    return s
+                else:
+                    logger.debug(f"Could not find GRBL device at {port.device}")
+                    s.close()
+        logger.error(f"No GRBL device found in {[port.name for port in comports()]}")
+        raise IOError(f"No GRBL device found in {[port.name for port in comports()]}")
+
     def stop(self) -> None:
         """Close the serial connection to the GRBL controller.
 
@@ -255,8 +313,16 @@ class CNC(AbstractCNC):
         SerialException
             If there's an error while closing the serial port
         """
+        self.reset_pos()
         if self.has_started:
             self.serial_port.close()
+
+    def reset_pos(self):
+        """
+        Resets the position of the CNC to the initial position. (20, 20, min angle)
+        """
+        self._move(20, 20, self._min_angle - 5)
+        self.wait_until_immobile()
 
     def compute_move_time(self, x: length_mm, y: length_mm, z: deg) -> time_s:
         """Compute the estimated time required to move the CNC machine to the specified coordinates."""
@@ -453,6 +519,7 @@ class CNC(AbstractCNC):
         y_init = sign_y * (y_max - pulloff) if pulloff_mask & 2 else sign_y * pulloff
         z_init = sign_z * (z_max - pulloff) if pulloff_mask & 4 else sign_z * pulloff
         self.send_cmd(f"g92 x{x_init} y{y_init} z{z_init}", wait=True, timeout=10)
+        self._min_angle = -z_init
 
     def _check_move(self, x: float, y: float, z: float) -> None:
         """Validate that the requested movement coordinates are within the machine's axis limits.
@@ -505,29 +572,63 @@ class CNC(AbstractCNC):
         - Units are in millimeters (``G21`` mode)
         - The method will block until the movement is complete
         """
-        # Validate that the target coordinates are within machine limits
-        self._check_move(x, y, z)
-
         z = angle_min_travel(self.z, z)
+
+        # check for bounds for angles, if too much go the other way
+        if z < self._min_angle:
+            z += 360
+        elif z > self._max_angle:
+            z -= 360
+
+
         travel_time = self.compute_move_time(x, y, z)
         travel_time += min(travel_time * 0.1, 1)
-
-        # Apply axis inversions based on machine configuration
-        # Convert coordinates to integers for GRBL compatibility
-        x = int(-x) if self.invert_x else int(x)
-        y = int(-y) if self.invert_y else int(y)
-        z = int(-z) if self.invert_z else int(z)
-
-
         t0 = time.time()
-        # Send G0 rapid positioning command with target coordinates
-        # G0 moves at maximum speed in a straight line
-        response = self.send_cmd(f"g0 x{x} y{y} z{z}", wait=True, timeout=int(travel_time*2))
+
+        response = self._move(x, y, z, timeout=int(travel_time)*2)
         if not response:
             self.wait(timeout=30)
         if time.time() - t0 < travel_time:
             time.sleep(travel_time - (time.time() - t0))
         self.wait_until_immobile(30)
+
+    def _move(self, x, y, z, timeout=10, wait=True):
+        """
+        Move to absolute positions (absolute angle for z)
+
+        Send a G0 command to move the device to the target position at maximum
+        speed in a straight line.
+
+        Parameters
+        ----------
+        x : float
+            Target X coordinate for the move.
+        y : float
+            Target Y coordinate for the move.
+        z : float
+            Target Z coordinate for the move.
+        timeout : float, optional
+            Maximum time to wait for the command response in seconds.
+        wait : bool, optional
+            If ``True``, waits for the command to complete before returning.
+            If ``False``, sends the command and returns immediately. Default is
+            ``True``.
+
+        Returns
+        -------
+        Any
+            The result of the command execution, typically the response from the
+            device or ``None`` if ``wait=False``.
+        """
+        self._check_move(x, y, z)
+
+        x = int(-x) if self.invert_x else int(x)
+        y = int(-y) if self.invert_y else int(y)
+        z = int(-z) if self.invert_z else int(z)
+
+        # Send G0 rapid positioning command with target coordinates
+        # G0 moves at maximum speed in a straight line
+        return self.send_cmd(f"g0 x{x} y{y} z{z}", wait=wait, timeout=timeout)
 
     def moveto_async(self, x: length_mm, y: length_mm, z: deg) -> bytes:
         """Asynchronously move the CNC machine to specified coordinates using G0 rapid positioning.
@@ -566,20 +667,15 @@ class CNC(AbstractCNC):
         ----------
         http://linuxcnc.org/docs/html/gcode/g-code.html#gcode:g0
         """
-        # Validate that the target coordinates are within machine limits
-        self._check_move(x, y, z)
 
         z = angle_min_travel(self.z, z)
+        # check for bounds for angles, if too much go the other way
+        if z < self._min_angle:
+            z += 360
+        elif z > self._max_angle:
+            z -= 360
 
-        # Apply axis inversions based on machine configuration
-        # Convert coordinates to integers for GRBL compatibility
-        x = int(-x) if self.invert_x else int(x)
-        y = int(-y) if self.invert_y else int(y)
-        z = int(-z) if self.invert_z else int(z)
-
-        # Send G0 rapid positioning command with target coordinates
-        # G0 moves at maximum speed in a straight line
-        return self.send_cmd(f"g0 x{x} y{y} z{z}", wait=False)
+        return self._move(x, y, z, wait=False)
 
     def wait(self, timeout: int=60) -> None:
         """Wait for the CNC machine to complete any ongoing operations and returns the last response.
@@ -672,7 +768,7 @@ class CNC(AbstractCNC):
             # Small delay to prevent CPU flooding
             time.sleep(0.05)
 
-    def send_cmd(self, cmd: str, wait=False, timeout=None) -> str:
+    def send_cmd(self, cmd: str, wait=False, timeout=10) -> str:
         """Send a command to the GRBL controller and return its response.
 
         Parameters
@@ -735,7 +831,7 @@ class CNC(AbstractCNC):
                 logger.debug("cnc -> response pending (async)")
                 return ""
             elif not grbl_out and wait:
-                grbl_out = self.wait(timeout=timeout)
+                self.wait(timeout=timeout)
 
             logger.debug(f"cnc -> {grbl_out.strip()}")
             grbl_out = grbl_out.decode("ascii").strip()

@@ -262,6 +262,7 @@ class Scanner(QObject):
 
         self._scan_in_progress = False
         self._scanner_working = False
+        self.scanInProgressChanged.connect(self.scannerWorkingChanged)  # scannerWorking depends on scanInProgress
         try:
             # Try to connect to the real CNC hardware
             self.cnc = CNC()
@@ -803,13 +804,11 @@ class Scanner(QObject):
                 wait(jobs, return_when=ALL_COMPLETED)
 
         # Move the arm back close to origin
-        # self.cnc.moveto(10, 10,-10)
         time.sleep(1)
-        # self.cnc.home()
-        self.move_arm(20, 20, 45)
+        self.cnc.reset_pos()
         self._scan_in_progress = False
         self.scanInProgressChanged.emit(self.scan_in_progress)
-        logger.info(f"Scan completed")  # Log completion
+        logger.info("Scan completed")  # Log completion
 
     @Slot(float, float, float)
     def move_arm(self, x: float, y: float, z: float):
