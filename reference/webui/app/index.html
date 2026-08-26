@@ -18,7 +18,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../auth/">
+        <link rel="next" href="../carousel/">
       
       
         
@@ -1998,34 +1998,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../carousel/" class="md-nav__link">
         
   
@@ -2205,7 +2177,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2227,14 +2199,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2971,7 +2943,9 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/app.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">207</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
@@ -3003,10 +2977,8 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">234</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">235</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">236</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">237</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">238</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">239</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Run the Plant Imager Web Interface application.</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">237</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Run the Plant Imager Web Interface application.</span>
 
 <span style="color: #BA2121; font-style: italic">    This function serves as the entry point for the Plant Imager Web UI. It:</span>
 <span style="color: #BA2121; font-style: italic">    1. Parses command-line arguments for REST API connection settings</span>
@@ -3018,7 +2990,7 @@
 <span style="color: #BA2121; font-style: italic">    - This should be used for development purposes only, refers to the wsgi.py file for production</span>
 <span style="color: #BA2121; font-style: italic">    - The controller connection runs in a separate daemon thread</span>
 <span style="color: #BA2121; font-style: italic">    - The Dash application runs in debug mode on port 8000</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #3D7B7B; font-style: italic"># - Parse the input arguments to variables:</span>
     parser <span style="color: #666">=</span> parsing()
     args <span style="color: #666">=</span> parser<span style="color: #666">.</span>parse_args()
@@ -3026,20 +2998,20 @@
     <span style="color: #3D7B7B; font-style: italic"># - Create connexion with controller</span>
     context <span style="color: #666">=</span> zmq<span style="color: #666">.</span>Context()
     <span style="color: #3D7B7B; font-style: italic"># Create a thread to avoid blocking the process</span>
-    controller_thread <span style="color: #666">=</span> Thread(target<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">lambda</span> ctx: RPCController(ctx, <span style="color: #BA2121">&quot;tcp://localhost:14567&quot;</span>), args<span style="color: #666">=</span>(context,))
+    controller_thread <span style="color: #666">=</span> Thread(target<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">lambda</span> ctx: RPCController(ctx, <span style="color: #BA2121">"tcp://localhost:14567"</span>), args<span style="color: #666">=</span>(context,))
     controller_thread<span style="color: #666">.</span>daemon <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
     controller_thread<span style="color: #666">.</span>start()
 
     <span style="color: #3D7B7B; font-style: italic"># Load environment variables from an `.env` file if present</span>
     load_dotenv()
 
-    <span style="color: #008000; font-weight: bold">if</span> args<span style="color: #666">.</span>plantdb_host <span style="color: #A2F; font-weight: bold">in</span> (<span style="color: #BA2121">&#39;localhost&#39;</span>, <span style="color: #BA2121">&#39;127.0.0.1&#39;</span>):
-        os<span style="color: #666">.</span>environ[<span style="color: #BA2121">&#39;VALIDATE_HOST&#39;</span>] <span style="color: #666">=</span> <span style="color: #BA2121">&#39;false&#39;</span>
+    <span style="color: #008000; font-weight: bold">if</span> args<span style="color: #666">.</span>plantdb_host <span style="color: #A2F; font-weight: bold">in</span> (<span style="color: #BA2121">'localhost'</span>, <span style="color: #BA2121">'127.0.0.1'</span>):
+        os<span style="color: #666">.</span>environ[<span style="color: #BA2121">'VALIDATE_HOST'</span>] <span style="color: #666">=</span> <span style="color: #BA2121">'false'</span>
 
     <span style="color: #3D7B7B; font-style: italic"># - Start the Dash app:</span>
     app <span style="color: #666">=</span> setup_web_app(args<span style="color: #666">.</span>plantdb_host, args<span style="color: #666">.</span>plantdb_port, args<span style="color: #666">.</span>plantdb_prefix, args<span style="color: #666">.</span>plantdb_ssl,
                         proxy<span style="color: #666">=</span>args<span style="color: #666">.</span>proxy, url_prefix<span style="color: #666">=</span>args<span style="color: #666">.</span>url_prefix)
-    app<span style="color: #666">.</span>run(host<span style="color: #666">=</span><span style="color: #BA2121">&quot;0.0.0.0&quot;</span>, debug<span style="color: #666">=</span>args<span style="color: #666">.</span>debug, port<span style="color: #666">=</span>args<span style="color: #666">.</span>port)
+    app<span style="color: #666">.</span>run(host<span style="color: #666">=</span><span style="color: #BA2121">"0.0.0.0"</span>, debug<span style="color: #666">=</span>args<span style="color: #666">.</span>debug, port<span style="color: #666">=</span>args<span style="color: #666">.</span>port)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3090,8 +3062,8 @@ including host address and port options.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.webui.app</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> parsing
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>parser <span style="color: #666">=</span> parsing()
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>args <span style="color: #666">=</span> parser<span style="color: #666">.</span>parse_args([<span style="color: #BA2121">&#39;--plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;192.168.1.100&#39;</span>, <span style="color: #BA2121">&#39;--plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;5001&#39;</span>, <span style="color: #BA2121">&#39;--plantdb-prefix&#39;</span>, <span style="color: #BA2121">&#39;/plantdb&#39;</span>])
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;https://</span><span style="color: #A45A77; font-weight: bold">{</span>args<span style="color: #666">.</span>plantdb_host<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>args<span style="color: #666">.</span>plantdb_port<span style="color: #A45A77; font-weight: bold">}{</span>args<span style="color: #666">.</span>plantdb_prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>args <span style="color: #666">=</span> parser<span style="color: #666">.</span>parse_args([<span style="color: #BA2121">'--plantdb-host'</span>, <span style="color: #BA2121">'192.168.1.100'</span>, <span style="color: #BA2121">'--plantdb-port'</span>, <span style="color: #BA2121">'5001'</span>, <span style="color: #BA2121">'--plantdb-prefix'</span>, <span style="color: #BA2121">'/plantdb'</span>])
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000">print</span>(<span style="color: #BA2121">f"https://</span><span style="color: #A45A77; font-weight: bold">{</span>args<span style="color: #666">.</span>plantdb_host<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>args<span style="color: #666">.</span>plantdb_port<span style="color: #A45A77; font-weight: bold">}{</span>args<span style="color: #666">.</span>plantdb_prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 <span style="color: #717171">https://192.168.1.100:5001/plantdb</span>
 </code></pre></div>
 
@@ -3141,7 +3113,7 @@ including host address and port options.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">97</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">98</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">99</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parsing</span>() <span style="color: #666">-&gt;</span> argparse<span style="color: #666">.</span>ArgumentParser:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create and configure the command-line argument parser for the Plant Imager WebUI.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create and configure the command-line argument parser for the Plant Imager WebUI.</span>
 
 <span style="color: #BA2121; font-style: italic">    Sets up command-line arguments for configuring the connection to the PlantDB REST API,</span>
 <span style="color: #BA2121; font-style: italic">    including host address and port options.</span>
@@ -3155,33 +3127,33 @@ including host address and port options.</p>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; from plantimager.webui.app import parsing</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; parser = parsing()</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; args = parser.parse_args([&#39;--plantdb-host&#39;, &#39;192.168.1.100&#39;, &#39;--plantdb-port&#39;, &#39;5001&#39;, &#39;--plantdb-prefix&#39;, &#39;/plantdb&#39;])</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; print(f&quot;https://{args.plantdb_host}:{args.plantdb_port}{args.plantdb_prefix}&quot;)</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; args = parser.parse_args(['--plantdb-host', '192.168.1.100', '--plantdb-port', '5001', '--plantdb-prefix', '/plantdb'])</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; print(f"https://{args.plantdb_host}:{args.plantdb_port}{args.plantdb_prefix}")</span>
 <span style="color: #BA2121; font-style: italic">    https://192.168.1.100:5001/plantdb</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    parser <span style="color: #666">=</span> argparse<span style="color: #666">.</span>ArgumentParser(description<span style="color: #666">=</span><span style="color: #BA2121">&quot;PlantImager WebUI.&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    """</span>
+    parser <span style="color: #666">=</span> argparse<span style="color: #666">.</span>ArgumentParser(description<span style="color: #666">=</span><span style="color: #BA2121">"PlantImager WebUI."</span>)
 
-    app_args <span style="color: #666">=</span> parser<span style="color: #666">.</span>add_argument_group(<span style="color: #BA2121">&quot;Dash app options&quot;</span>)
-    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;-p&#39;</span>, <span style="color: #BA2121">&#39;--port&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">int</span>, default<span style="color: #666">=</span>WEBUI_PORT,
-                          help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Port of the WebUI app.&quot;</span>)
-    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--proxy&#39;</span>, action<span style="color: #666">=</span><span style="color: #BA2121">&#39;store_true&#39;</span>,
-                          help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Defines if the WebUI app is running behind a reverse proxy.&quot;</span>)
-    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--url-prefix&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span><span style="color: #BA2121">&#39;&#39;</span>,
-                          help<span style="color: #666">=</span><span style="color: #BA2121">&quot;URL prefix for the WebUI app (e.g. should match NGINX location if behind proxy).&quot;</span>)
+    app_args <span style="color: #666">=</span> parser<span style="color: #666">.</span>add_argument_group(<span style="color: #BA2121">"Dash app options"</span>)
+    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">'-p'</span>, <span style="color: #BA2121">'--port'</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">int</span>, default<span style="color: #666">=</span>WEBUI_PORT,
+                          help<span style="color: #666">=</span><span style="color: #BA2121">"Port of the WebUI app."</span>)
+    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">'--proxy'</span>, action<span style="color: #666">=</span><span style="color: #BA2121">'store_true'</span>,
+                          help<span style="color: #666">=</span><span style="color: #BA2121">"Defines if the WebUI app is running behind a reverse proxy."</span>)
+    app_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">'--url-prefix'</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span><span style="color: #BA2121">''</span>,
+                          help<span style="color: #666">=</span><span style="color: #BA2121">"URL prefix for the WebUI app (e.g. should match NGINX location if behind proxy)."</span>)
 
-    plantdb_args <span style="color: #666">=</span> parser<span style="color: #666">.</span>add_argument_group(<span style="color: #BA2121">&quot;PlantDB REST API options&quot;</span>)
-    plantdb_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--plantdb-host&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span>PLANTDB_HOST,
-                              help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Host address of the PlantDB REST API.&quot;</span>)
-    plantdb_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--plantdb-port&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">int</span>, default<span style="color: #666">=</span>PLANTDB_PORT,
-                              help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Port of the PlantDB REST API.&quot;</span>)
-    plantdb_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--plantdb-prefix&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span>PLANTDB_PREFIX,
-                              help<span style="color: #666">=</span><span style="color: #BA2121">&quot;URL prefix of the PlantDB REST API.&quot;</span>)
-    plantdb_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--plantdb-ssl&#39;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">bool</span>, default<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>,
-                              help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Whether the PlantDB REST API is using SSL or not.&quot;</span>)
+    plantdb_args <span style="color: #666">=</span> parser<span style="color: #666">.</span>add_argument_group(<span style="color: #BA2121">"PlantDB REST API options"</span>)
+    plantdb_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">'--plantdb-host'</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span>PLANTDB_HOST,
+                              help<span style="color: #666">=</span><span style="color: #BA2121">"Host address of the PlantDB REST API."</span>)
+    plantdb_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">'--plantdb-port'</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">int</span>, default<span style="color: #666">=</span>PLANTDB_PORT,
+                              help<span style="color: #666">=</span><span style="color: #BA2121">"Port of the PlantDB REST API."</span>)
+    plantdb_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">'--plantdb-prefix'</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">str</span>, default<span style="color: #666">=</span>PLANTDB_PREFIX,
+                              help<span style="color: #666">=</span><span style="color: #BA2121">"URL prefix of the PlantDB REST API."</span>)
+    plantdb_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">'--plantdb-ssl'</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">bool</span>, default<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>,
+                              help<span style="color: #666">=</span><span style="color: #BA2121">"Whether the PlantDB REST API is using SSL or not."</span>)
 
-    misc_args <span style="color: #666">=</span> parser<span style="color: #666">.</span>add_argument_group(<span style="color: #BA2121">&quot;Miscellaneous options&quot;</span>)
-    misc_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&#39;--debug&#39;</span>, action<span style="color: #666">=</span><span style="color: #BA2121">&#39;store_true&#39;</span>,
-                           help<span style="color: #666">=</span><span style="color: #BA2121">&quot;Enable/disable all the dev tools.&quot;</span>)
+    misc_args <span style="color: #666">=</span> parser<span style="color: #666">.</span>add_argument_group(<span style="color: #BA2121">"Miscellaneous options"</span>)
+    misc_args<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">'--debug'</span>, action<span style="color: #666">=</span><span style="color: #BA2121">'store_true'</span>,
+                           help<span style="color: #666">=</span><span style="color: #BA2121">"Enable/disable all the dev tools."</span>)
     <span style="color: #008000; font-weight: bold">return</span> parser
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3197,7 +3169,7 @@ including host address and port options.</p>
 
 
 <a href="#plantimager.webui.app.setup_web_app" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>setup_web_app(plantdb_host, plantdb_port, plantdb_prefix, plantdb_ssl, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_prefix<span style="color: #666">=</span><span style="color: #BA2121">&#39;/webui&#39;</span>)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>setup_web_app(plantdb_host, plantdb_port, plantdb_prefix, plantdb_ssl, proxy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, url_prefix<span style="color: #666">=</span><span style="color: #BA2121">'/webui'</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3454,11 +3426,9 @@ user authentication, and dataset management.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(plantdb_host: <span style="color: #008000">str</span>, plantdb_port: <span style="color: #008000">int</span>, plantdb_prefix: <span style="color: #008000">str</span>, plantdb_ssl: <span style="color: #008000">str</span>,
-                  proxy: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>, url_prefix: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&#39;/webui&#39;</span>) <span style="color: #666">-&gt;</span> Dash:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Initialize and configure the Plant Imager Dash web application.</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(plantdb_host: <span style="color: #008000">str</span>, plantdb_port: <span style="color: #008000">int</span>, plantdb_prefix: <span style="color: #008000">str</span>, plantdb_ssl: <span style="color: #008000">str</span>,
+                  proxy: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>, url_prefix: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">'/webui'</span>) <span style="color: #666">-&gt;</span> Dash:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Initialize and configure the Plant Imager Dash web application.</span>
 
 <span style="color: #BA2121; font-style: italic">    Creates a Dash application instance with Bootstrap styling and sets up the main</span>
 <span style="color: #BA2121; font-style: italic">    layout including navigation bar, modals, and content areas. The application</span>
@@ -3468,7 +3438,7 @@ user authentication, and dataset management.</p>
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    plantdb_host : str</span>
-<span style="color: #BA2121; font-style: italic">        The hostname for the PlantDB REST API server (e.g., &#39;localhost&#39;, &#39;127.0.0.1&#39;, &#39;example.com&#39;)</span>
+<span style="color: #BA2121; font-style: italic">        The hostname for the PlantDB REST API server (e.g., 'localhost', '127.0.0.1', 'example.com')</span>
 <span style="color: #BA2121; font-style: italic">    plantdb_port : int</span>
 <span style="color: #BA2121; font-style: italic">        The port number for the PlantDB REST API server connection</span>
 <span style="color: #BA2121; font-style: italic">    plantdb_prefix : str</span>
@@ -3493,21 +3463,21 @@ user authentication, and dataset management.</p>
 <span style="color: #BA2121; font-style: italic">    - Navigation bar with ROMI branding</span>
 <span style="color: #BA2121; font-style: italic">    - Configuration and authentication modals</span>
 <span style="color: #BA2121; font-style: italic">    - Main content area for scan management</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #3D7B7B; font-style: italic"># Ensure `url_prefix` ends with a trailing slash (as required by Dash)</span>
-    <span style="color: #008000; font-weight: bold">if</span> url_prefix <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #A2F; font-weight: bold">not</span> url_prefix<span style="color: #666">.</span>endswith(<span style="color: #BA2121">&#39;/&#39;</span>):
-        url_prefix <span style="color: #666">+=</span> <span style="color: #BA2121">&#39;/&#39;</span>
+    <span style="color: #008000; font-weight: bold">if</span> url_prefix <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #A2F; font-weight: bold">not</span> url_prefix<span style="color: #666">.</span>endswith(<span style="color: #BA2121">'/'</span>):
+        url_prefix <span style="color: #666">+=</span> <span style="color: #BA2121">'/'</span>
     <span style="color: #008000; font-weight: bold">else</span>:
         url_prefix <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
 
     app <span style="color: #666">=</span> Dash(
-        name<span style="color: #666">=</span><span style="color: #BA2121">&quot;plantimager.webui&quot;</span>,
-        title<span style="color: #666">=</span><span style="color: #BA2121">&quot;Plant Imager WebUI&quot;</span>,
+        name<span style="color: #666">=</span><span style="color: #BA2121">"plantimager.webui"</span>,
+        title<span style="color: #666">=</span><span style="color: #BA2121">"Plant Imager WebUI"</span>,
         external_stylesheets<span style="color: #666">=</span>[dbc<span style="color: #666">.</span>themes<span style="color: #666">.</span>BOOTSTRAP, dbc<span style="color: #666">.</span>icons<span style="color: #666">.</span>BOOTSTRAP],
         url_base_pathname<span style="color: #666">=</span>url_prefix,
         use_pages<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
-        pages_folder<span style="color: #666">=</span><span style="color: #008000">str</span>(Path(<span style="color: #19177C">__file__</span>)<span style="color: #666">.</span>parent <span style="color: #666">/</span> <span style="color: #BA2121">&quot;pages&quot;</span>),
-        assets_folder<span style="color: #666">=</span><span style="color: #008000">str</span>(Path(<span style="color: #19177C">__file__</span>)<span style="color: #666">.</span>parent <span style="color: #666">/</span> <span style="color: #BA2121">&quot;assets&quot;</span>),
+        pages_folder<span style="color: #666">=</span><span style="color: #008000">str</span>(Path(<span style="color: #19177C">__file__</span>)<span style="color: #666">.</span>parent <span style="color: #666">/</span> <span style="color: #BA2121">"pages"</span>),
+        assets_folder<span style="color: #666">=</span><span style="color: #008000">str</span>(Path(<span style="color: #19177C">__file__</span>)<span style="color: #666">.</span>parent <span style="color: #666">/</span> <span style="color: #BA2121">"assets"</span>),
     )
 
     <span style="color: #008000; font-weight: bold">if</span> proxy:
@@ -3517,28 +3487,26 @@ user authentication, and dataset management.</p>
         app<span style="color: #666">.</span>server<span style="color: #666">.</span>config<span style="color: #666">.</span>update(
             SESSION_COOKIE_SECURE<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,  <span style="color: #3D7B7B; font-style: italic"># Only send cookies over HTTPS</span>
             SESSION_COOKIE_HTTPONLY<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,  <span style="color: #3D7B7B; font-style: italic"># Prevent JavaScript access</span>
-            SESSION_COOKIE_SAMESITE<span style="color: #666">=</span><span style="color: #BA2121">&#39;Strict&#39;</span>  <span style="color: #3D7B7B; font-style: italic"># CSRF protection</span>
+            SESSION_COOKIE_SAMESITE<span style="color: #666">=</span><span style="color: #BA2121">'Strict'</span>  <span style="color: #3D7B7B; font-style: italic"># CSRF protection</span>
         )
 
     <span style="color: #3D7B7B; font-style: italic"># Main application layout definition</span>
     app<span style="color: #666">.</span>layout <span style="color: #666">=</span> html<span style="color: #666">.</span>Div([
         <span style="color: #3D7B7B; font-style: italic"># Global state storage</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;plantdb-host&#39;</span>, data<span style="color: #666">=</span>plantdb_host, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API URL</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;plantdb-port&#39;</span>, data<span style="color: #666">=</span>plantdb_port, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API port</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;plantdb-prefix&#39;</span>, data<span style="color: #666">=</span>plantdb_prefix, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API prefix</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;plantdb-ssl&#39;</span>, data<span style="color: #666">=</span>plantdb_ssl, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API prefix</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;connected&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># boolean flag indicating if connected to the database or not</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;logged-username&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># id of the logger user</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;logged-fullname&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># real name of the logged user</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;access-token&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># access token of the logged user</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;refresh-token&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># refresh token of the logged user</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;scan-api-token&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># scoped API token for the current scan</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;scan-job-id&#39;</span>, data<span style="color: #666">=0</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),  <span style="color: #3D7B7B; font-style: italic"># trigger to launch the background scan</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-list&#39;</span>, data<span style="color: #666">=</span>[]),  <span style="color: #3D7B7B; font-style: italic"># list of datasets known to the database</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-id&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># name of the dataset to create (scan operation)</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;dataset-dict&#39;</span>, data<span style="color: #666">=</span>{}, storage_type<span style="color: #666">=</span><span style="color: #BA2121">&#39;session&#39;</span>),
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'plantdb-host'</span>, data<span style="color: #666">=</span>plantdb_host, storage_type<span style="color: #666">=</span><span style="color: #BA2121">'session'</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API URL</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'plantdb-port'</span>, data<span style="color: #666">=</span>plantdb_port, storage_type<span style="color: #666">=</span><span style="color: #BA2121">'session'</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API port</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'plantdb-prefix'</span>, data<span style="color: #666">=</span>plantdb_prefix, storage_type<span style="color: #666">=</span><span style="color: #BA2121">'session'</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API prefix</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'plantdb-ssl'</span>, data<span style="color: #666">=</span>plantdb_ssl, storage_type<span style="color: #666">=</span><span style="color: #BA2121">'session'</span>),  <span style="color: #3D7B7B; font-style: italic"># PlantDB REST API prefix</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'connected'</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># boolean flag indicating if connected to the database or not</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'logged-username'</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">'session'</span>),  <span style="color: #3D7B7B; font-style: italic"># id of the logger user</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'logged-fullname'</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">'session'</span>),  <span style="color: #3D7B7B; font-style: italic"># real name of the logged user</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'access-token'</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">'session'</span>),  <span style="color: #3D7B7B; font-style: italic"># access token of the logged user</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'refresh-token'</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, storage_type<span style="color: #666">=</span><span style="color: #BA2121">'session'</span>),  <span style="color: #3D7B7B; font-style: italic"># refresh token of the logged user</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'dataset-list'</span>, data<span style="color: #666">=</span>[]),  <span style="color: #3D7B7B; font-style: italic"># list of datasets known to the database</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'dataset-id'</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># name of the dataset to create (scan operation)</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'dataset-dict'</span>, data<span style="color: #666">=</span>{}, storage_type<span style="color: #666">=</span><span style="color: #BA2121">'session'</span>),
         <span style="color: #3D7B7B; font-style: italic"># dictionary of dataset information, used for AG grid table</span>
-        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;view-dataset&#39;</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># name of the dataset to visualize (plotly carousel)</span>
+        dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'view-dataset'</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># name of the dataset to visualize (plotly carousel)</span>
         <span style="color: #3D7B7B; font-style: italic"># Navigation and modal components</span>
         html<span style="color: #666">.</span>Div(children<span style="color: #666">=</span>[
             navbar_layout,
@@ -3548,11 +3516,11 @@ user authentication, and dataset management.</p>
             caroussel_modal,
         ]),
         <span style="color: #3D7B7B; font-style: italic"># Main content container</span>
-        <span style="color: #3D7B7B; font-style: italic"># html.Div(children=[scan_layout], style={&quot;margin&quot;: 20}),</span>
-        dcc<span style="color: #666">.</span>Location(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;url&#39;</span>, refresh<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>),
-        html<span style="color: #666">.</span>Div(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&#39;page-content&#39;</span>,
+        <span style="color: #3D7B7B; font-style: italic"># html.Div(children=[scan_layout], style={"margin": 20}),</span>
+        dcc<span style="color: #666">.</span>Location(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'url'</span>, refresh<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>),
+        html<span style="color: #666">.</span>Div(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'page-content'</span>,
                  children<span style="color: #666">=</span>[dash<span style="color: #666">.</span>page_container],
-                 style<span style="color: #666">=</span>{<span style="color: #BA2121">&quot;margin&quot;</span>: <span style="color: #666">20</span>},
+                 style<span style="color: #666">=</span>{<span style="color: #BA2121">"margin"</span>: <span style="color: #666">20</span>},
                  ),
     ])
 

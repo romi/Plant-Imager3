@@ -2004,34 +2004,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../webui/carousel/" class="md-nav__link">
         
   
@@ -2211,7 +2183,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2233,14 +2205,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3065,23 +3037,23 @@ appropriate bridge for the application.</p>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_currentCamera <span style="color: #666">=</span> DummyCameraBridge(<span style="color: #008000">self</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_scanner <span style="color: #666">=</span> Scanner()
 
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server <span style="color: #666">=</span> RPCControllerServer(<span style="color: #008000">self</span><span style="color: #666">.</span>context, <span style="color: #BA2121">&quot;tcp://localhost:14567&quot;</span>, <span style="color: #008000">self</span><span style="color: #666">.</span>_scanner)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server <span style="color: #666">=</span> RPCControllerServer(<span style="color: #008000">self</span><span style="color: #666">.</span>context, <span style="color: #BA2121">"tcp://localhost:14567"</span>, <span style="color: #008000">self</span><span style="color: #666">.</span>_scanner)
     <span style="color: #008000">self</span><span style="color: #666">.</span>scannerChanged<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server<span style="color: #666">.</span>handle_scanner_changed)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread <span style="color: #666">=</span> Thread(target<span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server<span style="color: #666">.</span>serve_forever, name<span style="color: #666">=</span><span style="color: #BA2121">&quot;RPCControllerServer&quot;</span>)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread <span style="color: #666">=</span> Thread(target<span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server<span style="color: #666">.</span>serve_forever, name<span style="color: #666">=</span><span style="color: #BA2121">"RPCControllerServer"</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread<span style="color: #666">.</span>daemon <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread<span style="color: #666">.</span>start()
 
     <span style="color: #008000">self</span><span style="color: #666">.</span>registry<span style="color: #666">.</span>start()
 
     <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">finalizer</span>(registry, controller_server, controller_thread, context):
-        logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">&quot;finalizing AppBridge&quot;</span>)
+        logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">"finalizing AppBridge"</span>)
         registry<span style="color: #666">.</span>stop()
         registry<span style="color: #666">.</span>join()
         controller_server<span style="color: #666">.</span>stop_server()
         <span style="color: #008000">print</span>(controller_thread, context)
         controller_thread<span style="color: #666">.</span>join()
         context<span style="color: #666">.</span>term()
-        logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">&quot;AppBridge finalized&quot;</span>)
+        logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">"AppBridge finalized"</span>)
 
     finalize(<span style="color: #008000">self</span>, finalizer, <span style="color: #008000">self</span><span style="color: #666">.</span>registry, <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server, <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread, <span style="color: #008000">self</span><span style="color: #666">.</span>context)
 </code></pre></div></td></tr></table></div>
@@ -3188,7 +3160,7 @@ appropriate bridge for the application.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">123</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">int</span>, result<span style="color: #666">=</span>CameraBridge)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getCameraBridgeAtIndex</span>(<span style="color: #008000">self</span>, index: <span style="color: #008000">int</span>) <span style="color: #666">-&gt;</span> CameraBridge:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    (Slot) Returns the camera bridge at a given index.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -3199,7 +3171,7 @@ appropriate bridge for the application.</p>
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    CameraBridge</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>device_bridges[index]
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3230,8 +3202,8 @@ appropriate bridge for the application.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">220</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">reboot_host</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Reboots the host.&quot;&quot;&quot;</span>
-    subprocess<span style="color: #666">.</span>run([<span style="color: #BA2121">&quot;reboot&quot;</span>])
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Reboots the host."""</span>
+    subprocess<span style="color: #666">.</span>run([<span style="color: #BA2121">"reboot"</span>])
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3261,8 +3233,8 @@ appropriate bridge for the application.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">224</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">restart_app</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Reboots the app.&quot;&quot;&quot;</span>
-    subprocess<span style="color: #666">.</span>run([<span style="color: #BA2121">&quot;systemctl&quot;</span>, <span style="color: #BA2121">&quot;--user&quot;</span>, <span style="color: #BA2121">&quot;restart&quot;</span>, <span style="color: #BA2121">&quot;plant-imager-app.service&quot;</span>])
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Reboots the app."""</span>
+    subprocess<span style="color: #666">.</span>run([<span style="color: #BA2121">"systemctl"</span>, <span style="color: #BA2121">"--user"</span>, <span style="color: #BA2121">"restart"</span>, <span style="color: #BA2121">"plant-imager-app.service"</span>])
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3292,8 +3264,8 @@ appropriate bridge for the application.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">215</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">shutdown_host</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Shuts down the host.&quot;&quot;&quot;</span>
-    subprocess<span style="color: #666">.</span>run([<span style="color: #BA2121">&quot;poweroff&quot;</span>])
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Shuts down the host."""</span>
+    subprocess<span style="color: #666">.</span>run([<span style="color: #BA2121">"poweroff"</span>])
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

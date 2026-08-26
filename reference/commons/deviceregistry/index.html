@@ -2048,34 +2048,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../webui/carousel/" class="md-nav__link">
         
   
@@ -2255,7 +2227,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2277,14 +2249,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3018,7 +2990,7 @@
 
 
 <a href="#plantimager.commons.deviceregistry.DeviceRegistry" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>DeviceRegistry(context, addr<span style="color: #666">=</span><span style="color: #BA2121">&#39;*&#39;</span>, port<span style="color: #666">=</span><span style="color: #BA2121">&#39;5555&#39;</span>)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>DeviceRegistry(context, addr<span style="color: #666">=</span><span style="color: #BA2121">'*'</span>, port<span style="color: #666">=</span><span style="color: #BA2121">'5555'</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3158,7 +3130,7 @@ callbacks for.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, addr: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&quot;*&quot;</span>, port: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&quot;5555&quot;</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, addr: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">"*"</span>, port: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">"5555"</span>):
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000">self</span><span style="color: #666">.</span>addr: <span style="color: #008000">str</span> <span style="color: #666">=</span> addr
     <span style="color: #008000">self</span><span style="color: #666">.</span>port: <span style="color: #008000">str</span> <span style="color: #666">=</span> port
@@ -3166,8 +3138,8 @@ callbacks for.</p>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_lock <span style="color: #666">=</span> RLock()
     <span style="color: #008000">self</span><span style="color: #666">.</span>_new_device_callbacks: <span style="color: #008000">list</span>[Callable] <span style="color: #666">=</span> []
     <span style="color: #008000">self</span><span style="color: #666">.</span>_device_removed_callbacks: <span style="color: #008000">list</span>[Callable] <span style="color: #666">=</span> []
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_callback_events_to_process: <span style="color: #008000">dict</span>[Literal[<span style="color: #BA2121">&quot;added&quot;</span>, <span style="color: #BA2121">&quot;removed&quot;</span>], <span style="color: #008000">list</span>[<span style="color: #008000">tuple</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>, <span style="color: #008000">str</span>]]] <span style="color: #666">=</span> {
-        <span style="color: #BA2121">&quot;added&quot;</span>: [], <span style="color: #BA2121">&quot;removed&quot;</span>: []
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_callback_events_to_process: <span style="color: #008000">dict</span>[Literal[<span style="color: #BA2121">"added"</span>, <span style="color: #BA2121">"removed"</span>], <span style="color: #008000">list</span>[<span style="color: #008000">tuple</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>, <span style="color: #008000">str</span>]]] <span style="color: #666">=</span> {
+        <span style="color: #BA2121">"added"</span>: [], <span style="color: #BA2121">"removed"</span>: []
     }
     <span style="color: #008000">self</span><span style="color: #666">.</span>devices: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>]] <span style="color: #666">=</span> {}  <span style="color: #3D7B7B; font-style: italic"># name --&gt; (device_type, addr)</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>device_names: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>] <span style="color: #666">=</span> {}  <span style="color: #3D7B7B; font-style: italic"># uuid --&gt; name</span>
@@ -3212,9 +3184,9 @@ callbacks for.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">350</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">351</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">352</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">add_device_removed_callback</span>(<span style="color: #008000">self</span>, callback: Callable):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Register a callback function to be executed when a device is removed.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_device_removed_callbacks<span style="color: #666">.</span>append(callback)
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3245,9 +3217,9 @@ callbacks for.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">344</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">345</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">346</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">add_new_device_callback</span>(<span style="color: #008000">self</span>, callback: Callable):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Register a callback function to be executed when a new device is registered.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_new_device_callbacks<span style="color: #666">.</span>append(callback)
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3309,7 +3281,7 @@ values are tuples containing the name and type of the device as strings.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">363</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">364</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">365</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_devices</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>]]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Returns the registered devices.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
@@ -3317,7 +3289,7 @@ values are tuples containing the name and type of the device as strings.</p>
 <span style="color: #BA2121; font-style: italic">    dict[str, tuple[str, str]]</span>
 <span style="color: #BA2121; font-style: italic">        A dictionary where the keys are device identifiers as strings and the</span>
 <span style="color: #BA2121; font-style: italic">        values are tuples containing the name and type of the device as strings.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">with</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_lock:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>devices
 </code></pre></div></td></tr></table></div>
@@ -3435,94 +3407,94 @@ the events accordingly.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">209</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">210</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">run</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Runs the main loop for the registry service, handling device registration, unregistration, and</span>
 <span style="color: #BA2121; font-style: italic">    device-related event callbacks. The service listens for messages using ZeroMQ (zmq) and processes</span>
 <span style="color: #BA2121; font-style: italic">    the events accordingly.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">with</span> <span style="color: #008000">self</span><span style="color: #666">.</span>context<span style="color: #666">.</span>socket(zmq<span style="color: #666">.</span>REP) <span style="color: #008000; font-weight: bold">as</span> socket:
-        socket<span style="color: #666">.</span>bind(<span style="color: #BA2121">f&quot;tcp://</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
-        logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f&quot;Starting registry on </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+        socket<span style="color: #666">.</span>bind(<span style="color: #BA2121">f"tcp://</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
+        logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f"Starting registry on </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
         <span style="color: #008000; font-weight: bold">while</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_stop_flag:
             <span style="color: #008000">self</span><span style="color: #666">.</span>_prune_unhealthy_devices()
             <span style="color: #3D7B7B; font-style: italic"># Fire callbacks for removed and added devices after responding back</span>
-            <span style="color: #008000; font-weight: bold">for</span> device_type, addr, name <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_callback_events_to_process[<span style="color: #BA2121">&quot;removed&quot;</span>]:
+            <span style="color: #008000; font-weight: bold">for</span> device_type, addr, name <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_callback_events_to_process[<span style="color: #BA2121">"removed"</span>]:
                 <span style="color: #008000; font-weight: bold">for</span> callback <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_device_removed_callbacks:
                     callback(device_type, addr, name)
-                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Processed REMOVE callback for </span><span style="color: #A45A77; font-weight: bold">{</span>device_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
-            <span style="color: #008000">self</span><span style="color: #666">.</span>_callback_events_to_process[<span style="color: #BA2121">&quot;removed&quot;</span>]<span style="color: #666">.</span>clear()
-            <span style="color: #008000; font-weight: bold">for</span> device_type, addr, name <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_callback_events_to_process[<span style="color: #BA2121">&quot;added&quot;</span>]:
+                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Processed REMOVE callback for </span><span style="color: #A45A77; font-weight: bold">{</span>device_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
+            <span style="color: #008000">self</span><span style="color: #666">.</span>_callback_events_to_process[<span style="color: #BA2121">"removed"</span>]<span style="color: #666">.</span>clear()
+            <span style="color: #008000; font-weight: bold">for</span> device_type, addr, name <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_callback_events_to_process[<span style="color: #BA2121">"added"</span>]:
                 <span style="color: #008000; font-weight: bold">for</span> callback <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_new_device_callbacks:
                     callback(device_type, addr, name)
-                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Processed ADDED callback for </span><span style="color: #A45A77; font-weight: bold">{</span>device_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
-            <span style="color: #008000">self</span><span style="color: #666">.</span>_callback_events_to_process[<span style="color: #BA2121">&quot;added&quot;</span>]<span style="color: #666">.</span>clear()
+                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Processed ADDED callback for </span><span style="color: #A45A77; font-weight: bold">{</span>device_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
+            <span style="color: #008000">self</span><span style="color: #666">.</span>_callback_events_to_process[<span style="color: #BA2121">"added"</span>]<span style="color: #666">.</span>clear()
 
             <span style="color: #3D7B7B; font-style: italic"># in order for the thread to stop properly, it must not block indefinitely while waiting for</span>
             <span style="color: #3D7B7B; font-style: italic"># a message, hence polling for 100 ms and continue-ing if timeout</span>
             <span style="color: #008000; font-weight: bold">if</span> socket<span style="color: #666">.</span>poll(<span style="color: #666">100</span>) <span style="color: #666">==</span> <span style="color: #666">0</span>:
                 <span style="color: #008000; font-weight: bold">continue</span>
             message <span style="color: #666">=</span> socket<span style="color: #666">.</span>recv_json()
-            event_type: <span style="color: #008000">str</span> <span style="color: #666">=</span> message[<span style="color: #BA2121">&quot;event&quot;</span>]
-            payload: <span style="color: #008000">dict</span> <span style="color: #666">=</span> message[<span style="color: #BA2121">&quot;payload&quot;</span>]
-            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Received event: </span><span style="color: #A45A77; font-weight: bold">{</span>event_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>payload<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+            event_type: <span style="color: #008000">str</span> <span style="color: #666">=</span> message[<span style="color: #BA2121">"event"</span>]
+            payload: <span style="color: #008000">dict</span> <span style="color: #666">=</span> message[<span style="color: #BA2121">"payload"</span>]
+            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Received event: </span><span style="color: #A45A77; font-weight: bold">{</span>event_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>payload<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
             <span style="color: #008000; font-weight: bold">match</span> event_type:
                 <span style="color: #008000; font-weight: bold">case</span> EventType<span style="color: #666">.</span>REGISTER:
-                    device_type <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;device_type&quot;</span>]
-                    addr <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;addr&quot;</span>]
-                    proposed_name <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;name&quot;</span>]
-                    overwrite <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;overwrite&quot;</span>] <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">&quot;overwrite&quot;</span> <span style="color: #A2F; font-weight: bold">in</span> payload <span style="color: #008000; font-weight: bold">else</span> <span style="color: #008000; font-weight: bold">False</span>
+                    device_type <span style="color: #666">=</span> payload[<span style="color: #BA2121">"device_type"</span>]
+                    addr <span style="color: #666">=</span> payload[<span style="color: #BA2121">"addr"</span>]
+                    proposed_name <span style="color: #666">=</span> payload[<span style="color: #BA2121">"name"</span>]
+                    overwrite <span style="color: #666">=</span> payload[<span style="color: #BA2121">"overwrite"</span>] <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">"overwrite"</span> <span style="color: #A2F; font-weight: bold">in</span> payload <span style="color: #008000; font-weight: bold">else</span> <span style="color: #008000; font-weight: bold">False</span>
                     name, uuid <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_handle_register(device_type, addr, proposed_name, overwrite<span style="color: #666">=</span>overwrite)
                     socket<span style="color: #666">.</span>send_json({
-                        <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>REGISTER_ACK,
-                        <span style="color: #BA2121">&quot;payload&quot;</span>: {
-                            <span style="color: #BA2121">&quot;name&quot;</span>: name,
-                            <span style="color: #BA2121">&quot;uuid&quot;</span>: <span style="color: #008000">str</span>(uuid),
+                        <span style="color: #BA2121">"event"</span>: EventType<span style="color: #666">.</span>REGISTER_ACK,
+                        <span style="color: #BA2121">"payload"</span>: {
+                            <span style="color: #BA2121">"name"</span>: name,
+                            <span style="color: #BA2121">"uuid"</span>: <span style="color: #008000">str</span>(uuid),
                         }
                     })
                 <span style="color: #008000; font-weight: bold">case</span> EventType<span style="color: #666">.</span>UNREGISTER:
-                    uuid <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;uuid&quot;</span>]
+                    uuid <span style="color: #666">=</span> payload[<span style="color: #BA2121">"uuid"</span>]
                     <span style="color: #008000; font-weight: bold">if</span> uuid <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>device_names:
                         result <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_remove_device_by_uuid(uuid)
                     <span style="color: #008000; font-weight: bold">else</span>:
                         result <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
-                        logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f&quot;Device of id </span><span style="color: #A45A77; font-weight: bold">{</span>uuid<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> not found in registry&quot;</span>)
+                        logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f"Device of id </span><span style="color: #A45A77; font-weight: bold">{</span>uuid<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> not found in registry"</span>)
                     socket<span style="color: #666">.</span>send_json({
-                        <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>ACK,
-                        <span style="color: #BA2121">&quot;payload&quot;</span>: {
-                            <span style="color: #BA2121">&quot;req_event&quot;</span>: EventType<span style="color: #666">.</span>UNREGISTER,
-                            <span style="color: #BA2121">&quot;success&quot;</span>: result,
+                        <span style="color: #BA2121">"event"</span>: EventType<span style="color: #666">.</span>ACK,
+                        <span style="color: #BA2121">"payload"</span>: {
+                            <span style="color: #BA2121">"req_event"</span>: EventType<span style="color: #666">.</span>UNREGISTER,
+                            <span style="color: #BA2121">"success"</span>: result,
                         }
                     })
 
                 <span style="color: #008000; font-weight: bold">case</span> EventType<span style="color: #666">.</span>CHECK_ALIVE:
-                    uuid <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;uuid&quot;</span>]
-                    timeout <span style="color: #666">=</span> payload<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;alive_timeout&quot;</span>, ALIVE_TIMEOUT)
+                    uuid <span style="color: #666">=</span> payload[<span style="color: #BA2121">"uuid"</span>]
+                    timeout <span style="color: #666">=</span> payload<span style="color: #666">.</span>get(<span style="color: #BA2121">"alive_timeout"</span>, ALIVE_TIMEOUT)
                     <span style="color: #008000; font-weight: bold">if</span> uuid <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>device_health_timeout:
                         <span style="color: #008000">self</span><span style="color: #666">.</span>device_health_timeout[uuid] <span style="color: #666">=</span> <span style="color: #008000">int</span>(time<span style="color: #666">.</span>time()) <span style="color: #666">+</span> timeout
                         socket<span style="color: #666">.</span>send_json({
-                            <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>ACK,
-                            <span style="color: #BA2121">&quot;payload&quot;</span>: {
-                                <span style="color: #BA2121">&quot;req_event&quot;</span>: EventType<span style="color: #666">.</span>CHECK_ALIVE,
-                                <span style="color: #BA2121">&quot;success&quot;</span>: <span style="color: #008000; font-weight: bold">True</span>,
+                            <span style="color: #BA2121">"event"</span>: EventType<span style="color: #666">.</span>ACK,
+                            <span style="color: #BA2121">"payload"</span>: {
+                                <span style="color: #BA2121">"req_event"</span>: EventType<span style="color: #666">.</span>CHECK_ALIVE,
+                                <span style="color: #BA2121">"success"</span>: <span style="color: #008000; font-weight: bold">True</span>,
                             }
                         })
                     <span style="color: #008000; font-weight: bold">else</span>:
                         socket<span style="color: #666">.</span>send_json({
-                            <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>ACK,
-                            <span style="color: #BA2121">&quot;payload&quot;</span>: {
-                                <span style="color: #BA2121">&quot;req_event&quot;</span>: EventType<span style="color: #666">.</span>CHECK_ALIVE,
-                                <span style="color: #BA2121">&quot;success&quot;</span>: <span style="color: #008000; font-weight: bold">False</span>,
+                            <span style="color: #BA2121">"event"</span>: EventType<span style="color: #666">.</span>ACK,
+                            <span style="color: #BA2121">"payload"</span>: {
+                                <span style="color: #BA2121">"req_event"</span>: EventType<span style="color: #666">.</span>CHECK_ALIVE,
+                                <span style="color: #BA2121">"success"</span>: <span style="color: #008000; font-weight: bold">False</span>,
                             }
                         })
                 <span style="color: #008000; font-weight: bold">case</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">_</span>:
-                    logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f&quot;Unknown event type: </span><span style="color: #A45A77; font-weight: bold">{</span>event_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+                    logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f"Unknown event type: </span><span style="color: #A45A77; font-weight: bold">{</span>event_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
                     socket<span style="color: #666">.</span>send_json({
-                        <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>UNSUPPORTED,
-                        <span style="color: #BA2121">&quot;payload&quot;</span>: {
-                            <span style="color: #BA2121">&quot;req_event&quot;</span>: event_type,
+                        <span style="color: #BA2121">"event"</span>: EventType<span style="color: #666">.</span>UNSUPPORTED,
+                        <span style="color: #BA2121">"payload"</span>: {
+                            <span style="color: #BA2121">"req_event"</span>: event_type,
                         }
                     })
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f&quot;Registry stopped on </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f"Registry stopped on </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3552,7 +3524,7 @@ the events accordingly.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Stop the registry thread.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Stop the registry thread."""</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_device_removed_callbacks <span style="color: #666">=</span> []
     <span style="color: #008000">self</span><span style="color: #666">.</span>_new_device_callbacks <span style="color: #666">=</span> []
     <span style="color: #008000">self</span><span style="color: #666">.</span>_stop_flag <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
@@ -3623,32 +3595,32 @@ The uuid must be kept to unregister the device later.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">397</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_device</span>(
         context: zmq<span style="color: #666">.</span>Context, device_type: <span style="color: #008000">str</span>, addr: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, overwrite: <span style="color: #008000">bool</span><span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>
 ) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Register device of type `device_type` and of address `addr` to registry at `registry_url`.</span>
 <span style="color: #BA2121; font-style: italic">    Proposes name to registry.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns accepted device name and the uuid of the device if successful, otherwise an empty string.</span>
 <span style="color: #BA2121; font-style: italic">    The uuid must be kept to unregister the device later.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">with</span> context<span style="color: #666">.</span>socket(zmq<span style="color: #666">.</span>REQ) <span style="color: #008000; font-weight: bold">as</span> socket:
         <span style="color: #008000; font-weight: bold">with</span> socket<span style="color: #666">.</span>connect(registry_url):
             socket<span style="color: #666">.</span>send_json({
-                <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>REGISTER,
-                <span style="color: #BA2121">&quot;payload&quot;</span>: {
-                    <span style="color: #BA2121">&quot;device_type&quot;</span>: device_type,
-                    <span style="color: #BA2121">&quot;addr&quot;</span>: addr,
-                    <span style="color: #BA2121">&quot;name&quot;</span>: name,
-                    <span style="color: #BA2121">&quot;overwrite&quot;</span>: overwrite,
+                <span style="color: #BA2121">"event"</span>: EventType<span style="color: #666">.</span>REGISTER,
+                <span style="color: #BA2121">"payload"</span>: {
+                    <span style="color: #BA2121">"device_type"</span>: device_type,
+                    <span style="color: #BA2121">"addr"</span>: addr,
+                    <span style="color: #BA2121">"name"</span>: name,
+                    <span style="color: #BA2121">"overwrite"</span>: overwrite,
                 }
             })
             reply <span style="color: #666">=</span> socket<span style="color: #666">.</span>recv_json()
-            event_type <span style="color: #666">=</span> reply[<span style="color: #BA2121">&quot;event&quot;</span>]
-            payload <span style="color: #666">=</span> reply[<span style="color: #BA2121">&quot;payload&quot;</span>]
+            event_type <span style="color: #666">=</span> reply[<span style="color: #BA2121">"event"</span>]
+            payload <span style="color: #666">=</span> reply[<span style="color: #BA2121">"payload"</span>]
             <span style="color: #008000; font-weight: bold">if</span> event_type <span style="color: #666">==</span> EventType<span style="color: #666">.</span>REGISTER_ACK:
-                registered_name <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;name&quot;</span>]
-                uuid <span style="color: #666">=</span> payload[<span style="color: #BA2121">&quot;uuid&quot;</span>]
+                registered_name <span style="color: #666">=</span> payload[<span style="color: #BA2121">"name"</span>]
+                uuid <span style="color: #666">=</span> payload[<span style="color: #BA2121">"uuid"</span>]
                 <span style="color: #008000; font-weight: bold">return</span> registered_name, uuid
-    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;&quot;</span>, <span style="color: #BA2121">&quot;&quot;</span>
+    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">""</span>, <span style="color: #BA2121">""</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3897,7 +3869,7 @@ connecting, sending, or receiving messages.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">495</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">496</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">send_alive_check</span>(context: zmq<span style="color: #666">.</span>Context, uuid: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, alive_timeout: <span style="color: #008000">int</span><span style="color: #666">=</span>ALIVE_TIMEOUT) \
         <span style="color: #666">-&gt;</span> AliveCheckState:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Check the liveness of a service with the registry.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Check the liveness of a service with the registry.</span>
 
 <span style="color: #BA2121; font-style: italic">    Send an ``EventType.CHECK_ALIVE`` request to the registry and wait for an</span>
 <span style="color: #BA2121; font-style: italic">    ``EventType.ACK`` reply. The function opens a ``REQ`` socket on the provided</span>
@@ -3922,9 +3894,9 @@ connecting, sending, or receiving messages.</p>
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    str</span>
-<span style="color: #BA2121; font-style: italic">        &#39;ok&#39; if alive check successfull</span>
-<span style="color: #BA2121; font-style: italic">        &#39;unreachable&#39; if the check attempt timed out</span>
-<span style="color: #BA2121; font-style: italic">        &#39;unknown&#39; if the registry does not know this service; might have already been removed</span>
+<span style="color: #BA2121; font-style: italic">        'ok' if alive check successfull</span>
+<span style="color: #BA2121; font-style: italic">        'unreachable' if the check attempt timed out</span>
+<span style="color: #BA2121; font-style: italic">        'unknown' if the registry does not know this service; might have already been removed</span>
 
 <span style="color: #BA2121; font-style: italic">    Raises</span>
 <span style="color: #BA2121; font-style: italic">    ------</span>
@@ -3945,23 +3917,23 @@ connecting, sending, or receiving messages.</p>
 <span style="color: #BA2121; font-style: italic">    See Also</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    `EventType` - enumeration of supported event types.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">with</span> context<span style="color: #666">.</span>socket(zmq<span style="color: #666">.</span>REQ) <span style="color: #008000; font-weight: bold">as</span> socket:
         socket: zmq<span style="color: #666">.</span>Socket
         socket<span style="color: #666">.</span>connect(registry_url)
         socket<span style="color: #666">.</span>send_json({
-            <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>CHECK_ALIVE,
-            <span style="color: #BA2121">&quot;payload&quot;</span>: {
-                <span style="color: #BA2121">&quot;uuid&quot;</span>: uuid,
-                <span style="color: #BA2121">&quot;alive_timeout&quot;</span>: alive_timeout,
+            <span style="color: #BA2121">"event"</span>: EventType<span style="color: #666">.</span>CHECK_ALIVE,
+            <span style="color: #BA2121">"payload"</span>: {
+                <span style="color: #BA2121">"uuid"</span>: uuid,
+                <span style="color: #BA2121">"alive_timeout"</span>: alive_timeout,
             }
         })
         <span style="color: #008000; font-weight: bold">if</span> socket<span style="color: #666">.</span>poll(<span style="color: #666">5000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
-            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;No answer from registry at address </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">.&quot;</span>)
+            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"No answer from registry at address </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">."</span>)
             <span style="color: #008000; font-weight: bold">return</span> AliveCheckState<span style="color: #666">.</span>UNREACHABLE
         reply <span style="color: #666">=</span> socket<span style="color: #666">.</span>recv_json()
-        event_type <span style="color: #666">=</span> reply[<span style="color: #BA2121">&quot;event&quot;</span>]
-        <span style="color: #008000; font-weight: bold">if</span> event_type <span style="color: #666">==</span> EventType<span style="color: #666">.</span>ACK <span style="color: #A2F; font-weight: bold">and</span> reply<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;payload&quot;</span>, {})<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;success&quot;</span>, <span style="color: #008000; font-weight: bold">False</span>):
+        event_type <span style="color: #666">=</span> reply[<span style="color: #BA2121">"event"</span>]
+        <span style="color: #008000; font-weight: bold">if</span> event_type <span style="color: #666">==</span> EventType<span style="color: #666">.</span>ACK <span style="color: #A2F; font-weight: bold">and</span> reply<span style="color: #666">.</span>get(<span style="color: #BA2121">"payload"</span>, {})<span style="color: #666">.</span>get(<span style="color: #BA2121">"success"</span>, <span style="color: #008000; font-weight: bold">False</span>):
             <span style="color: #008000; font-weight: bold">return</span> AliveCheckState<span style="color: #666">.</span>OK
         <span style="color: #008000; font-weight: bold">return</span> AliveCheckState<span style="color: #666">.</span>UNKNOWN
 </code></pre></div></td></tr></table></div>
@@ -4011,24 +3983,24 @@ Returns True if the device was unregistered successfully.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">419</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">420</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">421</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">unregister_device</span>(context: zmq<span style="color: #666">.</span>Context, uuid: <span style="color: #008000">str</span>, registry_addr: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Unregister the device of the given uuid from the registry at `registry_addr`.</span>
 <span style="color: #BA2121; font-style: italic">    Returns True if the device was unregistered successfully.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">with</span> context<span style="color: #666">.</span>socket(zmq<span style="color: #666">.</span>REQ) <span style="color: #008000; font-weight: bold">as</span> socket:
         socket: zmq<span style="color: #666">.</span>Socket
         <span style="color: #008000; font-weight: bold">with</span> socket<span style="color: #666">.</span>connect(registry_addr):
             socket<span style="color: #666">.</span>send_json({
-                <span style="color: #BA2121">&quot;event&quot;</span>: EventType<span style="color: #666">.</span>UNREGISTER,
-                <span style="color: #BA2121">&quot;payload&quot;</span>: {
-                    <span style="color: #BA2121">&quot;uuid&quot;</span>: uuid,
+                <span style="color: #BA2121">"event"</span>: EventType<span style="color: #666">.</span>UNREGISTER,
+                <span style="color: #BA2121">"payload"</span>: {
+                    <span style="color: #BA2121">"uuid"</span>: uuid,
                 }
             })
             <span style="color: #008000; font-weight: bold">if</span> socket<span style="color: #666">.</span>poll(<span style="color: #666">5000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
-                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;No answer from registry at address </span><span style="color: #A45A77; font-weight: bold">{</span>registry_addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">. Closing&quot;</span>)
+                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"No answer from registry at address </span><span style="color: #A45A77; font-weight: bold">{</span>registry_addr<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">. Closing"</span>)
                 <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
             reply <span style="color: #666">=</span> socket<span style="color: #666">.</span>recv_json()
-            event_type <span style="color: #666">=</span> reply[<span style="color: #BA2121">&quot;event&quot;</span>]
+            event_type <span style="color: #666">=</span> reply[<span style="color: #BA2121">"event"</span>]
             <span style="color: #008000; font-weight: bold">if</span> event_type <span style="color: #666">==</span> EventType<span style="color: #666">.</span>ACK:
                 <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>
             <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>

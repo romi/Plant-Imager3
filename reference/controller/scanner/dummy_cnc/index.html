@@ -2083,34 +2083,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../webui/carousel/" class="md-nav__link">
         
   
@@ -2290,7 +2262,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2312,14 +2284,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3077,7 +3049,7 @@ demonstration purposes when physical hardware is unavailable.</p>
 <span style="color: #666">&gt;&gt;&gt;</span> cnc<span style="color: #666">.</span>home()
 <span style="color: #666">&gt;&gt;&gt;</span> cnc<span style="color: #666">.</span>moveto(<span style="color: #666">100</span>, <span style="color: #666">100</span>, <span style="color: #666">45</span>)
 <span style="color: #666">&gt;&gt;&gt;</span> x, y, z <span style="color: #666">=</span> cnc<span style="color: #666">.</span>get_position()
-<span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;Current position: (</span><span style="color: #A45A77; font-weight: bold">{</span>x<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>y<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>z<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">)&quot;</span>)
+<span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #008000">print</span>(<span style="color: #BA2121">f"Current position: (</span><span style="color: #A45A77; font-weight: bold">{</span>x<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>y<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #A45A77; font-weight: bold">{</span>z<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">)"</span>)
 <span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #3D7B7B; font-style: italic"># Async movement</span>
 <span style="color: #666">&gt;&gt;&gt;</span> cnc<span style="color: #666">.</span>moveto_async(<span style="color: #666">200</span>, <span style="color: #666">200</span>, <span style="color: #666">90</span>)
 <span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #3D7B7B; font-style: italic"># Do other things...</span>
@@ -3220,7 +3192,7 @@ It simulates basic CNC operations like movement, positioning, and homing.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, x_limits: <span style="color: #008000">tuple</span>[<span style="color: #008000">float</span>, <span style="color: #008000">float</span>] <span style="color: #666">=</span> (<span style="color: #666">0</span>, <span style="color: #666">740</span>), y_limits: <span style="color: #008000">tuple</span>[<span style="color: #008000">float</span>, <span style="color: #008000">float</span>] <span style="color: #666">=</span> (<span style="color: #666">0</span>, <span style="color: #666">740</span>),
              z_limits: <span style="color: #008000">tuple</span>[<span style="color: #008000">float</span>, <span style="color: #008000">float</span>] <span style="color: #666">=</span> (<span style="color: #666">0</span>, <span style="color: #666">360</span>)) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Initialize the dummy CNC controller with default axis limits.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Initialize the dummy CNC controller with default axis limits."""</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000">self</span><span style="color: #666">.</span>x_lims <span style="color: #666">=</span> x_limits
     <span style="color: #008000">self</span><span style="color: #666">.</span>y_lims <span style="color: #666">=</span> y_limits
@@ -3231,7 +3203,7 @@ It simulates basic CNC operations like movement, positioning, and homing.</p>
 
     <span style="color: #3D7B7B; font-style: italic"># Simulate initialization delay</span>
     time<span style="color: #666">.</span>sleep(<span style="color: #666">0.2</span>)
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">&quot;Dummy CNC initialized&quot;</span>)
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Dummy CNC initialized"</span>)
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -3381,15 +3353,7 @@ It simulates basic CNC operations like movement, positioning, and homing.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/dummy_cnc.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">123</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">125</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">126</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">127</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">127</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">128</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">129</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">130</span>
@@ -3402,8 +3366,16 @@ It simulates basic CNC operations like movement, positioning, and homing.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">137</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">138</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">139</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_position</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[length_mm, length_mm, deg]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Get the current XYZ position of the dummy CNC machine.</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">141</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">142</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">143</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">144</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">145</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">146</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">147</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_position</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[length_mm, length_mm, deg]:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Get the current XYZ position of the dummy CNC machine.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
@@ -3413,7 +3385,7 @@ It simulates basic CNC operations like movement, positioning, and homing.</p>
 <span style="color: #BA2121; font-style: italic">        Current Y-axis position in millimeters</span>
 <span style="color: #BA2121; font-style: italic">    deg</span>
 <span style="color: #BA2121; font-style: italic">        Current Z-axis position in degrees</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #3D7B7B; font-style: italic"># Add a small amount of noise to simulate real sensor readings</span>
     noise_x <span style="color: #666">=</span> random<span style="color: #666">.</span>uniform(<span style="color: #666">-0.01</span>, <span style="color: #666">0.01</span>)
     noise_y <span style="color: #666">=</span> random<span style="color: #666">.</span>uniform(<span style="color: #666">-0.01</span>, <span style="color: #666">0.01</span>)
@@ -3471,30 +3443,30 @@ It simulates basic CNC operations like movement, positioning, and homing.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/dummy_cnc.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">279</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">280</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">281</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">282</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">283</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">284</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">285</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">286</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">287</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">287</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">288</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">289</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">290</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">291</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_status</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Simulate querying the current status of the GRBL controller.</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">291</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">292</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">294</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">295</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">296</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">297</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">298</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">299</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_status</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Simulate querying the current status of the GRBL controller.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    dict</span>
 <span style="color: #BA2121; font-style: italic">        A dictionary containing simulated status information</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    state <span style="color: #666">=</span> <span style="color: #BA2121">&quot;Idle&quot;</span> <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_busy <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">&quot;Run&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
+    state <span style="color: #666">=</span> <span style="color: #BA2121">"Idle"</span> <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_busy <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">"Run"</span>
     <span style="color: #008000; font-weight: bold">return</span> {
-        <span style="color: #BA2121">&#39;status&#39;</span>: state,
-        <span style="color: #BA2121">&#39;position&#39;</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>_position
+        <span style="color: #BA2121">'status'</span>: state,
+        <span style="color: #BA2121">'position'</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>_position
     }
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3536,19 +3508,19 @@ simulating the behavior of the real CNC homing procedure.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">116</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">home</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Simulate performing a homing cycle.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Simulate performing a homing cycle.</span>
 
 <span style="color: #BA2121; font-style: italic">    Sets the current position to a starting point near the origin,</span>
 <span style="color: #BA2121; font-style: italic">    simulating the behavior of the real CNC homing procedure.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">&quot;Dummy CNC homing...&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    """</span>
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Dummy CNC homing..."</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_busy <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
     <span style="color: #3D7B7B; font-style: italic"># Simulate homing time</span>
     time<span style="color: #666">.</span>sleep(<span style="color: #666">1.5</span>)
     <span style="color: #3D7B7B; font-style: italic"># Set position to a slight offset from zero, simulating a real homing result</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_position <span style="color: #666">=</span> (<span style="color: #666">20</span>, <span style="color: #666">20</span>, <span style="color: #666">0</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_busy <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">&quot;Dummy CNC homing completed&quot;</span>)
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Dummy CNC homing completed"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3659,15 +3631,7 @@ simulating the behavior of the real CNC homing procedure.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/dummy_cnc.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">142</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">143</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">144</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">145</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">146</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">147</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">149</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">151</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">152</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">153</span>
@@ -3677,8 +3641,16 @@ simulating the behavior of the real CNC homing procedure.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">159</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Move the dummy CNC machine to specified coordinates and wait until the target position is reached.</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">161</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">162</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">163</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">164</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">165</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Move the dummy CNC machine to specified coordinates and wait until the target position is reached.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -3693,7 +3665,7 @@ simulating the behavior of the real CNC homing procedure.</p>
 <span style="color: #BA2121; font-style: italic">    ------</span>
 <span style="color: #BA2121; font-style: italic">    ValueError</span>
 <span style="color: #BA2121; font-style: italic">        If any of the target coordinates are outside the allowed limits</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>moveto_async(x, y, z)
     <span style="color: #008000">self</span><span style="color: #666">.</span>wait()
 </code></pre></div></td></tr></table></div>
@@ -3806,15 +3778,7 @@ simulating the behavior of the real CNC homing procedure.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/dummy_cnc.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">162</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">163</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">164</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">165</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">171</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">172</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
@@ -3840,8 +3804,16 @@ simulating the behavior of the real CNC homing procedure.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto_async</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Asynchronously move the dummy CNC machine to specified coordinates.</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto_async</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Asynchronously move the dummy CNC machine to specified coordinates.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -3856,7 +3828,7 @@ simulating the behavior of the real CNC homing procedure.</p>
 <span style="color: #BA2121; font-style: italic">    ------</span>
 <span style="color: #BA2121; font-style: italic">    ValueError</span>
 <span style="color: #BA2121; font-style: italic">        If any of the target coordinates are outside the allowed limits</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #3D7B7B; font-style: italic"># Convert to float to ensure compatibility</span>
     x, y, z <span style="color: #666">=</span> <span style="color: #008000">float</span>(x), <span style="color: #008000">float</span>(y), <span style="color: #008000">float</span>(z)
 
@@ -3867,7 +3839,7 @@ simulating the behavior of the real CNC homing procedure.</p>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_busy <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
 
     <span style="color: #3D7B7B; font-style: italic"># Log the movement</span>
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f&quot;Dummy CNC moving to (x=</span><span style="color: #A45A77; font-weight: bold">{</span>x<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, y=</span><span style="color: #A45A77; font-weight: bold">{</span>y<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, z=</span><span style="color: #A45A77; font-weight: bold">{</span>z<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">)&quot;</span>)
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f"Dummy CNC moving to (x=</span><span style="color: #A45A77; font-weight: bold">{</span>x<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, y=</span><span style="color: #A45A77; font-weight: bold">{</span>y<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, z=</span><span style="color: #A45A77; font-weight: bold">{</span>z<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">)"</span>)
 
     <span style="color: #3D7B7B; font-style: italic"># Start simulated movement in a separate thread</span>
     threading<span style="color: #666">.</span>Thread(
@@ -3953,15 +3925,7 @@ simulating the behavior of the real CNC homing procedure.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/dummy_cnc.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">263</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">268</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">270</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">271</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">272</span>
@@ -3969,8 +3933,16 @@ simulating the behavior of the real CNC homing procedure.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">274</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">275</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">276</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">277</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">send_cmd</span>(<span style="color: #008000">self</span>, cmd: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Simulate sending a command to the GRBL controller.</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">277</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">278</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">279</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">280</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">281</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">282</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">283</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">284</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">285</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">send_cmd</span>(<span style="color: #008000">self</span>, cmd: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Simulate sending a command to the GRBL controller.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -3981,11 +3953,11 @@ simulating the behavior of the real CNC homing procedure.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    str</span>
 <span style="color: #BA2121; font-style: italic">        Simulated response from the controller</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Dummy CNC received command: </span><span style="color: #A45A77; font-weight: bold">{</span>cmd<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    """</span>
+    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Dummy CNC received command: </span><span style="color: #A45A77; font-weight: bold">{</span>cmd<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
     <span style="color: #3D7B7B; font-style: italic"># Simulate response delay</span>
     time<span style="color: #666">.</span>sleep(<span style="color: #666">0.1</span>)
-    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;ok&quot;</span>
+    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">"ok"</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4010,12 +3982,12 @@ simulating the behavior of the real CNC homing procedure.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/dummy_cnc.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">257</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Stop the dummy CNC and clean up resources.&quot;&quot;&quot;</span>
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">&quot;Stopping dummy CNC&quot;</span>)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Stop the dummy CNC and clean up resources."""</span>
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Stopping dummy CNC"</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_busy <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4095,15 +4067,7 @@ simulating the behavior of the real CNC homing procedure.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/dummy_cnc.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">236</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">237</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">238</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">239</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">240</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">241</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">242</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">243</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">244</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">244</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">245</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">246</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
@@ -4113,8 +4077,16 @@ simulating the behavior of the real CNC homing procedure.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">253</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">254</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">wait</span>(<span style="color: #008000">self</span>, timeout: <span style="color: #008000">int</span><span style="color: #666">=60</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Wait for the dummy CNC machine to complete any ongoing operations.</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">254</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">255</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">257</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">wait</span>(<span style="color: #008000">self</span>, timeout: <span style="color: #008000">int</span><span style="color: #666">=60</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Wait for the dummy CNC machine to complete any ongoing operations.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -4124,14 +4096,14 @@ simulating the behavior of the real CNC homing procedure.</p>
 <span style="color: #BA2121; font-style: italic">    Raises</span>
 <span style="color: #BA2121; font-style: italic">    ------</span>
 <span style="color: #BA2121; font-style: italic">    TimeoutError</span>
-<span style="color: #BA2121; font-style: italic">        If the simulated movement doesn&#39;t complete within the timeout</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">        If the simulated movement doesn't complete within the timeout</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     start_time <span style="color: #666">=</span> time<span style="color: #666">.</span>time()
 
     <span style="color: #008000; font-weight: bold">while</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_busy:
         time<span style="color: #666">.</span>sleep(<span style="color: #666">0.1</span>)  <span style="color: #3D7B7B; font-style: italic"># Small delay to prevent CPU overload</span>
         <span style="color: #008000; font-weight: bold">if</span> time<span style="color: #666">.</span>time() <span style="color: #666">-</span> start_time <span style="color: #666">&gt;</span> timeout:
-            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">&quot;Timeout waiting for CNC movement to complete&quot;</span>)
+            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">"Timeout waiting for CNC movement to complete"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

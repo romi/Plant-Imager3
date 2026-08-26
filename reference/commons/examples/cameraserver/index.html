@@ -2050,34 +2050,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../webui/carousel/" class="md-nav__link">
         
   
@@ -2257,7 +2229,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2279,14 +2251,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3097,9 +3069,9 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
     RPCServer<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context, url)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_mode <span style="color: #666">=</span> CameraMode<span style="color: #666">.</span>STILL
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_video_url <span style="color: #666">=</span> <span style="color: #BA2121">&quot;tcp://test_url:1234&quot;</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_video_url <span style="color: #666">=</span> <span style="color: #BA2121">"tcp://test_url:1234"</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_rotation <span style="color: #666">=</span> <span style="color: #666">0</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding <span style="color: #666">=</span> <span style="color: #BA2121">&quot;jpeg&quot;</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding <span style="color: #666">=</span> <span style="color: #BA2121">"jpeg"</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_config <span style="color: #666">=</span> {}
     <span style="color: #008000">self</span><span style="color: #666">.</span>_image_provider <span style="color: #666">=</span> image_provider()
 </code></pre></div></td></tr></table></div>
@@ -3139,7 +3111,7 @@
   <summary><div class="codehilite"><pre><span></span><code>    Parameters
 </code></pre></div></summary>
   <div class="codehilite"><pre><span></span><code>    value : dict
-        Control names and values (e.g., {&#39;Brightness&#39;: 0.5, &#39;Contrast&#39;: 1.2}).
+        Control names and values (e.g., {'Brightness': 0.5, 'Contrast': 1.2}).
 </code></pre></div>
 </details>
 
@@ -3173,19 +3145,19 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">135</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">136</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code>    <span style="color: #A2F">@config</span><span style="color: #666">.</span>setter
     <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">config</span>(<span style="color: #008000">self</span>, value: <span style="color: #008000">dict</span>):
-<span style="color: #BBB">        </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">        </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">        Sets camera controls/parameters from Picamera2 Appendix C.</span>
 
 <span style="color: #BA2121; font-style: italic">        Parameters</span>
 <span style="color: #BA2121; font-style: italic">        ----------</span>
 <span style="color: #BA2121; font-style: italic">        value : dict</span>
-<span style="color: #BA2121; font-style: italic">            Control names and values (e.g., {&#39;Brightness&#39;: 0.5, &#39;Contrast&#39;: 1.2}).</span>
+<span style="color: #BA2121; font-style: italic">            Control names and values (e.g., {'Brightness': 0.5, 'Contrast': 1.2}).</span>
 
 <span style="color: #BA2121; font-style: italic">        See Also</span>
 <span style="color: #BA2121; font-style: italic">        --------</span>
 <span style="color: #BA2121; font-style: italic">        Picamera2 Manual Appendix C:</span>
 <span style="color: #BA2121; font-style: italic">https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf?disposition=inline#%5B%7B%22num%22%3A10333%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70.86614%2C781.0236%2C0%5D</span>
-<span style="color: #BA2121; font-style: italic">        &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">        """</span>
         <span style="color: #008000">self</span><span style="color: #666">.</span>_config<span style="color: #666">.</span>update(value)
         <span style="color: #3D7B7B; font-style: italic"># Apply controls to the running camera</span>
         <span style="color: #008000">self</span><span style="color: #666">.</span>configChanged<span style="color: #666">.</span>emit(<span style="color: #008000">self</span><span style="color: #666">.</span>_config)
@@ -3238,27 +3210,27 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">103</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_buffer(timeout<span style="color: #666">=10000</span>)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_image</span>(<span style="color: #008000">self</span>, lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> (<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return a JPEG‑encoded image (as a memoryview) and a metadata dict.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return a JPEG‑encoded image (as a memoryview) and a metadata dict.</span>
 
 <span style="color: #BA2121; font-style: italic">    The *lores* flag is ignored for the dummy implementation.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>mode <span style="color: #666">!=</span> CameraMode<span style="color: #666">.</span>STILL:
         <span style="color: #008000">self</span><span style="color: #666">.</span>mode <span style="color: #666">=</span> CameraMode<span style="color: #666">.</span>STILL
     image <span style="color: #666">=</span> <span style="color: #008000">next</span>(<span style="color: #008000">self</span><span style="color: #666">.</span>_image_provider)
     <span style="color: #3D7B7B; font-style: italic"># image = block_mean(image, 5)</span>
     <span style="color: #3D7B7B; font-style: italic"># image = np.clip(image.astype(int) + np.round(np.random.normal(0.0, 0.5, image.shape)), 0, 255)</span>
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding <span style="color: #666">==</span> <span style="color: #BA2121">&quot;jpeg&quot;</span>:
-        buffer <span style="color: #666">=</span> encode_jpeg(image<span style="color: #666">.</span>astype(np<span style="color: #666">.</span>uint8), quality<span style="color: #666">=95</span>, colorsubsampling<span style="color: #666">=</span><span style="color: #BA2121">&quot;420&quot;</span>, fastdct<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
-    <span style="color: #008000; font-weight: bold">elif</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding <span style="color: #666">==</span> <span style="color: #BA2121">&quot;png&quot;</span>:
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding <span style="color: #666">==</span> <span style="color: #BA2121">"jpeg"</span>:
+        buffer <span style="color: #666">=</span> encode_jpeg(image<span style="color: #666">.</span>astype(np<span style="color: #666">.</span>uint8), quality<span style="color: #666">=95</span>, colorsubsampling<span style="color: #666">=</span><span style="color: #BA2121">"420"</span>, fastdct<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+    <span style="color: #008000; font-weight: bold">elif</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding <span style="color: #666">==</span> <span style="color: #BA2121">"png"</span>:
         rgb_image <span style="color: #666">=</span> image[<span style="color: #666">...</span>, ::<span style="color: #666">-1</span>]
         pil_img <span style="color: #666">=</span> Image<span style="color: #666">.</span>fromarray(rgb_image)
         buf <span style="color: #666">=</span> io<span style="color: #666">.</span>BytesIO()
-        pil_img<span style="color: #666">.</span>save(buf, <span style="color: #008000">format</span><span style="color: #666">=</span><span style="color: #BA2121">&quot;PNG&quot;</span>)
+        pil_img<span style="color: #666">.</span>save(buf, <span style="color: #008000">format</span><span style="color: #666">=</span><span style="color: #BA2121">"PNG"</span>)
         buffer <span style="color: #666">=</span> buf<span style="color: #666">.</span>getvalue()
     <span style="color: #008000; font-weight: bold">else</span>:
-        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">f&quot;Unknown encoding: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_encoding<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">f"Unknown encoding: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_encoding<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
     time<span style="color: #666">.</span>sleep(CAMERASERVER_LAG<span style="color: #666">/1000</span>)
-    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">memoryview</span>(buffer), {<span style="color: #BA2121">&quot;format&quot;</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding, <span style="color: #BA2121">&quot;rotation&quot;</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>_rotation, <span style="color: #BA2121">&quot;size&quot;</span>: image<span style="color: #666">.</span>shape}
+    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">memoryview</span>(buffer), {<span style="color: #BA2121">"format"</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>_encoding, <span style="color: #BA2121">"rotation"</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>_rotation, <span style="color: #BA2121">"size"</span>: image<span style="color: #666">.</span>shape}
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3376,7 +3348,7 @@ as well as a buffer_info dictionary.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1126</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1127</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_buffer</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output as a buffer-like object</span>
 <span style="color: #BA2121; font-style: italic">    as well as a buffer_info dictionary.</span>
 
@@ -3393,7 +3365,7 @@ as well as a buffer_info dictionary.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    decorator: Callable[Callable[..., tuple[memoryview|bytes, dict]], Callable[..., tuple[memoryview|bytes, dict]]]</span>
 
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> inspect<span style="color: #666">.</span>isfunction(timeout):
         timeout<span style="color: #666">.</span>_is_buffer_method <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
         timeout<span style="color: #666">.</span>_timeout <span style="color: #666">=</span> <span style="color: #666">10000</span>
@@ -3519,7 +3491,7 @@ Arguments are also serialized via json.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1094</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1095</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_json</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output via json.</span>
 
 <span style="color: #BA2121; font-style: italic">    It is advised to only send basic types and containers as output (int, float, str, bool, list, tuple, dict, ...)</span>
@@ -3534,7 +3506,7 @@ Arguments are also serialized via json.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    Callable[Callable[..., Any], Callable[..., Any]]</span>
 
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> inspect<span style="color: #666">.</span>isfunction(timeout):
         timeout<span style="color: #666">.</span>_is_json_method <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
         timeout<span style="color: #666">.</span>_timeout <span style="color: #666">=</span> <span style="color: #666">10000</span>
@@ -3717,7 +3689,7 @@ conflicting devices.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1063</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1064</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1065</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_to_registry</span>(<span style="color: #008000">self</span>, type_: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, overwrite<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Register this RPCServer to the registry at `registry_address` as a device of type `type_` and name `name`.</span>
 
 <span style="color: #BA2121; font-style: italic">    Note: The name not be accepted as is and may be modified by the registry to avoid duplicate. This method</span>
@@ -3730,7 +3702,7 @@ conflicting devices.</p>
 <span style="color: #BA2121; font-style: italic">    name: str</span>
 <span style="color: #BA2121; font-style: italic">        Proposed name of the device.</span>
 <span style="color: #BA2121; font-style: italic">    registry_url: str</span>
-<span style="color: #BA2121; font-style: italic">        Url of the device registry. Must have the form &quot;tcp://&lt;ip&gt;:&lt;port&gt;&quot; if the registry uses tcp</span>
+<span style="color: #BA2121; font-style: italic">        Url of the device registry. Must have the form "tcp://&lt;ip&gt;:&lt;port&gt;" if the registry uses tcp</span>
 <span style="color: #BA2121; font-style: italic">    overwrite: bool, optional</span>
 <span style="color: #BA2121; font-style: italic">        Wether or not this device should take preference for the use of this name and overwrite other</span>
 <span style="color: #BA2121; font-style: italic">        conflicting devices.</span>
@@ -3739,24 +3711,24 @@ conflicting devices.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    str</span>
 <span style="color: #BA2121; font-style: italic">        Name of this device as accepted by the registry.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Register device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    """</span>
+    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Register device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_type <span style="color: #666">=</span> type_
     <span style="color: #008000">self</span><span style="color: #666">.</span>name, <span style="color: #008000">self</span><span style="color: #666">.</span>uuid <span style="color: #666">=</span> register_device(
         <span style="color: #008000">self</span><span style="color: #666">.</span>context, type_,
-        <span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>,
+        <span style="color: #BA2121">f"</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>,
         name, registry_url,
         overwrite<span style="color: #666">=</span>overwrite,
     )
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666">.</span>name:
-        logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f&quot;Failed to register device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> as </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr <span style="color: #666">=</span> registry_url <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">&quot;&quot;</span>
+        logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f"Failed to register device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> as </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr <span style="color: #666">=</span> registry_url <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">""</span>
 
     <span style="color: #3D7B7B; font-style: italic"># Update cleanup state so finalizer knows what to unregister</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">&quot;uuid&quot;</span>] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>uuid
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">&quot;registry_addr&quot;</span>] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">"uuid"</span>] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>uuid
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">"registry_addr"</span>] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr
 
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f&quot;Successfully registered device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f"Successfully registered device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>name
 </code></pre></div></td></tr></table></div>
@@ -3921,11 +3893,11 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1296</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1297</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1298</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">serve_forever</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Serve the RPC server indefinitely, handling incoming requests until a stop signal is</span>
 <span style="color: #BA2121; font-style: italic">    received.</span>
 
-<span style="color: #BA2121; font-style: italic">    The method enters a loop that repeatedly notifies the watchdog, checks the server&#39;s</span>
+<span style="color: #BA2121; font-style: italic">    The method enters a loop that repeatedly notifies the watchdog, checks the server's</span>
 <span style="color: #BA2121; font-style: italic">    liveness, waits for a request, and dispatches the request based on its ``event`` field.</span>
 <span style="color: #BA2121; font-style: italic">    Supported events include peer discovery, inventory retrieval, signal handling</span>
 <span style="color: #BA2121; font-style: italic">    initialization, method invocation, property access, and server shutdown. Upon receiving</span>
@@ -3956,10 +3928,10 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 <span style="color: #BA2121; font-style: italic">    _handle_find_peer_address, _handle_get_inventory, _handle_init_signal_handling,</span>
 <span style="color: #BA2121; font-style: italic">    _handle_method_call, _handle_property_get, _handle_property_set :</span>
 <span style="color: #BA2121; font-style: italic">        Private helper methods that implement the handling logic for each event type.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_dead:
-        logger<span style="color: #666">.</span>error(<span style="color: #BA2121">&quot;RPCServer is in dead state. A new instance must be created.&quot;</span>)
-        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">&quot;RPCServer is in dead state. A new instance must be created.&quot;</span>)
+        logger<span style="color: #666">.</span>error(<span style="color: #BA2121">"RPCServer is in dead state. A new instance must be created."</span>)
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">"RPCServer is in dead state. A new instance must be created."</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_stop <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #008000; font-weight: bold">while</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_stop:
         notify_watchdog()
@@ -3969,9 +3941,9 @@ _handle_method_call, _handle_property_get, _handle_property_set :
         <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> request:
             <span style="color: #008000; font-weight: bold">continue</span>
         <span style="color: #008000; font-weight: bold">try</span>:
-            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Received request: </span><span style="color: #A45A77; font-weight: bold">{</span>request[<span style="color: #BA2121">&#39;event&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Received request: </span><span style="color: #A45A77; font-weight: bold">{</span>request[<span style="color: #BA2121">'event'</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
             t0 <span style="color: #666">=</span> time<span style="color: #666">.</span>monotonic()
-            <span style="color: #008000; font-weight: bold">match</span> request[<span style="color: #BA2121">&quot;event&quot;</span>]:
+            <span style="color: #008000; font-weight: bold">match</span> request[<span style="color: #BA2121">"event"</span>]:
                 <span style="color: #008000; font-weight: bold">case</span> RPCEvents<span style="color: #666">.</span>GET_INVENTORY:
                     reply <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_handle_get_inventory()
                     <span style="color: #008000">self</span><span style="color: #666">.</span>_send_reply(reply)
@@ -3988,14 +3960,14 @@ _handle_method_call, _handle_property_get, _handle_property_set :
                     reply <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_handle_property_set(request)
                     <span style="color: #008000">self</span><span style="color: #666">.</span>_send_reply(reply)
                 <span style="color: #008000; font-weight: bold">case</span> RPCEvents<span style="color: #666">.</span>STOP_SERVER:
-                    <span style="color: #008000">self</span><span style="color: #666">.</span>_socket<span style="color: #666">.</span>send_json({<span style="color: #BA2121">&quot;success&quot;</span>: <span style="color: #008000; font-weight: bold">True</span>})
+                    <span style="color: #008000">self</span><span style="color: #666">.</span>_socket<span style="color: #666">.</span>send_json({<span style="color: #BA2121">"success"</span>: <span style="color: #008000; font-weight: bold">True</span>})
                     <span style="color: #008000">self</span><span style="color: #666">.</span>_stop <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
-            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Event </span><span style="color: #A45A77; font-weight: bold">{</span>request[<span style="color: #BA2121">&#39;event&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> treated in </span><span style="color: #A45A77; font-weight: bold">{</span>time<span style="color: #666">.</span>monotonic()<span style="color: #BBB"> </span><span style="color: #666">-</span><span style="color: #BBB"> </span>t0<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">s&quot;</span>)
+            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Event </span><span style="color: #A45A77; font-weight: bold">{</span>request[<span style="color: #BA2121">'event'</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> treated in </span><span style="color: #A45A77; font-weight: bold">{</span>time<span style="color: #666">.</span>monotonic()<span style="color: #BBB"> </span><span style="color: #666">-</span><span style="color: #BBB"> </span>t0<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">s"</span>)
         <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span> <span style="color: #008000; font-weight: bold">as</span> exc:
-            logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f&quot;Unexpected error while handling request: </span><span style="color: #A45A77; font-weight: bold">{</span>exc<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+            logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f"Unexpected error while handling request: </span><span style="color: #A45A77; font-weight: bold">{</span>exc<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
             <span style="color: #3D7B7B; font-style: italic"># If we have a request, we can at least try to answer with a generic error.</span>
-            <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(request, <span style="color: #008000">dict</span>) <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #BA2121">&quot;event&quot;</span> <span style="color: #A2F; font-weight: bold">in</span> request:
-                <span style="color: #008000">self</span><span style="color: #666">.</span>_send_reply(<span style="color: #008000">self</span><span style="color: #666">.</span>_make_error_reply(exc, <span style="color: #BA2121">&quot;serve_forever&quot;</span>))
+            <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(request, <span style="color: #008000">dict</span>) <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #BA2121">"event"</span> <span style="color: #A2F; font-weight: bold">in</span> request:
+                <span style="color: #008000">self</span><span style="color: #666">.</span>_send_reply(<span style="color: #008000">self</span><span style="color: #666">.</span>_make_error_reply(exc, <span style="color: #BA2121">"serve_forever"</span>))
             <span style="color: #008000; font-weight: bold">break</span>  <span style="color: #3D7B7B; font-style: italic"># abort the loop - we are in an inconsistent state</span>
 
     <span style="color: #3D7B7B; font-style: italic"># cleanup</span>
@@ -4004,7 +3976,7 @@ _handle_method_call, _handle_property_get, _handle_property_set :
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_signal_socket:
         <span style="color: #008000">self</span><span style="color: #666">.</span>_signal_socket<span style="color: #666">.</span>close()
     <span style="color: #008000">self</span><span style="color: #666">.</span>_dead <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">&quot;Server stopped&quot;</span>)
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Server stopped"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4116,7 +4088,7 @@ network errors or authentication failures.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1210</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1211</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1212</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop_server</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Stop the server and unregister the device if it has been registered.</span>
 
 <span style="color: #BA2121; font-style: italic">    The method sets the internal stop flag, optionally calls</span>
@@ -4138,24 +4110,24 @@ network errors or authentication failures.</p>
 <span style="color: #BA2121; font-style: italic">      ``True``. If any of them is falsy, the function simply sets the</span>
 <span style="color: #BA2121; font-style: italic">      stop flag and returns.</span>
 <span style="color: #BA2121; font-style: italic">    * ``self._cleanup_state`` is updated after a successful unregister to</span>
-<span style="color: #BA2121; font-style: italic">      avoid duplicate cleanup actions later in the object&#39;s lifecycle.</span>
+<span style="color: #BA2121; font-style: italic">      avoid duplicate cleanup actions later in the object's lifecycle.</span>
 
 <span style="color: #BA2121; font-style: italic">    See Also</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    unregister_device : Function that removes a device from the registry.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_stop <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">self</span><span style="color: #666">.</span>uuid:
         unregister_device(<span style="color: #008000">self</span><span style="color: #666">.</span>context, <span style="color: #008000">self</span><span style="color: #666">.</span>uuid, <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr)
-        <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;</span>
-        <span style="color: #008000">self</span><span style="color: #666">.</span>uuid <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;</span>
-        <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #666">=</span> <span style="color: #BA2121">""</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>uuid <span style="color: #666">=</span> <span style="color: #BA2121">""</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr <span style="color: #666">=</span> <span style="color: #BA2121">""</span>
 
         <span style="color: #3D7B7B; font-style: italic"># Clear cleanup state to avoid double unregister</span>
-        <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">&quot;uuid&quot;</span>] <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-        <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">&quot;registry_addr&quot;</span>] <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">"uuid"</span>] <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">"registry_addr"</span>] <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
 
-        logger<span style="color: #666">.</span>info(<span style="color: #BA2121">&quot;Device unregistered successfully&quot;</span>)
+        logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Device unregistered successfully"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4238,18 +4210,18 @@ The generator loops indefinitely, restarting after the last image.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">image_provider</span>():
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Generates an infinite sequence of images from a directory.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Generates an infinite sequence of images from a directory.</span>
 
 <span style="color: #BA2121; font-style: italic">    Yields</span>
 <span style="color: #BA2121; font-style: italic">    ------</span>
 <span style="color: #BA2121; font-style: italic">    numpy.ndarray</span>
 <span style="color: #BA2121; font-style: italic">        Image data loaded by ``matplotlib.pyplot.imread`` from the current file.</span>
 <span style="color: #BA2121; font-style: italic">        The generator loops indefinitely, restarting after the last image.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    image_path <span style="color: #666">=</span> os<span style="color: #666">.</span>getenv(<span style="color: #BA2121">&quot;PI3_CAMERASERVER_IMAGE&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    """</span>
+    image_path <span style="color: #666">=</span> os<span style="color: #666">.</span>getenv(<span style="color: #BA2121">"PI3_CAMERASERVER_IMAGE"</span>)
     <span style="color: #008000; font-weight: bold">if</span> image_path <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
-        dataset_path <span style="color: #666">=</span> get_test_dataset(<span style="color: #BA2121">&#39;real_plant&#39;</span>)
-        image_path <span style="color: #666">=</span> <span style="color: #008000">str</span>(dataset_path <span style="color: #666">/</span> <span style="color: #BA2121">&quot;images&quot;</span>)
+        dataset_path <span style="color: #666">=</span> get_test_dataset(<span style="color: #BA2121">'real_plant'</span>)
+        image_path <span style="color: #666">=</span> <span style="color: #008000">str</span>(dataset_path <span style="color: #666">/</span> <span style="color: #BA2121">"images"</span>)
 
     images <span style="color: #666">=</span> <span style="color: #008000">sorted</span>(os<span style="color: #666">.</span>listdir(image_path))
     n <span style="color: #666">=</span> <span style="color: #008000">len</span>(images)

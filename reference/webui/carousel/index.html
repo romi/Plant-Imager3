@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://github.com/romi/Plant-Imager3/reference/webui/carousel/">
       
       
-        <link rel="prev" href="../auth/">
+        <link rel="prev" href="../app/">
       
       
         <link rel="next" href="../config/">
@@ -1880,34 +1880,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -2172,7 +2144,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2194,14 +2166,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3073,19 +3045,19 @@ None if the modal is closed or dataset_id is invalid</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&#39;carousel&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
-          <span style="color: #3D7B7B; font-style: italic"># Output(&#39;carousel&#39;, &#39;figure&#39;),</span>
-          Input(<span style="color: #BA2121">&#39;carousel-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
-          Input(<span style="color: #BA2121">&#39;select-image-task&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-          State(<span style="color: #BA2121">&#39;view-dataset&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-          State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-          State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-          State(<span style="color: #BA2121">&#39;plantdb-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-          State(<span style="color: #BA2121">&#39;plantdb-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-          State(<span style="color: #BA2121">&#39;access-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">'carousel'</span>, <span style="color: #BA2121">'children'</span>),
+          <span style="color: #3D7B7B; font-style: italic"># Output('carousel', 'figure'),</span>
+          Input(<span style="color: #BA2121">'carousel-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
+          Input(<span style="color: #BA2121">'select-image-task'</span>, <span style="color: #BA2121">'value'</span>),
+          State(<span style="color: #BA2121">'view-dataset'</span>, <span style="color: #BA2121">'data'</span>),
+          State(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>),
+          State(<span style="color: #BA2121">'plantdb-port'</span>, <span style="color: #BA2121">'data'</span>),
+          State(<span style="color: #BA2121">'plantdb-prefix'</span>, <span style="color: #BA2121">'data'</span>),
+          State(<span style="color: #BA2121">'plantdb-ssl'</span>, <span style="color: #BA2121">'data'</span>),
+          State(<span style="color: #BA2121">'access-token'</span>, <span style="color: #BA2121">'data'</span>),
           )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">images_carousel</span>(open_modal, image_task, dataset_id, host, port, prefix, ssl, access_token):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a Dash carousel component displaying images from a specified dataset task.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create a Dash carousel component displaying images from a specified dataset task.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback function generates a Bootstrap-styled carousel component for displaying</span>
 <span style="color: #BA2121; font-style: italic">    images associated with a specific task in a dataset. The carousel is only generated</span>
@@ -3113,22 +3085,22 @@ None if the modal is closed or dataset_id is invalid</p>
 <span style="color: #BA2121; font-style: italic">    dash_bootstrap_components.Carousel or None</span>
 <span style="color: #BA2121; font-style: italic">        A Bootstrap carousel component containing the task images if conditions are met,</span>
 <span style="color: #BA2121; font-style: italic">        None if the modal is closed or dataset_id is invalid</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> open_modal <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #666">==</span> <span style="color: #BA2121">&#39;&#39;</span>:
+<span style="color: #BA2121; font-style: italic">    """</span>
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> open_modal <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #666">==</span> <span style="color: #BA2121">''</span>:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>
 
-    images <span style="color: #666">=</span> list_task_images_uri(host, dataset_id, task_name<span style="color: #666">=</span>image_task, size<span style="color: #666">=</span><span style="color: #BA2121">&#39;orig&#39;</span>, as_base64<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
+    images <span style="color: #666">=</span> list_task_images_uri(host, dataset_id, task_name<span style="color: #666">=</span>image_task, size<span style="color: #666">=</span><span style="color: #BA2121">'orig'</span>, as_base64<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
                                   port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl, session_token<span style="color: #666">=</span>access_token)
 
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(images) <span style="color: #666">==</span> <span style="color: #666">0</span>:
-        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Could not find any images for task &#39;</span><span style="color: #A45A77; font-weight: bold">{</span>image_task<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&#39; and dataset &#39;</span><span style="color: #A45A77; font-weight: bold">{</span>dataset_id<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&#39;.&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>)
+        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f"Could not find any images for task '</span><span style="color: #A45A77; font-weight: bold">{</span>image_task<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">' and dataset '</span><span style="color: #A45A77; font-weight: bold">{</span>dataset_id<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">'."</span>, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>)
 
-    <span style="color: #3D7B7B; font-style: italic"># fig_layout_kwargs = {&#39;font_family&#39;: FONT_FAMILY, &#39;paper_bgcolor&#39;: &quot;#F3F3F3&quot;,</span>
-    <span style="color: #3D7B7B; font-style: italic">#                      &#39;autosize&#39;: True, &#39;margin&#39;: {&#39;t&#39;: 25, &#39;b&#39;: 5}, &#39;width&#39;: None, &#39;height&#39;: None}</span>
+    <span style="color: #3D7B7B; font-style: italic"># fig_layout_kwargs = {'font_family': FONT_FAMILY, 'paper_bgcolor': "#F3F3F3",</span>
+    <span style="color: #3D7B7B; font-style: italic">#                      'autosize': True, 'margin': {'t': 25, 'b': 5}, 'width': None, 'height': None}</span>
     <span style="color: #3D7B7B; font-style: italic"># fig = plotly_image_carousel(images, title=dataset_id, layout_kwargs=fig_layout_kwargs)</span>
-    <span style="color: #3D7B7B; font-style: italic"># fig.update_layout(uirevision=&#39;value&#39;)</span>
+    <span style="color: #3D7B7B; font-style: italic"># fig.update_layout(uirevision='value')</span>
     <span style="color: #3D7B7B; font-style: italic"># # Remove the axis ticks and labels:</span>
-    <span style="color: #3D7B7B; font-style: italic"># fig.update_layout(xaxis={&#39;visible&#39;: False}, yaxis={&#39;visible&#39;: False})</span>
+    <span style="color: #3D7B7B; font-style: italic"># fig.update_layout(xaxis={'visible': False}, yaxis={'visible': False})</span>
     <span style="color: #3D7B7B; font-style: italic"># return fig</span>
     <span style="color: #008000; font-weight: bold">return</span> dash_boostrap_carousel(images, access_token)
 </code></pre></div></td></tr></table></div>
@@ -3321,17 +3293,17 @@ the tasks available for the selected dataset.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;select-image-task&#39;</span>, <span style="color: #BA2121">&#39;options&#39;</span>),
-    Input(<span style="color: #BA2121">&#39;carousel-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
-    State(<span style="color: #BA2121">&#39;view-dataset&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;access-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Output(<span style="color: #BA2121">'select-image-task'</span>, <span style="color: #BA2121">'options'</span>),
+    Input(<span style="color: #BA2121">'carousel-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
+    State(<span style="color: #BA2121">'view-dataset'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-port'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-prefix'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-ssl'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'access-token'</span>, <span style="color: #BA2121">'data'</span>),
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_image_task_dropdown</span>(open_modal, dataset_id, host, port, prefix, ssl, access_token):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Updates the dropdown options for image tasks based on the dataset and API configuration.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Updates the dropdown options for image tasks based on the dataset and API configuration.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback function is triggered when the carousel modal is opened or closed. It fetches</span>
 <span style="color: #BA2121; font-style: italic">    the available tasks for a given dataset from the API and filters them against predefined</span>
@@ -3353,13 +3325,13 @@ the tasks available for the selected dataset.</p>
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    list of str</span>
-<span style="color: #BA2121; font-style: italic">        List of available image task options. Returns [&#39;images&#39;] if the modal is closed</span>
+<span style="color: #BA2121; font-style: italic">        List of available image task options. Returns ['images'] if the modal is closed</span>
 <span style="color: #BA2121; font-style: italic">        or no dataset is selected. Otherwise, returns the intersection of IMAGE_TASKS and</span>
 <span style="color: #BA2121; font-style: italic">        the tasks available for the selected dataset.</span>
 
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> open_modal <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #666">==</span> <span style="color: #BA2121">&#39;&#39;</span>:
-        <span style="color: #008000; font-weight: bold">return</span> [<span style="color: #BA2121">&#39;images&#39;</span>]
+<span style="color: #BA2121; font-style: italic">    """</span>
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> open_modal <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">or</span> dataset_id <span style="color: #666">==</span> <span style="color: #BA2121">''</span>:
+        <span style="color: #008000; font-weight: bold">return</span> [<span style="color: #BA2121">'images'</span>]
     tasks_fileset <span style="color: #666">=</span> request_scan_tasks_fileset(host, dataset_id, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl,
                                                session_token<span style="color: #666">=</span>access_token)
     <span style="color: #008000; font-weight: bold">return</span> [task <span style="color: #008000; font-weight: bold">for</span> task <span style="color: #A2F; font-weight: bold">in</span> IMAGE_TASKS <span style="color: #008000; font-weight: bold">if</span> task <span style="color: #A2F; font-weight: bold">in</span> tasks_fileset]

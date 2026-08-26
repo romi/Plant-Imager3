@@ -1973,34 +1973,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../webui/carousel/" class="md-nav__link">
         
   
@@ -2180,7 +2152,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2202,14 +2174,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2908,7 +2880,7 @@
     <span style="color: #008000">self</span><span style="color: #666">.</span>_stream: av<span style="color: #666">.</span>VideoStream <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_container: av<span style="color: #666">.</span>container<span style="color: #666">.</span>InputContainer <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
     <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_finalizer</span>():
-        <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;Closing stream&quot;</span>)
+        <span style="color: #008000">print</span>(<span style="color: #BA2121">"Closing stream"</span>)
         <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_container: <span style="color: #008000">self</span><span style="color: #666">.</span>_container<span style="color: #666">.</span>close()
     finalize(<span style="color: #008000">self</span>, _finalizer)
 </code></pre></div></td></tr></table></div>
@@ -2980,12 +2952,12 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">open</span>(<span style="color: #008000">self</span>, uri: <span style="color: #008000">str</span>, <span style="color: #008000">format</span>: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Open a new video stream from uri using the specified format.</span>
 <span style="color: #BA2121; font-style: italic">    :param uri:</span>
 <span style="color: #BA2121; font-style: italic">    :param format:</span>
 <span style="color: #BA2121; font-style: italic">    :return bool:</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>uri <span style="color: #666">=</span> uri
     <span style="color: #008000">self</span><span style="color: #666">.</span>format <span style="color: #666">=</span> <span style="color: #008000">format</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_container:
@@ -2993,7 +2965,7 @@
         <span style="color: #008000">self</span><span style="color: #666">.</span>_opened <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #008000; font-weight: bold">try</span>:
         <span style="color: #008000">self</span><span style="color: #666">.</span>_container <span style="color: #666">=</span> av<span style="color: #666">.</span>open(
-            <span style="color: #008000">self</span><span style="color: #666">.</span>uri, <span style="color: #BA2121">&quot;r&quot;</span>, <span style="color: #008000">format</span><span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>format, buffer_size<span style="color: #666">=1024</span>, timeout<span style="color: #666">=60</span>
+            <span style="color: #008000">self</span><span style="color: #666">.</span>uri, <span style="color: #BA2121">"r"</span>, <span style="color: #008000">format</span><span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>format, buffer_size<span style="color: #666">=1024</span>, timeout<span style="color: #666">=60</span>
         )
     <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">UnicodeDecodeError</span>:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>

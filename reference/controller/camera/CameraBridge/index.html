@@ -2023,34 +2023,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../webui/carousel/" class="md-nav__link">
         
   
@@ -2230,7 +2202,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2252,14 +2224,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3021,11 +2993,11 @@ statusClass</p>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>(parent)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_name <span style="color: #666">=</span> name
     <span style="color: #008000">self</span><span style="color: #666">.</span>_address <span style="color: #666">=</span> address
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_video_source <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_image_source <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_video_source <span style="color: #666">=</span> <span style="color: #BA2121">""</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_image_source <span style="color: #666">=</span> <span style="color: #BA2121">""</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_displayMode <span style="color: #666">=</span> DisplayMode<span style="color: #666">.</span>NORMAL
-    <span style="color: #008000; font-weight: bold">if</span> name <span style="color: #666">==</span> <span style="color: #BA2121">&quot;empty&quot;</span> <span style="color: #A2F; font-weight: bold">or</span> address <span style="color: #666">==</span> <span style="color: #BA2121">&quot;&quot;</span>:
-        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">&quot;Empty camera bridge cannot be created.&quot;</span>)
+    <span style="color: #008000; font-weight: bold">if</span> name <span style="color: #666">==</span> <span style="color: #BA2121">"empty"</span> <span style="color: #A2F; font-weight: bold">or</span> address <span style="color: #666">==</span> <span style="color: #BA2121">""</span>:
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">"Empty camera bridge cannot be created."</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>statusChanged<span style="color: #666">.</span>connect(<span style="color: #008000; font-weight: bold">lambda</span> state: <span style="color: #008000">self</span><span style="color: #666">.</span>statusClassChanged<span style="color: #666">.</span>emit(STATE_TO_CLASS[state]))
 
     <span style="color: #008000">self</span><span style="color: #666">.</span>camera <span style="color: #666">=</span> PiCameraComm(context, address)
@@ -3034,14 +3006,14 @@ statusClass</p>
     <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>videoUrlChanged<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>_videoUrlChanged)
     <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>stateChanged<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>statusChanged)
 
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_mode: Literal[<span style="color: #BA2121">&quot;VIDEO&quot;</span>, <span style="color: #BA2121">&quot;STILL&quot;</span>] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>mode
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_mode: Literal[<span style="color: #BA2121">"VIDEO"</span>, <span style="color: #BA2121">"STILL"</span>] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>mode
     <span style="color: #008000">self</span><span style="color: #666">.</span>_rotation: <span style="color: #008000">int</span> <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>rotation
     <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>rotationChanged<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>_camera_rotation_change_handler)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_i <span style="color: #666">=</span> <span style="color: #666">0</span>
 
     <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_finalizer</span>(camera):
         <span style="color: #008000; font-weight: bold">del</span> camera
-        logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;bridge </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> finalized&quot;</span>)
+        logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"bridge </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> finalized"</span>)
 
     finalize(<span style="color: #008000">self</span>, _finalizer, <span style="color: #008000">self</span><span style="color: #666">.</span>camera)
 </code></pre></div></td></tr></table></div>
@@ -3084,7 +3056,7 @@ statusClass</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">104</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">105</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getImage</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Gets a high-resolution image from the camera&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Gets a high-resolution image from the camera"""</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>camera:
         <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>getImage()
 </code></pre></div></td></tr></table></div>
@@ -3117,7 +3089,7 @@ statusClass</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getLoresImage</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Gets a low-resolution image from the camera&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Gets a low-resolution image from the camera"""</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>camera:
         <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>getImage(lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
 </code></pre></div></td></tr></table></div>
@@ -3171,7 +3143,7 @@ statusClass</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">230</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, parent: QObject):
     <span style="color: #008000">self</span><span style="color: #666">.</span>_status <span style="color: #666">=</span> CameraStates<span style="color: #666">.</span>INVALID
     <span style="color: #008000">self</span><span style="color: #666">.</span>camera <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_mode <span style="color: #666">=</span> <span style="color: #BA2121">&quot;STILL&quot;</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_mode <span style="color: #666">=</span> <span style="color: #BA2121">"STILL"</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_rotation <span style="color: #666">=</span> <span style="color: #666">0</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_displayMode <span style="color: #666">=</span> DisplayMode<span style="color: #666">.</span>NORMAL
 </code></pre></div></td></tr></table></div>
@@ -3214,7 +3186,7 @@ statusClass</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">104</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">105</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getImage</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Gets a high-resolution image from the camera&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Gets a high-resolution image from the camera"""</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>camera:
         <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>getImage()
 </code></pre></div></td></tr></table></div>
@@ -3247,7 +3219,7 @@ statusClass</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getLoresImage</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Gets a low-resolution image from the camera&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Gets a low-resolution image from the camera"""</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>camera:
         <span style="color: #008000">self</span><span style="color: #666">.</span>camera<span style="color: #666">.</span>getImage(lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
 </code></pre></div></td></tr></table></div>

@@ -1872,34 +1872,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/webui/carousel/" class="md-nav__link">
         
   
@@ -2079,7 +2051,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2101,14 +2073,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2941,7 +2913,7 @@ The API reference documentation is automatically generated using <a href="https:
 <p>All Python code in the Plant-Imager3 project should use the NumPy docstring format. This format is well-structured and provides a clear way to document parameters, return values, exceptions, and examples.</p>
 <h3 id="example-class-docstring">Example Class Docstring<a class="headerlink" href="#example-class-docstring" title="Permanent link">Link</a></h3>
 <div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">CNC</span>(AbstractCNC):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;A concrete implementation of CNC machine control using GRBL firmware.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""A concrete implementation of CNC machine control using GRBL firmware.</span>
 
 <span style="color: #BA2121; font-style: italic">    This class provides functionality to control a CNC machine running GRBL firmware</span>
 <span style="color: #BA2121; font-style: italic">    over a serial connection. It supports movement along X, Y, and Z axes, homing,</span>
@@ -2980,7 +2952,7 @@ The API reference documentation is automatically generated using <a href="https:
 <span style="color: #BA2121; font-style: italic">    Examples</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; from plantimager.controller.scanner.grbl import CNC</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; cnc = CNC(&quot;/dev/ttyACM0&quot;)  # Initialize CNC connection</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; cnc = CNC("/dev/ttyACM0")  # Initialize CNC connection</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; cnc.home()  # Perform homing sequence</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; cnc.moveto(100, 100, 50)  # Move to position synchronously</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; x, y, z = cnc.get_position()  # Get current position</span>
@@ -2995,23 +2967,23 @@ The API reference documentation is automatically generated using <a href="https:
 <span style="color: #BA2121; font-style: italic">        If unable to read position from CNC</span>
 <span style="color: #BA2121; font-style: italic">    SerialException</span>
 <span style="color: #BA2121; font-style: italic">        If serial communication fails</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
 </code></pre></div>
 <h3 id="example-method-docstring">Example Method Docstring<a class="headerlink" href="#example-method-docstring" title="Permanent link">Link</a></h3>
 <div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto</span>(<span style="color: #008000">self</span>, x, y, z):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Move the CNC machine to specified coordinates and wait until the target position is reached.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Move the CNC machine to specified coordinates and wait until the target position is reached.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    x : length_mm</span>
 <span style="color: #BA2121; font-style: italic">        Target position along the X-axis in millimeters. Must be within the</span>
-<span style="color: #BA2121; font-style: italic">        machine&#39;s x_lims range.</span>
+<span style="color: #BA2121; font-style: italic">        machine's x_lims range.</span>
 <span style="color: #BA2121; font-style: italic">    y : length_mm</span>
 <span style="color: #BA2121; font-style: italic">        Target position along the Y-axis in millimeters. Must be within the</span>
-<span style="color: #BA2121; font-style: italic">        machine&#39;s y_lims range.</span>
+<span style="color: #BA2121; font-style: italic">        machine's y_lims range.</span>
 <span style="color: #BA2121; font-style: italic">    z : deg</span>
 <span style="color: #BA2121; font-style: italic">        Target position along the Z-axis in degrees. Must be within the</span>
-<span style="color: #BA2121; font-style: italic">        machine&#39;s z_lims range.</span>
+<span style="color: #BA2121; font-style: italic">        machine's z_lims range.</span>
 
 <span style="color: #BA2121; font-style: italic">    Raises</span>
 <span style="color: #BA2121; font-style: italic">    ------</span>
@@ -3026,7 +2998,7 @@ The API reference documentation is automatically generated using <a href="https:
 <span style="color: #BA2121; font-style: italic">    - The movement is performed in absolute coordinates (``G90`` mode)</span>
 <span style="color: #BA2121; font-style: italic">    - Units are in millimeters (``G21`` mode)</span>
 <span style="color: #BA2121; font-style: italic">    - The method will block until the movement is complete</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
 </code></pre></div>
 <h2 id="markdown-files">Markdown Files<a class="headerlink" href="#markdown-files" title="Permanent link">Link</a></h2>
 <p>In addition to docstrings, the documentation includes Markdown files that provide higher-level information about the project.

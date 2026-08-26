@@ -1872,34 +1872,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/webui/carousel/" class="md-nav__link">
         
   
@@ -2079,7 +2051,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2101,14 +2073,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3211,13 +3183,13 @@ It provides a touchscreen interface for controlling the scanner and viewing imag
 </ul>
 <div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
     app <span style="color: #666">=</span> QGuiApplication(sys<span style="color: #666">.</span>argv)
-    font <span style="color: #666">=</span> QFont(<span style="color: #BA2121">&quot;Nunito Sans&quot;</span>)
+    font <span style="color: #666">=</span> QFont(<span style="color: #BA2121">"Nunito Sans"</span>)
     app<span style="color: #666">.</span>setFont(font)
-    QQuickStyle<span style="color: #666">.</span>setStyle(<span style="color: #BA2121">&quot;Material&quot;</span>)
+    QQuickStyle<span style="color: #666">.</span>setStyle(<span style="color: #BA2121">"Material"</span>)
     engine <span style="color: #666">=</span> QQmlApplicationEngine()
-    engine<span style="color: #666">.</span>addImageProvider(<span style="color: #BA2121">&quot;provider&quot;</span>, imageProvider)
+    engine<span style="color: #666">.</span>addImageProvider(<span style="color: #BA2121">"provider"</span>, imageProvider)
     engine<span style="color: #666">.</span>addImportPath(dirname(<span style="color: #19177C">__file__</span>))
-    engine<span style="color: #666">.</span>loadFromModule(<span style="color: #BA2121">&quot;PlantImagerApp&quot;</span>, <span style="color: #BA2121">&quot;Main&quot;</span>)
+    engine<span style="color: #666">.</span>loadFromModule(<span style="color: #BA2121">"PlantImagerApp"</span>, <span style="color: #BA2121">"Main"</span>)
 
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> engine<span style="color: #666">.</span>rootObjects():
         sys<span style="color: #666">.</span>exit(<span style="color: #666">-1</span>)
@@ -3237,9 +3209,9 @@ It runs on a Raspberry Pi Zero W and communicates with the central controller us
 </ul>
 <p>The camera component exposes its functionality through the <code>Camera</code> interface:</p>
 <div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">PiCameraComm</span>(QObject):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Object that will handle communication with the picamera. Meant to live in a separate thread.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
 
     imageReady <span style="color: #666">=</span> Signal(<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>)
     modeChanged <span style="color: #666">=</span> Signal(<span style="color: #008000">str</span>)
@@ -3269,7 +3241,7 @@ It communicates with the central controller using ZMQ-based RPC and with the Pla
 
     <span style="color: #3D7B7B; font-style: italic"># - Create connexion with controller</span>
     context <span style="color: #666">=</span> zmq<span style="color: #666">.</span>Context()
-    controller_thread <span style="color: #666">=</span> Thread(target<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">lambda</span> ctx: RPCController(ctx, <span style="color: #BA2121">&quot;tcp://localhost:14567&quot;</span>), args<span style="color: #666">=</span>(context,))
+    controller_thread <span style="color: #666">=</span> Thread(target<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">lambda</span> ctx: RPCController(ctx, <span style="color: #BA2121">"tcp://localhost:14567"</span>), args<span style="color: #666">=</span>(context,))
     controller_thread<span style="color: #666">.</span>daemon <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
     controller_thread<span style="color: #666">.</span>start()
 
@@ -3289,18 +3261,18 @@ It communicates with the central controller and provides precise positioning of 
 <li>Safety features</li>
 </ul>
 <div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">CNC</span>(AbstractCNC):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;A concrete implementation of CNC machine control using GRBL firmware.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""A concrete implementation of CNC machine control using GRBL firmware.</span>
 
 <span style="color: #BA2121; font-style: italic">    This class provides functionality to control a CNC machine running GRBL firmware</span>
 <span style="color: #BA2121; font-style: italic">    over a serial connection. It supports movement along X, Y, and Z axes, homing,</span>
 <span style="color: #BA2121; font-style: italic">    position queries, and both synchronous and asynchronous operations.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
 
-    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, port: <span style="color: #008000">str</span><span style="color: #666">=</span><span style="color: #BA2121">&quot;/dev/ttyUSB0&quot;</span>, baud_rate: <span style="color: #008000">int</span><span style="color: #666">=115200</span>):
+    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, port: <span style="color: #008000">str</span><span style="color: #666">=</span><span style="color: #BA2121">"/dev/ttyUSB0"</span>, baud_rate: <span style="color: #008000">int</span><span style="color: #666">=115200</span>):
         <span style="color: #3D7B7B; font-style: italic"># ...</span>
 
     <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg):
-<span style="color: #BBB">        </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Move the CNC machine to specified coordinates and wait until the target position is reached.&quot;&quot;&quot;</span>
+<span style="color: #BBB">        </span><span style="color: #BA2121; font-style: italic">"""Move the CNC machine to specified coordinates and wait until the target position is reached."""</span>
         <span style="color: #3D7B7B; font-style: italic"># ...</span>
 </code></pre></div>
 <h3 id="5-remote-plantdb-rest-api">5. Remote PlantDB REST API<a class="headerlink" href="#5-remote-plantdb-rest-api" title="Permanent link">Link</a></h3>
@@ -3315,9 +3287,9 @@ It stores scan data, metadata, and images, and provides a RESTful interface for 
 </ul>
 <p>The Web UI communicates with the PlantDB REST API to store and retrieve scan data:</p>
 <div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_dataset_list</span>(host: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Returns the dataset dictionary for the PlantDB REST API at given host url and port.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Returns the dataset dictionary for the PlantDB REST API at given host url and port."""</span>
     <span style="color: #008000; font-weight: bold">try</span>:
-        response <span style="color: #666">=</span> requests<span style="color: #666">.</span>get(<span style="color: #BA2121">f&quot;http://</span><span style="color: #A45A77; font-weight: bold">{</span>host<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">/scans&quot;</span>)
+        response <span style="color: #666">=</span> requests<span style="color: #666">.</span>get(<span style="color: #BA2121">f"http://</span><span style="color: #A45A77; font-weight: bold">{</span>host<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">/scans"</span>)
         <span style="color: #008000; font-weight: bold">if</span> response<span style="color: #666">.</span>status_code <span style="color: #666">==</span> <span style="color: #666">200</span>:
             <span style="color: #008000; font-weight: bold">return</span> response<span style="color: #666">.</span>json()
         <span style="color: #008000; font-weight: bold">else</span>:

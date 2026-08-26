@@ -1883,34 +1883,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../carousel/" class="md-nav__link">
         
   
@@ -2090,7 +2062,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2112,14 +2084,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2935,26 +2907,26 @@ particularly for interacting with the PlantDB REST API and handling configuratio
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">config_upload</span>() <span style="color: #666">-&gt;</span> dcc<span style="color: #666">.</span>Upload:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;The TOML configuration file upload component.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""The TOML configuration file upload component.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    dcc.Upload</span>
 <span style="color: #BA2121; font-style: italic">        A Dash Upload component configured for TOML files.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">return</span> dcc<span style="color: #666">.</span>Upload(
-        children<span style="color: #666">=</span>[<span style="color: #BA2121">&#39;Drag and Drop or Select a TOML configuration file.&#39;</span>],
-        <span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&quot;cfg-upload&quot;</span>,
+        children<span style="color: #666">=</span>[<span style="color: #BA2121">'Drag and Drop or Select a TOML configuration file.'</span>],
+        <span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">"cfg-upload"</span>,
         style<span style="color: #666">=</span>{
-            <span style="color: #BA2121">&#39;width&#39;</span>: <span style="color: #BA2121">&#39;100%&#39;</span>,
-            <span style="color: #BA2121">&#39;height&#39;</span>: <span style="color: #BA2121">&#39;60px&#39;</span>,
-            <span style="color: #BA2121">&#39;lineHeight&#39;</span>: <span style="color: #BA2121">&#39;60px&#39;</span>,
-            <span style="color: #BA2121">&#39;borderWidth&#39;</span>: <span style="color: #BA2121">&#39;1px&#39;</span>,
-            <span style="color: #BA2121">&#39;borderStyle&#39;</span>: <span style="color: #BA2121">&#39;dashed&#39;</span>,
-            <span style="color: #BA2121">&#39;borderRadius&#39;</span>: <span style="color: #BA2121">&#39;5px&#39;</span>,
-            <span style="color: #BA2121">&#39;textAlign&#39;</span>: <span style="color: #BA2121">&#39;center&#39;</span>,
+            <span style="color: #BA2121">'width'</span>: <span style="color: #BA2121">'100%'</span>,
+            <span style="color: #BA2121">'height'</span>: <span style="color: #BA2121">'60px'</span>,
+            <span style="color: #BA2121">'lineHeight'</span>: <span style="color: #BA2121">'60px'</span>,
+            <span style="color: #BA2121">'borderWidth'</span>: <span style="color: #BA2121">'1px'</span>,
+            <span style="color: #BA2121">'borderStyle'</span>: <span style="color: #BA2121">'dashed'</span>,
+            <span style="color: #BA2121">'borderRadius'</span>: <span style="color: #BA2121">'5px'</span>,
+            <span style="color: #BA2121">'textAlign'</span>: <span style="color: #BA2121">'center'</span>,
         },
-        accept<span style="color: #666">=</span><span style="color: #BA2121">&quot;.toml&quot;</span>,
+        accept<span style="color: #666">=</span><span style="color: #BA2121">".toml"</span>,
         <span style="color: #3D7B7B; font-style: italic"># Do not allow multiple files to be uploaded</span>
         multiple<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>
     )
@@ -3102,13 +3074,13 @@ Returns <code>None</code> if no scans are found.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.webui.utils</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> get_dataset_dict
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantdb.server.test_rest_api</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> TestRestApiServer
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>server <span style="color: #666">=</span> TestRestApiServer(<span style="color: #BA2121">&quot;/data/ROMI/shared_fsdb&quot;</span>)
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>server <span style="color: #666">=</span> TestRestApiServer(<span style="color: #BA2121">"/data/ROMI/shared_fsdb"</span>)
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>server<span style="color: #666">.</span>start()
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>dataset_dict <span style="color: #666">=</span> get_dataset_dict(<span style="color: #BA2121">&#39;localhost&#39;</span>, port<span style="color: #666">=5000</span>, prefix<span style="color: #666">=</span><span style="color: #BA2121">&#39;&#39;</span>, ssl<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>)
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>dataset_dict <span style="color: #666">=</span> get_dataset_dict(<span style="color: #BA2121">'localhost'</span>, port<span style="color: #666">=5000</span>, prefix<span style="color: #666">=</span><span style="color: #BA2121">''</span>, ssl<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>)
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000">print</span>(<span style="color: #008000">list</span>(dataset_dict))
-<span style="color: #717171">[&#39;arabidopsis000&#39;, &#39;real_plant&#39;, &#39;real_plant_analyzed&#39;, &#39;virtual_plant&#39;, &#39;virtual_plant_analyzed&#39;]</span>
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000">print</span>(<span style="color: #008000">list</span>(dataset_dict[<span style="color: #BA2121">&#39;real_plant_analyzed&#39;</span>][<span style="color: #BA2121">&#39;metadata&#39;</span>]))
-<span style="color: #717171">[&#39;date&#39;, &#39;species&#39;, &#39;plant&#39;, &#39;environment&#39;, &#39;nbPhotos&#39;, &#39;files&#39;]</span>
+<span style="color: #717171">['arabidopsis000', 'real_plant', 'real_plant_analyzed', 'virtual_plant', 'virtual_plant_analyzed']</span>
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000">print</span>(<span style="color: #008000">list</span>(dataset_dict[<span style="color: #BA2121">'real_plant_analyzed'</span>][<span style="color: #BA2121">'metadata'</span>]))
+<span style="color: #717171">['date', 'species', 'plant', 'environment', 'nbPhotos', 'files']</span>
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>server<span style="color: #666">.</span>stop()
 </code></pre></div>
 
@@ -3167,7 +3139,7 @@ plantdb.rest_api_client.parse_scans_info</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">91</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">92</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">93</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_dataset_dict</span>(host: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span>, prefix: <span style="color: #008000">str</span>, ssl: <span style="color: #008000">bool</span>, access_token: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, Any] <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Returns the dataset dictionary for the PlantDB REST API at a given host url and port.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Returns the dataset dictionary for the PlantDB REST API at a given host url and port.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -3192,20 +3164,20 @@ plantdb.rest_api_client.parse_scans_info</p>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; from plantimager.webui.utils import get_dataset_dict</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; from plantdb.server.test_rest_api import TestRestApiServer</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; server = TestRestApiServer(&quot;/data/ROMI/shared_fsdb&quot;)</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; server = TestRestApiServer("/data/ROMI/shared_fsdb")</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; server.start()</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; dataset_dict = get_dataset_dict(&#39;localhost&#39;, port=5000, prefix=&#39;&#39;, ssl=False)</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; dataset_dict = get_dataset_dict('localhost', port=5000, prefix='', ssl=False)</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; print(list(dataset_dict))</span>
-<span style="color: #BA2121; font-style: italic">    [&#39;arabidopsis000&#39;, &#39;real_plant&#39;, &#39;real_plant_analyzed&#39;, &#39;virtual_plant&#39;, &#39;virtual_plant_analyzed&#39;]</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; print(list(dataset_dict[&#39;real_plant_analyzed&#39;][&#39;metadata&#39;]))</span>
-<span style="color: #BA2121; font-style: italic">    [&#39;date&#39;, &#39;species&#39;, &#39;plant&#39;, &#39;environment&#39;, &#39;nbPhotos&#39;, &#39;files&#39;]</span>
+<span style="color: #BA2121; font-style: italic">    ['arabidopsis000', 'real_plant', 'real_plant_analyzed', 'virtual_plant', 'virtual_plant_analyzed']</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; print(list(dataset_dict['real_plant_analyzed']['metadata']))</span>
+<span style="color: #BA2121; font-style: italic">    ['date', 'species', 'plant', 'environment', 'nbPhotos', 'files']</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; server.stop()</span>
 
 <span style="color: #BA2121; font-style: italic">    See Also</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    plantdb.rest_api_client.request_scan_names_list</span>
 <span style="color: #BA2121; font-style: italic">    plantdb.rest_api_client.parse_scans_info</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     scans_list <span style="color: #666">=</span> <span style="color: #008000">sorted</span>(request_scan_names_list(host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl, session_token<span style="color: #666">=</span>access_token))
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(scans_list) <span style="color: #666">&gt;</span> <span style="color: #666">0</span>:
         dataset_dict <span style="color: #666">=</span> parse_scans_info(host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl, session_token<span style="color: #666">=</span>access_token)
@@ -3309,13 +3281,13 @@ such as "No Image" or "Error Loading" when the fetch is unsuccessful.</p>
     <div class="language-pycon highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.webui.utils</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> load_image_from_url
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantdb.server.test_rest_api</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> TestRestApiServer
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantdb.client.rest_api</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> scan_image_url
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>server <span style="color: #666">=</span> TestRestApiServer(<span style="color: #BA2121">&quot;/data/ROMI/shared_fsdb&quot;</span>)
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>server <span style="color: #666">=</span> TestRestApiServer(<span style="color: #BA2121">"/data/ROMI/shared_fsdb"</span>)
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>server<span style="color: #666">.</span>start()
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #3D7B7B; font-style: italic"># Load a very small image:</span>
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>load_image_from_url(scan_image_url(<span style="color: #BA2121">&#39;localhost&#39;</span>, <span style="color: #BA2121">&quot;real_plant&quot;</span>, <span style="color: #BA2121">&quot;images&quot;</span>, <span style="color: #BA2121">&quot;00000_rgb&quot;</span>, port<span style="color: #666">=5000</span>, size<span style="color: #666">=</span><span style="color: #BA2121">&#39;10&#39;</span>))
-<span style="color: #717171">&#39;data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q==&#39;</span>
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>load_image_from_url(scan_image_url(<span style="color: #BA2121">&#39;localhost&#39;</span>, <span style="color: #BA2121">&quot;real_plant&quot;</span>, <span style="color: #BA2121">&quot;images&quot;</span>, <span style="color: #BA2121">&quot;00000_rgb&quot;</span>, port<span style="color: #666">=5000</span>, size<span style="color: #666">=</span><span style="color: #BA2121">&#39;10&#39;</span>, as_base64<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>))
-<span style="color: #717171">&#39;data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q==&#39;</span>
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>load_image_from_url(scan_image_url(<span style="color: #BA2121">'localhost'</span>, <span style="color: #BA2121">"real_plant"</span>, <span style="color: #BA2121">"images"</span>, <span style="color: #BA2121">"00000_rgb"</span>, port<span style="color: #666">=5000</span>, size<span style="color: #666">=</span><span style="color: #BA2121">'10'</span>))
+<span style="color: #717171">'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q=='</span>
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>load_image_from_url(scan_image_url(<span style="color: #BA2121">'localhost'</span>, <span style="color: #BA2121">"real_plant"</span>, <span style="color: #BA2121">"images"</span>, <span style="color: #BA2121">"00000_rgb"</span>, port<span style="color: #666">=5000</span>, size<span style="color: #666">=</span><span style="color: #BA2121">'10'</span>, as_base64<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>))
+<span style="color: #717171">'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q=='</span>
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>server<span style="color: #666">.</span>stop()
 </code></pre></div>
 
@@ -3374,7 +3346,7 @@ such as "No Image" or "Error Loading" when the fetch is unsuccessful.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">load_image_from_url</span>(url, access_token<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Load an image from a given URL and encode it to a base64 data URI.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Load an image from a given URL and encode it to a base64 data URI.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -3387,43 +3359,43 @@ such as "No Image" or "Error Loading" when the fetch is unsuccessful.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    str</span>
 <span style="color: #BA2121; font-style: italic">        A base64‑encoded data URI containing the image, or a fallback string</span>
-<span style="color: #BA2121; font-style: italic">        such as &quot;No Image&quot; or &quot;Error Loading&quot; when the fetch is unsuccessful.</span>
+<span style="color: #BA2121; font-style: italic">        such as "No Image" or "Error Loading" when the fetch is unsuccessful.</span>
 
 <span style="color: #BA2121; font-style: italic">    Examples</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; from plantimager.webui.utils import load_image_from_url</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; from plantdb.server.test_rest_api import TestRestApiServer</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; from plantdb.client.rest_api import scan_image_url</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; server = TestRestApiServer(&quot;/data/ROMI/shared_fsdb&quot;)</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; server = TestRestApiServer("/data/ROMI/shared_fsdb")</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; server.start()</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; # Load a very small image:</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; load_image_from_url(scan_image_url(&#39;localhost&#39;, &quot;real_plant&quot;, &quot;images&quot;, &quot;00000_rgb&quot;, port=5000, size=&#39;10&#39;))</span>
-<span style="color: #BA2121; font-style: italic">    &#39;data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q==&#39;</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; load_image_from_url(scan_image_url(&#39;localhost&#39;, &quot;real_plant&quot;, &quot;images&quot;, &quot;00000_rgb&quot;, port=5000, size=&#39;10&#39;, as_base64=True))</span>
-<span style="color: #BA2121; font-style: italic">    &#39;data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q==&#39;</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; load_image_from_url(scan_image_url('localhost', "real_plant", "images", "00000_rgb", port=5000, size='10'))</span>
+<span style="color: #BA2121; font-style: italic">    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q=='</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; load_image_from_url(scan_image_url('localhost', "real_plant", "images", "00000_rgb", port=5000, size='10', as_base64=True))</span>
+<span style="color: #BA2121; font-style: italic">    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAIAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5asPtK6SrCMOiqCTz8oJ71zUxzPIf9o/zooqVuwP/2Q=='</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; server.stop()</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #3D7B7B; font-style: italic"># Fetch image and convert to base64</span>
     <span style="color: #008000; font-weight: bold">try</span>:
         response <span style="color: #666">=</span> make_api_request(url<span style="color: #666">=</span>url, session_token<span style="color: #666">=</span>access_token, timeout<span style="color: #666">=5</span>)
         <span style="color: #008000; font-weight: bold">if</span> response<span style="color: #666">.</span>ok:
-            content_type <span style="color: #666">=</span> response<span style="color: #666">.</span>headers<span style="color: #666">.</span>get(<span style="color: #BA2121">&#39;Content-Type&#39;</span>)
-            encoding <span style="color: #666">=</span> response<span style="color: #666">.</span>headers<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;X-Content-Encoding&quot;</span>)
-            <span style="color: #008000; font-weight: bold">if</span> encoding <span style="color: #666">==</span> <span style="color: #BA2121">&#39;binary&#39;</span>:
+            content_type <span style="color: #666">=</span> response<span style="color: #666">.</span>headers<span style="color: #666">.</span>get(<span style="color: #BA2121">'Content-Type'</span>)
+            encoding <span style="color: #666">=</span> response<span style="color: #666">.</span>headers<span style="color: #666">.</span>get(<span style="color: #BA2121">"X-Content-Encoding"</span>)
+            <span style="color: #008000; font-weight: bold">if</span> encoding <span style="color: #666">==</span> <span style="color: #BA2121">'binary'</span>:
                 <span style="color: #3D7B7B; font-style: italic"># Convert binary streaming to base64 encoding:</span>
-                encoded_img <span style="color: #666">=</span> pybase64<span style="color: #666">.</span>b64encode(response<span style="color: #666">.</span>content)<span style="color: #666">.</span>decode(<span style="color: #BA2121">&#39;ascii&#39;</span>)
-                img_data <span style="color: #666">=</span> <span style="color: #BA2121">f&quot;data:</span><span style="color: #A45A77; font-weight: bold">{</span>content_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">;base64,</span><span style="color: #A45A77; font-weight: bold">{</span>encoded_img<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
-            <span style="color: #008000; font-weight: bold">elif</span> encoding <span style="color: #666">==</span> <span style="color: #BA2121">&#39;base64&#39;</span>:
+                encoded_img <span style="color: #666">=</span> pybase64<span style="color: #666">.</span>b64encode(response<span style="color: #666">.</span>content)<span style="color: #666">.</span>decode(<span style="color: #BA2121">'ascii'</span>)
+                img_data <span style="color: #666">=</span> <span style="color: #BA2121">f"data:</span><span style="color: #A45A77; font-weight: bold">{</span>content_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">;base64,</span><span style="color: #A45A77; font-weight: bold">{</span>encoded_img<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>
+            <span style="color: #008000; font-weight: bold">elif</span> encoding <span style="color: #666">==</span> <span style="color: #BA2121">'base64'</span>:
                 <span style="color: #3D7B7B; font-style: italic"># A base64 encoded image from JSON:</span>
-                content_type <span style="color: #666">=</span> response<span style="color: #666">.</span>json()[<span style="color: #BA2121">&#39;content-type&#39;</span>]
-                img_str <span style="color: #666">=</span> response<span style="color: #666">.</span>json()[<span style="color: #BA2121">&#39;image&#39;</span>]
-                img_data <span style="color: #666">=</span> <span style="color: #BA2121">f&quot;data:</span><span style="color: #A45A77; font-weight: bold">{</span>content_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">;base64,</span><span style="color: #A45A77; font-weight: bold">{</span>img_str<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
+                content_type <span style="color: #666">=</span> response<span style="color: #666">.</span>json()[<span style="color: #BA2121">'content-type'</span>]
+                img_str <span style="color: #666">=</span> response<span style="color: #666">.</span>json()[<span style="color: #BA2121">'image'</span>]
+                img_data <span style="color: #666">=</span> <span style="color: #BA2121">f"data:</span><span style="color: #A45A77; font-weight: bold">{</span>content_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">;base64,</span><span style="color: #A45A77; font-weight: bold">{</span>img_str<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>
             <span style="color: #008000; font-weight: bold">else</span>:
-                img_data <span style="color: #666">=</span> <span style="color: #BA2121">f&quot;Error processing sent image: Unknown content type: </span><span style="color: #A45A77; font-weight: bold">{</span>content_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
+                img_data <span style="color: #666">=</span> <span style="color: #BA2121">f"Error processing sent image: Unknown content type: </span><span style="color: #A45A77; font-weight: bold">{</span>content_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>
         <span style="color: #008000; font-weight: bold">else</span>:
-            img_data <span style="color: #666">=</span> <span style="color: #BA2121">f&quot;No Image: </span><span style="color: #A45A77; font-weight: bold">{</span>response<span style="color: #666">.</span>status_code<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
+            img_data <span style="color: #666">=</span> <span style="color: #BA2121">f"No Image: </span><span style="color: #A45A77; font-weight: bold">{</span>response<span style="color: #666">.</span>status_code<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>
     <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span> <span style="color: #008000; font-weight: bold">as</span> e:
-        img_data <span style="color: #666">=</span> <span style="color: #BA2121">f&quot;Error Loading: </span><span style="color: #A45A77; font-weight: bold">{</span>e<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
+        img_data <span style="color: #666">=</span> <span style="color: #BA2121">f"Error Loading: </span><span style="color: #A45A77; font-weight: bold">{</span>e<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>
     <span style="color: #008000; font-weight: bold">return</span> img_data
 </code></pre></div></td></tr></table></div>
             </details>

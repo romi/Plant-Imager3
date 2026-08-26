@@ -1976,34 +1976,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../webui/carousel/" class="md-nav__link">
         
   
@@ -2183,7 +2155,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2205,14 +2177,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3163,7 +3135,7 @@ succeeds.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">254</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">255</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">coerce_to_generic</span>(value: Any, generic_type: Any) <span style="color: #666">-&gt;</span> Any:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Coerce a value to a specified generic type or type hint.</span>
 
 <span style="color: #BA2121; font-style: italic">    This utility attempts to convert ``value`` into the type described by</span>
@@ -3198,7 +3170,7 @@ succeeds.</p>
 <span style="color: #BA2121; font-style: italic">        * If ``value`` cannot be instantiated as the required generic origin.</span>
 <span style="color: #BA2121; font-style: italic">    ValueError</span>
 <span style="color: #BA2121; font-style: italic">        Propagated from underlying constructors when a conversion fails (e.g.,</span>
-<span style="color: #BA2121; font-style: italic">        ``int(&#39;abc&#39;)``).</span>
+<span style="color: #BA2121; font-style: italic">        ``int('abc')``).</span>
 
 <span style="color: #BA2121; font-style: italic">    Notes</span>
 <span style="color: #BA2121; font-style: italic">    -----</span>
@@ -3220,7 +3192,7 @@ succeeds.</p>
 <span style="color: #BA2121; font-style: italic">       (``tuple[int, ...]``) and fixed‑size (``tuple[int, str]``) forms. The</span>
 <span style="color: #BA2121; font-style: italic">       function validates iterability, then coerces each element according to</span>
 <span style="color: #BA2121; font-style: italic">       the specified element type.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #3D7B7B; font-style: italic"># 1. Handle Unions (e.g., int | str or Union[int, str])</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(generic_type, <span style="color: #008000">tuple</span>):
         <span style="color: #008000; font-weight: bold">for</span> gtype <span style="color: #A2F; font-weight: bold">in</span> generic_type:
@@ -3228,7 +3200,7 @@ succeeds.</p>
                 <span style="color: #008000; font-weight: bold">return</span> coerce_to_generic(value, gtype)
             <span style="color: #008000; font-weight: bold">except</span> (<span style="color: #CB3F38; font-weight: bold">TypeError</span>, <span style="color: #CB3F38; font-weight: bold">ValueError</span>):
                 <span style="color: #008000; font-weight: bold">continue</span>
-        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f&quot;Could not coerce </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> to any of </span><span style="color: #A45A77; font-weight: bold">{</span>generic_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f"Could not coerce </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> to any of </span><span style="color: #A45A77; font-weight: bold">{</span>generic_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 
     <span style="color: #008000; font-weight: bold">if</span> generic_type <span style="color: #A2F; font-weight: bold">is</span> Any:
         <span style="color: #008000; font-weight: bold">return</span> value
@@ -3245,19 +3217,19 @@ succeeds.</p>
     <span style="color: #3D7B7B; font-style: italic"># 3. Simple types (no origin, e.g., int, str, or a class)</span>
     <span style="color: #008000; font-weight: bold">if</span> origin <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
         <span style="color: #008000; font-weight: bold">try</span>:
-            <span style="color: #3D7B7B; font-style: italic"># If it&#39;s already the right type, return it</span>
+            <span style="color: #3D7B7B; font-style: italic"># If it's already the right type, return it</span>
             <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(value, generic_type):
                 <span style="color: #008000; font-weight: bold">return</span> value
             <span style="color: #3D7B7B; font-style: italic"># Attempt type casting</span>
             <span style="color: #008000; font-weight: bold">return</span> generic_type(value)
         <span style="color: #008000; font-weight: bold">except</span> (<span style="color: #CB3F38; font-weight: bold">ValueError</span>, <span style="color: #CB3F38; font-weight: bold">TypeError</span>) <span style="color: #008000; font-weight: bold">as</span> e:
-            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f&quot;Failed to coerce </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>generic_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">: </span><span style="color: #A45A77; font-weight: bold">{</span>e<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f"Failed to coerce </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>generic_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">: </span><span style="color: #A45A77; font-weight: bold">{</span>e<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 
     <span style="color: #3D7B7B; font-style: italic"># 4. Handle Tuples</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">issubclass</span>(origin, <span style="color: #008000">tuple</span>):
         <span style="color: #3D7B7B; font-style: italic"># Ensure input is iterable</span>
         <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(value, collections<span style="color: #666">.</span>abc<span style="color: #666">.</span>Iterable):
-            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f&quot;Value </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> must be iterable to coerce to tuple&quot;</span>)
+            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f"Value </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> must be iterable to coerce to tuple"</span>)
 
         items <span style="color: #666">=</span> <span style="color: #008000">list</span>(value)
         <span style="color: #3D7B7B; font-style: italic"># Variadic tuple: tuple[int, ...]</span>
@@ -3267,13 +3239,13 @@ succeeds.</p>
         <span style="color: #3D7B7B; font-style: italic"># Fixed-size tuple: tuple[int, str]</span>
         <span style="color: #008000; font-weight: bold">else</span>:
             <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(items) <span style="color: #666">!=</span> <span style="color: #008000">len</span>(args):
-                <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f&quot;Tuple length mismatch: expected </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">len</span>(args)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, got </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">len</span>(items)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+                <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f"Tuple length mismatch: expected </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">len</span>(args)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, got </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">len</span>(items)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
             <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">tuple</span>(coerce_to_generic(item, arg) <span style="color: #008000; font-weight: bold">for</span> item, arg <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">zip</span>(items, args))
 
     <span style="color: #3D7B7B; font-style: italic"># 5. Handle Mappings (e.g., dict[str, int])</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">issubclass</span>(origin, collections<span style="color: #666">.</span>abc<span style="color: #666">.</span>Mapping):
         <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(value, collections<span style="color: #666">.</span>abc<span style="color: #666">.</span>Mapping):
-            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f&quot;Value </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> must be a mapping to coerce to </span><span style="color: #A45A77; font-weight: bold">{</span>origin<span style="color: #666">.</span><span style="color: #19177C">__name__</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f"Value </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> must be a mapping to coerce to </span><span style="color: #A45A77; font-weight: bold">{</span>origin<span style="color: #666">.</span><span style="color: #19177C">__name__</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 
         key_type, val_type <span style="color: #666">=</span> (args[<span style="color: #666">0</span>], args[<span style="color: #666">1</span>]) <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(args) <span style="color: #666">&gt;=</span> <span style="color: #666">2</span> <span style="color: #008000; font-weight: bold">else</span> (Any, Any)
         <span style="color: #008000; font-weight: bold">return</span> origin({
@@ -3284,7 +3256,7 @@ succeeds.</p>
     <span style="color: #3D7B7B; font-style: italic"># 6. Handle Sequences and Sets (e.g., list[int], set[str])</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">issubclass</span>(origin, (collections<span style="color: #666">.</span>abc<span style="color: #666">.</span>Sequence, collections<span style="color: #666">.</span>abc<span style="color: #666">.</span>Set)):
         <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(value, collections<span style="color: #666">.</span>abc<span style="color: #666">.</span>Iterable) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">isinstance</span>(value, (<span style="color: #008000">str</span>, <span style="color: #008000">bytes</span>)):
-            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f&quot;Value </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> must be an iterable container to coerce to </span><span style="color: #A45A77; font-weight: bold">{</span>origin<span style="color: #666">.</span><span style="color: #19177C">__name__</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f"Value </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> must be an iterable container to coerce to </span><span style="color: #A45A77; font-weight: bold">{</span>origin<span style="color: #666">.</span><span style="color: #19177C">__name__</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 
         element_type <span style="color: #666">=</span> args[<span style="color: #666">0</span>] <span style="color: #008000; font-weight: bold">if</span> args <span style="color: #008000; font-weight: bold">else</span> Any
         <span style="color: #008000; font-weight: bold">return</span> origin(coerce_to_generic(item, element_type) <span style="color: #008000; font-weight: bold">for</span> item <span style="color: #A2F; font-weight: bold">in</span> value)
@@ -3293,7 +3265,7 @@ succeeds.</p>
     <span style="color: #008000; font-weight: bold">try</span>:
         <span style="color: #008000; font-weight: bold">return</span> origin(value)
     <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span> <span style="color: #008000; font-weight: bold">as</span> e:
-        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f&quot;Could not coerce </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>generic_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">: </span><span style="color: #A45A77; font-weight: bold">{</span>e<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TypeError</span>(<span style="color: #BA2121">f"Could not coerce </span><span style="color: #A45A77; font-weight: bold">{</span>value<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>generic_type<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">: </span><span style="color: #A45A77; font-weight: bold">{</span>e<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3549,7 +3521,7 @@ isinstance</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">358</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">359</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">360</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_instance_of_generic</span>(value, generic_type):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Determine whether ``value`` conforms to a typing generic specification.</span>
 
 <span style="color: #BA2121; font-style: italic">    This utility inspects ``generic_type`` using :func:`typing.get_origin` and</span>
@@ -3599,7 +3571,7 @@ isinstance</p>
 <span style="color: #BA2121; font-style: italic">    typing.get_origin</span>
 <span style="color: #BA2121; font-style: italic">    typing.get_args</span>
 <span style="color: #BA2121; font-style: italic">    isinstance</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(generic_type, <span style="color: #008000">tuple</span>):
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">any</span>(is_instance_of_generic(value, gtype) <span style="color: #008000; font-weight: bold">for</span> gtype <span style="color: #A2F; font-weight: bold">in</span> generic_type)
 
@@ -3608,7 +3580,7 @@ isinstance</p>
 
     origin <span style="color: #666">=</span> get_origin(generic_type)
 
-    <span style="color: #3D7B7B; font-style: italic"># If no origin, it&#39;s not a generic type</span>
+    <span style="color: #3D7B7B; font-style: italic"># If no origin, it's not a generic type</span>
     <span style="color: #008000; font-weight: bold">if</span> origin <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">isinstance</span>(value, generic_type)
 
@@ -3945,7 +3917,7 @@ with expiration and capacity constraints.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ttl_cache</span>(maxsize: <span style="color: #008000">int</span> <span style="color: #666">=</span> <span style="color: #666">16</span>, ttl: <span style="color: #008000">float</span> <span style="color: #666">=</span> <span style="color: #666">300</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    A decorator to cache the results of a function with a time-to-live (TTL) mechanism.</span>
 
 <span style="color: #BA2121; font-style: italic">    This decorator caches the results of a function for a specified number of seconds (`ttl`),</span>
@@ -3983,7 +3955,7 @@ with expiration and capacity constraints.</p>
 <span style="color: #BA2121; font-style: italic">    -----</span>
 <span style="color: #BA2121; font-style: italic">    - The `clear_cache` attribute is added to the decorated function, allowing</span>
 <span style="color: #BA2121; font-style: italic">      external clearing of the cache.</span>
-<span style="color: #BA2121; font-style: italic">    - Cache keys are created based on the function&#39;s positional and keyword arguments.</span>
+<span style="color: #BA2121; font-style: italic">    - Cache keys are created based on the function's positional and keyword arguments.</span>
 <span style="color: #BA2121; font-style: italic">    - The decorator does not guard against concurrent usage and is not thread-safe.</span>
 
 <span style="color: #BA2121; font-style: italic">    Examples</span>
@@ -4023,7 +3995,7 @@ with expiration and capacity constraints.</p>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; multiply.clear_cache()</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; multiply(2, 3)</span>
 <span style="color: #BA2121; font-style: italic">    6  # Cache was cleared, so the result is recomputed</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
 
     <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ttl_cache_inner</span>(func):
         cache: <span style="color: #008000">dict</span> <span style="color: #666">=</span> {}
@@ -4049,7 +4021,7 @@ with expiration and capacity constraints.</p>
                 <span style="color: #008000; font-weight: bold">return</span> val
 
         <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">clear_cache</span>():
-<span style="color: #BBB">            </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Clears the attached cache.&quot;&quot;&quot;</span>
+<span style="color: #BBB">            </span><span style="color: #BA2121; font-style: italic">"""Clears the attached cache."""</span>
             cache<span style="color: #666">.</span>clear()
 
         wrapper<span style="color: #666">.</span>clear_cache <span style="color: #666">=</span> clear_cache

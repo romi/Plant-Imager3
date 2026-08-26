@@ -1883,34 +1883,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../carousel/" class="md-nav__link">
         
   
@@ -2194,7 +2166,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2216,14 +2188,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3253,24 +3225,24 @@ validation, password matching, and account creation through the backend API.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">354</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">355</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">356</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;registration-message&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
-    [Input(<span style="color: #BA2121">&#39;register-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>)],
-    [State(<span style="color: #BA2121">&#39;new-username-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-     State(<span style="color: #BA2121">&#39;new-fullname-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-     State(<span style="color: #BA2121">&#39;new-password-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-     State(<span style="color: #BA2121">&#39;confirm-password-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-     State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-     State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-     State(<span style="color: #BA2121">&#39;plantdb-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-     State(<span style="color: #BA2121">&#39;plantdb-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-     State(<span style="color: #BA2121">&#39;access-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Output(<span style="color: #BA2121">'registration-message'</span>, <span style="color: #BA2121">'children'</span>),
+    [Input(<span style="color: #BA2121">'register-button'</span>, <span style="color: #BA2121">'n_clicks'</span>)],
+    [State(<span style="color: #BA2121">'new-username-input'</span>, <span style="color: #BA2121">'value'</span>),
+     State(<span style="color: #BA2121">'new-fullname-input'</span>, <span style="color: #BA2121">'value'</span>),
+     State(<span style="color: #BA2121">'new-password-input'</span>, <span style="color: #BA2121">'value'</span>),
+     State(<span style="color: #BA2121">'confirm-password-input'</span>, <span style="color: #BA2121">'value'</span>),
+     State(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>),
+     State(<span style="color: #BA2121">'plantdb-port'</span>, <span style="color: #BA2121">'data'</span>),
+     State(<span style="color: #BA2121">'plantdb-prefix'</span>, <span style="color: #BA2121">'data'</span>),
+     State(<span style="color: #BA2121">'plantdb-ssl'</span>, <span style="color: #BA2121">'data'</span>),
+     State(<span style="color: #BA2121">'access-token'</span>, <span style="color: #BA2121">'data'</span>),
      ],
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_user</span>(n_clicks: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, username: <span style="color: #008000">str</span>, fullname: <span style="color: #008000">str</span>, password: <span style="color: #008000">str</span>,
                   confirm_password: <span style="color: #008000">str</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>, ssl: <span style="color: #008000">bool</span>,
                   access_token: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span> <span style="color: #666">|</span> dbc<span style="color: #666">.</span>Alert:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Process user registration by validating inputs and creating a new account.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Process user registration by validating inputs and creating a new account.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback handles the complete user registration process, including input</span>
 <span style="color: #BA2121; font-style: italic">    validation, password matching, and account creation through the backend API.</span>
@@ -3317,24 +3289,24 @@ validation, password matching, and account creation through the backend API.</p>
 <span style="color: #BA2121; font-style: italic">        If there are network connectivity issues or API errors.</span>
 <span style="color: #BA2121; font-style: italic">    json.JSONDecodeError</span>
 <span style="color: #BA2121; font-style: italic">        If the API response contains invalid JSON data.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> n_clicks:
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;&quot;</span>
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">""</span>
 
     <span style="color: #3D7B7B; font-style: italic"># Check if a username already exists in the backend before proceeding</span>
     res_data <span style="color: #666">=</span> request_check_username(host, username, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl)
-    user_exists <span style="color: #666">=</span> res_data<span style="color: #666">.</span>get(<span style="color: #BA2121">&#39;exists&#39;</span>, <span style="color: #008000; font-weight: bold">False</span>)  <span style="color: #3D7B7B; font-style: italic"># True if username is taken</span>
+    user_exists <span style="color: #666">=</span> res_data<span style="color: #666">.</span>get(<span style="color: #BA2121">'exists'</span>, <span style="color: #008000; font-weight: bold">False</span>)  <span style="color: #3D7B7B; font-style: italic"># True if username is taken</span>
     <span style="color: #008000; font-weight: bold">if</span> user_exists:
-        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Username &#39;</span><span style="color: #A45A77; font-weight: bold">{</span>username<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&#39; is unavailable!&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f"Username '</span><span style="color: #A45A77; font-weight: bold">{</span>username<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">' is unavailable!"</span>, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
 
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">all</span>([username, fullname, password, confirm_password]):
-        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">&quot;All fields are required!&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">"All fields are required!"</span>, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
 
     <span style="color: #008000; font-weight: bold">if</span> password <span style="color: #666">!=</span> confirm_password:
-        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">&quot;Passwords do not match!&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">"Passwords do not match!"</span>, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
 
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> access_token:
-        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Missing access token, you need to login first!&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, className<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f"Missing access token, you need to login first!"</span>, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>, className<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
 
     <span style="color: #008000; font-weight: bold">try</span>:
         <span style="color: #3D7B7B; font-style: italic"># Create a new user via REST API</span>
@@ -3342,20 +3314,20 @@ validation, password matching, and account creation through the backend API.</p>
                                     session_token<span style="color: #666">=</span>access_token)
 
         <span style="color: #008000; font-weight: bold">if</span> response<span style="color: #666">.</span>ok:
-            <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">&quot;Registration successful! You can now login.&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+            <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">"Registration successful! You can now login."</span>, color<span style="color: #666">=</span><span style="color: #BA2121">"success"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
         <span style="color: #008000; font-weight: bold">else</span>:
             <span style="color: #3D7B7B; font-style: italic"># Extract error message from API response if possible</span>
-            error_msg <span style="color: #666">=</span> <span style="color: #BA2121">&quot;Registration failed&quot;</span>
+            error_msg <span style="color: #666">=</span> <span style="color: #BA2121">"Registration failed"</span>
             <span style="color: #008000; font-weight: bold">try</span>:
                 error_data <span style="color: #666">=</span> response<span style="color: #666">.</span>json()
-                <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">&#39;message&#39;</span> <span style="color: #A2F; font-weight: bold">in</span> error_data:
-                    error_msg <span style="color: #666">=</span> error_data[<span style="color: #BA2121">&#39;message&#39;</span>]
+                <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">'message'</span> <span style="color: #A2F; font-weight: bold">in</span> error_data:
+                    error_msg <span style="color: #666">=</span> error_data[<span style="color: #BA2121">'message'</span>]
             <span style="color: #008000; font-weight: bold">except</span> json<span style="color: #666">.</span>JSONDecodeError:
                 error_msg <span style="color: #666">=</span> response<span style="color: #666">.</span>text
-            <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(error_msg, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+            <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(error_msg, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
 
     <span style="color: #008000; font-weight: bold">except</span> requests<span style="color: #666">.</span>exceptions<span style="color: #666">.</span>RequestException <span style="color: #008000; font-weight: bold">as</span> e:
-        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Connection error: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">str</span>(e)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f"Connection error: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">str</span>(e)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3481,13 +3453,13 @@ was clicked.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">141</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">142</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;new-user-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
-    Input(<span style="color: #BA2121">&#39;new-user-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
-    State(<span style="color: #BA2121">&#39;new-user-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
+    Output(<span style="color: #BA2121">'new-user-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
+    Input(<span style="color: #BA2121">'new-user-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
+    State(<span style="color: #BA2121">'new-user-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">toggle_register_modal</span>(new_user_clicks: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, is_open: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Toggle the visibility state of the new user registration modal.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Toggle the visibility state of the new user registration modal.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback controls the opening and closing of the registration modal dialog</span>
 <span style="color: #BA2121; font-style: italic">    when the new user button is clicked.</span>
@@ -3504,7 +3476,7 @@ was clicked.</p>
 <span style="color: #BA2121; font-style: italic">    bool</span>
 <span style="color: #BA2121; font-style: italic">        The new state of the modal dialog - toggled from current state if button</span>
 <span style="color: #BA2121; font-style: italic">        was clicked.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> new_user_clicks:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #A2F; font-weight: bold">not</span> is_open
     <span style="color: #008000; font-weight: bold">return</span> is_open
@@ -3745,18 +3717,18 @@ Updates the validation state of the username input field accordingly.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;new-username-input&#39;</span>, <span style="color: #BA2121">&#39;valid&#39;</span>),
-    Output(<span style="color: #BA2121">&#39;new-username-input&#39;</span>, <span style="color: #BA2121">&#39;invalid&#39;</span>),
-    Input(<span style="color: #BA2121">&#39;new-username-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-    State(<span style="color: #BA2121">&#39;new-user-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Output(<span style="color: #BA2121">'new-username-input'</span>, <span style="color: #BA2121">'valid'</span>),
+    Output(<span style="color: #BA2121">'new-username-input'</span>, <span style="color: #BA2121">'invalid'</span>),
+    Input(<span style="color: #BA2121">'new-username-input'</span>, <span style="color: #BA2121">'value'</span>),
+    State(<span style="color: #BA2121">'new-user-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
+    State(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-port'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-prefix'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-ssl'</span>, <span style="color: #BA2121">'data'</span>),
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">validate_new_username</span>(new_username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, is_modal_open: <span style="color: #008000">bool</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>,
                           ssl: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> Tuple[<span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Validate if the entered username is available for registration.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Validate if the entered username is available for registration.</span>
 
 <span style="color: #BA2121; font-style: italic">    Makes an API request to check if the username already exists in the system.</span>
 <span style="color: #BA2121; font-style: italic">    Updates the validation state of the username input field accordingly.</span>
@@ -3781,19 +3753,19 @@ Updates the validation state of the username input field accordingly.</p>
 <span style="color: #BA2121; font-style: italic">    Tuple[bool, bool]</span>
 <span style="color: #BA2121; font-style: italic">        A tuple containing:</span>
 <span style="color: #BA2121; font-style: italic">        - bool: ``True`` if username is available (valid new username), ``False`` otherwise.</span>
-<span style="color: #BA2121; font-style: italic">        - bool: ``True`` if username exists or there&#39;s an error (invalid new username), ``False`` otherwise.</span>
+<span style="color: #BA2121; font-style: italic">        - bool: ``True`` if username exists or there's an error (invalid new username), ``False`` otherwise.</span>
 
 <span style="color: #BA2121; font-style: italic">    Raises</span>
 <span style="color: #BA2121; font-style: italic">    ------</span>
 <span style="color: #BA2121; font-style: italic">    requests.exceptions.RequestException</span>
 <span style="color: #BA2121; font-style: italic">        If there are network connectivity issues or API errors.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> is_modal_open <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> new_username:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #008000; font-weight: bold">False</span>
 
     <span style="color: #3D7B7B; font-style: italic"># Check if username already exists in the backend before proceeding</span>
     res_data <span style="color: #666">=</span> request_check_username(host, new_username, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl)
-    user_exists <span style="color: #666">=</span> res_data<span style="color: #666">.</span>get(<span style="color: #BA2121">&#39;exists&#39;</span>, <span style="color: #008000; font-weight: bold">False</span>)  <span style="color: #3D7B7B; font-style: italic"># True if username is taken</span>
+    user_exists <span style="color: #666">=</span> res_data<span style="color: #666">.</span>get(<span style="color: #BA2121">'exists'</span>, <span style="color: #008000; font-weight: bold">False</span>)  <span style="color: #3D7B7B; font-style: italic"># True if username is taken</span>
     valid_username <span style="color: #666">=</span> <span style="color: #A2F; font-weight: bold">not</span> user_exists
     <span style="color: #008000; font-weight: bold">return</span> valid_username, <span style="color: #A2F; font-weight: bold">not</span> valid_username
 </code></pre></div></td></tr></table></div>
@@ -3954,18 +3926,18 @@ ensuring they contain identical values.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     [
-        Output(<span style="color: #BA2121">&#39;new-password-input&#39;</span>, <span style="color: #BA2121">&#39;valid&#39;</span>),
-        Output(<span style="color: #BA2121">&#39;new-password-input&#39;</span>, <span style="color: #BA2121">&#39;invalid&#39;</span>),
-        Output(<span style="color: #BA2121">&#39;confirm-password-input&#39;</span>, <span style="color: #BA2121">&#39;valid&#39;</span>),
-        Output(<span style="color: #BA2121">&#39;confirm-password-input&#39;</span>, <span style="color: #BA2121">&#39;invalid&#39;</span>)
+        Output(<span style="color: #BA2121">'new-password-input'</span>, <span style="color: #BA2121">'valid'</span>),
+        Output(<span style="color: #BA2121">'new-password-input'</span>, <span style="color: #BA2121">'invalid'</span>),
+        Output(<span style="color: #BA2121">'confirm-password-input'</span>, <span style="color: #BA2121">'valid'</span>),
+        Output(<span style="color: #BA2121">'confirm-password-input'</span>, <span style="color: #BA2121">'invalid'</span>)
     ],
     [
-        Input(<span style="color: #BA2121">&#39;new-password-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-        Input(<span style="color: #BA2121">&#39;confirm-password-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>)
+        Input(<span style="color: #BA2121">'new-password-input'</span>, <span style="color: #BA2121">'value'</span>),
+        Input(<span style="color: #BA2121">'confirm-password-input'</span>, <span style="color: #BA2121">'value'</span>)
     ]
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">validate_password_match</span>(password: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, confirm_password: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Validate that the password and confirmation password match.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Validate that the password and confirmation password match.</span>
 
 <span style="color: #BA2121; font-style: italic">    Provides real-time validation feedback for both password input fields,</span>
 <span style="color: #BA2121; font-style: italic">    ensuring they contain identical values.</span>
@@ -3982,14 +3954,14 @@ ensuring they contain identical values.</p>
 <span style="color: #BA2121; font-style: italic">    Tuple[bool, bool, bool, bool]</span>
 <span style="color: #BA2121; font-style: italic">        A tuple of four boolean values in the order:</span>
 <span style="color: #BA2121; font-style: italic">        - bool: ``True`` if passwords match and not empty, ``False`` otherwise.</span>
-<span style="color: #BA2121; font-style: italic">        - bool: ``True`` if passwords don&#39;t match, ``False`` otherwise.</span>
+<span style="color: #BA2121; font-style: italic">        - bool: ``True`` if passwords don't match, ``False`` otherwise.</span>
 <span style="color: #BA2121; font-style: italic">        - bool: ``True`` if passwords match and not empty, ``False`` otherwise.</span>
-<span style="color: #BA2121; font-style: italic">        - bool: ``True`` if passwords don&#39;t match, ``False`` otherwise.</span>
+<span style="color: #BA2121; font-style: italic">        - bool: ``True`` if passwords don't match, ``False`` otherwise.</span>
 
 <span style="color: #BA2121; font-style: italic">    Notes</span>
 <span style="color: #BA2121; font-style: italic">    -----</span>
 <span style="color: #BA2121; font-style: italic">    Returns all ``False`` values if either password field is empty.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> password <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> confirm_password:
         <span style="color: #008000; font-weight: bold">return</span> (
             <span style="color: #008000; font-weight: bold">False</span>,  <span style="color: #3D7B7B; font-style: italic"># new password not valid</span>

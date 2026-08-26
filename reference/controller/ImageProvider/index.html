@@ -1976,34 +1976,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../webui/carousel/" class="md-nav__link">
         
   
@@ -2183,7 +2155,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2205,14 +2177,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3040,7 +3012,7 @@ where higher values correspond to more focused regions.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">75</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">76</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">77</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">compute_focus</span>(image: np<span style="color: #666">.</span>ndarray, <span style="color: #666">/</span>,):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Computes the focus measure of an image using the Sobel filter.</span>
 
 <span style="color: #BA2121; font-style: italic">    This function calculates the gradient magnitude of an input image in the</span>
@@ -3061,21 +3033,21 @@ where higher values correspond to more focused regions.</p>
 <span style="color: #BA2121; font-style: italic">    np.ndarray</span>
 <span style="color: #BA2121; font-style: italic">        A 2D array representing the gradient magnitude of the input image,</span>
 <span style="color: #BA2121; font-style: italic">        where higher values correspond to more focused regions.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     downscaled <span style="color: #666">=</span> skimage<span style="color: #666">.</span>transform<span style="color: #666">.</span>downscale_local_mean(image, <span style="color: #666">2</span>)<span style="color: #666">.</span>astype(np<span style="color: #666">.</span>uint8)
     grad_x <span style="color: #666">=</span> skimage<span style="color: #666">.</span>filters<span style="color: #666">.</span>sobel(downscaled, axis<span style="color: #666">=0</span>)
     grad_y <span style="color: #666">=</span> skimage<span style="color: #666">.</span>filters<span style="color: #666">.</span>sobel(downscaled, axis<span style="color: #666">=1</span>)
-    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(downscaled, title=&quot;downscaled&quot;)</span>
-    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(grad_x, title=&quot;grad_x&quot;, vmin=grad_x.min(), vmax=grad_x.max())</span>
-    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(grad_y, title=&quot;grad_y&quot;, vmin=grad_y.min(), vmax=grad_y.max())</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(downscaled, title="downscaled")</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(grad_x, title="grad_x", vmin=grad_x.min(), vmax=grad_x.max())</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(grad_y, title="grad_y", vmin=grad_y.min(), vmax=grad_y.max())</span>
     magnitude <span style="color: #666">=</span> np<span style="color: #666">.</span>sqrt(grad_x<span style="color: #666">**2</span> <span style="color: #666">+</span> grad_y<span style="color: #666">**2</span>)
     magnitude <span style="color: #666">=</span> np<span style="color: #666">.</span>astype((magnitude<span style="color: #666">-</span>magnitude<span style="color: #666">.</span>min())<span style="color: #666">/</span>magnitude<span style="color: #666">.</span>max()<span style="color: #666">*255</span>, np<span style="color: #666">.</span>uint8)
     <span style="color: #3D7B7B; font-style: italic">#smoothed = scipy.ndimage.gaussian_filter(magnitude, sigma=1)</span>
-    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(smoothed, title=&quot;smoothed&quot;)</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(smoothed, title="smoothed")</span>
     <span style="color: #3D7B7B; font-style: italic">#magnitude = scipy.ndimage.grey_opening(magnitude, size=(3,3))</span>
-    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(magnitude, title=&quot;magnitude after opening&quot;)</span>
+    <span style="color: #3D7B7B; font-style: italic">#plt_imshow(magnitude, title="magnitude after opening")</span>
     <span style="color: #3D7B7B; font-style: italic">#plt_imshow(np.floor(magnitude/magnitude.max()*255))</span>
-    <span style="color: #008000; font-weight: bold">return</span> skimage<span style="color: #666">.</span>transform<span style="color: #666">.</span>resize(magnitude, image<span style="color: #666">.</span>shape, anti_aliasing<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, mode<span style="color: #666">=</span><span style="color: #BA2121">&#39;constant&#39;</span>)
+    <span style="color: #008000; font-weight: bold">return</span> skimage<span style="color: #666">.</span>transform<span style="color: #666">.</span>resize(magnitude, image<span style="color: #666">.</span>shape, anti_aliasing<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>, mode<span style="color: #666">=</span><span style="color: #BA2121">'constant'</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3209,7 +3181,7 @@ this percentile will be highlighted.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">123</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">focus_highlight</span>(image: QImage, percentile: <span style="color: #008000">float</span>) <span style="color: #666">-&gt;</span> QImage:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Enhances the focus areas of an image by adding a red highlight to regions of</span>
 <span style="color: #BA2121; font-style: italic">    the image that have a focus value greater than a specified percentile.</span>
 
@@ -3225,7 +3197,7 @@ this percentile will be highlighted.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    QImage</span>
 <span style="color: #BA2121; font-style: italic">        A new image with highlighted focus areas in red.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     image_array <span style="color: #666">=</span> qimage_to_ndarray_rgb(image)
     image_grayscale <span style="color: #666">=</span> qimage_to_ndarray_gray(image)
     focus_array <span style="color: #666">=</span> compute_focus(image_grayscale)

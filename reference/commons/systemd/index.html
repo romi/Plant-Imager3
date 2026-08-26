@@ -1987,34 +1987,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../webui/carousel/" class="md-nav__link">
         
   
@@ -2194,7 +2166,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2216,14 +2188,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2914,10 +2886,10 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">14</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">15</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">16</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_systemd_process</span>():
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Returns True if the current process is running under systemd.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    <span style="color: #008000; font-weight: bold">return</span> os<span style="color: #666">.</span>environ<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;SYSTEMD_EXEC_PID&quot;</span>) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">or</span> os<span style="color: #666">.</span>environ<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;NOTIFY_SOCKET&quot;</span>) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
+    <span style="color: #008000; font-weight: bold">return</span> os<span style="color: #666">.</span>environ<span style="color: #666">.</span>get(<span style="color: #BA2121">"SYSTEMD_EXEC_PID"</span>) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">or</span> os<span style="color: #666">.</span>environ<span style="color: #666">.</span>get(<span style="color: #BA2121">"NOTIFY_SOCKET"</span>) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2949,11 +2921,11 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">notify_ready</span>():
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Tells the service manager that service startup is finished, or the service finished re-loading its configuration.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Tells the service manager that service startup is finished, or the service finished re-loading its configuration.</span>
 
 <span style="color: #BA2121; font-style: italic">    This is only used by systemd if the service definition file has Type=notify or Type=notify-reload set.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    notifier<span style="color: #666">.</span>notify(<span style="color: #BA2121">&quot;READY=1&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    """</span>
+    notifier<span style="color: #666">.</span>notify(<span style="color: #BA2121">"READY=1"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2986,12 +2958,12 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">notify_stopping</span>():
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Tells the service manager that the service is beginning its shutdown.</span>
 
-<span style="color: #BA2121; font-style: italic">    This is useful to allow the service manager to track the service&#39;s internal state, and present it to the user.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    notifier<span style="color: #666">.</span>notify(<span style="color: #BA2121">&quot;STOPPING=1&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    This is useful to allow the service manager to track the service's internal state, and present it to the user.</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
+    notifier<span style="color: #666">.</span>notify(<span style="color: #BA2121">"STOPPING=1"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3027,14 +2999,14 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">31</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">32</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">33</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">notify_watchdog</span>():
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Tells the service manager to update the watchdog timestamp.</span>
 
 <span style="color: #BA2121; font-style: italic">    This is the keep-alive ping that services need to issue in regular intervals if WatchdogSec= is enabled for it.</span>
 
 <span style="color: #BA2121; font-style: italic">    see https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#WatchdogSec=</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    notifier<span style="color: #666">.</span>notify(<span style="color: #BA2121">&quot;WATCHDOG=1&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    """</span>
+    notifier<span style="color: #666">.</span>notify(<span style="color: #BA2121">"WATCHDOG=1"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

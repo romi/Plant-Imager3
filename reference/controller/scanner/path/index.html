@@ -2094,34 +2094,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../webui/carousel/" class="md-nav__link">
         
   
@@ -2301,7 +2273,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2323,14 +2295,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3101,7 +3073,7 @@ circles, cylinders, and lines, as well as utilities for path manipulation.</p>
 <span style="color: #666">&gt;&gt;&gt;</span> circular_path <span style="color: #666">=</span> Circle(center_x, center_y, height, tilt, radius, n_points)
 <span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #3D7B7B; font-style: italic"># Access the first point in the path</span>
 <span style="color: #666">&gt;&gt;&gt;</span> first_point <span style="color: #666">=</span> circular_path[<span style="color: #666">0</span>]
-<span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;First point: x=</span><span style="color: #A45A77; font-weight: bold">{</span>first_point<span style="color: #666">.</span>x<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, y=</span><span style="color: #A45A77; font-weight: bold">{</span>first_point<span style="color: #666">.</span>y<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, z=</span><span style="color: #A45A77; font-weight: bold">{</span>first_point<span style="color: #666">.</span>z<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+<span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #008000">print</span>(<span style="color: #BA2121">f"First point: x=</span><span style="color: #A45A77; font-weight: bold">{</span>first_point<span style="color: #666">.</span>x<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, y=</span><span style="color: #A45A77; font-weight: bold">{</span>first_point<span style="color: #666">.</span>y<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">, z=</span><span style="color: #A45A77; font-weight: bold">{</span>first_point<span style="color: #666">.</span>z<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 </code></pre></div></p>
 
 
@@ -3268,17 +3240,17 @@ Let x0, y0 &amp; z0 be the first <code>ElementPath</code> xyz position, then:
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">499</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">500</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">501</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, path, n_points_line):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    path : Path</span>
 <span style="color: #BA2121; font-style: italic">        A path to calibrate.</span>
 <span style="color: #BA2121; font-style: italic">    n_points_line : int</span>
 <span style="color: #BA2121; font-style: italic">        The number of points per line.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     el0 <span style="color: #666">=</span> path[<span style="color: #666">0</span>]
-    <span style="color: #3D7B7B; font-style: italic"># # TODO: find a better &quot;algo&quot; than this to select y-limit for line #1 and x-limit for line #2</span>
+    <span style="color: #3D7B7B; font-style: italic"># # TODO: find a better "algo" than this to select y-limit for line #1 and x-limit for line #2</span>
     <span style="color: #3D7B7B; font-style: italic"># el1 = path[len(path) // 4 - 1]</span>
     <span style="color: #3D7B7B; font-style: italic"># self.extend(Line(el0.x, el0.y, el0.z, el0.x, el1.y, el0.z, el0.pan, el0.tilt, n_points_line))</span>
     <span style="color: #3D7B7B; font-style: italic"># self.extend(Line(el0.x, el0.y, el0.z, el1.x, el0.y, el0.z, el0.pan, el0.tilt, n_points_line))</span>
@@ -3361,9 +3333,9 @@ Let x0, y0 &amp; z0 be the first <code>ElementPath</code> xyz position, then:
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">523</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">524</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">525</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, center_x: length_mm, center_y: length_mm, radius: length_mm, z: length_mm, tilt: length_mm, n_points_line: <span style="color: #008000">int</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    # TODO: remake later, target too much on the side or not visible</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000">self</span><span style="color: #666">.</span>center_x <span style="color: #666">=</span> center_x
     <span style="color: #008000">self</span><span style="color: #666">.</span>center_y <span style="color: #666">=</span> center_y
@@ -3602,13 +3574,13 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, center_x, center_y, z, tilt, radius, n_points):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    center_x : length_mm</span>
-<span style="color: #BA2121; font-style: italic">        X-axis position, in millimeters, of the circle&#39;s center, relative to the origin.</span>
+<span style="color: #BA2121; font-style: italic">        X-axis position, in millimeters, of the circle's center, relative to the origin.</span>
 <span style="color: #BA2121; font-style: italic">    center_y : length_mm</span>
-<span style="color: #BA2121; font-style: italic">        Y-axis position, in millimeters, of the circle&#39;s center, relative to the origin.</span>
+<span style="color: #BA2121; font-style: italic">        Y-axis position, in millimeters, of the circle's center, relative to the origin.</span>
 <span style="color: #BA2121; font-style: italic">    z : length_mm</span>
 <span style="color: #BA2121; font-style: italic">        Height at which to make the circle.</span>
 <span style="color: #BA2121; font-style: italic">    tilt : deg or list(deg)</span>
@@ -3618,7 +3590,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: #BA2121; font-style: italic">        Radius, in millimeters, of the circular path to create.</span>
 <span style="color: #BA2121; font-style: italic">    n_points : int</span>
 <span style="color: #BA2121; font-style: italic">        Number of points (``PathElement``) used to generate the circular path.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     x, y, pan <span style="color: #666">=</span> circle(center_x, center_y, radius, n_points)
 
@@ -3666,7 +3638,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 
 
 <a href="#plantimager.controller.scanner.path.CustomPath" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>CustomPath(waypoints, scheme<span style="color: #666">=</span>(<span style="color: #BA2121">&#39;x&#39;</span>, <span style="color: #BA2121">&#39;y&#39;</span>, <span style="color: #BA2121">&#39;z&#39;</span>, <span style="color: #BA2121">&#39;pan&#39;</span>, <span style="color: #BA2121">&#39;tilt&#39;</span>))
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>CustomPath(waypoints, scheme<span style="color: #666">=</span>(<span style="color: #BA2121">'x'</span>, <span style="color: #BA2121">'y'</span>, <span style="color: #BA2121">'z'</span>, <span style="color: #BA2121">'pan'</span>, <span style="color: #BA2121">'tilt'</span>))
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3806,8 +3778,8 @@ the <code>Pose</code> class.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">562</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">563</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">564</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">565</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, waypoints: <span style="color: #008000">list</span>[<span style="color: #008000">list</span>[<span style="color: #008000">float</span>]], scheme<span style="color: #666">=</span>(<span style="color: #BA2121">&quot;x&quot;</span>, <span style="color: #BA2121">&quot;y&quot;</span>, <span style="color: #BA2121">&quot;z&quot;</span>, <span style="color: #BA2121">&quot;pan&quot;</span>, <span style="color: #BA2121">&quot;tilt&quot;</span>)):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">565</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, waypoints: <span style="color: #008000">list</span>[<span style="color: #008000">list</span>[<span style="color: #008000">float</span>]], scheme<span style="color: #666">=</span>(<span style="color: #BA2121">"x"</span>, <span style="color: #BA2121">"y"</span>, <span style="color: #BA2121">"z"</span>, <span style="color: #BA2121">"pan"</span>, <span style="color: #BA2121">"tilt"</span>)):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Initialize a PoseList object with given waypoints and a scheme.</span>
 
 <span style="color: #BA2121; font-style: italic">    This constructor creates a list of `Pose` objects by mapping the provided</span>
@@ -3822,7 +3794,7 @@ the <code>Pose</code> class.</p>
 <span style="color: #BA2121; font-style: italic">    scheme : tuple of str, optional</span>
 <span style="color: #BA2121; font-style: italic">        A tuple of strings specifying the names of the coordinates or attributes</span>
 <span style="color: #BA2121; font-style: italic">        in the waypoints. The length of the scheme must match the length of each</span>
-<span style="color: #BA2121; font-style: italic">        waypoint. By default, it is `(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;, &quot;pan&quot;, &quot;tilt&quot;)`.</span>
+<span style="color: #BA2121; font-style: italic">        waypoint. By default, it is `("x", "y", "z", "pan", "tilt")`.</span>
 
 <span style="color: #BA2121; font-style: italic">    Raises</span>
 <span style="color: #BA2121; font-style: italic">    ------</span>
@@ -3835,7 +3807,7 @@ the <code>Pose</code> class.</p>
 <span style="color: #BA2121; font-style: italic">    the waypoint values, and then passed as keyword arguments to the `Pose` class</span>
 <span style="color: #BA2121; font-style: italic">    constructor. It is essential that the `shceme` matches the keys expected by</span>
 <span style="color: #BA2121; font-style: italic">    the `Pose` class.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000; font-weight: bold">for</span> waypoint <span style="color: #A2F; font-weight: bold">in</span> waypoints:
         <span style="color: #008000; font-weight: bold">assert</span> <span style="color: #008000">len</span>(waypoint) <span style="color: #666">==</span> <span style="color: #008000">len</span>(scheme)
@@ -4071,13 +4043,13 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">304</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">305</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">306</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, center_x, center_y, z_range, tilt, radius, n_points, n_circles<span style="color: #666">=2</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    center_x : length_mm</span>
-<span style="color: #BA2121; font-style: italic">        X-axis position, in millimeters, of the circle&#39;s center, relative to the origin.</span>
+<span style="color: #BA2121; font-style: italic">        X-axis position, in millimeters, of the circle's center, relative to the origin.</span>
 <span style="color: #BA2121; font-style: italic">    center_y : length_mm</span>
-<span style="color: #BA2121; font-style: italic">        Y-axis position, in millimeters, of the circle&#39;s center, relative to the origin.</span>
+<span style="color: #BA2121; font-style: italic">        Y-axis position, in millimeters, of the circle's center, relative to the origin.</span>
 <span style="color: #BA2121; font-style: italic">    z_range : (length_mm, length_mm)</span>
 <span style="color: #BA2121; font-style: italic">        Height range, in millimeters, at which to make the cylinder.</span>
 <span style="color: #BA2121; font-style: italic">    tilt : deg or list of deg</span>
@@ -4089,12 +4061,12 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: #BA2121; font-style: italic">        Number of points (``PathElement``) used to generate the circular path.</span>
 <span style="color: #BA2121; font-style: italic">    n_circles : int, optional</span>
 <span style="color: #BA2121; font-style: italic">        Number of circular path to make within the cylinder, minimum value is 2.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000; font-weight: bold">try</span>:
         <span style="color: #008000; font-weight: bold">assert</span> n_circles <span style="color: #666">&gt;=</span> <span style="color: #666">2</span>
     <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">AssertionError</span>:
-        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;You need a minimum of two circles to make a cylinder!&quot;</span>)
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">"You need a minimum of two circles to make a cylinder!"</span>)
     min_z, max_z <span style="color: #666">=</span> z_range
     <span style="color: #008000; font-weight: bold">for</span> z_circle <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">range</span>(min_z, max_z <span style="color: #666">+</span> <span style="color: #666">1</span>, <span style="color: #008000">int</span>((max_z <span style="color: #666">-</span> min_z) <span style="color: #666">/</span> (n_circles <span style="color: #666">-</span> <span style="color: #666">1</span>))):
         <span style="color: #008000">self</span><span style="color: #666">.</span>extend(Circle(center_x, center_y, z_circle, tilt, radius, n_points))
@@ -4359,7 +4331,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">425</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">426</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">427</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, x_0, y_0, z_0, x_1, y_1, z_1, pan, tilt, n_points):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    x_0 : length_mm</span>
@@ -4381,12 +4353,12 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: #BA2121; font-style: italic">        If an iterable is given, performs more than one camera acquisition at same xyz position.</span>
 <span style="color: #BA2121; font-style: italic">    n_points : int</span>
 <span style="color: #BA2121; font-style: italic">        Number of points used to create the linear path.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
     <span style="color: #008000; font-weight: bold">try</span>:
         <span style="color: #008000; font-weight: bold">assert</span> n_points <span style="color: #666">&gt;=</span> <span style="color: #666">2</span>
     <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">AssertionError</span>:
-        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;You need a minimum of two points to make a line!&quot;</span>)
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">"You need a minimum of two points to make a line!"</span>)
 
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(tilt, Iterable):
         tilt <span style="color: #666">=</span> [tilt]
@@ -4657,7 +4629,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, x<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, y<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, z<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, pan<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, tilt<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, exact_pose<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    x : length_mm, optional</span>
@@ -4673,7 +4645,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: #BA2121; font-style: italic">    exact_pose : bool, optional</span>
 <span style="color: #BA2121; font-style: italic">        If ``True``, the above parameter values are exact, else they are approximations.</span>
 
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>(x, y, z, pan, tilt)
     <span style="color: #008000">self</span><span style="color: #666">.</span>exact_pose <span style="color: #666">=</span> exact_pose
 </code></pre></div></td></tr></table></div>
@@ -4854,7 +4826,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">73</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, x<span style="color: #666">=0.</span>, y<span style="color: #666">=0.</span>, z<span style="color: #666">=0.</span>, pan<span style="color: #666">=0.</span>, tilt<span style="color: #666">=0.</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Pose constructor.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Pose constructor.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -4868,7 +4840,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: #BA2121; font-style: italic">        Relative rotation to the origin along the xy-plane.</span>
 <span style="color: #BA2121; font-style: italic">    tilt : deg, optional</span>
 <span style="color: #BA2121; font-style: italic">        Relative rotation to the origin orthogonal to the xy-plane.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>x <span style="color: #666">=</span> x
     <span style="color: #008000">self</span><span style="color: #666">.</span>y <span style="color: #666">=</span> y
     <span style="color: #008000">self</span><span style="color: #666">.</span>z <span style="color: #666">=</span> z
@@ -5092,7 +5064,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">183</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">184</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">circle</span>(center_x, center_y, radius, n_points):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a 2D circle of N points with given center and radius.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create a 2D circle of N points with given center and radius.</span>
 
 <span style="color: #BA2121; font-style: italic">    Pan orientations are also computed to always face the center of the circle.</span>
 
@@ -5124,7 +5096,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: #BA2121; font-style: italic">     [10.0, 5.669872981077806, 14.330127018922191],</span>
 <span style="color: #BA2121; font-style: italic">     [270.0, 29.999999999999986, 149.99999999999997])</span>
 
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     x, y, p <span style="color: #666">=</span> [], [], []
     <span style="color: #008000; font-weight: bold">for</span> i <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">range</span>(n_points):
         pan <span style="color: #666">=</span> <span style="color: #666">2</span> <span style="color: #666">*</span> i <span style="color: #666">*</span> math<span style="color: #666">.</span>pi <span style="color: #666">/</span> n_points
@@ -5276,7 +5248,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">331</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">332</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">333</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">line1d</span>(start, stop, n_points):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a 1D line of N points between start and stop position (included).</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create a 1D line of N points between start and stop position (included).</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -5298,7 +5270,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; line1d(0,10,5)</span>
 <span style="color: #BA2121; font-style: italic">    [0.0, 2.5, 5.0, 7.5, 10.0]</span>
 
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">return</span> [(<span style="color: #666">1</span> <span style="color: #666">-</span> i <span style="color: #666">/</span> (n_points <span style="color: #666">-</span> <span style="color: #666">1</span>)) <span style="color: #666">*</span> start <span style="color: #666">+</span> (i <span style="color: #666">/</span> (n_points <span style="color: #666">-</span> <span style="color: #666">1</span>)) <span style="color: #666">*</span> stop <span style="color: #008000; font-weight: bold">for</span> i <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">range</span>(n_points)]
 </code></pre></div></td></tr></table></div>
             </details>
@@ -5542,7 +5514,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">372</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">373</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">374</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">line3d</span>(x_0, y_0, z_0, x_1, y_1, z_1, n_points):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a 3D line of N points between start and stop position (included).</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create a 3D line of N points between start and stop position (included).</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -5578,7 +5550,7 @@ If an iterable is given, performs more than one camera acquisition at same xyz p
 <span style="color: #BA2121; font-style: italic">     [0.0, 2.5, 5.0, 7.5, 10.0],</span>
 <span style="color: #BA2121; font-style: italic">     [0.0, 2.5, 5.0, 7.5, 10.0])</span>
 
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">return</span> line1d(x_0, x_1, n_points), line1d(y_0, y_1, n_points), line1d(z_0, z_1, n_points)
 </code></pre></div></td></tr></table></div>
             </details>

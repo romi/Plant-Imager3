@@ -1872,34 +1872,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/webui/carousel/" class="md-nav__link">
         
   
@@ -2079,7 +2051,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2101,14 +2073,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2882,26 +2854,26 @@
 <h3 id="env"><code>.env</code><a class="headerlink" href="#env" title="Permanent link">Link</a></h3>
 <div class="language-text highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>SERVER_HOST=plantimager.local
 # Plant Imager WebUI (webui service)
-CONTROLLER_HOST=&quot;plantimager_webui&quot;  # internal docker DNS, can be an IP if external
+CONTROLLER_HOST="plantimager_webui"  # internal docker DNS, can be an IP if external
 CONTROLLER_PORT=8080
-CONTROLLER_PREFIX=&quot;/webui&quot;
+CONTROLLER_PREFIX="/webui"
 # PlantDB REST API (plantdb servie)
-PLANTDB_HOST=&quot;plantimager_plantdb&quot;  # internal docker DNS
+PLANTDB_HOST="plantimager_plantdb"  # internal docker DNS
 PLANTDB_PORT=5000
-PLANTDB_PREFIX=&quot;/plantdb&quot;
+PLANTDB_PREFIX="/plantdb"
 # Plant 3D Explorer UI (p3dx service)
-P3DX_HOST=&quot;plantimager_p3dx&quot;  # internal docker DNS
+P3DX_HOST="plantimager_p3dx"  # internal docker DNS
 P3DX_PORT=80
-P3DX_PREFIX=&quot;/p3dx&quot;
+P3DX_PREFIX="/p3dx"
 # Plant 3D Vision WebTerm (p3dv service)
-P3DV_HOST=&quot;plantimager_p3dv&quot;  # internal docker DNS
+P3DV_HOST="plantimager_p3dv"  # internal docker DNS
 P3DV_PORT=8081
-P3DV_PREFIX=&quot;/p3dv&quot;
+P3DV_PREFIX="/p3dv"
 
-SSL_CERT_LOC=&quot;Plant-Imager3/docker/nginx/ssl&quot;  # location of the serf-signed certificates
-ROMI_DB=&quot;/data/ROMI/&quot;  # path to the database to use, here a bind mount, can be a volume 
-COLMAP_VERSION=&quot;3.13.0&quot;
-P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
+SSL_CERT_LOC="Plant-Imager3/docker/nginx/ssl"  # location of the serf-signed certificates
+ROMI_DB="/data/ROMI/"  # path to the database to use, here a bind mount, can be a volume 
+COLMAP_VERSION="3.13.0"
+P3DV_BASE_IMG='colmap/colmap:20251107.4118'  # 3.13.0
 </code></pre></div>
 <ul>
 <li>These variables are substituted into the <code>docker-compose.yml</code> at build time (via <code>${VAR}</code> syntax).</li>
@@ -2940,7 +2912,7 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${SSL_CERT_LOC}:/tmp<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># location of the certificates on the host</span>
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>nginx_cert:/etc/nginx/ssl/<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># volume (shared with nginx service) hosting the copied certificates</span>
-<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>/bin/bash -c &#39;cp /tmp/*.pem /etc/nginx/ssl/&#39;
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>/bin/bash -c 'cp /tmp/*.pem /etc/nginx/ssl/'
 
 <span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">nginx</span>:
 <span style="color: #BBB">    </span><span style="color: #3D7B7B; font-style: italic"># NGINX service, forwards requests by reverse proxy</span>
@@ -2992,22 +2964,22 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_API_PREFIX</span>:<span style="color: #BBB"> </span>${PLANTDB_PREFIX}
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_API_SSL</span>:<span style="color: #BBB"> </span>true
-<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;uwsgi</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">"uwsgi</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--http=:${PLANTDB_PORT}</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--socket=/tmp/uwsgi.sock</span><span style="color: #19177C"> </span><span style="color: #BA2121">--chmod-socket=666</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--module=plantdb.server.cli.wsgi:application</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--callable=application</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--master</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
-<span style="color: #BBB">               </span><span style="color: #BA2121">--processes=4</span><span style="color: #19177C"> </span><span style="color: #BA2121">--threads=2</span><span style="color: #19177C"> </span><span style="color: #BA2121">--buffer-size=32768&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">               </span><span style="color: #BA2121">--processes=4</span><span style="color: #19177C"> </span><span style="color: #BA2121">--threads=2</span><span style="color: #19177C"> </span><span style="color: #BA2121">--buffer-size=32768"</span><span style="color: #BBB"> </span>]
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>unless-stopped
-<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">user</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;${UID:-2020}:${GID:-2020}&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">user</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">"${UID:-2020}:${GID:-2020}"</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${ROMI_DB}:/myapp/db
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>uwsgi_sockets:/tmp
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">healthcheck</span>:
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;CMD&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;curl&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;-f&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;http://localhost:${PLANTDB_PORT}${PLANTDB_PREFIX}/health&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">"CMD"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"curl"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"-f"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"http://localhost:${PLANTDB_PORT}${PLANTDB_PREFIX}/health"</span><span style="color: #BBB"> </span>]
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>180s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">timeout</span>:<span style="color: #BBB"> </span>10s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">retries</span>:<span style="color: #BBB"> </span>3
@@ -3036,7 +3008,7 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">healthcheck</span>:
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;CMD&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;curl&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;-f&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;http://localhost:${P3DX_PORT}${P3DX_PREFIX}&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">"CMD"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"curl"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"-f"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"http://localhost:${P3DX_PORT}${P3DX_PREFIX}"</span><span style="color: #BBB"> </span>]
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>180s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">timeout</span>:<span style="color: #BBB"> </span>10s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">retries</span>:<span style="color: #BBB"> </span>3
@@ -3048,10 +3020,10 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>plant-3d-vision/
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/Dockerfile
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">args</span>:
-<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">COLMAP_VERSION</span>:<span style="color: #BBB"> </span>${COLMAP_VERSION:-&#39;3.8&#39;}
-<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">CUDA_CC</span>:<span style="color: #BBB"> </span>${CUDA_CC:-&#39;75&#39;}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">COLMAP_VERSION</span>:<span style="color: #BBB"> </span>${COLMAP_VERSION:-'3.8'}
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">CUDA_CC</span>:<span style="color: #BBB"> </span>${CUDA_CC:-'75'}
 <span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">P3DV_BASE_IMG</span>:<span style="color: #BBB"> </span>${P3DV_BASE_IMG}
-<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plant-3d-vision:colmap_${COLMAP_VERSION:-&#39;3.8&#39;}
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plant-3d-vision:colmap_${COLMAP_VERSION:-'3.8'}
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_p3dv
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">expose</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>${P3DV_PORT}<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># Expose port internally to the docker network</span>
@@ -3059,11 +3031,11 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_API</span>:<span style="color: #BBB"> </span>${PLANTDB_HOST}/${PLANTDB_PREFIX}
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">WEBTERM_PROXY</span>:<span style="color: #BBB"> </span>true
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">WEBTERM_PREFIX</span>:<span style="color: #BBB"> </span>${P3DV_PREFIX}
-<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;gunicorn</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">"gunicorn</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--worker-class</span><span style="color: #19177C"> </span><span style="color: #BA2121">eventlet</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">-w</span><span style="color: #19177C"> </span><span style="color: #BA2121">1</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--bind</span><span style="color: #19177C"> </span><span style="color: #BA2121">0.0.0.0:${P3DV_PORT}</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
-<span style="color: #BBB">               </span><span style="color: #BA2121">plant3dvision.webterm.wsgi:application&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">               </span><span style="color: #BA2121">plant3dvision.webterm.wsgi:application"</span><span style="color: #BBB"> </span>]
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>unless-stopped
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">deploy</span>:
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">resources</span>:
@@ -3079,7 +3051,7 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>plantimager-net
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">healthcheck</span>:
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;CMD&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;curl&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;-f&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;http://localhost:${P3DV_PORT}${P3DV_PREFIX}&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">"CMD"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"curl"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"-f"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"http://localhost:${P3DV_PORT}${P3DV_PREFIX}"</span><span style="color: #BBB"> </span>]
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>180s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">timeout</span>:<span style="color: #BBB"> </span>10s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">retries</span>:<span style="color: #BBB"> </span>3
@@ -3091,27 +3063,27 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">context</span>:<span style="color: #BBB"> </span>Plant-Imager3/
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">dockerfile</span>:<span style="color: #BBB"> </span>docker/webui/Dockerfile
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">args</span>:
-<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">PLANTDB_BRANCH</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&#39;hotfix/jwt_exp_date&#39;</span><span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># pull a specific branch of plantdb</span>
+<span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">PLANTDB_BRANCH</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">'hotfix/jwt_exp_date'</span><span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># pull a specific branch of plantdb</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">image</span>:<span style="color: #BBB"> </span>roboticsmicrofarms/plantimager_webui:latest
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">container_name</span>:<span style="color: #BBB"> </span>plantimager_webui
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">environment</span>:
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">ALLOW_PRIVATE_IP</span>:<span style="color: #BBB"> </span>true<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># use true for tests with &#39;localhost&#39;</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">ALLOW_PRIVATE_IP</span>:<span style="color: #BBB"> </span>true<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># use true for tests with 'localhost'</span>
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">CERT_PATH</span>:<span style="color: #BBB"> </span>/etc/nginx/ssl/cert.pem<span style="color: #BBB">  </span><span style="color: #3D7B7B; font-style: italic"># self-signed certificate for SSL/TLS verification</span>
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_HOST</span>:<span style="color: #BBB"> </span>${SERVER_HOST}
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_PORT</span>:<span style="color: #BBB"> </span>${PLANTDB_PORT}
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_PREFIX</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;&quot;</span>
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_PREFIX</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">""</span>
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">PLANTDB_SSL</span>:<span style="color: #BBB"> </span>true
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">WEBUI_PROXY</span>:<span style="color: #BBB"> </span>true
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">WEBUI_PREFIX</span>:<span style="color: #BBB"> </span>${CONTROLLER_PREFIX}
-<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;uwsgi</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
+<span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">command</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">"uwsgi</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--http=:${CONTROLLER_PORT}</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--module=plantimager.webui.wsgi:application</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--callable=application</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
 <span style="color: #BBB">               </span><span style="color: #BA2121">--master</span><span style="color: #19177C"> </span><span style="color: #BA2121">\</span>
-<span style="color: #BBB">               </span><span style="color: #BA2121">--processes=4</span><span style="color: #19177C"> </span><span style="color: #BA2121">--threads=2</span><span style="color: #19177C"> </span><span style="color: #BA2121">--buffer-size=32768&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">               </span><span style="color: #BA2121">--processes=4</span><span style="color: #19177C"> </span><span style="color: #BA2121">--threads=2</span><span style="color: #19177C"> </span><span style="color: #BA2121">--buffer-size=32768"</span><span style="color: #BBB"> </span>]
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">restart</span>:<span style="color: #BBB"> </span>unless-stopped
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">extra_hosts</span>:
-<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;dev.romi.local:host-gateway&quot;</span>
+<span style="color: #BBB">      </span>-<span style="color: #BBB"> </span><span style="color: #BA2121">"dev.romi.local:host-gateway"</span>
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">volumes</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>nginx_cert:/etc/nginx/ssl/
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">networks</span>:
@@ -3119,7 +3091,7 @@ P3DV_BASE_IMG=&#39;colmap/colmap:20251107.4118&#39;  # 3.13.0
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">depends_on</span>:
 <span style="color: #BBB">      </span>-<span style="color: #BBB"> </span>ssl_cert
 <span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">healthcheck</span>:
-<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;CMD&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;curl&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;-f&quot;</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;http://localhost:${WEBUI_PORT}${WEBUI_PREFIX}&quot;</span><span style="color: #BBB"> </span>]
+<span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">test</span>:<span style="color: #BBB"> </span>[<span style="color: #BBB"> </span><span style="color: #BA2121">"CMD"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"curl"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"-f"</span>,<span style="color: #BBB"> </span><span style="color: #BA2121">"http://localhost:${WEBUI_PORT}${WEBUI_PREFIX}"</span><span style="color: #BBB"> </span>]
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">interval</span>:<span style="color: #BBB"> </span>180s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">timeout</span>:<span style="color: #BBB"> </span>10s
 <span style="color: #BBB">      </span><span style="color: #008000; font-weight: bold">retries</span>:<span style="color: #BBB"> </span>3

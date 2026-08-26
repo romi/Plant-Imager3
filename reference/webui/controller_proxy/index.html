@@ -1883,34 +1883,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../carousel/" class="md-nav__link">
         
   
@@ -2321,7 +2293,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2343,14 +2315,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3143,7 +3115,7 @@
 <span style="color: #666">&gt;&gt;&gt;</span>
 <span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #3D7B7B; font-style: italic"># Initialize the controller proxy</span>
 <span style="color: #666">&gt;&gt;&gt;</span> context <span style="color: #666">=</span> zmq<span style="color: #666">.</span>Context()
-<span style="color: #666">&gt;&gt;&gt;</span> controller <span style="color: #666">=</span> RPCController(context, <span style="color: #BA2121">&quot;tcp://localhost:14567&quot;</span>)
+<span style="color: #666">&gt;&gt;&gt;</span> controller <span style="color: #666">=</span> RPCController(context, <span style="color: #BA2121">"tcp://localhost:14567"</span>)
 <span style="color: #666">&gt;&gt;&gt;</span>
 <span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #3D7B7B; font-style: italic"># Access the singleton instance elsewhere in your code</span>
 <span style="color: #666">&gt;&gt;&gt;</span> same_controller <span style="color: #666">=</span> RPCController<span style="color: #666">.</span>instance()
@@ -3239,9 +3211,9 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
     <div class="language-pycon highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">zmq</span>
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.webui.controller_proxy</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> RPCController
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>context <span style="color: #666">=</span> zmq<span style="color: #666">.</span>Context()
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>controller <span style="color: #666">=</span> RPCController(context, <span style="color: #BA2121">&quot;tcp://localhost:14567&quot;</span>)
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>controller <span style="color: #666">=</span> RPCController(context, <span style="color: #BA2121">"tcp://localhost:14567"</span>)
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #3D7B7B; font-style: italic"># This returns the same instance</span>
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>controller2 <span style="color: #666">=</span> RPCController(context, <span style="color: #BA2121">&quot;tcp://localhost:14567&quot;</span>)
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>controller2 <span style="color: #666">=</span> RPCController(context, <span style="color: #BA2121">"tcp://localhost:14567"</span>)
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>controller <span style="color: #A2F; font-weight: bold">is</span> controller2
 <span style="color: #717171">True</span>
 <span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span><span style="color: #3D7B7B; font-style: italic"># Get the singleton instance</span>
@@ -3319,7 +3291,7 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Initialize the RPCController.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Initialize the RPCController.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -3327,7 +3299,7 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
 <span style="color: #BA2121; font-style: italic">        The ZeroMQ context to use for communication.</span>
 <span style="color: #BA2121; font-style: italic">    url : str</span>
 <span style="color: #BA2121; font-style: italic">        The URL to connect to for RPC communication.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     RPCClient<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context, url, timeout<span style="color: #666">=120_000</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span><span style="color: #19177C">__class__</span><span style="color: #666">.</span>_instance <span style="color: #666">=</span> <span style="color: #008000">self</span>
 </code></pre></div></td></tr></table></div>
@@ -3453,7 +3425,7 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 98</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 99</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">100</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__new__</span>(<span style="color: #008000">cls</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a new instance or return the existing instance.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create a new instance or return the existing instance.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -3466,7 +3438,7 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    plantimager.commons.controller_device.RPCController</span>
 <span style="color: #BA2121; font-style: italic">        The singleton instance of this class.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">cls</span><span style="color: #666">.</span>_instance <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
         instance <span style="color: #666">=</span> <span style="color: #008000">super</span>(RPCController, <span style="color: #008000">cls</span>)<span style="color: #666">.</span><span style="color: #00F">__new__</span>(<span style="color: #008000">cls</span>)
         <span style="color: #008000; font-weight: bold">return</span> instance
@@ -3506,7 +3478,7 @@ plantimager.commons.RPC.RPCClient : Base class for RPC client functionality.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>cameraNamesChanged)
 <span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">camera_names</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>[<span style="color: #008000">str</span>]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return the list of camera names.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return the list of camera names."""</span>
     <span style="color: #008000; font-weight: bold">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3681,7 +3653,7 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">832</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">833</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">834</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">execute</span>(<span style="color: #008000">self</span>, method_name: <span style="color: #008000">str</span>, params: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">object</span>]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Execute a remote method on the RPC server.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -3702,38 +3674,38 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 <span style="color: #BA2121; font-style: italic">    ------</span>
 <span style="color: #BA2121; font-style: italic">    TimeoutError</span>
 <span style="color: #BA2121; font-style: italic">        If the server does not respond within the configured timeout.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     package <span style="color: #666">=</span> {
-        <span style="color: #BA2121">&quot;event&quot;</span>: RPCEvents<span style="color: #666">.</span>METHOD_CALL,
-        <span style="color: #BA2121">&quot;method&quot;</span>: method_name,
-        <span style="color: #BA2121">&quot;params&quot;</span>: params,
+        <span style="color: #BA2121">"event"</span>: RPCEvents<span style="color: #666">.</span>METHOD_CALL,
+        <span style="color: #BA2121">"method"</span>: method_name,
+        <span style="color: #BA2121">"params"</span>: params,
     }
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=1000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLOUT) <span style="color: #666">==</span> <span style="color: #666">0</span>:
-        logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f&quot;Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond&quot;</span>)
-        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">f&quot;Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond&quot;</span>)
-    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Executing </span><span style="color: #A45A77; font-weight: bold">{</span>package<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+        logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f"Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond"</span>)
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">f"Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond"</span>)
+    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Executing </span><span style="color: #A45A77; font-weight: bold">{</span>package<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>send_json(package, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>NOBLOCK)
 
     <span style="color: #008000; font-weight: bold">if</span> method_name <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_json_methods:
         <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>_json_methods[method_name], flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
-            logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f&quot;Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond&quot;</span>)
-            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">f&quot;Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond&quot;</span>)
+            logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f"Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond"</span>)
+            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">f"Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond"</span>)
         reply <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>recv_json()
-        <span style="color: #008000; font-weight: bold">if</span> reply[<span style="color: #BA2121">&quot;success&quot;</span>]:
-            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>, reply[<span style="color: #BA2121">&quot;result&quot;</span>]
+        <span style="color: #008000; font-weight: bold">if</span> reply[<span style="color: #BA2121">"success"</span>]:
+            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>, reply[<span style="color: #BA2121">"result"</span>]
         <span style="color: #008000; font-weight: bold">else</span>:
-            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, (reply[<span style="color: #BA2121">&quot;error&quot;</span>], reply[<span style="color: #BA2121">&quot;traceback&quot;</span>])
+            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, (reply[<span style="color: #BA2121">"error"</span>], reply[<span style="color: #BA2121">"traceback"</span>])
     <span style="color: #008000; font-weight: bold">elif</span> method_name <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_buffer_methods:
         <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>_buffer_methods[method_name], flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
-            logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f&quot;Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond&quot;</span>)
-            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">f&quot;Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond&quot;</span>)
+            logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f"Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond"</span>)
+            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">TimeoutError</span>(<span style="color: #BA2121">f"Proxy of </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>_interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> at </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond"</span>)
         reply_frames: <span style="color: #008000">list</span>[zmq<span style="color: #666">.</span>Frame] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>recv_multipart(copy<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>)
         buffer_info <span style="color: #666">=</span> json<span style="color: #666">.</span>loads(reply_frames[<span style="color: #666">0</span>]<span style="color: #666">.</span>bytes)
-        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">&quot;error&quot;</span> <span style="color: #A2F; font-weight: bold">in</span> buffer_info:
-            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, (buffer_info[<span style="color: #BA2121">&quot;error&quot;</span>], buffer_info[<span style="color: #BA2121">&quot;traceback&quot;</span>])
+        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">"error"</span> <span style="color: #A2F; font-weight: bold">in</span> buffer_info:
+            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, (buffer_info[<span style="color: #BA2121">"error"</span>], buffer_info[<span style="color: #BA2121">"traceback"</span>])
         <span style="color: #008000; font-weight: bold">else</span>:
             <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>, (reply_frames[<span style="color: #666">1</span>]<span style="color: #666">.</span>buffer, buffer_info)
-    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, (<span style="color: #CB3F38; font-weight: bold">Warning</span>(<span style="color: #BA2121">f&quot;Unknown method </span><span style="color: #A45A77; font-weight: bold">{</span>method_name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>), <span style="color: #BA2121">&quot;&quot;</span>)
+    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, (<span style="color: #CB3F38; font-weight: bold">Warning</span>(<span style="color: #BA2121">f"Unknown method </span><span style="color: #A45A77; font-weight: bold">{</span>method_name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>), <span style="color: #BA2121">""</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3825,8 +3797,8 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">129</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">130</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">131</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@classmethod</span>
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">instance</span>(<span style="color: #008000">cls</span>) <span style="color: #666">-&gt;</span> <span style="color: #BA2121">&quot;RPCController&quot;</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Get the singleton instance of the RPCController.</span>
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">instance</span>(<span style="color: #008000">cls</span>) <span style="color: #666">-&gt;</span> <span style="color: #BA2121">"RPCController"</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Get the singleton instance of the RPCController.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
@@ -3837,9 +3809,9 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 <span style="color: #BA2121; font-style: italic">    ------</span>
 <span style="color: #BA2121; font-style: italic">    RuntimeError</span>
 <span style="color: #BA2121; font-style: italic">        If the controller proxy has not been initialized yet.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">cls</span><span style="color: #666">.</span>_instance <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
-        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">&quot;Controller proxy not initialized.&quot;</span>)
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">"Controller proxy not initialized."</span>)
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">cls</span><span style="color: #666">.</span>_instance
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3876,7 +3848,7 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>maxProgressChanged)
 <span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">max_progress</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return the maximum progress of the scan.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return the maximum progress of the scan."""</span>
     <span style="color: #008000; font-weight: bold">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3913,7 +3885,7 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>progressChanged)
 <span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">progress</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return the current progress of the scan.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return the current progress of the scan."""</span>
     <span style="color: #008000; font-weight: bold">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3950,7 +3922,7 @@ is a tuple containing the <code>(error_message, traceback)</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">63</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>readyToScanChanged)
 <span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ready_to_scan</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return whether the controller is ready to start a scan.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return whether the controller is ready to start a scan."""</span>
     <span style="color: #008000; font-weight: bold">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4110,7 +4082,7 @@ and <code>RPCClient</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">717</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">718</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@classmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_interface</span>(<span style="color: #008000">cls</span>, interface: <span style="color: #008000">type</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Class decorator to bind an interface to an RPCClient subclass.</span>
 
 <span style="color: #BA2121; font-style: italic">    This decorator inspects the provided `interface` and dynamically</span>
@@ -4132,14 +4104,14 @@ and <code>RPCClient</code>.</p>
 <span style="color: #BA2121; font-style: italic">    RuntimeError</span>
 <span style="color: #BA2121; font-style: italic">        If the decorated class does not inherit from both `interface`</span>
 <span style="color: #BA2121; font-style: italic">        and `RPCClient`.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
 
     <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_decorator</span>(target_cls: <span style="color: #008000">type</span>):
         <span style="color: #008000; font-weight: bold">if</span> interface <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> target_cls<span style="color: #666">.</span><span style="color: #19177C">__bases__</span> <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">cls</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> target_cls<span style="color: #666">.</span><span style="color: #19177C">__bases__</span>:
-            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>target_cls<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> must inherit from </span><span style="color: #A45A77; font-weight: bold">{</span>interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> and </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">cls</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">.&quot;</span>)
+            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">f"</span><span style="color: #A45A77; font-weight: bold">{</span>target_cls<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> must inherit from </span><span style="color: #A45A77; font-weight: bold">{</span>interface<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> and </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">cls</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">."</span>)
         <span style="color: #008000; font-weight: bold">for</span> key, val <span style="color: #A2F; font-weight: bold">in</span> interface<span style="color: #666">.</span><span style="color: #19177C">__dict__</span><span style="color: #666">.</span>items():
-            <span style="color: #008000; font-weight: bold">if</span> inspect<span style="color: #666">.</span>isfunction(val) <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #A2F; font-weight: bold">not</span> (key<span style="color: #666">.</span>startswith(<span style="color: #BA2121">&quot;__&quot;</span>) <span style="color: #A2F; font-weight: bold">and</span> key<span style="color: #666">.</span>endswith(<span style="color: #BA2121">&quot;__&quot;</span>)):
-                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;registering method </span><span style="color: #A45A77; font-weight: bold">{</span>key<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> in </span><span style="color: #A45A77; font-weight: bold">{</span>target_cls<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+            <span style="color: #008000; font-weight: bold">if</span> inspect<span style="color: #666">.</span>isfunction(val) <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #A2F; font-weight: bold">not</span> (key<span style="color: #666">.</span>startswith(<span style="color: #BA2121">"__"</span>) <span style="color: #A2F; font-weight: bold">and</span> key<span style="color: #666">.</span>endswith(<span style="color: #BA2121">"__"</span>)):
+                logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"registering method </span><span style="color: #A45A77; font-weight: bold">{</span>key<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> in </span><span style="color: #A45A77; font-weight: bold">{</span>target_cls<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
                 func <span style="color: #666">=</span> decorate(val, <span style="color: #008000">cls</span><span style="color: #666">.</span>_method_proxy)
                 func<span style="color: #666">.</span>__isabstractmethod__ <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>  <span style="color: #3D7B7B; font-style: italic"># Counts as en actual implementation</span>
                 <span style="color: #008000">setattr</span>(target_cls, key, func)
@@ -4189,7 +4161,7 @@ and <code>RPCClient</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">44</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">45</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">run_scan</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Start the scan.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Start the scan."""</span>
     <span style="color: #008000; font-weight: bold">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4224,7 +4196,7 @@ and <code>RPCClient</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_api_token</span>(<span style="color: #008000">self</span>, token: <span style="color: #008000">str</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the session token to use for authenticated requests.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Set the session token to use for authenticated requests."""</span>
     <span style="color: #008000; font-weight: bold">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4259,7 +4231,7 @@ and <code>RPCClient</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">29</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">30</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_config</span>(<span style="color: #008000">self</span>, config: <span style="color: #008000">dict</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Send a configuration dictionary to the controller.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Send a configuration dictionary to the controller."""</span>
     <span style="color: #008000; font-weight: bold">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4294,7 +4266,7 @@ and <code>RPCClient</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">34</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">35</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_dataset_name</span>(<span style="color: #008000">self</span>, name: <span style="color: #008000">str</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the name of the dataset to be created.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Set the name of the dataset to be created."""</span>
     <span style="color: #008000; font-weight: bold">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4329,7 +4301,7 @@ and <code>RPCClient</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">24</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">25</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@abstractmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_db_url</span>(<span style="color: #008000">self</span>, url: <span style="color: #008000">str</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the database URL for the controller.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Set the database URL for the controller."""</span>
     <span style="color: #008000; font-weight: bold">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4376,24 +4348,24 @@ If the server responds, it logs the reply.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">852</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">853</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">854</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop_server</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Request the connected RPC server to shut down.</span>
 
 <span style="color: #BA2121; font-style: italic">    Sends a non-blocking `STOP_SERVER` event to the remote server.</span>
 <span style="color: #BA2121; font-style: italic">    If the server responds, it logs the reply.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f&quot;Stopping server </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    """</span>
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f"Stopping server </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=1000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLOUT) <span style="color: #666">==</span> <span style="color: #666">0</span>:
-        logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f&quot;Server </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> could not be joined (might already be dead)&quot;</span>)
+        logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f"Server </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> could not be joined (might already be dead)"</span>)
         <span style="color: #008000; font-weight: bold">return</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>send_json({
-        <span style="color: #BA2121">&quot;event&quot;</span>: RPCEvents<span style="color: #666">.</span>STOP_SERVER
+        <span style="color: #BA2121">"event"</span>: RPCEvents<span style="color: #666">.</span>STOP_SERVER
     }, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>NOBLOCK)
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>poll(timeout<span style="color: #666">=1000</span>, flags<span style="color: #666">=</span>zmq<span style="color: #666">.</span>POLLIN) <span style="color: #666">==</span> <span style="color: #666">0</span>:
-        logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f&quot;Server </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond (might already be dead)&quot;</span>)
+        logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f"Server </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> did not respond (might already be dead)"</span>)
         <span style="color: #008000; font-weight: bold">return</span>
     reply <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>socket<span style="color: #666">.</span>recv_json()
-    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Got stop reply </span><span style="color: #A45A77; font-weight: bold">{</span>reply<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Got stop reply </span><span style="color: #A45A77; font-weight: bold">{</span>reply<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

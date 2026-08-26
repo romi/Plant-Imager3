@@ -1883,34 +1883,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../carousel/" class="md-nav__link">
         
   
@@ -2293,7 +2265,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2315,14 +2287,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3231,9 +3203,9 @@ background, or <code>None</code> if fullname is empty.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">78</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">create_avatar</span>(fullname: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> html<span style="color: #666">.</span>Div <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create an avatar with user&#39;s initials in a colored circle.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create an avatar with user's initials in a colored circle.</span>
 
-<span style="color: #BA2121; font-style: italic">    Generates a circular avatar component containing the initials of a user&#39;s full name</span>
+<span style="color: #BA2121; font-style: italic">    Generates a circular avatar component containing the initials of a user's full name</span>
 <span style="color: #BA2121; font-style: italic">    with a background color uniquely derived from the name using MD5 hashing.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -3244,7 +3216,7 @@ background, or <code>None</code> if fullname is empty.</p>
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    dash.html.Div or None</span>
-<span style="color: #BA2121; font-style: italic">        A Dash HTML Div component containing the user&#39;s initials with styled</span>
+<span style="color: #BA2121; font-style: italic">        A Dash HTML Div component containing the user's initials with styled</span>
 <span style="color: #BA2121; font-style: italic">        background, or ``None`` if fullname is empty.</span>
 
 <span style="color: #BA2121; font-style: italic">    Notes</span>
@@ -3253,26 +3225,26 @@ background, or <code>None</code> if fullname is empty.</p>
 <span style="color: #BA2121; font-style: italic">    - Avatar is rendered as a 35x35px circle with centered text</span>
 <span style="color: #BA2121; font-style: italic">    - Initials are automatically capitalized</span>
 <span style="color: #BA2121; font-style: italic">    - Multiple word names will use the first letter of each word</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> fullname:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>
 
     <span style="color: #3D7B7B; font-style: italic"># Get initials from fullname</span>
-    initials <span style="color: #666">=</span> <span style="color: #BA2121">&#39;&#39;</span><span style="color: #666">.</span>join(name[<span style="color: #666">0</span>]<span style="color: #666">.</span>upper() <span style="color: #008000; font-weight: bold">for</span> name <span style="color: #A2F; font-weight: bold">in</span> fullname<span style="color: #666">.</span>split() <span style="color: #008000; font-weight: bold">if</span> name)
+    initials <span style="color: #666">=</span> <span style="color: #BA2121">''</span><span style="color: #666">.</span>join(name[<span style="color: #666">0</span>]<span style="color: #666">.</span>upper() <span style="color: #008000; font-weight: bold">for</span> name <span style="color: #A2F; font-weight: bold">in</span> fullname<span style="color: #666">.</span>split() <span style="color: #008000; font-weight: bold">if</span> name)
     <span style="color: #3D7B7B; font-style: italic"># Generate a consistent color based on the fullname</span>
-    color_hash <span style="color: #666">=</span> hashlib<span style="color: #666">.</span>md5(fullname<span style="color: #666">.</span>encode(<span style="color: #BA2121">&#39;utf-8&#39;</span>))<span style="color: #666">.</span>hexdigest()
-    bg_color <span style="color: #666">=</span> <span style="color: #BA2121">f&quot;#</span><span style="color: #A45A77; font-weight: bold">{</span>color_hash[:<span style="color: #666">6</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
+    color_hash <span style="color: #666">=</span> hashlib<span style="color: #666">.</span>md5(fullname<span style="color: #666">.</span>encode(<span style="color: #BA2121">'utf-8'</span>))<span style="color: #666">.</span>hexdigest()
+    bg_color <span style="color: #666">=</span> <span style="color: #BA2121">f"#</span><span style="color: #A45A77; font-weight: bold">{</span>color_hash[:<span style="color: #666">6</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>
     avatar_style <span style="color: #666">=</span> {
-        <span style="color: #BA2121">&#39;backgroundColor&#39;</span>: bg_color,
-        <span style="color: #BA2121">&#39;color&#39;</span>: <span style="color: #BA2121">&#39;white&#39;</span>,
-        <span style="color: #BA2121">&#39;borderRadius&#39;</span>: <span style="color: #BA2121">&#39;50%&#39;</span>,
-        <span style="color: #BA2121">&#39;width&#39;</span>: <span style="color: #BA2121">&#39;35px&#39;</span>,
-        <span style="color: #BA2121">&#39;height&#39;</span>: <span style="color: #BA2121">&#39;35px&#39;</span>,
-        <span style="color: #BA2121">&#39;display&#39;</span>: <span style="color: #BA2121">&#39;flex&#39;</span>,
-        <span style="color: #BA2121">&#39;alignItems&#39;</span>: <span style="color: #BA2121">&#39;center&#39;</span>,
-        <span style="color: #BA2121">&#39;justifyContent&#39;</span>: <span style="color: #BA2121">&#39;center&#39;</span>,
-        <span style="color: #BA2121">&#39;fontSize&#39;</span>: <span style="color: #BA2121">&#39;14px&#39;</span>,
-        <span style="color: #BA2121">&#39;fontWeight&#39;</span>: <span style="color: #BA2121">&#39;bold&#39;</span>,
+        <span style="color: #BA2121">'backgroundColor'</span>: bg_color,
+        <span style="color: #BA2121">'color'</span>: <span style="color: #BA2121">'white'</span>,
+        <span style="color: #BA2121">'borderRadius'</span>: <span style="color: #BA2121">'50%'</span>,
+        <span style="color: #BA2121">'width'</span>: <span style="color: #BA2121">'35px'</span>,
+        <span style="color: #BA2121">'height'</span>: <span style="color: #BA2121">'35px'</span>,
+        <span style="color: #BA2121">'display'</span>: <span style="color: #BA2121">'flex'</span>,
+        <span style="color: #BA2121">'alignItems'</span>: <span style="color: #BA2121">'center'</span>,
+        <span style="color: #BA2121">'justifyContent'</span>: <span style="color: #BA2121">'center'</span>,
+        <span style="color: #BA2121">'fontSize'</span>: <span style="color: #BA2121">'14px'</span>,
+        <span style="color: #BA2121">'fontWeight'</span>: <span style="color: #BA2121">'bold'</span>,
     }
     <span style="color: #008000; font-weight: bold">return</span> html<span style="color: #666">.</span>Div(initials, style<span style="color: #666">=</span>avatar_style)
 </code></pre></div></td></tr></table></div>
@@ -3421,11 +3393,11 @@ Default is <code>None</code>.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">create_login_avatar_button</span>(is_logged_in: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>, user_fullname: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> dbc<span style="color: #666">.</span>NavLink:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create an avatar button triggering the login/logout modal for the navigation bar.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create an avatar button triggering the login/logout modal for the navigation bar.</span>
 
 <span style="color: #BA2121; font-style: italic">    This function generates a navigation link component that displays either a default</span>
 <span style="color: #BA2121; font-style: italic">    person icon (when logged out) or a user avatar (when logged in). The avatar is</span>
-<span style="color: #BA2121; font-style: italic">    created using the user&#39;s full name initials.</span>
+<span style="color: #BA2121; font-style: italic">    created using the user's full name initials.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -3446,19 +3418,19 @@ Default is <code>None</code>.</p>
 <span style="color: #BA2121; font-style: italic">    See Also</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    create_avatar : Function used to generate the user avatar display</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> is_logged_in <span style="color: #A2F; font-weight: bold">and</span> user_fullname:
         <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>NavLink(
             children<span style="color: #666">=</span>create_avatar(user_fullname),
-            <span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&quot;login-avatar-button&quot;</span>,
+            <span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">"login-avatar-button"</span>,
             n_clicks<span style="color: #666">=0</span>
         )
     <span style="color: #008000; font-weight: bold">else</span>:
         <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>NavLink(
-            children<span style="color: #666">=</span>html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">&quot;bi bi-person-bounding-box fs-3&quot;</span>),
-            <span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">&quot;login-avatar-button&quot;</span>,
+            children<span style="color: #666">=</span>html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">"bi bi-person-bounding-box fs-3"</span>),
+            <span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">"login-avatar-button"</span>,
             n_clicks<span style="color: #666">=0</span>,
-            style<span style="color: #666">=</span>{<span style="color: #BA2121">&#39;color&#39;</span>: <span style="color: #BA2121">&quot;#f3f3f3&quot;</span>},
+            style<span style="color: #666">=</span>{<span style="color: #BA2121">'color'</span>: <span style="color: #BA2121">"#f3f3f3"</span>},
         )
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3565,11 +3537,11 @@ a user is currently logged in.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">680</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">681</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">682</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;logout-button&#39;</span>, <span style="color: #BA2121">&#39;disabled&#39;</span>),
-    Input(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Output(<span style="color: #BA2121">'logout-button'</span>, <span style="color: #BA2121">'disabled'</span>),
+    Input(<span style="color: #BA2121">'logged-username'</span>, <span style="color: #BA2121">'data'</span>),
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">disable_logout_button</span>(username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Control the enabled/disabled state of the logout button.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Control the enabled/disabled state of the logout button.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback toggles the disabled state of the logout button based on whether</span>
 <span style="color: #BA2121; font-style: italic">    a user is currently logged in.</span>
@@ -3584,7 +3556,7 @@ a user is currently logged in.</p>
 <span style="color: #BA2121; font-style: italic">    bool</span>
 <span style="color: #BA2121; font-style: italic">        ``True`` if the logout button should be disabled (no user logged in),</span>
 <span style="color: #BA2121; font-style: italic">        ``False`` if the button should be enabled (user is logged in).</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> username:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>
@@ -3994,21 +3966,21 @@ including various error conditions.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">417</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">418</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">419</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">420</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-          Output(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-          Output(<span style="color: #BA2121">&#39;access-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-          Output(<span style="color: #BA2121">&#39;refresh-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-          Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;style&#39;</span>),
-          Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
-          Input(<span style="color: #BA2121">&#39;username-input&#39;</span>, <span style="color: #BA2121">&#39;n_submit&#39;</span>),
-          Input(<span style="color: #BA2121">&#39;password-input&#39;</span>, <span style="color: #BA2121">&#39;n_submit&#39;</span>),
-          Input(<span style="color: #BA2121">&#39;login-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
-          State(<span style="color: #BA2121">&#39;username-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-          State(<span style="color: #BA2121">&#39;password-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-          State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-          State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-          State(<span style="color: #BA2121">&#39;plantdb-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-          State(<span style="color: #BA2121">&#39;plantdb-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">420</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">'logged-username'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+          Output(<span style="color: #BA2121">'logged-fullname'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+          Output(<span style="color: #BA2121">'access-token'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+          Output(<span style="color: #BA2121">'refresh-token'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+          Output(<span style="color: #BA2121">'login-attempt-message'</span>, <span style="color: #BA2121">'style'</span>),
+          Output(<span style="color: #BA2121">'login-attempt-message'</span>, <span style="color: #BA2121">'children'</span>),
+          Input(<span style="color: #BA2121">'username-input'</span>, <span style="color: #BA2121">'n_submit'</span>),
+          Input(<span style="color: #BA2121">'password-input'</span>, <span style="color: #BA2121">'n_submit'</span>),
+          Input(<span style="color: #BA2121">'login-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
+          State(<span style="color: #BA2121">'username-input'</span>, <span style="color: #BA2121">'value'</span>),
+          State(<span style="color: #BA2121">'password-input'</span>, <span style="color: #BA2121">'value'</span>),
+          State(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>),
+          State(<span style="color: #BA2121">'plantdb-port'</span>, <span style="color: #BA2121">'data'</span>),
+          State(<span style="color: #BA2121">'plantdb-prefix'</span>, <span style="color: #BA2121">'data'</span>),
+          State(<span style="color: #BA2121">'plantdb-ssl'</span>, <span style="color: #BA2121">'data'</span>),
           prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">login</span>(
         username_submit: <span style="color: #008000">int</span>,
@@ -4021,7 +3993,7 @@ including various error conditions.</p>
         prefix: <span style="color: #008000">str</span>,
         ssl: <span style="color: #008000">bool</span>
 ) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">dict</span>, dbc<span style="color: #666">.</span>Alert]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Handle user authentication through the REST API.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Handle user authentication through the REST API.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback function processes login attempts by sending credentials to a REST API endpoint</span>
 <span style="color: #BA2121; font-style: italic">    and handling the response appropriately. It manages both successful and failed login attempts,</span>
@@ -4053,7 +4025,7 @@ including various error conditions.</p>
 <span style="color: #BA2121; font-style: italic">    str or None</span>
 <span style="color: #BA2121; font-style: italic">        The authenticated username if login successful, ``None`` otherwise.</span>
 <span style="color: #BA2121; font-style: italic">    str or None</span>
-<span style="color: #BA2121; font-style: italic">        The user&#39;s full name if login successful, ``None`` otherwise.</span>
+<span style="color: #BA2121; font-style: italic">        The user's full name if login successful, ``None`` otherwise.</span>
 <span style="color: #BA2121; font-style: italic">    str or None</span>
 <span style="color: #BA2121; font-style: italic">        The access token if login successful, ``None`` otherwise.</span>
 <span style="color: #BA2121; font-style: italic">    str or None</span>
@@ -4073,8 +4045,8 @@ including various error conditions.</p>
 <span style="color: #BA2121; font-style: italic">    Notes</span>
 <span style="color: #BA2121; font-style: italic">    -----</span>
 <span style="color: #BA2121; font-style: italic">    Authentication state is maintained through Dash Store components in the application layout.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    message_style <span style="color: #666">=</span> {<span style="color: #BA2121">&#39;display&#39;</span>: <span style="color: #BA2121">&#39;block&#39;</span>, <span style="color: #BA2121">&#39;margin-top&#39;</span>: <span style="color: #BA2121">&#39;10px&#39;</span>}
+<span style="color: #BA2121; font-style: italic">    """</span>
+    message_style <span style="color: #666">=</span> {<span style="color: #BA2121">'display'</span>: <span style="color: #BA2121">'block'</span>, <span style="color: #BA2121">'margin-top'</span>: <span style="color: #BA2121">'10px'</span>}
 
     <span style="color: #008000; font-weight: bold">try</span>:
         <span style="color: #3D7B7B; font-style: italic"># Send login request to REST API endpoint</span>
@@ -4082,26 +4054,26 @@ including various error conditions.</p>
     <span style="color: #008000; font-weight: bold">except</span> requests<span style="color: #666">.</span>exceptions<span style="color: #666">.</span>RequestException <span style="color: #008000; font-weight: bold">as</span> e:
         <span style="color: #3D7B7B; font-style: italic"># Handle connection errors (network issues, server down, etc.)</span>
         <span style="color: #3D7B7B; font-style: italic"># Set up an alert message</span>
-        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Connection error: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">str</span>(e)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f"Connection error: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">str</span>(e)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
 
-    login_msg <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">&#39;message&#39;</span>]
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">&#39;user&#39;</span> <span style="color: #A2F; font-weight: bold">in</span> loggin_data:
+    login_msg <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">'message'</span>]
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">'user'</span> <span style="color: #A2F; font-weight: bold">in</span> loggin_data:
         <span style="color: #3D7B7B; font-style: italic"># Parse successful response</span>
-        fullname <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">&#39;user&#39;</span>][<span style="color: #BA2121">&#39;fullname&#39;</span>]
-        access_token <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">&#39;access_token&#39;</span>]
-        refresh_token <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">&#39;refresh_token&#39;</span>]
+        fullname <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">'user'</span>][<span style="color: #BA2121">'fullname'</span>]
+        access_token <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">'access_token'</span>]
+        refresh_token <span style="color: #666">=</span> loggin_data[<span style="color: #BA2121">'refresh_token'</span>]
         <span style="color: #3D7B7B; font-style: italic"># Set up a success message</span>
-        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(login_msg, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(login_msg, color<span style="color: #666">=</span><span style="color: #BA2121">"success"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
         <span style="color: #008000">print</span>(login_msg)
         <span style="color: #008000; font-weight: bold">return</span> username, fullname, access_token, refresh_token, message_style, alert
 
     <span style="color: #3D7B7B; font-style: italic"># Handle failed login attempts</span>
-    error_msg <span style="color: #666">=</span> <span style="color: #BA2121">&quot;Login failed. Please check your credentials.&quot;</span>
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">&#39;message&#39;</span> <span style="color: #A2F; font-weight: bold">in</span> loggin_data:
+    error_msg <span style="color: #666">=</span> <span style="color: #BA2121">"Login failed. Please check your credentials."</span>
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">'message'</span> <span style="color: #A2F; font-weight: bold">in</span> loggin_data:
         error_msg <span style="color: #666">=</span> login_msg
     <span style="color: #3D7B7B; font-style: italic"># Set up an alert message</span>
-    alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(error_msg, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+    alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(error_msg, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
     <span style="color: #008000">print</span>(error_msg)
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
 </code></pre></div></td></tr></table></div>
@@ -4220,7 +4192,7 @@ or a default login icon and text</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">153</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">154</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">155</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">login_modal_title</span>(fullname: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>, username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create a title for the login modal based on user login status.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create a title for the login modal based on user login status.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -4232,14 +4204,14 @@ or a default login icon and text</p>
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    list</span>
-<span style="color: #BA2121; font-style: italic">        A list of components for the modal title, either showing the user&#39;s name and username</span>
+<span style="color: #BA2121; font-style: italic">        A list of components for the modal title, either showing the user's name and username</span>
 <span style="color: #BA2121; font-style: italic">        or a default login icon and text</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    icon <span style="color: #666">=</span> html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">&quot;bi bi-person-bounding-box me-2&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    """</span>
+    icon <span style="color: #666">=</span> html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">"bi bi-person-bounding-box me-2"</span>)
     <span style="color: #008000; font-weight: bold">if</span> fullname:
-        <span style="color: #008000; font-weight: bold">return</span> [<span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>fullname<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> (@</span><span style="color: #A45A77; font-weight: bold">{</span>username<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">)&quot;</span>]
+        <span style="color: #008000; font-weight: bold">return</span> [<span style="color: #BA2121">f"</span><span style="color: #A45A77; font-weight: bold">{</span>fullname<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> (@</span><span style="color: #A45A77; font-weight: bold">{</span>username<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">)"</span>]
     <span style="color: #008000; font-weight: bold">else</span>:
-        <span style="color: #008000; font-weight: bold">return</span> [icon, <span style="color: #BA2121">&quot;Login&quot;</span>]
+        <span style="color: #008000; font-weight: bold">return</span> [icon, <span style="color: #BA2121">"Login"</span>]
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4509,29 +4481,29 @@ or a default login icon and text</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">654</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">655</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">656</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&#39;access-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;style&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Input(<span style="color: #BA2121">&#39;logout-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;access-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Output(<span style="color: #BA2121">'logged-username'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">'logged-fullname'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">'access-token'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">'login-attempt-message'</span>, <span style="color: #BA2121">'style'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">'login-attempt-message'</span>, <span style="color: #BA2121">'children'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Input(<span style="color: #BA2121">'logout-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
+    State(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-port'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-prefix'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-ssl'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'access-token'</span>, <span style="color: #BA2121">'data'</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">logout</span>(_: <span style="color: #008000">int</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>, ssl: <span style="color: #008000">bool</span>, access_token: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[
     <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000">dict</span>, dbc<span style="color: #666">.</span>Alert]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Handle user logout functionality.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Handle user logout functionality.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback clears the user session data when the logout button is clicked.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    _ : int</span>
-<span style="color: #BA2121; font-style: italic">        Placeholder for the click event of the &#39;logout-button&#39; (unused).</span>
+<span style="color: #BA2121; font-style: italic">        Placeholder for the click event of the 'logout-button' (unused).</span>
 <span style="color: #BA2121; font-style: italic">    host : str</span>
 <span style="color: #BA2121; font-style: italic">       The hostname or IP address of the PlantDB REST API server.</span>
 <span style="color: #BA2121; font-style: italic">    port : int</span>
@@ -4555,11 +4527,11 @@ or a default login icon and text</p>
 <span style="color: #BA2121; font-style: italic">        CSS style dictionary for the message display.</span>
 <span style="color: #BA2121; font-style: italic">    dash_bootstrap_components.Alert</span>
 <span style="color: #BA2121; font-style: italic">        Bootstrap alert component containing success or error message.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    message_style <span style="color: #666">=</span> {<span style="color: #BA2121">&#39;display&#39;</span>: <span style="color: #BA2121">&#39;block&#39;</span>, <span style="color: #BA2121">&#39;margin-top&#39;</span>: <span style="color: #BA2121">&#39;10px&#39;</span>}
+<span style="color: #BA2121; font-style: italic">    """</span>
+    message_style <span style="color: #666">=</span> {<span style="color: #BA2121">'display'</span>: <span style="color: #BA2121">'block'</span>, <span style="color: #BA2121">'margin-top'</span>: <span style="color: #BA2121">'10px'</span>}
 
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> access_token:
-        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Missing access token, you need to login first!&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, className<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f"Missing access token, you need to login first!"</span>, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>, className<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
 
     <span style="color: #008000; font-weight: bold">try</span>:
@@ -4568,15 +4540,15 @@ or a default login icon and text</p>
 
     <span style="color: #008000; font-weight: bold">except</span> requests<span style="color: #666">.</span>exceptions<span style="color: #666">.</span>RequestException <span style="color: #008000; font-weight: bold">as</span> e:
         <span style="color: #3D7B7B; font-style: italic"># Handle connection errors (network issues, server down, etc.)</span>
-        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f&quot;Connection error: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">str</span>(e)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;danger&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(<span style="color: #BA2121">f"Connection error: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">str</span>(e)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, color<span style="color: #666">=</span><span style="color: #BA2121">"danger"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
 
     <span style="color: #008000; font-weight: bold">if</span> logout_success:
         <span style="color: #3D7B7B; font-style: italic"># Parse successful response</span>
-        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(logout_msg, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(logout_msg, color<span style="color: #666">=</span><span style="color: #BA2121">"success"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
     <span style="color: #008000; font-weight: bold">else</span>:
-        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(logout_msg, color<span style="color: #666">=</span><span style="color: #BA2121">&quot;warning&quot;</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;mb-0&quot;</span>)
+        alert <span style="color: #666">=</span> dbc<span style="color: #666">.</span>Alert(logout_msg, color<span style="color: #666">=</span><span style="color: #BA2121">"warning"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-0"</span>)
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, message_style, alert
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4629,30 +4601,30 @@ and populate the logged‑in stores. This runs on every page load.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">446</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">447</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">448</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&#39;access-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Input(<span style="color: #BA2121">&#39;access-token&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Output(<span style="color: #BA2121">'logged-username'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">'logged-fullname'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">'access-token'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Input(<span style="color: #BA2121">'access-token'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-port'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-prefix'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-ssl'</span>, <span style="color: #BA2121">'data'</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">restore_login</span>(access_token, host, port, prefix, ssl):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    If an access token exists in session storage, verify it with the API</span>
 <span style="color: #BA2121; font-style: italic">    and populate the logged‑in stores. This runs on every page load.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> access_token:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>
 
     <span style="color: #008000; font-weight: bold">try</span>:
         <span style="color: #3D7B7B; font-style: italic"># API endpoint that returns user info given a token</span>
-        user <span style="color: #666">=</span> request_token_validation(host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl, session_token<span style="color: #666">=</span>access_token)[<span style="color: #BA2121">&#39;user&#39;</span>]
-        <span style="color: #008000; font-weight: bold">return</span> user[<span style="color: #BA2121">&#39;username&#39;</span>], user[<span style="color: #BA2121">&#39;fullname&#39;</span>], access_token
+        user <span style="color: #666">=</span> request_token_validation(host, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl, session_token<span style="color: #666">=</span>access_token)[<span style="color: #BA2121">'user'</span>]
+        <span style="color: #008000; font-weight: bold">return</span> user[<span style="color: #BA2121">'username'</span>], user[<span style="color: #BA2121">'fullname'</span>], access_token
     <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
-        <span style="color: #3D7B7B; font-style: italic"># If the token is invalid, clear it so we don&#39;t keep an old one</span>
+        <span style="color: #3D7B7B; font-style: italic"># If the token is invalid, clear it so we don't keep an old one</span>
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4769,12 +4741,12 @@ when a user successfully logs in.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">582</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">583</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">584</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;login-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Input(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Output(<span style="color: #BA2121">'login-modal'</span>, <span style="color: #BA2121">'is_open'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Input(<span style="color: #BA2121">'logged-username'</span>, <span style="color: #BA2121">'data'</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">timeout_modal</span>(username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Control the visibility of the login-modal with a timeout.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Control the visibility of the login-modal with a timeout.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback automatically closes the login-modal after a 1-second delay</span>
 <span style="color: #BA2121; font-style: italic">    when a user successfully logs in.</span>
@@ -4792,7 +4764,7 @@ when a user successfully logs in.</p>
 <span style="color: #BA2121; font-style: italic">    Notes</span>
 <span style="color: #BA2121; font-style: italic">    -----</span>
 <span style="color: #BA2121; font-style: italic">    The function includes a 1-second sleep delay to provide time for the logout callback to unset the username.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     time<span style="color: #666">.</span>sleep(<span style="color: #666">1</span>)
     <span style="color: #008000; font-weight: bold">if</span> username:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>  <span style="color: #3D7B7B; font-style: italic"># close the login modal</span>
@@ -4926,13 +4898,13 @@ when a user successfully logs in.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">&#39;login-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-          Input(<span style="color: #BA2121">&#39;login-avatar-button&#39;</span>, <span style="color: #BA2121">&#39;n_clicks&#39;</span>),
-          State(<span style="color: #BA2121">&#39;login-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
-          State(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">'login-modal'</span>, <span style="color: #BA2121">'is_open'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+          Input(<span style="color: #BA2121">'login-avatar-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
+          State(<span style="color: #BA2121">'login-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
+          State(<span style="color: #BA2121">'logged-username'</span>, <span style="color: #BA2121">'data'</span>),
           prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">toggle_login_modal</span>(_: <span style="color: #008000">int</span>, is_open: <span style="color: #008000">bool</span>, username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Toggle the visibility of the login modal.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Toggle the visibility of the login modal.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback function controls the visibility of the login modal when the login avatar button is clicked.</span>
 
@@ -4951,7 +4923,7 @@ when a user successfully logs in.</p>
 <span style="color: #BA2121; font-style: italic">    Notes</span>
 <span style="color: #BA2121; font-style: italic">    -----</span>
 <span style="color: #BA2121; font-style: italic">    The function only handles opening the modal. Closing is handled by other modal mechanisms</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> username:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #A2F; font-weight: bold">not</span> is_open
@@ -5071,15 +5043,15 @@ The content varies based on login status.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">477</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">478</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">479</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;login-avatar-button&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
-    Input(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>)
+    Output(<span style="color: #BA2121">'login-avatar-button'</span>, <span style="color: #BA2121">'children'</span>),
+    Input(<span style="color: #BA2121">'logged-fullname'</span>, <span style="color: #BA2121">'data'</span>)
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_login_avatar_button</span>(fullname: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Update the login avatar button display based on user login status.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Update the login avatar button display based on user login status.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback function modifies the login button appearance in the navigation bar</span>
 <span style="color: #BA2121; font-style: italic">    to reflect whether a user is logged in or not. When logged in, it displays the</span>
-<span style="color: #BA2121; font-style: italic">    user&#39;s full name; when logged out, it shows the default login button.</span>
+<span style="color: #BA2121; font-style: italic">    user's full name; when logged out, it shows the default login button.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -5095,7 +5067,7 @@ The content varies based on login status.</p>
 <span style="color: #BA2121; font-style: italic">    See Also</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    create_login_button : The underlying function that creates the button components</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> fullname:
         <span style="color: #008000; font-weight: bold">return</span> create_login_avatar_button(is_logged_in<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, user_fullname<span style="color: #666">=</span>fullname)<span style="color: #666">.</span>children
     <span style="color: #008000; font-weight: bold">return</span> create_login_avatar_button(is_logged_in<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>)<span style="color: #666">.</span>children
@@ -5199,9 +5171,9 @@ as well as any login attempt messages, based on whether a user is logged in.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>update_login_modal_body(<span style="color: #008000; font-weight: bold">None</span>)
-<span style="color: #717171">({&#39;display&#39;: &#39;flex&#39;}, {&#39;display&#39;: &#39;flex&#39;}, &quot;&quot;)</span>
-<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>update_login_modal_body(<span style="color: #BA2121">&quot;John Doe&quot;</span>)
-<span style="color: #717171">({&#39;display&#39;: &#39;none&#39;}, {&#39;display&#39;: &#39;none&#39;}, &quot;&quot;)</span>
+<span style="color: #717171">({'display': 'flex'}, {'display': 'flex'}, "")</span>
+<span style="color: #000080; font-weight: bold">&gt;&gt;&gt; </span>update_login_modal_body(<span style="color: #BA2121">"John Doe"</span>)
+<span style="color: #717171">({'display': 'none'}, {'display': 'none'}, "")</span>
 </code></pre></div>
 
 
@@ -5245,15 +5217,15 @@ as well as any login attempt messages, based on whether a user is logged in.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">550</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">551</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">552</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;username-input-group&#39;</span>, <span style="color: #BA2121">&#39;style&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&#39;password-input-group&#39;</span>, <span style="color: #BA2121">&#39;style&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Output(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
-    Input(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;login-attempt-message&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
+    Output(<span style="color: #BA2121">'username-input-group'</span>, <span style="color: #BA2121">'style'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">'password-input-group'</span>, <span style="color: #BA2121">'style'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">'login-attempt-message'</span>, <span style="color: #BA2121">'children'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Input(<span style="color: #BA2121">'logged-fullname'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'login-attempt-message'</span>, <span style="color: #BA2121">'children'</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_login_modal_body</span>(fullname: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, msg: dbc<span style="color: #666">.</span>Alert) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">dict</span>, <span style="color: #008000">dict</span>, <span style="color: #008000">str</span>]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Update the visibility of login modal components based on login status.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Update the visibility of login modal components based on login status.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback controls the display of username and password input groups in the login modal,</span>
 <span style="color: #BA2121; font-style: italic">    as well as any login attempt messages, based on whether a user is logged in.</span>
@@ -5275,13 +5247,13 @@ as well as any login attempt messages, based on whether a user is logged in.</p>
 <span style="color: #BA2121; font-style: italic">    Examples</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; update_login_modal_body(None)</span>
-<span style="color: #BA2121; font-style: italic">    ({&#39;display&#39;: &#39;flex&#39;}, {&#39;display&#39;: &#39;flex&#39;}, &quot;&quot;)</span>
-<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; update_login_modal_body(&quot;John Doe&quot;)</span>
-<span style="color: #BA2121; font-style: italic">    ({&#39;display&#39;: &#39;none&#39;}, {&#39;display&#39;: &#39;none&#39;}, &quot;&quot;)</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    ({'display': 'flex'}, {'display': 'flex'}, "")</span>
+<span style="color: #BA2121; font-style: italic">    &gt;&gt;&gt; update_login_modal_body("John Doe")</span>
+<span style="color: #BA2121; font-style: italic">    ({'display': 'none'}, {'display': 'none'}, "")</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> fullname:
-        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&#39;display&#39;</span>: <span style="color: #BA2121">&#39;flex&#39;</span>}, {<span style="color: #BA2121">&#39;display&#39;</span>: <span style="color: #BA2121">&#39;flex&#39;</span>}, msg
-    <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&#39;display&#39;</span>: <span style="color: #BA2121">&#39;none&#39;</span>}, {<span style="color: #BA2121">&#39;display&#39;</span>: <span style="color: #BA2121">&#39;none&#39;</span>}, <span style="color: #BA2121">&quot;&quot;</span>
+        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">'display'</span>: <span style="color: #BA2121">'flex'</span>}, {<span style="color: #BA2121">'display'</span>: <span style="color: #BA2121">'flex'</span>}, msg
+    <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">'display'</span>: <span style="color: #BA2121">'none'</span>}, {<span style="color: #BA2121">'display'</span>: <span style="color: #BA2121">'none'</span>}, <span style="color: #BA2121">""</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -5415,13 +5387,13 @@ if no user information is provided.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">510</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">511</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">512</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;login-modal-title&#39;</span>, <span style="color: #BA2121">&#39;children&#39;</span>),
-    Input(<span style="color: #BA2121">&#39;logged-fullname&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    Input(<span style="color: #BA2121">&#39;logged-username&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Output(<span style="color: #BA2121">'login-modal-title'</span>, <span style="color: #BA2121">'children'</span>),
+    Input(<span style="color: #BA2121">'logged-fullname'</span>, <span style="color: #BA2121">'data'</span>),
+    Input(<span style="color: #BA2121">'logged-username'</span>, <span style="color: #BA2121">'data'</span>),
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_login_modal_title</span>(fullname: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Updates the title of the login modal window dynamically based on the logged-in</span>
-<span style="color: #BA2121; font-style: italic">    user&#39;s information. If the logged-in user&#39;s full name is available, it uses the</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Updates the title of the login modal window dynamically based on the logged-in</span>
+<span style="color: #BA2121; font-style: italic">    user's information. If the logged-in user's full name is available, it uses the</span>
 <span style="color: #BA2121; font-style: italic">    provided full name and username to generate the title. Otherwise, it defaults</span>
 <span style="color: #BA2121; font-style: italic">    to a generic title.</span>
 
@@ -5439,9 +5411,9 @@ if no user information is provided.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    str</span>
 <span style="color: #BA2121; font-style: italic">        The dynamically generated title for the login modal window. This either</span>
-<span style="color: #BA2121; font-style: italic">        includes the logged-in user&#39;s full name and username or a default message</span>
+<span style="color: #BA2121; font-style: italic">        includes the logged-in user's full name and username or a default message</span>
 <span style="color: #BA2121; font-style: italic">        if no user information is provided.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> fullname:
         <span style="color: #008000; font-weight: bold">return</span> login_modal_title(fullname, username)
     <span style="color: #008000; font-weight: bold">return</span> login_modal_title()
@@ -5671,18 +5643,18 @@ if no user information is provided.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">306</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">307</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">308</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
-    Output(<span style="color: #BA2121">&#39;username-input&#39;</span>, <span style="color: #BA2121">&#39;valid&#39;</span>),
-    Output(<span style="color: #BA2121">&#39;username-input&#39;</span>, <span style="color: #BA2121">&#39;invalid&#39;</span>),
-    Input(<span style="color: #BA2121">&#39;username-input&#39;</span>, <span style="color: #BA2121">&#39;value&#39;</span>),
-    State(<span style="color: #BA2121">&#39;login-modal&#39;</span>, <span style="color: #BA2121">&#39;is_open&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-host&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-port&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-prefix&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
-    State(<span style="color: #BA2121">&#39;plantdb-ssl&#39;</span>, <span style="color: #BA2121">&#39;data&#39;</span>),
+    Output(<span style="color: #BA2121">'username-input'</span>, <span style="color: #BA2121">'valid'</span>),
+    Output(<span style="color: #BA2121">'username-input'</span>, <span style="color: #BA2121">'invalid'</span>),
+    Input(<span style="color: #BA2121">'username-input'</span>, <span style="color: #BA2121">'value'</span>),
+    State(<span style="color: #BA2121">'login-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
+    State(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-port'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-prefix'</span>, <span style="color: #BA2121">'data'</span>),
+    State(<span style="color: #BA2121">'plantdb-ssl'</span>, <span style="color: #BA2121">'data'</span>),
 )
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">validate_username</span>(username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, is_modal_open: <span style="color: #008000">bool</span>, host: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>, ssl: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> \
         <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">bool</span>]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Validate a username by checking if it exists in the database.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Validate a username by checking if it exists in the database.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -5708,7 +5680,7 @@ if no user information is provided.</p>
 <span style="color: #BA2121; font-style: italic">    ------</span>
 <span style="color: #BA2121; font-style: italic">    requests.exceptions.RequestException</span>
 <span style="color: #BA2121; font-style: italic">        If there are network connectivity issues or server communication problems</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> is_modal_open <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> username:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #008000; font-weight: bold">False</span>
 

@@ -1883,34 +1883,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../carousel/" class="md-nav__link">
         
   
@@ -2090,7 +2062,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2112,14 +2084,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2972,7 +2944,7 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">dash_boostrap_carousel</span>(images: <span style="color: #008000">list</span>[<span style="color: #008000">str</span>], access_token: Optional[<span style="color: #008000">str</span>]) <span style="color: #666">-&gt;</span> Carousel:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Creates a Bootstrap Carousel component from a list of image URLs.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -2990,7 +2962,7 @@
 <span style="color: #BA2121; font-style: italic">    Notes</span>
 <span style="color: #BA2121; font-style: italic">    -----</span>
 <span style="color: #BA2121; font-style: italic">    The image URLs are sorted alphabetically before being added to the carousel.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.webui.utils</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> load_image_from_url
 
     images<span style="color: #666">.</span>sort()
@@ -2998,12 +2970,12 @@
     <span style="color: #008000; font-weight: bold">with</span> ThreadPoolExecutor(max_workers<span style="color: #666">=4</span>) <span style="color: #008000; font-weight: bold">as</span> pool:
         encoded_images <span style="color: #666">=</span> <span style="color: #008000">list</span>(pool<span style="color: #666">.</span>map(<span style="color: #008000; font-weight: bold">lambda</span> img: load_image_from_url(img, access_token), images))
     carousel <span style="color: #666">=</span> Carousel(
-        items<span style="color: #666">=</span>[{<span style="color: #BA2121">&quot;key&quot;</span>: idx, <span style="color: #BA2121">&quot;alt&quot;</span>: img<span style="color: #666">.</span>split(<span style="color: #BA2121">&#39;/&#39;</span>)[<span style="color: #666">-1</span>], <span style="color: #BA2121">&quot;src&quot;</span>: encoded_images[idx]} <span style="color: #008000; font-weight: bold">for</span> idx, img <span style="color: #A2F; font-weight: bold">in</span>
+        items<span style="color: #666">=</span>[{<span style="color: #BA2121">"key"</span>: idx, <span style="color: #BA2121">"alt"</span>: img<span style="color: #666">.</span>split(<span style="color: #BA2121">'/'</span>)[<span style="color: #666">-1</span>], <span style="color: #BA2121">"src"</span>: encoded_images[idx]} <span style="color: #008000; font-weight: bold">for</span> idx, img <span style="color: #A2F; font-weight: bold">in</span>
                <span style="color: #008000">enumerate</span>(images)],
         controls<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
         indicators<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
         slide<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>,
-        class_name<span style="color: #666">=</span><span style="color: #BA2121">&quot;carousel-fade&quot;</span>,
+        class_name<span style="color: #666">=</span><span style="color: #BA2121">"carousel-fade"</span>,
     )
     <span style="color: #008000; font-weight: bold">return</span> carousel
 </code></pre></div></td></tr></table></div>
@@ -3020,7 +2992,7 @@
 
 
 <a href="#plantimager.webui.visu.plotly_image_carousel" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>plotly_image_carousel(images, height<span style="color: #666">=900.0</span>, width<span style="color: #666">=900.0</span>, title<span style="color: #666">=</span><span style="color: #BA2121">&#39;Carousel&#39;</span>, layout_kwargs<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>plotly_image_carousel(images, height<span style="color: #666">=900.0</span>, width<span style="color: #666">=900.0</span>, title<span style="color: #666">=</span><span style="color: #BA2121">'Carousel'</span>, layout_kwargs<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3220,10 +3192,10 @@ default layout style.</p>
         images: <span style="color: #008000">list</span>[ImageLike],
         height: <span style="color: #008000">float</span> <span style="color: #666">=</span> <span style="color: #666">900.0</span>,
         width: <span style="color: #008000">float</span> <span style="color: #666">=</span> <span style="color: #666">900.0</span>,
-        title: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&quot;Carousel&quot;</span>,
+        title: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">"Carousel"</span>,
         layout_kwargs: Optional[LayoutDict] <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>,
 ) <span style="color: #666">-&gt;</span> Figure:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;An image carousel based on Plotly.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""An image carousel based on Plotly.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -3234,7 +3206,7 @@ default layout style.</p>
 <span style="color: #BA2121; font-style: italic">    width : float, optional</span>
 <span style="color: #BA2121; font-style: italic">        The width of the figure to create, in pixels. Defaults to ``900``.</span>
 <span style="color: #BA2121; font-style: italic">    title : str, optional</span>
-<span style="color: #BA2121; font-style: italic">        The title to give to the figure. Defaults to ``&quot;Carousel&quot;``.</span>
+<span style="color: #BA2121; font-style: italic">        The title to give to the figure. Defaults to ``"Carousel"``.</span>
 <span style="color: #BA2121; font-style: italic">    layout_kwargs : dict[str, Any] | None, optional</span>
 <span style="color: #BA2121; font-style: italic">        A dictionary to customize the figure layout. If provided, it will be merged with the</span>
 <span style="color: #BA2121; font-style: italic">        default layout style.</span>
@@ -3251,14 +3223,14 @@ default layout style.</p>
 <span style="color: #BA2121; font-style: italic">    References</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    Plotly documentation for `Layout`: https://plotly.com/python/reference/layout/</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     layout_style: LayoutDict <span style="color: #666">=</span> {
-        <span style="color: #BA2121">&quot;height&quot;</span>: height,
-        <span style="color: #BA2121">&quot;width&quot;</span>: width,
-        <span style="color: #BA2121">&quot;title&quot;</span>: title,
-        <span style="color: #BA2121">&quot;showlegend&quot;</span>: <span style="color: #008000; font-weight: bold">False</span>,
-        <span style="color: #BA2121">&quot;xaxis&quot;</span>: {<span style="color: #BA2121">&quot;visible&quot;</span>: <span style="color: #008000; font-weight: bold">False</span>},
-        <span style="color: #BA2121">&quot;yaxis&quot;</span>: {<span style="color: #BA2121">&quot;visible&quot;</span>: <span style="color: #008000; font-weight: bold">False</span>},
+        <span style="color: #BA2121">"height"</span>: height,
+        <span style="color: #BA2121">"width"</span>: width,
+        <span style="color: #BA2121">"title"</span>: title,
+        <span style="color: #BA2121">"showlegend"</span>: <span style="color: #008000; font-weight: bold">False</span>,
+        <span style="color: #BA2121">"xaxis"</span>: {<span style="color: #BA2121">"visible"</span>: <span style="color: #008000; font-weight: bold">False</span>},
+        <span style="color: #BA2121">"yaxis"</span>: {<span style="color: #BA2121">"visible"</span>: <span style="color: #008000; font-weight: bold">False</span>},
     }
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(layout_kwargs, <span style="color: #008000">dict</span>):
         layout_style<span style="color: #666">.</span>update(layout_kwargs)
@@ -3268,10 +3240,10 @@ default layout style.</p>
         array,
         animation_frame<span style="color: #666">=0</span>,
         binary_string<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
-        labels<span style="color: #666">=</span><span style="color: #008000">dict</span>(animation_frame<span style="color: #666">=</span><span style="color: #BA2121">&quot;Image&quot;</span>),
+        labels<span style="color: #666">=</span><span style="color: #008000">dict</span>(animation_frame<span style="color: #666">=</span><span style="color: #BA2121">"Image"</span>),
     )
     fig<span style="color: #666">.</span>update_layout(<span style="color: #666">**</span>layout_style)
-    fig<span style="color: #666">.</span>update_scenes(aspectmode<span style="color: #666">=</span><span style="color: #BA2121">&#39;data&#39;</span>)
+    fig<span style="color: #666">.</span>update_scenes(aspectmode<span style="color: #666">=</span><span style="color: #BA2121">'data'</span>)
 
     <span style="color: #008000; font-weight: bold">return</span> fig
 </code></pre></div></td></tr></table></div>

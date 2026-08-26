@@ -2127,34 +2127,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../webui/carousel/" class="md-nav__link">
         
   
@@ -2334,7 +2306,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2356,14 +2328,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_3_1_9" id="__nav_2_3_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_3_1_8" id="__nav_2_3_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_1_9">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3174,7 +3146,7 @@ This enables remote execution of scanner control functions with robust error han
 <span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #3D7B7B; font-style: italic"># Create a ZeroMQ context</span>
 <span style="color: #666">&gt;&gt;&gt;</span> context <span style="color: #666">=</span> zmq<span style="color: #666">.</span>Context()
 <span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #3D7B7B; font-style: italic"># Create an RPC server for the scanner</span>
-<span style="color: #666">&gt;&gt;&gt;</span> server <span style="color: #666">=</span> RPCControllerServer(context, <span style="color: #BA2121">&quot;tcp://*:5555&quot;</span>, scanner)
+<span style="color: #666">&gt;&gt;&gt;</span> server <span style="color: #666">=</span> RPCControllerServer(context, <span style="color: #BA2121">"tcp://*:5555"</span>, scanner)
 <span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #3D7B7B; font-style: italic"># Start the server</span>
 <span style="color: #666">&gt;&gt;&gt;</span> server<span style="color: #666">.</span>start()
 </code></pre></div>
@@ -3437,7 +3409,7 @@ plantimager.controller.scanner.scanner.Scanner : The scanner device being contro
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">94</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">95</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">96</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context, url, scanner: Scanner):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Initialize the RPC controller server.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -3448,7 +3420,7 @@ plantimager.controller.scanner.scanner.Scanner : The scanner device being contro
 <span style="color: #BA2121; font-style: italic">        The URL where the RPC server will be available.</span>
 <span style="color: #BA2121; font-style: italic">    scanner : plantimager.controller.scanner.scanner.Scanner</span>
 <span style="color: #BA2121; font-style: italic">        The scanner device to be controlled via RPC.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     RPCServer<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context, url)
     <span style="color: #008000">self</span><span style="color: #666">.</span>scanner <span style="color: #666">=</span> scanner
     <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>progressChanged<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>progressChanged<span style="color: #666">.</span>emit)
@@ -3494,7 +3466,7 @@ plantimager.controller.scanner.scanner.Scanner : The scanner device being contro
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">183</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">184</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>cameraNamesChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">camera_names</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>[<span style="color: #008000">str</span>]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Return the list of camera names.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return the list of camera names."""</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>camera_names
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3574,7 +3546,7 @@ reference to the scanner and emits signals to update progress values.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">handle_scanner_changed</span>(<span style="color: #008000">self</span>, scanner):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Update the controlled scanner and synchronize progress values.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Update the controlled scanner and synchronize progress values.</span>
 
 <span style="color: #BA2121; font-style: italic">    This method is called when the scanner device changes. It updates the</span>
 <span style="color: #BA2121; font-style: italic">    reference to the scanner and emits signals to update progress values.</span>
@@ -3583,7 +3555,7 @@ reference to the scanner and emits signals to update progress values.</p>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    scanner : plantimager.controller.scanner.scanner.Scanner</span>
 <span style="color: #BA2121; font-style: italic">        The new scanner device to be controlled.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scanner <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> scanner:
         <span style="color: #008000">self</span><span style="color: #666">.</span>scanner <span style="color: #666">=</span> scanner
         <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>progressChanged<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>progressChanged<span style="color: #666">.</span>emit)
@@ -3652,13 +3624,13 @@ reference to the scanner and emits signals to update progress values.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>maxProgressChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">max_progress</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Get the maximum progress value of the scanner.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Get the maximum progress value of the scanner.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    int</span>
 <span style="color: #BA2121; font-style: italic">        The maximum progress value.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>max_progress
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3718,13 +3690,13 @@ reference to the scanner and emits signals to update progress values.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">156</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>progressChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">progress</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Get the current progress value of the scanner.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Get the current progress value of the scanner.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    int</span>
 <span style="color: #BA2121; font-style: italic">        The current progress value.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>progress
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3784,13 +3756,13 @@ reference to the scanner and emits signals to update progress values.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">178</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">179</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>readyToScanChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ready_to_scan</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Get whether the scanner is ready to start a scan.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Get whether the scanner is ready to start a scan.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    bool</span>
 <span style="color: #BA2121; font-style: italic">        True if the scanner is ready to start a scan, False otherwise.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>ready_to_scan
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3909,7 +3881,7 @@ as well as a buffer_info dictionary.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1126</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1127</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_buffer</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output as a buffer-like object</span>
 <span style="color: #BA2121; font-style: italic">    as well as a buffer_info dictionary.</span>
 
@@ -3926,7 +3898,7 @@ as well as a buffer_info dictionary.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    decorator: Callable[Callable[..., tuple[memoryview|bytes, dict]], Callable[..., tuple[memoryview|bytes, dict]]]</span>
 
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> inspect<span style="color: #666">.</span>isfunction(timeout):
         timeout<span style="color: #666">.</span>_is_buffer_method <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
         timeout<span style="color: #666">.</span>_timeout <span style="color: #666">=</span> <span style="color: #666">10000</span>
@@ -4052,7 +4024,7 @@ Arguments are also serialized via json.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1094</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1095</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_method_json</span>(timeout: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #666">10000</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Registers this method as remote callable procedure which will transmit its output via json.</span>
 
 <span style="color: #BA2121; font-style: italic">    It is advised to only send basic types and containers as output (int, float, str, bool, list, tuple, dict, ...)</span>
@@ -4067,7 +4039,7 @@ Arguments are also serialized via json.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    Callable[Callable[..., Any], Callable[..., Any]]</span>
 
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> inspect<span style="color: #666">.</span>isfunction(timeout):
         timeout<span style="color: #666">.</span>_is_json_method <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
         timeout<span style="color: #666">.</span>_timeout <span style="color: #666">=</span> <span style="color: #666">10000</span>
@@ -4250,7 +4222,7 @@ conflicting devices.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1063</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1064</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1065</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">register_to_registry</span>(<span style="color: #008000">self</span>, type_: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>, registry_url: <span style="color: #008000">str</span>, overwrite<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Register this RPCServer to the registry at `registry_address` as a device of type `type_` and name `name`.</span>
 
 <span style="color: #BA2121; font-style: italic">    Note: The name not be accepted as is and may be modified by the registry to avoid duplicate. This method</span>
@@ -4263,7 +4235,7 @@ conflicting devices.</p>
 <span style="color: #BA2121; font-style: italic">    name: str</span>
 <span style="color: #BA2121; font-style: italic">        Proposed name of the device.</span>
 <span style="color: #BA2121; font-style: italic">    registry_url: str</span>
-<span style="color: #BA2121; font-style: italic">        Url of the device registry. Must have the form &quot;tcp://&lt;ip&gt;:&lt;port&gt;&quot; if the registry uses tcp</span>
+<span style="color: #BA2121; font-style: italic">        Url of the device registry. Must have the form "tcp://&lt;ip&gt;:&lt;port&gt;" if the registry uses tcp</span>
 <span style="color: #BA2121; font-style: italic">    overwrite: bool, optional</span>
 <span style="color: #BA2121; font-style: italic">        Wether or not this device should take preference for the use of this name and overwrite other</span>
 <span style="color: #BA2121; font-style: italic">        conflicting devices.</span>
@@ -4272,24 +4244,24 @@ conflicting devices.</p>
 <span style="color: #BA2121; font-style: italic">    -------</span>
 <span style="color: #BA2121; font-style: italic">    str</span>
 <span style="color: #BA2121; font-style: italic">        Name of this device as accepted by the registry.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
-    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Register device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+<span style="color: #BA2121; font-style: italic">    """</span>
+    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Register device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_type <span style="color: #666">=</span> type_
     <span style="color: #008000">self</span><span style="color: #666">.</span>name, <span style="color: #008000">self</span><span style="color: #666">.</span>uuid <span style="color: #666">=</span> register_device(
         <span style="color: #008000">self</span><span style="color: #666">.</span>context, type_,
-        <span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>,
+        <span style="color: #BA2121">f"</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>,
         name, registry_url,
         overwrite<span style="color: #666">=</span>overwrite,
     )
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666">.</span>name:
-        logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f&quot;Failed to register device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> as </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr <span style="color: #666">=</span> registry_url <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">&quot;&quot;</span>
+        logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f"Failed to register device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> as </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr <span style="color: #666">=</span> registry_url <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">""</span>
 
     <span style="color: #3D7B7B; font-style: italic"># Update cleanup state so finalizer knows what to unregister</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">&quot;uuid&quot;</span>] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>uuid
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">&quot;registry_addr&quot;</span>] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">"uuid"</span>] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>uuid
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">"registry_addr"</span>] <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr
 
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f&quot;Successfully registered device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f"Successfully registered device </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> of type </span><span style="color: #A45A77; font-weight: bold">{</span>type_<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> to </span><span style="color: #A45A77; font-weight: bold">{</span>registry_url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>name
 </code></pre></div></td></tr></table></div>
@@ -4321,7 +4293,7 @@ conflicting devices.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">145</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">146</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json(timeout<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">run_scan</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Start a scanning operation with the current configuration.&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Start a scanning operation with the current configuration."""</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>scan()
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4485,11 +4457,11 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1296</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1297</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1298</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">serve_forever</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Serve the RPC server indefinitely, handling incoming requests until a stop signal is</span>
 <span style="color: #BA2121; font-style: italic">    received.</span>
 
-<span style="color: #BA2121; font-style: italic">    The method enters a loop that repeatedly notifies the watchdog, checks the server&#39;s</span>
+<span style="color: #BA2121; font-style: italic">    The method enters a loop that repeatedly notifies the watchdog, checks the server's</span>
 <span style="color: #BA2121; font-style: italic">    liveness, waits for a request, and dispatches the request based on its ``event`` field.</span>
 <span style="color: #BA2121; font-style: italic">    Supported events include peer discovery, inventory retrieval, signal handling</span>
 <span style="color: #BA2121; font-style: italic">    initialization, method invocation, property access, and server shutdown. Upon receiving</span>
@@ -4520,10 +4492,10 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 <span style="color: #BA2121; font-style: italic">    _handle_find_peer_address, _handle_get_inventory, _handle_init_signal_handling,</span>
 <span style="color: #BA2121; font-style: italic">    _handle_method_call, _handle_property_get, _handle_property_set :</span>
 <span style="color: #BA2121; font-style: italic">        Private helper methods that implement the handling logic for each event type.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_dead:
-        logger<span style="color: #666">.</span>error(<span style="color: #BA2121">&quot;RPCServer is in dead state. A new instance must be created.&quot;</span>)
-        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">&quot;RPCServer is in dead state. A new instance must be created.&quot;</span>)
+        logger<span style="color: #666">.</span>error(<span style="color: #BA2121">"RPCServer is in dead state. A new instance must be created."</span>)
+        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">"RPCServer is in dead state. A new instance must be created."</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_stop <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #008000; font-weight: bold">while</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_stop:
         notify_watchdog()
@@ -4533,9 +4505,9 @@ _handle_method_call, _handle_property_get, _handle_property_set :
         <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> request:
             <span style="color: #008000; font-weight: bold">continue</span>
         <span style="color: #008000; font-weight: bold">try</span>:
-            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Received request: </span><span style="color: #A45A77; font-weight: bold">{</span>request[<span style="color: #BA2121">&#39;event&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Received request: </span><span style="color: #A45A77; font-weight: bold">{</span>request[<span style="color: #BA2121">'event'</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
             t0 <span style="color: #666">=</span> time<span style="color: #666">.</span>monotonic()
-            <span style="color: #008000; font-weight: bold">match</span> request[<span style="color: #BA2121">&quot;event&quot;</span>]:
+            <span style="color: #008000; font-weight: bold">match</span> request[<span style="color: #BA2121">"event"</span>]:
                 <span style="color: #008000; font-weight: bold">case</span> RPCEvents<span style="color: #666">.</span>GET_INVENTORY:
                     reply <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_handle_get_inventory()
                     <span style="color: #008000">self</span><span style="color: #666">.</span>_send_reply(reply)
@@ -4552,14 +4524,14 @@ _handle_method_call, _handle_property_get, _handle_property_set :
                     reply <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_handle_property_set(request)
                     <span style="color: #008000">self</span><span style="color: #666">.</span>_send_reply(reply)
                 <span style="color: #008000; font-weight: bold">case</span> RPCEvents<span style="color: #666">.</span>STOP_SERVER:
-                    <span style="color: #008000">self</span><span style="color: #666">.</span>_socket<span style="color: #666">.</span>send_json({<span style="color: #BA2121">&quot;success&quot;</span>: <span style="color: #008000; font-weight: bold">True</span>})
+                    <span style="color: #008000">self</span><span style="color: #666">.</span>_socket<span style="color: #666">.</span>send_json({<span style="color: #BA2121">"success"</span>: <span style="color: #008000; font-weight: bold">True</span>})
                     <span style="color: #008000">self</span><span style="color: #666">.</span>_stop <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
-            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f&quot;Event </span><span style="color: #A45A77; font-weight: bold">{</span>request[<span style="color: #BA2121">&#39;event&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> treated in </span><span style="color: #A45A77; font-weight: bold">{</span>time<span style="color: #666">.</span>monotonic()<span style="color: #BBB"> </span><span style="color: #666">-</span><span style="color: #BBB"> </span>t0<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">s&quot;</span>)
+            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Event </span><span style="color: #A45A77; font-weight: bold">{</span>request[<span style="color: #BA2121">'event'</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> treated in </span><span style="color: #A45A77; font-weight: bold">{</span>time<span style="color: #666">.</span>monotonic()<span style="color: #BBB"> </span><span style="color: #666">-</span><span style="color: #BBB"> </span>t0<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">s"</span>)
         <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span> <span style="color: #008000; font-weight: bold">as</span> exc:
-            logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f&quot;Unexpected error while handling request: </span><span style="color: #A45A77; font-weight: bold">{</span>exc<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+            logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f"Unexpected error while handling request: </span><span style="color: #A45A77; font-weight: bold">{</span>exc<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
             <span style="color: #3D7B7B; font-style: italic"># If we have a request, we can at least try to answer with a generic error.</span>
-            <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(request, <span style="color: #008000">dict</span>) <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #BA2121">&quot;event&quot;</span> <span style="color: #A2F; font-weight: bold">in</span> request:
-                <span style="color: #008000">self</span><span style="color: #666">.</span>_send_reply(<span style="color: #008000">self</span><span style="color: #666">.</span>_make_error_reply(exc, <span style="color: #BA2121">&quot;serve_forever&quot;</span>))
+            <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(request, <span style="color: #008000">dict</span>) <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #BA2121">"event"</span> <span style="color: #A2F; font-weight: bold">in</span> request:
+                <span style="color: #008000">self</span><span style="color: #666">.</span>_send_reply(<span style="color: #008000">self</span><span style="color: #666">.</span>_make_error_reply(exc, <span style="color: #BA2121">"serve_forever"</span>))
             <span style="color: #008000; font-weight: bold">break</span>  <span style="color: #3D7B7B; font-style: italic"># abort the loop - we are in an inconsistent state</span>
 
     <span style="color: #3D7B7B; font-style: italic"># cleanup</span>
@@ -4568,7 +4540,7 @@ _handle_method_call, _handle_property_get, _handle_property_set :
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_signal_socket:
         <span style="color: #008000">self</span><span style="color: #666">.</span>_signal_socket<span style="color: #666">.</span>close()
     <span style="color: #008000">self</span><span style="color: #666">.</span>_dead <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
-    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">&quot;Server stopped&quot;</span>)
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Server stopped"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4635,13 +4607,13 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">141</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_api_token</span>(<span style="color: #008000">self</span>, token: <span style="color: #008000">str</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the api token to use for authenticated requests.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Set the api token to use for authenticated requests.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    token : str</span>
 <span style="color: #BA2121; font-style: italic">        The session token to use for authenticated requests.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>set_api_token(token)
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4709,13 +4681,13 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_config</span>(<span style="color: #008000">self</span>, config):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Configure the scanner with the provided configuration.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Configure the scanner with the provided configuration.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    config : dict</span>
 <span style="color: #BA2121; font-style: italic">        Configuration dictionary with scanner settings.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>configure_scan(config)
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4783,13 +4755,13 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">129</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">130</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_dataset_name</span>(<span style="color: #008000">self</span>, name: <span style="color: #008000">str</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the name of the dataset to be created.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Set the name of the dataset to be created.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    name : str</span>
 <span style="color: #BA2121; font-style: italic">        The name of the dataset to be created.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>set_scan_id(name)
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4857,13 +4829,13 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_db_url</span>(<span style="color: #008000">self</span>, url: <span style="color: #008000">str</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Set the database URL for the scanner.</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Set the database URL for the scanner.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
 <span style="color: #BA2121; font-style: italic">    url : str</span>
 <span style="color: #BA2121; font-style: italic">        The URL, including protocol and port, of the database to connect to.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>set_db_url(url)
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4976,7 +4948,7 @@ network errors or authentication failures.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1210</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1211</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1212</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">stop_server</span>(<span style="color: #008000">self</span>):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Stop the server and unregister the device if it has been registered.</span>
 
 <span style="color: #BA2121; font-style: italic">    The method sets the internal stop flag, optionally calls</span>
@@ -4998,24 +4970,24 @@ network errors or authentication failures.</p>
 <span style="color: #BA2121; font-style: italic">      ``True``. If any of them is falsy, the function simply sets the</span>
 <span style="color: #BA2121; font-style: italic">      stop flag and returns.</span>
 <span style="color: #BA2121; font-style: italic">    * ``self._cleanup_state`` is updated after a successful unregister to</span>
-<span style="color: #BA2121; font-style: italic">      avoid duplicate cleanup actions later in the object&#39;s lifecycle.</span>
+<span style="color: #BA2121; font-style: italic">      avoid duplicate cleanup actions later in the object's lifecycle.</span>
 
 <span style="color: #BA2121; font-style: italic">    See Also</span>
 <span style="color: #BA2121; font-style: italic">    --------</span>
 <span style="color: #BA2121; font-style: italic">    unregister_device : Function that removes a device from the registry.</span>
-<span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_stop <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">self</span><span style="color: #666">.</span>uuid:
         unregister_device(<span style="color: #008000">self</span><span style="color: #666">.</span>context, <span style="color: #008000">self</span><span style="color: #666">.</span>uuid, <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr)
-        <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;</span>
-        <span style="color: #008000">self</span><span style="color: #666">.</span>uuid <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;</span>
-        <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>name <span style="color: #666">=</span> <span style="color: #BA2121">""</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>uuid <span style="color: #666">=</span> <span style="color: #BA2121">""</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>registry_addr <span style="color: #666">=</span> <span style="color: #BA2121">""</span>
 
         <span style="color: #3D7B7B; font-style: italic"># Clear cleanup state to avoid double unregister</span>
-        <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">&quot;uuid&quot;</span>] <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-        <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">&quot;registry_addr&quot;</span>] <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">"uuid"</span>] <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_cleanup_state[<span style="color: #BA2121">"registry_addr"</span>] <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
 
-        logger<span style="color: #666">.</span>info(<span style="color: #BA2121">&quot;Device unregistered successfully&quot;</span>)
+        logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Device unregistered successfully"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
