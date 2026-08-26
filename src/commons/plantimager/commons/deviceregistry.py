@@ -126,6 +126,7 @@ class DeviceRegistry(Thread):
         the events accordingly.
         """
         with self.context.socket(zmq.REP) as socket:
+            socket.setsockopt(zmq.LINGER, 0)
             socket.bind(f"tcp://{self.addr}:{self.port}")
             logger.info(f"Starting registry on {self.addr}:{self.port}")
             while not self._stop_flag:
@@ -377,6 +378,7 @@ def register_device(
     The uuid must be kept to unregister the device later.
     """
     with context.socket(zmq.REQ) as socket:
+        socket.setsockopt(zmq.LINGER, 0)
         with socket.connect(registry_url):
             socket.send_json({
                 "event": EventType.REGISTER,
@@ -387,6 +389,9 @@ def register_device(
                     "overwrite": overwrite,
                 }
             })
+            if socket.poll(5000, flags=zmq.POLLIN) == 0:
+                logger.debug(f"No answer from registry at {registry_url} during register")
+                return "", ""
             reply = socket.recv_json()
             event_type = reply["event"]
             payload = reply["payload"]
@@ -404,17 +409,26 @@ def unregister_device(context: zmq.Context, uuid: str, registry_addr: str) -> bo
     """
     with context.socket(zmq.REQ) as socket:
         socket: zmq.Socket
+        socket.setsockopt(zmq.LINGER, 0)
+        socket.setsockopt(zmq.RCVTIMEO, 500)
+        socket.setsockopt(zmq.SNDTIMEO, 500)
         with socket.connect(registry_addr):
-            socket.send_json({
-                "event": EventType.UNREGISTER,
-                "payload": {
-                    "uuid": uuid,
-                }
-            })
-            if socket.poll(5000, flags=zmq.POLLIN) == 0:
+            try:
+                socket.send_json({
+                    "event": EventType.UNREGISTER,
+                    "payload": {
+                        "uuid": uuid,
+                    }
+                })
+            except zmq.Again:
+                return False
+            if socket.poll(200, flags=zmq.POLLIN) == 0:
                 logger.debug(f"No answer from registry at address {registry_addr}. Closing")
                 return False
-            reply = socket.recv_json()
+            try:
+                reply = socket.recv_json()
+            except zmq.Again:
+                return False
             event_type = reply["event"]
             if event_type == EventType.ACK:
                 return True
@@ -478,6 +492,7 @@ def send_alive_check(context: zmq.Context, uuid: str, registry_url: str, alive_t
     """
     with context.socket(zmq.REQ) as socket:
         socket: zmq.Socket
+        socket.setsockopt(zmq.LINGER, 0)
         socket.connect(registry_url)
         socket.send_json({
             "event": EventType.CHECK_ALIVE,
