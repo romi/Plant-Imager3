@@ -26,66 +26,24 @@ GPIO_GROWTH_LIGHTS_PIN = int(os.getenv("GPIO_GROWTH_LIGHTS_PIN", 22))
 def activity_monitor(obj: object, callback: Callable[[], None]):
     """
     Wraps all methods of the given `obj` to trigger a specified callback before executing
-    the original method. This is useful for monitoring or observing object activity, such
-    as logging or tracking method calls.
-
-    This function dynamically intercepts all methods of the input `obj` object and wraps
-    them such that the `callback` function is executed prior to the method's actual
-    invocation. The wrapped methods retain their arguments, return values, and
-    attributes.
-
-    Parameters
-    ----------
-    obj : object
-        The target object whose methods are to be monitored. All methods of this object
-        will be wrapped to include the `callback`.
-    callback : Callable[[], None]
-        A zero-argument callable that is executed before any method of `obj` is invoked.
-
-    Returns
-    -------
-    object
-        The original `obj`, with its methods wrapped to call `callback` before
-        execution.
-
-    Raises
-    ------
-    AttributeError
-        If an attribute of `obj` cannot be fetched or set while wrapping methods.
-
-    Notes
-    -----
-    The `callback` function is expected to handle side-effects or monitoring concerns
-    (e.g., logging, notifications). This function does not guarantee thread safety if
-    the `obj`'s methods are accessed simultaneously from multiple threads.
-
-    See Also
-    --------
-    functools.update_wrapper : Used internally to update the wrapped function's
-        metadata to match the original function.
-
-    Examples
-    --------
-    >>> from functools import partial
-    >>> class MyClass:
-    ...     def method(self, x):
-    ...         print(f'Method called with {x}')
-    >>> obj = MyClass()
-    >>> def my_callback():
-    ...     print('Callback triggered!')
-    >>> monitored_obj = activity_monitor(obj, my_callback)
-    >>> monitored_obj.method(10)
-    Callback triggered!
-    Method called with 10
+    the original method.
     """
     for attr in dir(obj):
-        if inspect.ismethod(getattr(obj, attr)):
-            original_method = getattr(obj, attr)
+        try:
+            got = getattr(obj, attr)
+        except Exception:
+            continue
+        if not inspect.ismethod(got) and not inspect.isfunction(getattr(type(obj), attr, None)):
+            continue
+        original_method = got
 
+        def _make_wrapper(orig):
             def f(*args, **kwargs):
                 callback()
-                original_method(*args, **kwargs)
-            setattr(obj, attr, update_wrapper(f, original_method))
+                return orig(*args, **kwargs)
+            return update_wrapper(f, orig)
+
+        setattr(obj, attr, _make_wrapper(original_method))
     return obj
 
 class PowerManagerMode(StrEnum):
@@ -221,7 +179,7 @@ class PowerManager(QObject):
             self.mode = PowerManagerMode.AUTO
             return
 
-        now = datetime.datetime.now()
+        now = datetime.datetime.now(datetime.timezone.utc) if self._next_warmup_date and self._next_warmup_date.tzinfo else datetime.datetime.now()
         logger.debug(f"{self._next_warmup_date - now} -- {datetime.timedelta(seconds=self.warmup_period + 1.)}")
         if self._next_warmup_date - now < datetime.timedelta(seconds=self.warmup_period + 1.):
             self.mode = PowerManagerMode.SCAN
@@ -277,10 +235,16 @@ class PowerManager(QObject):
         self._lights_power_on()
         self._glights_power_off()
 
+    def prepare_for_scan(self):
+        self._prepare_for_scan()
+
     def _resume_auto(self):
         self._cnc_power_on()
         self._lights_power_off()
         self._glights_power_on()
+
+    def resume_auto(self):
+        self._resume_auto()
 
     def get_cnc(self):
         return self.cnc

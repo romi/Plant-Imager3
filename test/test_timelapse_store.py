@@ -17,7 +17,7 @@ class DummyTimeLapse:
     def __init__(self):
         self.id = "tl-123"
         self.mode = TimeLapseMode.FIXED_TIMES
-        self._state = TimeLapseState.STANDBY
+        self._state = TimeLapseState.SCHEDULED
         self.schedule_times = [
             datetime(2023, 1, 1, 12, 0, tzinfo=timezone.utc),
             datetime(2023, 1, 1, 14, 0, tzinfo=timezone.utc),
@@ -73,7 +73,7 @@ class TimelapseStoreTest(unittest.TestCase):
         store = TimelapseStore(
             timelapse_id="abc",
             mode="auto",
-            state="running",
+            state="scheduled",
             schedule_times=[
                 "2023-01-01T12:00:00+00:00",
                 "2023-01-01T14:00:00+00:00",

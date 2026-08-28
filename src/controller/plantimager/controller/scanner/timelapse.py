@@ -1,11 +1,73 @@
 """
-Handles the coordination and the scheduling of multiple scans through the TimeLapse class
+Handles the coordination and the scheduling of multiple scans through the TimeLapse class.
+
+Call graph and state flow
+-------------------------
+
+State model (persisted via ``TimelapseStore``, ``IDLE`` = no file):
+
+    IDLE(None) ──create──▶ SCHEDULED ──scan──▶ RUNNING ──ok──▶ SCHEDULED ──▶ COMPLETED
+                              │                  │                    ▲
+                              │                  └─fail──▶ FAILED ───┘
+                              └─cancel──────────▶ CANCELLED
+
+    ``PowerManager.mode`` (``SCAN``/``AUTO``) is displayed *alongside* the timelapse state
+    in ``Scanner.qml`` — no combined ``WAITING``/``COOLDOWN`` state.
+
+Timers vs methods
+~~~~~~~~~~~~~~~~~
+.. code-block:: text
+
+    __init__
+      ├─ _setup_timelapse_settings()          # builds schedule_times (UTC internally)
+      │     ├─ ONE_SHOT:  [now (+warmup)]
+      │     ├─ INTERVAL:  [start + k*interval]  interval = parse_duration() | int
+      │     └─ FIXED_TIMES: [sorted ISO datetimes, naive→local tz→UTC]
+      └─ _setup_next_scan_timer()  ──────────────────────────────────────────┐
+                                                                             │
+    _setup_next_scan_timer()  ◀──────────────────────────────────────────────┘
+      ├─ next_idx >= len  → COMPLETED
+      ├─ delta <= -grace  → skip, next_idx++, persist, recurse
+      ├─ delta <=  grace  → QTimer.singleShot(0, _trigger_next_scan)
+      └─ delta >   grace
+           ├─ delta > standby_threshold → _powerup_timer(warmup_at) + AUTO + set_next_auto_warmup_date
+           └─ else                     → SCAN
+           └─ _next_scan_timer(delta) → SCHEDULED (persist)
+
+    _trigger_next_scan()  ← QTimer timeout or singleShot
+      ├─ scan(next_idx)  ──────────┐
+      ├─ next_idx++ + persist      │
+      └─ if done → COMPLETED else ─┘ → _setup_next_scan_timer()
+
+    scan(index)  ← _trigger_next_scan
+      ├─ validate index, delta = scheduled - now(UTC)
+      ├─ delta >  grace  → re-arm timer (no sleep)
+      ├─ delta <= -grace → skip (persist)
+      └─ else
+           ├─ state = RUNNING
+           ├─ Scan(cnc=db_client, id=f"{id}--{slug(scheduled)}", scan_path).scan()
+           ├─ state = SCHEDULED or FAILED (+ errorOccurred)
+           └─ persist
+
+    cnc_ready(cnc)  ← PowerManager.cnc_ready
+      └─ if not terminal → SCHEDULED + _setup_next_scan_timer()
+
+    _on_powerup_timer()  ← _powerup_timer timeout
+      └─ PowerManager.prepare_for_scan()  (fallback: mode=SCAN)
+
+    cancel()  ← QML / RPC
+      └─ stop timers → CANCELLED → persist → scanFinished
+
+    _persist_state()  ← every state/next_idx mutation
+      └─ TimelapseStore.from_timelapse(self).save()  (XDG, atomic mkstemp+fsync+replace)
+
+    _slug_for_schedule(dt)  helper for deterministic PlantDB scan_id.
 """
 import importlib
 import os
 import re
 import datetime
-import time
+from datetime import timezone
 from enum import StrEnum
 from typing import Any, Literal
 
@@ -18,9 +80,7 @@ from plantimager.controller.scanner.hal import AbstractCNC
 from plantimager.controller.scanner.path import Path
 from plantimager.controller.scanner.powermanager import PowerManager, PowerManagerMode
 from plantimager.controller.scanner.scan import Scan
-
-TIMELAPSE_FILE_PATH = os.getenv("TIMELAPSE_FILE_PATH", "./plant-imager3")
-TIMELAPSE_FILE_NAME = os.getenv("TIMELAPSE_FILE_NAME", "timelapse_storage.json")
+from plantdb.client.plantdb_client import PlantDBClient
 
 logger = create_logger(__name__)
 
@@ -96,14 +156,10 @@ class TimeLapseMode(StrEnum):
     ONE_SHOT = "one_shot"
 
 class TimeLapseState(StrEnum):
-    IDLE = "idle"
-    ARMING = "arming"
-    WAITING = "waiting"
-    SCANNING = "scanning"
-    STANDBY = "standby"
-    COOLDOWN = "cooldown"
+    SCHEDULED = "scheduled"
+    RUNNING = "running"
     COMPLETED = "completed"
-    ERROR = "error"
+    FAILED = "failed"
     CANCELLED = "cancelled"
 
 class TimeLapse(QObject):
@@ -125,6 +181,7 @@ class TimeLapse(QObject):
     _state: TimeLapseState
     cnc: AbstractCNC
     db_url: str
+    db_client: PlantDBClient | None
     path: Path
     cameras: list[PiCameraComm]
 
@@ -134,16 +191,21 @@ class TimeLapse(QObject):
     progressChanged = Signal(int, int) # current progress, max progress
     errorOccurred = Signal(str)
     scanFinished = Signal()
+    pathInfoChanged = Signal(str)
 
     def __init__(self, cnc: AbstractCNC, db_url: str, cameras: list[PiCameraComm], path: Path,
                  timelapse_name: str, config: dict[str, Any], power_manager: PowerManager, parent=None):
         super().__init__(parent)
         self.cnc = cnc
         self.db_url = db_url
+        self.db_client = PlantDBClient(db_url) if db_url else None
         self.cameras = cameras
         self.path = path
         self.id = timelapse_name
         self.config = config
+        self.power_manager = power_manager
+        self.scans: list[Scan] = []
+        self._state = TimeLapseState.SCHEDULED
 
         # timelapse settings
         self._setup_timelapse_settings()
@@ -168,13 +230,10 @@ class TimeLapse(QObject):
                 res = config[camera.name]["res_x"], config[camera.name]["res_y"]
                 camera.resolution = res
 
-        self._state = TimeLapseState.STANDBY
-        self.power_manager = power_manager
-
         self._next_scan_timer = QTimer(self, singleShot=True)
         self._next_scan_timer.timeout.connect(self._trigger_next_scan)
         self._powerup_timer = QTimer(self, singleShot=True)
-        self._powerup_timer.timeout.connect(power_manager.prepare_for_scan)
+        self._powerup_timer.timeout.connect(self._on_powerup_timer)
         self._setup_next_scan_timer()
 
     def _setup_timelapse_settings(self):
@@ -234,155 +293,259 @@ class TimeLapse(QObject):
         assert timelapse_config["mode"] in TimeLapseMode, \
             f"Unrecognized mode, expected one of {[m.value for m in TimeLapseMode]}"
 
-        self.warmup_sec = timelapse_config["warmup_period"]
-        self.grace_period = timelapse_config["grace_period"]
+        self.warmup_sec = int(timelapse_config.get("warmup_period", 30))
+        self.grace_period = int(timelapse_config.get("grace_period", 120))
+        self.standby_threshold_sec = int(timelapse_config.get("standby_threshold_sec", 600))
+        self.light_policy = timelapse_config.get("light_policy", {})
         self.schedule_times = []
         self.current_idx = 0
         self.next_idx = 0
 
         self.mode = TimeLapseMode(timelapse_config["mode"])
+        now_utc = datetime.datetime.now(timezone.utc)
         if self.mode == TimeLapseMode.ONE_SHOT:
             if isinstance(self.cnc, CNC):
-                self.schedule_times.append(datetime.datetime.now())
+                self.schedule_times.append(now_utc)
             else:
-                self.schedule_times.append(datetime.datetime.now() + datetime.timedelta(seconds=self.warmup_sec))
+                self.schedule_times.append(now_utc + datetime.timedelta(seconds=self.warmup_sec))
         elif self.mode == TimeLapseMode.INTERVAL:
             if isinstance(self.cnc, CNC):
-                self.start_at = datetime.datetime.now()
+                self.start_at = now_utc
             else:
-                self.start_at = datetime.datetime.now() + datetime.timedelta(seconds=self.warmup_sec)
-            interval_str = timelapse_config["interval"]
-            interval = parse_duration(interval_str)
+                self.start_at = now_utc + datetime.timedelta(seconds=self.warmup_sec)
+            interval_raw = timelapse_config["interval"]
+            if isinstance(interval_raw, int):
+                interval = datetime.timedelta(seconds=interval_raw)
+            else:
+                interval = parse_duration(str(interval_raw))
             n_scans = int(timelapse_config["n_shots"])
             self.schedule_times = [self.start_at + interval * i for i in range(n_scans)]
         elif self.mode == TimeLapseMode.FIXED_TIMES:
-            self.schedule_times = [datetime.datetime.fromisoformat(datestring) for datestring in
-                                   timelapse_config["dates"]]
+            parsed = []
+            local_tz = datetime.datetime.now().astimezone().tzinfo
+            for datestring in timelapse_config["dates"]:
+                dt = datetime.datetime.fromisoformat(datestring)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=local_tz)
+                dt = dt.astimezone(timezone.utc)
+                parsed.append(dt)
+            self.schedule_times = sorted(parsed)
 
-        self.start_at = self.schedule_times[0]
+        self.start_at = self.schedule_times[0] if self.schedule_times else None
 
+
+    def _slug_for_schedule(self, scheduled: datetime.datetime) -> str:
+        """Deterministic, FSDB-safe slug for a scheduled time (UTC ISO, ``:``→``-``)."""
+        iso = scheduled.astimezone(timezone.utc).isoformat(timespec="seconds")
+        return iso.replace(":", "-").replace("+", "_")
 
     @Slot(int)
     def scan(self, index: int):
         """
-        Executes a scheduled scan based on the provided index.
+        Executes the scan at ``schedule_times[index]`` (UTC, deterministic ``scan_id``).
 
-        This method updates the current scanning index and triggers the `progressChanged` signal.
-        It determines the interval to the next scheduled time and either waits for the appropriate
-        time, proceeds with the scan, or skips it if the grace period has been violated.
+        Grace/warmup is handled by ``_setup_next_scan_timer``; this method never
+        blocks. If called early (``delta > grace``) it re-arms the timer; if
+        ``delta <= -grace`` the scan is skipped per persistence policy (one
+        dataset per time, ``skip`` without catch-up). Otherwise creates a
+        ``Scan`` with ``f"{id}--{slug(scheduled)}"`` and runs it synchronously,
+        transitioning ``SCHEDULED → RUNNING → SCHEDULED`` (or ``FAILED``).
 
         Parameters
         ----------
         index : int
-            The index of the scan to execute.
+            Index in ``schedule_times``; must equal ``next_idx``.
 
         Raises
         ------
         ValueError
-            If the provided `index` is invalid.
-
-        Notes
-        -----
-        - The method computes the interval between the current time and the next scheduled time.
-          If the interval is greater than the `grace_period`, the method pauses execution until
-          the scheduled time.
-        - If the time has already passed and exceeded the grace period, the scan is skipped.
-        - Sleeps the thread until the scheduled time arrives if the scan occurs too early.
-
-        See Also
-        --------
-        Scan.scan : Executes the actual scan process.
-
-        Examples
-        --------
-        Suppose you have a scheduler with predefined `schedule_times` and `grace_period`, you can
-        invoke the following method by supplying a valid scan index:
-
-        >>> scheduler.scan(2)
+            If ``index`` is out of range.
         """
+        if index < 0 or index >= len(self.schedule_times):
+            raise ValueError(f"Invalid scan index {index}")
         self.current_idx = index
-        self.progressChanged.emit(self.current_idx, self.max_progress)
+        self.progressChanged.emit(self.current_idx, self._max_progress)
 
-        next_time = self.schedule_times[self.next_idx]
-        current_time = datetime.datetime.now()
-        interval = next_time - current_time
-        if interval.total_seconds() > self.grace_period:
-            logger.warning("Woke up too early, sleeping until time.")
-            time.sleep(interval.total_seconds())
-        elif interval.total_seconds() <= -self.grace_period:
-            # date and grace period have passed
-            logger.warning(
-                f"Scan {self.next_idx} planned at {next_time.isoformat()} timed out at {current_time.isoformat()}. Skipping."
-            )
+        scheduled = self.schedule_times[self.next_idx]
+        now = datetime.datetime.now(timezone.utc)
+        delta = (scheduled - now).total_seconds()
+
+        if delta > self.grace_period:
+            logger.warning(f"Woke up {delta:.1f}s early for scan {self.next_idx} at {scheduled.isoformat()}, re-arming timer.")
+            self._setup_next_scan_timer()
             return
-        scan = Scan(
-            self.power_manager.cnc, self.db_url, self.cameras, self.path, f"{self.id}_{current_time.isoformat()}", self.config, parent=self
-        )
-        scan.scan()
-        self.scans.append(scan)
+
+        if delta <= -self.grace_period:
+            logger.warning(
+                f"Scan {self.next_idx} planned at {scheduled.isoformat()} missed (now {now.isoformat()}, grace {self.grace_period}s). Skipping per policy."
+            )
+            self._persist_state()
+            return
+
+        cnc = self.power_manager.get_cnc() if self.power_manager else self.cnc
+        if cnc is None:
+            cnc = self.cnc
+        db_client = self.db_client or PlantDBClient(self.db_url) if self.db_url else None
+        scan_id = f"{self.id}--{self._slug_for_schedule(scheduled)}"
+        scan_path = getattr(self, "scan_path", self.path)
+        scan = Scan(cnc, db_client, self.cameras, scan_path, scan_id, self.config, parent=self)
+        prev_state = self._state
+        self.state = TimeLapseState.RUNNING
+        try:
+            scan.scan()
+            self.scans.append(scan)
+        except Exception as exc:
+            logger.error(f"Scan {self.next_idx} {scan_id} failed: {exc}")
+            self.scans.append(scan)
+            self.state = TimeLapseState.FAILED
+            self.errorOccurred.emit(str(exc))
+            self._persist_state()
+            raise
+        finally:
+            if self._state == TimeLapseState.RUNNING:
+                self.state = TimeLapseState.SCHEDULED
+        self._persist_state()
 
     @Slot()
     def _trigger_next_scan(self):
         """
-        Initiates the next scan in the scheduled timelapse sequence.
+        Initiates the scan at ``next_idx`` and advances the schedule.
 
-        This method triggers a scan for the index specified by `next_idx`, updates
-        the index for the subsequent scan, and determines whether the timelapse sequence
-        is complete. If the timelapse is finished, the state is updated to
-        `TimeLapseState.COMPLETED`, and the `scanFinished` signal is emitted. Otherwise,
-        it sets up a timer for the next scan.
+        Called by ``_next_scan_timer`` or a zero-delay ``singleShot`` from
+        ``_setup_next_scan_timer``. Wraps ``scan()`` (skipped scans do not
+        raise), increments ``next_idx``, persists, and either completes
+        (``COMPLETED`` + ``scanFinished``) or re-arms via
+        ``_setup_next_scan_timer``.
         """
-        self.scan(self.next_idx)
+        try:
+            self.scan(self.next_idx)
+        except Exception:
+            pass
         self.next_idx += 1
-
-        # check if the timelapse is completed
+        self._persist_state()
         if self.next_idx >= len(self.schedule_times):
             self.state = TimeLapseState.COMPLETED
             self.scanFinished.emit()
+            self._persist_state()
+            self._next_scan_timer.stop()
+            self._powerup_timer.stop()
         else:
             self._setup_next_scan_timer()
 
     @Slot()
     def _powerup(self):
+        """Immediate power-up helper for manual controls (QML)."""
         self.power_manager.mode = PowerManagerMode.SCAN
+
+    @Slot()
+    def _on_powerup_timer(self):
+        """Warm-up timer callback — delegates to ``PowerManager``."""
+        if self.power_manager:
+            try:
+                self.power_manager.prepare_for_scan()
+            except AttributeError:
+                self.power_manager.mode = PowerManagerMode.SCAN
 
     @Slot(object)
     def cnc_ready(self, cnc):
+        """PowerManager reports CNC connected; (re)arm schedule if not terminal."""
         self.cnc = cnc
-        self.state = TimeLapseState.STANDBY
+        if self._state not in (TimeLapseState.COMPLETED, TimeLapseState.FAILED, TimeLapseState.CANCELLED):
+            self.state = TimeLapseState.SCHEDULED
+            self._setup_next_scan_timer()
 
     def _setup_next_scan_timer(self):
-        """Sets up a timer for the next scheduled scan."""
+        """
+        Arms ``_next_scan_timer`` (and ``_powerup_timer``) for ``schedule_times[next_idx]``.
+
+        Handles ``skip`` for overdue entries (``delta <= -grace``), immediate
+        dispatch when inside the grace window (``delta <= grace``), and
+        power-aware scheduling otherwise. Power state is kept in
+        ``PowerManager.mode`` and shown alongside the timelapse state in QML.
+        """
+        if self.next_idx >= len(self.schedule_times):
+            self.state = TimeLapseState.COMPLETED
+            return
         next_time = self.schedule_times[self.next_idx]
-        current_time = datetime.datetime.now()
-        interval = next_time - current_time
-        if interval.total_seconds() > self.standby_threshold_sec:
-            self._powerup_timer.setInterval(int((interval.total_seconds() - self.warmup_sec) * 1000))
+        if next_time.tzinfo is None:
+            next_time = next_time.replace(tzinfo=timezone.utc)
+        now = datetime.datetime.now(timezone.utc)
+        delta = (next_time - now).total_seconds()
+
+        if delta <= -self.grace_period:
+            logger.warning(f"Scan {self.next_idx} already missed by {-delta:.1f}s, skipping.")
+            self.next_idx += 1
+            self._persist_state()
+            if self.next_idx >= len(self.schedule_times):
+                self.state = TimeLapseState.COMPLETED
+                self.scanFinished.emit()
+                return
+            self._setup_next_scan_timer()
+            return
+
+        if delta <= self.grace_period:
+            QTimer.singleShot(0, self._trigger_next_scan)
+            return
+
+        self._next_scan_timer.stop()
+        self._powerup_timer.stop()
+
+        warmup_at = max(0, delta - self.warmup_sec)
+        if delta > self.standby_threshold_sec:
+            self._powerup_timer.setInterval(int(warmup_at * 1000))
             self._powerup_timer.start()
-            self._next_scan_timer.setInterval(int(interval.total_seconds() * 1000))
-            self._next_scan_timer.start()
-            self.power_manager.mode = PowerManagerMode.AUTO
-            self.state = TimeLapseState.COOLDOWN
-        elif interval.total_seconds() > self.grace_period:
-            self._next_scan_timer.setInterval(int(interval.total_seconds() * 1000))
-            self._next_scan_timer.start()
-            self.state = TimeLapseState.WAITING
+            if self.power_manager:
+                self.power_manager.mode = PowerManagerMode.AUTO
+                try:
+                    self.power_manager.set_next_auto_warmup_date(next_time - datetime.timedelta(seconds=self.warmup_sec))
+                except Exception:
+                    pass
         else:
-            self._trigger_next_scan()
+            if self.power_manager:
+                self.power_manager.mode = PowerManagerMode.SCAN
+        self._next_scan_timer.setInterval(int(delta * 1000))
+        self._next_scan_timer.start()
+        self.state = TimeLapseState.SCHEDULED
+        self._persist_state()
+
+    def cancel(self):
+        """Cancels the timelapse, stops timers, persists ``CANCELLED``."""
+        self._next_scan_timer.stop()
+        self._powerup_timer.stop()
+        self.state = TimeLapseState.CANCELLED
+        self._persist_state()
+        self.scanFinished.emit()
+
+    def _persist_state(self):
+        """Persists current state via ``TimelapseStore`` (atomic XDG save)."""
+        try:
+            from plantimager.controller.scanner.timelapse_store import TimelapseStore
+            store = TimelapseStore.from_timelapse(self)
+            store.save()
+        except Exception as exc:
+            logger.warning(f"Failed to persist timelapse state: {exc}")
 
 
     @property
     def n_scans(self):
         return len(self.schedule_times)
 
-    @Property(str, notify=progressChanged)
+    @Property(str, notify=stateChanged)
     def state(self):
+        """Current timelapse state, QML-visible via ``stateChanged``.
+
+        Separate from ``PowerManager.mode`` which is displayed alongside
+        in ``Scanner.qml``.
+        """
         return self._state
+
     @state.setter
     def state(self, value):
+        if isinstance(value, str):
+            value = TimeLapseState(value)
         if self._state != value:
             self._state = value
-            self.progressChanged.emit(self._state)
+            self.stateChanged.emit(value.value if isinstance(value, TimeLapseState) else str(value))
 
     @Property(int, notify=progressChanged)
     def progress(self):
