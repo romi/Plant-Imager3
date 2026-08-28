@@ -85,7 +85,7 @@ from plantdb.client.plantdb_client import PlantDBClient
 logger = create_logger(__name__)
 
 DURATION_REGEXP = re.compile(
-    r"(?:(?P<days>\d+)d)?\W?(?:(?P<hours>\d+)h)?\W?(?:(?P<minutes>\d+)m)?\W?(?P<seconds>\d+)s?"
+    r"^\s*(?:(?P<days>\d+)\s*d)?\W*(?:(?P<hours>\d+)\s*h)?\W*(?:(?P<minutes>\d+)\s*m)?\W*(?:(?P<seconds>\d+)\s*s)?\s*$"
 )
 
 
@@ -142,7 +142,7 @@ def parse_duration(duration_string, /, duration_regexp: re.Pattern = DURATION_RE
     RuntimeError: Failed to parse duration_string: invalid-string. Did not follow the format 2d-3h-1m-0s
     """
     match = duration_regexp.match(duration_string)
-    if match:
+    if match and any(v is not None for v in match.groupdict().values()):
         return datetime.timedelta(**{
             k: int(v) if v else 0 for k, v in match.groupdict().items()
         })
@@ -525,6 +525,30 @@ class TimeLapse(QObject):
         except Exception as exc:
             logger.warning(f"Failed to persist timelapse state: {exc}")
 
+
+    @Property(str, notify=pathInfoChanged)
+    def path_info(self) -> str:
+        """Human-readable description of the scan path for QML."""
+        if not hasattr(self, "scan_path") or self.scan_path is None:
+            return "No path configured"
+        # avoid hard dependency on numpy for CustomPath
+        try:
+            from plantimager.controller.scanner.path import Circle, CalibrationPath2, CustomPath
+        except Exception:
+            return f"{type(self.scan_path).__name__}: {len(self.scan_path)} steps"
+        if isinstance(self.scan_path, Circle):
+            return f"{type(self.scan_path).__name__}: center {self.scan_path.center_x:g}, {self.scan_path.center_y:g}, radius {self.scan_path.radius:g} - {len(self.scan_path)} steps"
+        if isinstance(self.scan_path, CalibrationPath2):
+            return f"{type(self.scan_path).__name__}: center {self.scan_path.center_x:g}, {self.scan_path.center_y:g}, radius {self.scan_path.radius:g} - {len(self.scan_path)} steps"
+        if isinstance(self.scan_path, CustomPath):
+            try:
+                import numpy as np
+                pts = np.array(self.scan_path)
+                x, y = float(np.mean(pts[:, 0])), float(np.mean(pts[:, 1]))
+                return f"{type(self.scan_path).__name__}: center {x:g}, {y:g} - {len(self.scan_path)} steps"
+            except Exception:
+                return f"{type(self.scan_path).__name__}: {len(self.scan_path)} steps"
+        return f"{type(self.scan_path).__name__}: {len(self.scan_path)} steps"
 
     @property
     def n_scans(self):
