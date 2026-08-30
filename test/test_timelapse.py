@@ -378,17 +378,19 @@ def test_setup_next_scan_timer_power_auto_vs_scan(fake_timers, tmp_xdg, mock_gpi
     cfg = minimal_config(mode="interval", interval=60, n_shots=2, grace_period=10, warmup_period=30, standby_threshold_sec=600)
     tl, pm = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
     now = datetime.datetime.now(timezone.utc)
-    # far → AUTO
+    # far → AUTO (+ PowerManager arms its own warm-up timer)
     tl.schedule_times = [now + datetime.timedelta(seconds=3600)]
     tl.next_idx = 0
     tl._setup_next_scan_timer()
     assert pm.mode == PowerManagerMode.AUTO
-    assert tl._powerup_timer.isActive()
+    assert pm.warmup_timer.isActive()
+    assert pm._next_warmup_date == tl.schedule_times[0] - datetime.timedelta(seconds=30)
     # close → SCAN
     tl.schedule_times = [now + datetime.timedelta(seconds=100)]
     tl.next_idx = 0
     tl._setup_next_scan_timer()
     assert pm.mode == PowerManagerMode.SCAN
+    assert not pm.warmup_timer.isActive()
 
 
 # ---------------------------------------------------------------------------
@@ -410,7 +412,6 @@ def test_trigger_next_scan_advances_and_completes(fake_timers, tmp_xdg, mock_gpi
         tl = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-trig", config=cfg, power_manager=pm)
         # mock timers to avoid real arming in __init__, then set schedule now
         tl._next_scan_timer = FakeTimer()
-        tl._powerup_timer = FakeTimer()
         tl.schedule_times = [datetime.datetime.now(timezone.utc) - datetime.timedelta(seconds=5),
                              datetime.datetime.now(timezone.utc) - datetime.timedelta(seconds=5)]
         tl.next_idx = 0

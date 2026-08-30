@@ -30,8 +30,8 @@ Timers vs methods
       ├─ delta <= -grace  → skip, next_idx++, persist, recurse
       ├─ delta <=  grace  → QTimer.singleShot(0, _trigger_next_scan)
       └─ delta >   grace
-           ├─ delta > standby_threshold → _powerup_timer(warmup_at) + AUTO + set_next_auto_warmup_date
-           └─ else                     → SCAN
+           ├─ PowerManager.arm_for_scan(next_time, standby_threshold_sec)
+           │     (PowerManager decides AUTO/SCAN + arms its own warm-up timer)
            └─ _next_scan_timer(delta) → SCHEDULED (persist)
 
     _trigger_next_scan()  ← QTimer timeout or singleShot
@@ -52,11 +52,12 @@ Timers vs methods
     cnc_ready(cnc)  ← PowerManager.cnc_ready
       └─ if not terminal → SCHEDULED + _setup_next_scan_timer()
 
-    _on_powerup_timer()  ← _powerup_timer timeout
-      └─ PowerManager.prepare_for_scan()  (fallback: mode=SCAN)
-
     cancel()  ← QML / RPC
       └─ stop timers → CANCELLED → persist → scanFinished
+
+    Power owns only ``PowerManager``: the warm-up timer and the AUTO/SCAN
+    decision live in ``PowerManager.arm_for_scan()``; ``TimeLapse`` merely
+    informs it of the next scan time.
 
     _persist_state()  ← every state/next_idx mutation
       └─ TimelapseStore.from_timelapse(self).save()  (XDG, atomic mkstemp+fsync+replace)
@@ -78,7 +79,7 @@ from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.scanner.grbl import CNC
 from plantimager.controller.scanner.hal import AbstractCNC
 from plantimager.controller.scanner.path import Path
-from plantimager.controller.scanner.powermanager import PowerManager, PowerManagerMode
+from plantimager.controller.scanner.powermanager import PowerManager
 from plantimager.controller.scanner.scan import Scan
 from plantdb.client.plantdb_client import PlantDBClient
 
@@ -232,8 +233,6 @@ class TimeLapse(QObject):
 
         self._next_scan_timer = QTimer(self, singleShot=True)
         self._next_scan_timer.timeout.connect(self._trigger_next_scan)
-        self._powerup_timer = QTimer(self, singleShot=True)
-        self._powerup_timer.timeout.connect(self._on_powerup_timer)
         self._setup_next_scan_timer()
 
     def _setup_timelapse_settings(self):
@@ -389,7 +388,6 @@ class TimeLapse(QObject):
         scan_id = f"{self.id}--{self._slug_for_schedule(scheduled)}"
         scan_path = getattr(self, "scan_path", self.path)
         scan = Scan(cnc, db_client, self.cameras, scan_path, scan_id, self.config, parent=self)
-        prev_state = self._state
         self.state = TimeLapseState.RUNNING
         try:
             scan.scan()
@@ -428,23 +426,8 @@ class TimeLapse(QObject):
             self.scanFinished.emit()
             self._persist_state()
             self._next_scan_timer.stop()
-            self._powerup_timer.stop()
         else:
             self._setup_next_scan_timer()
-
-    @Slot()
-    def _powerup(self):
-        """Immediate power-up helper for manual controls (QML)."""
-        self.power_manager.mode = PowerManagerMode.SCAN
-
-    @Slot()
-    def _on_powerup_timer(self):
-        """Warm-up timer callback — delegates to ``PowerManager``."""
-        if self.power_manager:
-            try:
-                self.power_manager.prepare_for_scan()
-            except AttributeError:
-                self.power_manager.mode = PowerManagerMode.SCAN
 
     @Slot(object)
     def cnc_ready(self, cnc):
@@ -456,12 +439,14 @@ class TimeLapse(QObject):
 
     def _setup_next_scan_timer(self):
         """
-        Arms ``_next_scan_timer`` (and ``_powerup_timer``) for ``schedule_times[next_idx]``.
+        Arms ``_next_scan_timer`` for ``schedule_times[next_idx]`` and informs
+        ``PowerManager`` of the next scan time.
 
         Handles ``skip`` for overdue entries (``delta <= -grace``), immediate
-        dispatch when inside the grace window (``delta <= grace``), and
-        power-aware scheduling otherwise. Power state is kept in
-        ``PowerManager.mode`` and shown alongside the timelapse state in QML.
+        dispatch when inside the grace window (``delta <= grace``), and power-aware
+        scheduling otherwise. Power is delegated to ``PowerManager.arm_for_scan``
+        (which decides AUTO/SCAN and arms its own warm-up timer); only the scan
+        trigger timer lives here.
         """
         if self.next_idx >= len(self.schedule_times):
             self.state = TimeLapseState.COMPLETED
@@ -488,21 +473,10 @@ class TimeLapse(QObject):
             return
 
         self._next_scan_timer.stop()
-        self._powerup_timer.stop()
 
-        warmup_at = max(0, delta - self.warmup_sec)
-        if delta > self.standby_threshold_sec:
-            self._powerup_timer.setInterval(int(warmup_at * 1000))
-            self._powerup_timer.start()
-            if self.power_manager:
-                self.power_manager.mode = PowerManagerMode.AUTO
-                try:
-                    self.power_manager.set_next_auto_warmup_date(next_time - datetime.timedelta(seconds=self.warmup_sec))
-                except Exception:
-                    pass
-        else:
-            if self.power_manager:
-                self.power_manager.mode = PowerManagerMode.SCAN
+        if self.power_manager:
+            self.power_manager.arm_for_scan(next_time, self.standby_threshold_sec)
+
         self._next_scan_timer.setInterval(int(delta * 1000))
         self._next_scan_timer.start()
         self.state = TimeLapseState.SCHEDULED
@@ -511,7 +485,6 @@ class TimeLapse(QObject):
     def cancel(self):
         """Cancels the timelapse, stops timers, persists ``CANCELLED``."""
         self._next_scan_timer.stop()
-        self._powerup_timer.stop()
         self.state = TimeLapseState.CANCELLED
         self._persist_state()
         self.scanFinished.emit()

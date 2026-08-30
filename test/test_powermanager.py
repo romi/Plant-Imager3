@@ -15,9 +15,15 @@ class FakeTimer:
     """
     def __init__(self, parent=None, singleShot=False, interval=0):
         self._single_shot = singleShot
-        self.interval = interval
+        self._interval = interval
         self.timeout = MagicMock()
         self._started = False
+
+    def setInterval(self, ms):
+        self._interval = ms
+
+    def interval(self):
+        return self._interval
 
     def start(self):
         self._started = True
@@ -103,6 +109,45 @@ class PowerManagerTest(unittest.TestCase):
         self.pm.manual_mode_timer.stop.assert_called_once()
         self.assertEqual(self.pm.mode, PowerManagerMode.SCAN)
 
+
+    def test_arm_for_scan_far_arms_auto_and_warmup(self):
+        import datetime
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        next_scan_at = now + datetime.timedelta(seconds=3600)
+        self.pm._prepare_for_scan = MagicMock()
+
+        self.pm.arm_for_scan(next_scan_at, standby_threshold_sec=600)
+
+        self.assertEqual(self.pm.mode, PowerManagerMode.AUTO)
+        self.assertTrue(self.pm.warmup_timer.isActive())
+        self.assertEqual(self.pm._next_warmup_date, next_scan_at - datetime.timedelta(seconds=60))
+
+    def test_arm_for_scan_close_stays_scan(self):
+        import datetime
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        next_scan_at = now + datetime.timedelta(seconds=100)
+        self.pm._prepare_for_scan = MagicMock()
+
+        self.pm.arm_for_scan(next_scan_at, standby_threshold_sec=600)
+
+        self.assertEqual(self.pm.mode, PowerManagerMode.SCAN)
+        self.assertFalse(self.pm.warmup_timer.isActive())
+        self.pm._prepare_for_scan.assert_called_once()
+
+    def test_warmup_timer_timeout_powers_up(self):
+        # firing the warm-up timer powers up the scanner for an imminent scan
+        self.pm._prepare_for_scan = MagicMock(num_calls=0)
+        self.pm._on_warmup_timer()
+        self.pm._prepare_for_scan.assert_called_once()
+
+        # and arm_for_scan(close) also powers up directly via SCAN mode
+        self.pm._prepare_for_scan.reset_mock()
+        import datetime
+        now = datetime.datetime.now(datetime.timezone.utc)
+        self.pm.arm_for_scan(now + datetime.timedelta(seconds=10), standby_threshold_sec=600)
+        self.pm._prepare_for_scan.assert_called_once()
 
     def test_manual_mode_timeout_elapsed_warmup_switches_to_auto(self):
         import datetime

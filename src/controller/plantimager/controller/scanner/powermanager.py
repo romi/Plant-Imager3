@@ -85,6 +85,9 @@ class PowerManager(QObject):
         manual_mode_timer : QTimer
             A single-shot timer used to manage the manual mode timeout. It triggers
             after 5 minutes (converted to milliseconds).
+        warmup_timer : QTimer
+            A single-shot timer that powers up the scanner at ``next_scan - warmup_period``
+            once a scan has been armed via :meth:`arm_for_scan`.
         cnc_connect_timer : QTimer
             A regular timer used to periodically attempt CNC reconnections. It is
             triggered every 1.2 seconds (1200 milliseconds).
@@ -104,6 +107,8 @@ class PowerManager(QObject):
         self.warmup_period: float = warmup_period
         self.manual_mode_timer = QTimer(parent=self, singleShot=True, interval=60 * 5 * 1000)  # 5 minutes in ms
         self.manual_mode_timer.timeout.connect(self._manual_mode_timeout)
+        self.warmup_timer = QTimer(parent=self, singleShot=True)
+        self.warmup_timer.timeout.connect(self._on_warmup_timer)
         self.cnc_connect_timer = QTimer(parent=self, singleShot=False, interval=1200)
         self.cnc_connect_timer.timeout.connect(self._cnc_connect)
         self._mode: PowerManagerMode = PowerManagerMode.AUTO
@@ -253,5 +258,54 @@ class PowerManager(QObject):
         # For future automatic light management
         pass
 
-    def set_next_auto_warmup_date(self, date: datetime.datetime):
-        self._next_warmup_date = date
+    @Slot()
+    def _on_warmup_timer(self):
+        """Warm-up timer fired — power up the scanner for an imminent scan."""
+        self.mode = PowerManagerMode.SCAN
+
+    def arm_for_scan(self, next_scan_at: datetime.datetime, standby_threshold_sec: int):
+        """
+        Decide and schedule power so the scanner is ready for a scan at ``next_scan_at``.
+
+        If the next scan is far enough away (``delta > standby_threshold_sec``) the
+        manager returns to ``AUTO`` (growth lights, scanner idle) and arms its internal
+        warm-up timer to power up ``warmup_period`` before the scan. Otherwise it stays
+        in ``SCAN`` mode (already powered). This is the single power-policy decision;
+        warnings are logged for each branch.
+
+        Called by ``TimeLapse`` each time it re-arms for the next scheduled scan.
+
+        Parameters
+        ----------
+        next_scan_at : datetime.datetime
+            When the next scan will run (timezone-aware).
+        standby_threshold_sec : int
+            If the next scan is sooner than this many seconds, keep the scanner powered
+            on in ``SCAN`` mode instead of dropping to ``AUTO``.
+        """
+        self.warmup_timer.stop()
+        if next_scan_at.tzinfo is None:
+            next_scan_at = next_scan_at.replace(tzinfo=datetime.timezone.utc)
+        now = datetime.datetime.now(datetime.timezone.utc)
+        delta = (next_scan_at - now).total_seconds()
+
+        if delta > standby_threshold_sec:
+            logger.info(
+                f"Next scan in {delta:.0f}s (above standby threshold {standby_threshold_sec}s), "
+                f"dropping to AUTO and warming up before the scan."
+            )
+            self._next_warmup_date = next_scan_at - datetime.timedelta(seconds=self.warmup_period)
+            self.mode = PowerManagerMode.AUTO
+            warmup_in = max(0, delta - self.warmup_period)
+            self.warmup_timer.setInterval(int(warmup_in * 1000))
+            self.warmup_timer.start()
+        else:
+            logger.info(
+                f"Next scan in {delta:.0f}s (within standby threshold {standby_threshold_sec}s), "
+                f"keeping scanner powered in SCAN mode."
+            )
+            self.mode = PowerManagerMode.SCAN
+
+    def set_manual(self):
+        """Enter MANUAL mode, powering up the scanner for manual operation."""
+        self.mode = PowerManagerMode.MANUAL

@@ -149,7 +149,7 @@ def test_power_auto_vs_scan(tmp_xdg, fake_timers):
             tl.next_idx = 0
             tl._setup_next_scan_timer()
             assert pm.mode == PowerManagerMode.AUTO
-            assert tl._powerup_timer.isActive()
+            assert pm.warmup_timer.isActive()
 
         # close → SCAN
         cfg_close = _minimal_config(mode="interval", interval=60, n_shots=1, grace_period=10, standby_threshold_sec=600, warmup_period=5)
