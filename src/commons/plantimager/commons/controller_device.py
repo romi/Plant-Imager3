@@ -44,6 +44,26 @@ class ControllerDevice(ABC):
         """Start the scan."""
         pass
 
+    @abstractmethod
+    def start_timelapse(self, config: dict) -> str:
+        """Create and start a timelapse from a configuration dict."""
+        pass
+
+    @abstractmethod
+    def get_active_timelapse(self) -> dict | None:
+        """Return a serialisable snapshot of the active timelapse, or None."""
+        pass
+
+    @abstractmethod
+    def cancel_timelapse(self):
+        """Cancel the active timelapse."""
+        pass
+
+    @abstractmethod
+    def preview_timelapse(self, config: dict) -> dict:
+        """Return the schedule computed for a config, without starting it."""
+        pass
+
     @RPCProperty(notify=progressChanged)
     @abstractmethod
     def progress(self) -> int:

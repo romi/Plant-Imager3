@@ -145,6 +145,50 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         """Start a scanning operation with the current configuration."""
         self.scanner.scan()
 
+    @RPCServer.register_method_json(timeout=None)
+    def start_timelapse(self, config):
+        """Create and start a timelapse from a configuration dict.
+
+        Parameters
+        ----------
+        config : dict
+            Timelapse configuration (``timelapse`` sub-dict for mode/schedule,
+            plus ``ScanPath``/``Metadata``/camera settings).
+
+        Returns
+        -------
+        str
+            The unique id of the created timelapse.
+        """
+        return self.scanner.start_timelapse(config)
+
+    @RPCServer.register_method_json()
+    def get_active_timelapse(self):
+        """Return a serialisable snapshot of the active timelapse, or None."""
+        return self.scanner.get_active_timelapse()
+
+    @RPCServer.register_method_json()
+    def cancel_timelapse(self):
+        """Cancel the active timelapse, if any."""
+        self.scanner.cancel_timelapse()
+
+    @RPCServer.register_method_json()
+    def preview_timelapse(self, config):
+        """Return the schedule computed for a config, without starting it.
+
+        Parameters
+        ----------
+        config : dict
+            Timelapse configuration to preview.
+
+        Returns
+        -------
+        dict
+            Computed schedule: ``{"mode": str, "schedule_times": [iso, ...],
+            "n_scans": int}``.
+        """
+        return self.scanner.preview_timelapse(config)
+
     @RPCProperty(notify=ControllerDevice.progressChanged)
     def progress(self):
         """Get the current progress value of the scanner.

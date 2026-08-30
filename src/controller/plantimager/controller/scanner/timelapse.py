@@ -192,6 +192,7 @@ class TimeLapse(QObject):
     progressChanged = Signal(int, int) # current progress, max progress
     errorOccurred = Signal(str)
     scanFinished = Signal()
+    scanCreated = Signal(object)
     pathInfoChanged = Signal(str)
 
     def __init__(self, cnc: AbstractCNC, db_url: str, cameras: list[PiCameraComm], path: Path,
@@ -388,6 +389,7 @@ class TimeLapse(QObject):
         scan_id = f"{self.id}--{self._slug_for_schedule(scheduled)}"
         scan_path = getattr(self, "scan_path", self.path)
         scan = Scan(cnc, db_client, self.cameras, scan_path, scan_id, self.config, parent=self)
+        self.scanCreated.emit(scan)
         self.state = TimeLapseState.RUNNING
         try:
             scan.scan()

@@ -3,18 +3,24 @@
 
 """Scanner Module for Plant Imaging Systems.
 
-A comprehensive module for controlling 3D plant imaging systems, managing the scanning process,
-camera control, and data acquisition. This module coordinates the movement of CNC hardware,
-image capture from multiple cameras, and data upload to a database.
+``Scanner`` is the UI/RPC bridge for the plant imaging system. It owns the
+device state (CNC, cameras, database connection) and the single shared
+``PowerManager``, and delegates the actual work to the specialised classes:
+
+* :class:`Scan`  — one 3D capture pass (path traversal, capture, upload).
+* :class:`TimeLapse` — scheduling a *series* of scans over time (``interval``,
+  ``fixed_times`` or a single pass). ``Scanner.timelapse`` is the active job.
+* :class:`PowerManager` — GPIO power and warm-up/power-on decisions.
+
+``Scanner`` itself does **not** run the scan loop anymore; it forwards signals
+and methods to/from the active ``Scan``/``TimeLapse`` so that QML and the RPC
+server keep a stable, bridge-only interface.
 
 Key Features:
-- Automated scanning along predefined paths with precise positioning
-- Multi-camera support with synchronized image capture
-- Asynchronous data upload to a PlantDB database
-- Progress tracking and reporting
-- QML integration for GUI applications
+- Bridge for QML integration (properties/signals) and the RPC controller
+- Owns one shared :class:`PowerManager` and the active :class:`TimeLapse`
+- ``run_scan`` delegates to a single :class:`Scan` (custom dataset id)
 - Fallback to dummy hardware when physical hardware is unavailable
-- Comprehensive metadata collection for each captured image
 
 Usage Examples:
 ```python
@@ -23,21 +29,15 @@ Usage Examples:
 >>> scanner.set_db_url("http://localhost:5000")
 >>> scanner.configure_scan(config_dict)  # Configure scan parameters
 >>> scanner.set_scan_id("plant_scan_001")  # Set scan identifier
->>> scanner.scan()  # Start the scanning process
+>>> scanner.run_scan()  # Start a single scanning operation
 ```
 """
 
 import importlib
 import time
-import traceback
-from concurrent.futures import ALL_COMPLETED
-from concurrent.futures import FIRST_COMPLETED
-from concurrent.futures import Future
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import wait
-from io import BytesIO
+import datetime
+from datetime import timezone
 from typing import Literal
-from weakref import finalize
 
 import numpy as np
 from PySide6.QtCore import Property
@@ -48,19 +48,21 @@ from PySide6.QtCore import Slot
 from PySide6.QtQml import QmlElement
 from PySide6.QtQml import QmlUncreatable
 from plantdb.client.plantdb_client import PlantDBClient
-from requests.exceptions import RequestException
 
 from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.scanner.dummy_cnc import DummyCNC
 from plantimager.controller.scanner.grbl import CNC
-from plantimager.controller.scanner.hal import DataItem
 from plantimager.controller.scanner.path import CalibrationPath2
 from plantimager.controller.scanner.path import Circle
 from plantimager.controller.scanner.path import CustomPath
 from plantimager.controller.scanner.path import Path
-from plantimager.controller.scanner.path import PathElement
 from plantimager.controller.scanner.path import Pose
+from plantimager.controller.scanner.powermanager import PowerManager
+from plantimager.controller.scanner.scan import Scan
+from plantimager.controller.scanner.timelapse import TimeLapse
+from plantimager.controller.scanner.timelapse import TimeLapseState
+from plantimager.controller.scanner.timelapse_store import TimelapseStore
 
 QML_IMPORT_NAME = "PlantImagerApp.Scanner"
 QML_IMPORT_MAJOR_VERSION = 1
@@ -68,178 +70,59 @@ QML_IMPORT_MAJOR_VERSION = 1
 logger = create_logger(__name__)
 
 
-class DataUploader():
-    """Worker thread that uploads scan data from a queue to a plantdb instance.
-
-    This class manages asynchronous uploads of image data to a PlantDB database
-    using a thread pool. It limits the number of concurrent uploads and provides
-    a queue mechanism to handle backpressure.
-
-    Attributes
-    ----------
-    db_client : PlantDBClient
-        Client for communicating with the PlantDB database
-    jobs : set[Future]
-        Set of active upload job futures
-    pool : ThreadPoolExecutor
-        Thread pool for executing upload tasks
-    queue_size : int
-        Maximum number of concurrent upload jobs
-
-    Notes
-    -----
-    - Uses ThreadPoolExecutor with 4 worker threads for parallel uploads
-    - Automatically shuts down the thread pool when the object is garbage collected
-    - Blocks new uploads when the queue is full until a slot becomes available
-
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from plantdb.client.plantdb_client import PlantDBClient
-    >>> from plantimager.controller.scanner.scanner import DataUploader
-    >>> from plantimager.controller.scanner.hal import DataItem
-    >>> client = PlantDBClient("http://localhost:5000")
-    >>> uploader = DataUploader(client, queue_size=10)
-    >>> # Generate random RGB data (values from 0-255)
-    >>> rgb_data = np.random.randint(0, 256, (200, 150, 3), dtype=np.uint8)
-    >>> metadata = {'description': 'Random RGB test image', 'author': 'John Doe'}
-    >>> data_item = DataItem(rgb_data, metadata)
-    >>> uploader.upload("scan_001", "images", data_item)
-    """
-
-    def __init__(self, db_client: PlantDBClient, queue_size: int):
-        """Initialize the DataUploader with a database client and queue size.
-
-        Parameters
-        ----------
-        db_client : plantdb.client.plantdb_client.PlantDBClient
-            Client for communicating with the PlantDB database
-        queue_size : int
-            Maximum number of concurrent upload jobs
-        """
-        self.db_client = db_client
-        self.jobs: set[Future] = set()  # Track active upload jobs
-        self.pool = ThreadPoolExecutor(max_workers=4, thread_name_prefix=__name__)
-        self.queue_size = queue_size
-        # Ensure thread pool is properly shut down when object is garbage collected
-        finalize(self, self.pool.shutdown, wait=True, cancel_futures=True)
-
-    def _upload(self, scan_id: str, fileset: str, data: DataItem):
-        """Internal method to perform the actual upload operation.
-
-        Parameters
-        ----------
-        scan_id : str
-            Identifier of the scan in the database
-        fileset : str
-            Identifier of the fileset within the scan
-        data : DataItem
-            Data item containing the image and metadata to upload
-
-        Notes
-        -----
-        This is a private method called by the public upload method.
-        """
-        # Create a BytesIO buffer from the image data
-        buffer = BytesIO(data.image)
-        buffer.seek(0)  # Reset buffer position to start
-        try:
-            # Upload the file to the database with metadata
-            response = self.db_client.create_file(
-                buffer, file_id=f"{data.metadata['camera_name']}-{data.idx:0>5}", ext=data.image_ext,
-                scan_id=scan_id, fileset_id=fileset, metadata=data.metadata
-            )
-        except Exception as e:
-            # Log any exceptions that occur during upload
-            traceback.print_exception(e)
-        return
-
-    def upload(self, scan_id: str, fileset: str, data: DataItem):
-        """Upload data file to specified fileset of scan_id in a plantdb instance.
-
-        This method queues an upload job to the thread pool. If the queue is full,
-        it blocks until a slot becomes available.
-
-        Parameters
-        ----------
-        scan_id : str
-            Identifier of the scan in the database
-        fileset : str
-            Identifier of the fileset within the scan
-        data : DataItem
-            Data item containing the image and metadata to upload
-
-        Notes
-        -----
-        This method may block indefinitely if the upload queue is full and
-        no upload jobs are completing.
-        """
-        # Wait if the number of jobs submitted is greater than queue_size
-        if len(self.jobs) >= self.queue_size:
-            wait(self.jobs, return_when=FIRST_COMPLETED)  # blocking
-
-        # Submit the upload job to the thread pool
-        future_: Future = self.pool.submit(self._upload, scan_id, fileset, data)
-        self.jobs.add(future_)  # Track the job
-        future_.add_done_callback(self.jobs.remove)  # Remove job when done
-
-
 @QmlElement
 @QmlUncreatable("Scanner cannot be created from QML")
 class Scanner(QObject):
-    """Main controller for the plant imaging scanner system.
+    """Main controller bridge for the plant imaging scanner system.
 
-    This class coordinates the scanning process, including CNC movement control,
-    camera management, image capture, and data upload. It integrates with QML
-    for GUI applications and provides signals for progress tracking.
+    This class owns the device state and delegates actual scanning work to
+    :class:`Scan` / :class:`TimeLapse` / :class:`PowerManager`. It exposes the
+    QML/RPC surface: camera management, CNC state, progress, path info and the
+    active timelapse.
 
     Attributes
     ----------
     progressChanged : Signal(int)
-        Signal emitted when scan progress changes
+        Signal emitted when the per-position scan progress changes.
     maxProgressChanged : Signal(int)
-        Signal emitted when maximum progress value changes
+        Signal emitted when maximum per-position progress changes.
     readyToScanChanged : Signal(bool)
-        Signal emitted when scanner ready state changes
+        Signal emitted when scanner ready state changes.
     cameraNamesChanged : Signal(list)
-        Signal emitted when the list of camera names changes
+        Signal emitted when the list of camera names changes.
+    timelapseChanged : Signal(QObject)
+        Signal emitted when the active timelapse object is set.
+    timelapseProgressChanged : Signal(int, int)
+        Schedule-level progress (current scan index, total scans).
+    timelapseStateChanged : Signal(str)
+        Signal emitted when the timelapse state changes.
+    timelapseErrorOccurred : Signal(str)
+        Signal emitted when a timelapse scan fails.
+    timelapseFinished : Signal()
+        Signal emitted when the active timelapse reaches a terminal state.
+
     config : dict
-        Configuration dictionary for the scan
+        Configuration dictionary for the scan.
     cnc : CNC or DummyCNC
-        CNC controller for hardware movement
+        CNC controller for hardware movement.
     cameras : list[PiCameraComm]
-        List of connected cameras
+        List of connected cameras.
     db_url : str or None
-        URL of the PlantDB database
+        URL of the PlantDB database.
     scan_path : Path or None
-        Path to follow during scanning
+        Path to follow during scanning.
     db_client : PlantDBClient or None
-        Client for communicating with the PlantDB database
-    uploader : DataUploader or None
-        Data uploader for sending images to the database
+        Client for communicating with the PlantDB database.
     fileset : str
-        Name of the fileset to store images in
+        Name of the fileset to store images in.
     scan_id : str
-        Identifier for the current scan
-
-    Notes
-    -----
-    - Automatically falls back to DummyCNC if hardware connection fails
-    - Requires configuration, database connection, and at least one camera to scan
-    - Integrates with QML through signals and properties
-
-    Examples
-    --------
-    >>> from plantimager.controller.scanner.scanner import Scanner
-    >>> from plantimager.controller.camera.camera import PiCameraComm
-    >>> camera = PiCameraComm()
-    >>> scanner = Scanner()
-    >>> scanner.set_db_url("http://localhost:5000")
-    >>> scanner.add_camera(camera)
-    >>> scanner.configure_scan(config_dict)
-    >>> scanner.set_scan_id("plant_scan_001")
-    >>> scanner.scan()
+        Identifier for the current scan.
+    power_manager : PowerManager
+        The single shared power manager.
+    timelapse : TimeLapse or None
+        The active timelapse job, or None when idle.
     """
+
     progressChanged = Signal(int)
     maxProgressChanged = Signal(int)
     readyToScanChanged = Signal(bool)
@@ -248,6 +131,13 @@ class Scanner(QObject):
     scanInProgressChanged = Signal(bool)
     scannerWorkingChanged = Signal(bool)
     pathInfoChanged = Signal(str)
+    # --- timelapse / power bridge signals ---
+    timelapseChanged = Signal(QObject)
+    timelapseProgressChanged = Signal(int, int)
+    timelapseStateChanged = Signal(str)
+    timelapseErrorOccurred = Signal(str)
+    timelapseFinished = Signal()
+    powerModeChanged = Signal(str)
 
     def __init__(self):
         """Initialize the Scanner with default settings.
@@ -255,7 +145,8 @@ class Scanner(QObject):
         Notes
         -----
         Attempts to connect to a CNC controller and falls back to a dummy
-        controller if the connection fails.
+        controller if the connection fails. A single shared :class:`PowerManager`
+        is created for GPIO power and warm-up handling.
         """
         super().__init__()
         self.config = {}  # Configuration dictionary
@@ -274,13 +165,12 @@ class Scanner(QObject):
         self.db_url = None  # Database URL
         self.scan_path: Path | None = None  # Path to follow during scanning
 
-        # Progress tracking
+        # Per-position progress of the currently running Scan
         self._progress = 0  # Current progress
         self._max_progress = 0  # Maximum progress value
 
-        # Database and upload components
+        # Database components
         self.db_client: PlantDBClient | None = None  # Database client
-        self.uploader: DataUploader | None = None  # Data uploader
         self.fileset = "images"  # Default fileset name
         self._api_token = ""
 
@@ -289,6 +179,17 @@ class Scanner(QObject):
         self._cnc_connection_timer.timeout.connect(self._try_connect_cnc)
         if isinstance(self.cnc, DummyCNC): self._cnc_connection_timer.start()
 
+        # Timelapse / power management
+        self.timelapse: TimeLapse | None = None
+        self._watched_scan: Scan | None = None
+        self.power_manager = PowerManager(warmup_period=30.0, parent=self)
+        self.power_manager.modeChanged.connect(self.powerModeChanged)
+        self.power_manager.cnc_ready.connect(self._on_power_cnc_ready)
+        self._resume_timelapse()
+
+    # ------------------------------------------------------------------
+    # CNC connection
+    # ------------------------------------------------------------------
     @Slot()
     def _try_connect_cnc(self):
         if isinstance(self.cnc, DummyCNC):
@@ -307,16 +208,29 @@ class Scanner(QObject):
         """Get the type of the CNC controller."""
         return "DummyCNC" if isinstance(self.cnc, DummyCNC) else "GRBL CNC"
 
+    @Slot(object)
+    def _on_power_cnc_ready(self, cnc):
+        """PowerManager connected a real CNC; keep a reference if we only had dummy."""
+        if isinstance(self.cnc, DummyCNC):
+            self.cnc = cnc
+            self.cncTypeChanged.emit(self.cnc_type)
+
+    # ------------------------------------------------------------------
+    # Working / ready state
+    # ------------------------------------------------------------------
     @Property(bool, notify=scanInProgressChanged)
     def scan_in_progress(self) -> bool:
-        """Check if the scanner is currently scanning."""
+        """Check if a single scan (``run_scan``) is currently running."""
         return self._scan_in_progress
 
     @Property(bool, notify=scannerWorkingChanged)
     def scanner_working(self) -> bool:
-        """Check if the scanner is currently working."""
+        """Check if the scanner is currently working (scan or manual movement)."""
         return self._scanner_working or self._scan_in_progress
 
+    # ------------------------------------------------------------------
+    # Camera management
+    # ------------------------------------------------------------------
     @Slot(QObject)
     def add_camera(self, camera: PiCameraComm):
         """Add a camera to the scanner.
@@ -324,7 +238,7 @@ class Scanner(QObject):
         Parameters
         ----------
         camera : PiCameraComm
-            Camera communication object to add
+            Camera communication object to add.
 
         Notes
         -----
@@ -344,7 +258,7 @@ class Scanner(QObject):
         Parameters
         ----------
         camera : PiCameraComm
-            Camera communication object to remove
+            Camera communication object to remove.
 
         Notes
         -----
@@ -353,7 +267,7 @@ class Scanner(QObject):
         Raises
         ------
         ValueError
-            If the camera is not in the list of cameras
+            If the camera is not in the list of cameras.
         """
         self.cameras.remove(camera)  # Remove camera from list
         self.cameraNamesChanged.emit(self.camera_names)  # Update camera names
@@ -361,19 +275,12 @@ class Scanner(QObject):
 
     @Property(list, notify=cameraNamesChanged)
     def camera_names(self) -> list[str]:
-        """Get the list of camera names.
-
-        Returns
-        -------
-        list[str]
-            List of names of connected cameras
-
-        Notes
-        -----
-        This property is exposed to QML and notifies via cameraNamesChanged signal.
-        """
+        """Get the list of camera names."""
         return [cam.name for cam in self.cameras]  # Extract names from camera objects
 
+    # ------------------------------------------------------------------
+    # Database configuration
+    # ------------------------------------------------------------------
     @Slot(str)
     def set_db_url(self, url: str):
         """Set the URL of the database to connect to.
@@ -381,16 +288,11 @@ class Scanner(QObject):
         Parameters
         ----------
         url : str
-            URL of the PlantDB database
+            URL of the PlantDB database.
 
         Notes
         -----
-        Creates a new PlantDBClient and DataUploader if the URL changes.
-        Emits readyToScanChanged signal if the URL changes.
-
-        Examples
-        --------
-        >>> scanner.set_db_url("http://localhost:5000")
+        Creates a new PlantDBClient and emits readyToScanChanged on change.
         """
         if self.db_url != url:  # Only update if URL has changed
             self.db_url = url  # Set new URL
@@ -399,39 +301,19 @@ class Scanner(QObject):
                 self.db_client = PlantDBClient(self.db_url, api_token=self._api_token)  # Create new client
             else:
                 self.db_client = PlantDBClient(self.db_url)
-            self.uploader = DataUploader(self.db_client, 10)  # Create new uploader
             self.readyToScanChanged.emit(self.ready_to_scan)  # Update ready state
 
-    @Property(int, notify=progressChanged)
-    def progress(self) -> int:
-        """Get the current scan progress.
+    def set_api_token(self, token: str):
+        """Set the API token and re-create the PlantDBClient to access the plantdb server."""
+        self._api_token = token
+        if self.db_client:
+            logger.debug("Initializing PlantDBClient with API token...")
+            self.db_client = PlantDBClient(self.db_client.base_url, api_token=self._api_token)
+            logger.debug("Done.")
 
-        Returns
-        -------
-        int
-            Current progress value
-
-        Notes
-        -----
-        This property is exposed to QML and notifies via progressChanged signal.
-        """
-        return self._progress
-
-    @Property(int, notify=maxProgressChanged)
-    def max_progress(self) -> int:
-        """Get the maximum scan progress value.
-
-        Returns
-        -------
-        int
-            Maximum progress value
-
-        Notes
-        -----
-        This property is exposed to QML and notifies via maxProgressChanged signal.
-        """
-        return self._max_progress
-
+    # ------------------------------------------------------------------
+    # Configuration
+    # ------------------------------------------------------------------
     def configure_scan(self, config: dict):
         """Configure the scan from a configuration dictionary.
 
@@ -445,38 +327,11 @@ class Scanner(QObject):
         config : dict
             Configuration dictionary with the following structure:
             {
-                "ScanPath": {
-                    "class_name": str,  # Name of the path class
-                    "kwargs": dict  # Arguments for path constructor
-                },
-                "Metadata": {
-                    "object": dict,  # Biological metadata
-                    "hardware": dict  # Hardware metadata
-                },
+                "ScanPath": {"class_name": str, "kwargs": dict},
+                "Metadata": {"object": dict, "hardware": dict},
                 # Camera configurations (camera name as key)
-                "camera_name": {
-                    "offset": dict,  # Camera position offset
-                    # Other camera parameters
-                }
+                "camera_name": {"offset": dict, ...}
             }
-
-        Notes
-        -----
-        - Dynamically imports and instantiates the path class
-        - Updates the maximum progress based on path length
-        - Emits maxProgressChanged signal
-
-        Examples
-        --------
-        >>> config = {
-        ...     "ScanPath": {"class_name": "CirclePath", "kwargs": {"radius": 100}},
-        ...     "Metadata": {
-        ...         "object": {"species": "Arabidopsis thaliana"},
-        ...         "hardware": {"scanner_version": "1.0"}
-        ...     },
-        ...     "camera1": {"offset": {"x": 0, "y": 0, "z": 0}}
-        ... }
-        >>> scanner.configure_scan(config)
         """
         self.config = config  # Store the configuration
 
@@ -490,10 +345,6 @@ class Scanner(QObject):
         self._max_progress = len(self.scan_path)
         self.maxProgressChanged.emit(self._max_progress)
 
-        # Store metadata for the scan
-        self.dataset_metadata = config["Metadata"]["object"]  # Biological metadata
-        self.hw_metadata = config["Metadata"]["hardware"]  # Hardware metadata
-
         # Configure cameras
         self._configure_cameras(self.cameras)
 
@@ -506,72 +357,254 @@ class Scanner(QObject):
                 camera.encoding = self.config[camera.name]["encoding"]
                 camera.config = self.config[camera.name]["config"]
 
+    def set_scan_id(self, scan_id: str):
+        """Set the identifier for the scan dataset.
+
+        Parameters
+        ----------
+        scan_id : str
+            Unique identifier for the scan in the database.
+        """
+        self.scan_id = scan_id  # Store the scan ID
+
     @Property(bool, notify=readyToScanChanged)
     def ready_to_scan(self) -> bool:
         """Check if the scanner is ready to perform a scan.
 
-        Returns
-        -------
-        bool
-            True if all required components are set up, False otherwise
-
-        Notes
-        -----
-        This property is exposed to QML and notifies via readyToScanChanged signal.
-
-        The scanner is ready when all of the following are available:
-        - CNC controller
-        - Scan path
-        - At least one camera
-        - Database uploader
-        - Database client
-        - Scan ID
-        - Fileset name
+        The scanner is ready when the required components are available and no
+        scan is in progress.
         """
-        # Check if all required components are available
         if (self.cnc and self.scan_path and self.cameras and
-                self.uploader and self.db_client and
+                self.db_client and
                 hasattr(self, 'scan_id') and self.scan_id and self.fileset and
                 not self._scan_in_progress and not self._scanner_working
         ):
             return True
         return False
 
+    # ------------------------------------------------------------------
+    # Per-position progress (bridged to the active Scan)
+    # ------------------------------------------------------------------
+    @Property(int, notify=progressChanged)
+    def progress(self) -> int:
+        """Get the current per-position scan progress."""
+        return self._progress
+
+    @Property(int, notify=maxProgressChanged)
+    def max_progress(self) -> int:
+        """Get the maximum per-position scan progress value."""
+        return self._max_progress
+
+    def _bridge_scan_signals(self, scan: Scan):
+        """Forward a running Scan's per-position progress to the Scanner surface."""
+        prev = self._watched_scan
+        if prev is not None and prev is not scan:
+            try:
+                prev.progressChanged.disconnect(self.progressChanged)
+                prev.maxProgressChanged.disconnect(self.maxProgressChanged)
+            except (RuntimeError, TypeError):
+                pass
+        self._watched_scan = scan
+        scan.progressChanged.connect(self.progressChanged)
+        scan.maxProgressChanged.connect(self.maxProgressChanged)
+
+    # ------------------------------------------------------------------
+    # Single-scan execution (bridge for the legacy `run_scan` RPC)
+    # ------------------------------------------------------------------
+    def run_scan(self) -> None:
+        """Execute a single scanning operation by delegating to a :class:`Scan`.
+
+        This preserves the legacy single-scan semantics: a custom dataset id
+        (via :meth:`set_scan_id`) and a synchronous, blocking run whose
+        per-position progress is exposed through ``progress``/``max_progress``.
+
+        Raises
+        ------
+        RuntimeError
+            If any required component is missing.
+        """
+        self.scan()
+
+    def scan(self) -> None:
+        """Delegate a single scan to :class:`Scan` (thin bridge).
+
+        Validates prerequisites, builds a :class:`Scan` with the current
+        configuration and dataset id, bridges its per-position progress and
+        runs it synchronously on the calling thread.
+
+        Raises
+        ------
+        RuntimeError
+            If any required component is missing.
+        """
+        if not self.config: raise RuntimeError("Config not set for scan")
+        if not self.scan_path: raise RuntimeError("Path not set for scan")
+        if not self.db_client: raise RuntimeError("DB client not set for scan")
+        if not self.scan_id: raise RuntimeError("Scan id not set for scan")
+        if not self.cameras: raise RuntimeError("No Cameras connected")
+
+        self._scan_in_progress = True
+        self.scanInProgressChanged.emit(self.scan_in_progress)
+        self._scanner_working = True
+        self.scannerWorkingChanged.emit(self.scanner_working)
+
+        scan = Scan(self.cnc, self.db_client, self.cameras, self.scan_path,
+                    self.scan_id, self.config, parent=self)
+        self._bridge_scan_signals(scan)
+        try:
+            scan.scan()
+        finally:
+            self._scan_in_progress = False
+            self._scanner_working = False
+            self.scanInProgressChanged.emit(self.scan_in_progress)
+            self.scannerWorkingChanged.emit(self.scanner_working)
+            logger.info("Scan completed")
+
+    # ------------------------------------------------------------------
+    # Timelapse management
+    # ------------------------------------------------------------------
+    def start_timelapse(self, config: dict) -> str:
+        """Create and start a new :class:`TimeLapse` and return its id.
+
+        Parameters
+        ----------
+        config : dict
+            Configuration dictionary, including a ``"timelapse"`` sub-dict with
+            ``mode`` (``interval``/``fixed_times``/``one_shot``) and scheduling
+            parameters plus ``ScanPath``/``Metadata``/camera settings.
+
+        Returns
+        -------
+        str
+            The unique id of the created timelapse.
+
+        Raises
+        ------
+        RuntimeError
+            If a timelapse is already running (``SCHEDULED`` or ``RUNNING``).
+        """
+        if self.timelapse is not None and self.timelapse.state in (
+                TimeLapseState.SCHEDULED, TimeLapseState.RUNNING):
+            raise RuntimeError("A timelapse is already running")
+        name = f"tl_{datetime.datetime.now(timezone.utc):%Y_%m_%d_%H%M%S}"
+        tl = TimeLapse(
+            cnc=self.cnc,
+            db_url=self.db_url,
+            cameras=self.cameras,
+            path=self.scan_path,
+            timelapse_name=name,
+            config=config,
+            power_manager=self.power_manager,
+            parent=self,
+        )
+        # Reuse the single database connection instead of re-deriving it.
+        if self.db_client is not None:
+            tl.db_client = self.db_client
+        self._wire_timelapse(tl)
+        self.timelapse = tl
+        self.timelapseChanged.emit(tl)
+        return name
+
+    def _wire_timelapse(self, tl: TimeLapse):
+        """Forward a TimeLapse's signals to the Scanner bridge surface."""
+        tl.stateChanged.connect(self.timelapseStateChanged)
+        tl.errorOccurred.connect(self.timelapseErrorOccurred)
+        tl.scanFinished.connect(self._on_timelapse_finished)
+        tl.progressChanged.connect(self._on_timelapse_progress)
+        tl.scanCreated.connect(self._bridge_scan_signals)
+
+    def get_active_timelapse(self) -> dict | None:
+        """Return a serialisable snapshot of the active timelapse, or None."""
+        if self.timelapse is None:
+            return None
+        try:
+            store = TimelapseStore.from_timelapse(self.timelapse)
+            return store._as_serialisable_dict()
+        except Exception as exc:
+            logger.error(f"Failed to serialise active timelapse: {exc}")
+            return None
+
+    def cancel_timelapse(self) -> None:
+        """Cancel the active timelapse.
+
+        Raises
+        ------
+        RuntimeError
+            If no timelapse is active.
+        """
+        if self.timelapse is None:
+            raise RuntimeError("No active timelapse")
+        self.timelapse.cancel()
+
+    def preview_timelapse(self, config: dict) -> dict:
+        """Return the computed schedule for a config, without starting it."""
+        # Reuse TimeLapse's schedule computation by building a throwaway instance
+        # is heavy; instead expose the deterministic schedule via the store shape.
+        from plantimager.controller.scanner.timelapse import TimeLapse as _TL
+        probe = _TL(cnc=self.cnc, db_url=self.db_url, cameras=self.cameras,
+                    path=self.scan_path, timelapse_name="preview", config=config,
+                    power_manager=self.power_manager, parent=self)
+        return {
+            "mode": probe.mode.value,
+            "schedule_times": [dt.isoformat() for dt in probe.schedule_times],
+            "n_scans": probe.n_scans,
+        }
+
+    def _on_timelapse_progress(self, current: int, total: int):
+        """Forward the schedule-level (scan index / total) progress."""
+        self.timelapseProgressChanged.emit(current, total)
+
+    def _on_timelapse_finished(self):
+        """A timelapse reached a terminal state; notify the bridge."""
+        self.timelapseFinished.emit()
+
+    def _on_timelapse_scan_created(self, scan: Scan):
+        """Bridge the per-position progress of a timelapse-driven Scan."""
+        self._bridge_scan_signals(scan)
+
+    def _resume_timelapse(self):
+        """Best-effort startup resume of a previously persisted timelapse.
+
+        A full rehydrate (rebuilding a :class:`TimeLapse` from its persisted
+        schedule/config) is follow-up work. For now, a persisted **non-terminal**
+        job is logged so the operator can decide: a stale ``RUNNING`` file is
+        treated as failed per the resumption policy, and the next slot is
+        evaluated rather than blocking a fresh start.
+        """
+        try:
+            store = TimelapseStore.new_store_from_last()
+        except Exception as exc:
+            logger.warning(f"Could not read persisted timelapse for resume: {exc}")
+            return
+        if store is None:
+            return
+        logger.info(
+            f"Found persisted timelapse '{store.timelapse_id}' in state "
+            f"'{store.state}' — automatic resume construction is not yet wired "
+            f"(see dev_plan/timelapse_next.md); a stale RUNNING is treated as FAILED."
+        )
+
+    # ------------------------------------------------------------------
+    # Manual movement (CNC panel)
+    # ------------------------------------------------------------------
     def get_position(self) -> Pose:
-        """Get the current position of the scanner.
+        """Get the current position of the scanner as a 5D pose.
 
         Returns
         -------
         Pose
-            Current position as a 5D pose (x, y, z, pan, tilt)
-
-        Notes
-        -----
-        The Z and tilt values are always set to 0 as the scanner only
-        supports 3D movement (X, Y, and pan rotation).
+            Current position; z is pan, tilt is always 0.
         """
-        # Get raw position from CNC controller
         x, y, z = self.cnc.get_position()
-        # Convert to Pose object (z is pan, tilt is always 0)
         pose = Pose(x, y, 0, pan=z, tilt=0)
         return pose
 
     def set_position(self, pose: Pose) -> None:
         """Set the position of the scanner from a 5D Pose.
 
-        Parameters
-        ----------
-        pose : Pose
-            Target position as a 5D pose (x, y, z, pan, tilt)
-
         Notes
         -----
         Only X, Y, and pan values are used; Z and tilt are ignored.
-
-        Examples
-        --------
-        >>> pose = Pose(100, 100, 0, pan=45, tilt=0)
-        >>> scanner.set_position(pose)
         """
         logger.info(f"Moving arm to {pose}")
         self._scanner_working = True
@@ -583,233 +616,20 @@ class Scanner(QObject):
         self._scanner_working = False
         self.scannerWorkingChanged.emit(self.scanner_working)
 
-    def set_scan_id(self, scan_id: str):
-        """Set the identifier for the scan dataset.
-
-        Parameters
-        ----------
-        scan_id : str
-            Unique identifier for the scan in the database
-
-        Notes
-        -----
-        This ID is used when creating the scan in the database and
-        when uploading files.
-
-        Examples
-        --------
-        >>> scanner.set_scan_id("arabidopsis_001")
-        """
-        self.scan_id = scan_id  # Store the scan ID
-
-    def grab(self, idx: int, metadata: dict, camera: PiCameraComm) -> DataItem:
-        """Capture an image from a camera and upload it to the database.
-
-        This method captures an image from the specified camera, adds metadata,
-        creates a DataItem, and uploads it to the database.
-
-        Parameters
-        ----------
-        idx : int
-            Identifier for the data item to create
-        metadata : dict
-            Dictionary of metadata to associate with the image
-        camera : PiCameraComm
-            Camera object to use for capturing the image
-
-        Returns
-        -------
-        DataItem
-            The created data item containing the image and metadata
-
-        Notes
-        -----
-        The method performs these steps:
-        1. Capture image from camera
-        2. Update metadata with image information
-        3. Create a DataItem
-        4. Upload the data to the database
-
-        Examples
-        --------
-        >>> metadata = {"camera_name": "cam1", "approximate_pose": [100, 100, 0, 45, 0]}
-        >>> data_item = scanner.grab(1, metadata, camera)
-        """
-        # Capture image from camera
-        image_future = camera.getImage(lores=False)
-        buffer, buffer_info = image_future.result()  # Wait for image capture to complete
-
-        # Update metadata with image information from camera
-        metadata.update(buffer_info)
-
-        # Create data item with image and metadata
-        data = DataItem(idx, buffer, image_ext=buffer_info["format"], metadata=metadata)
-
-        # Upload data to database
-        self.uploader.upload(scan_id=self.scan_id, fileset=self.fileset, data=data)
-
-        return data
-
-    def get_target_pose(self, x: PathElement) -> Pose:
+    def get_target_pose(self, x) -> Pose:
         """Calculate the target pose from a path element.
 
-        This method creates a target pose by combining the current position
-        with the specified values from the path element. For any attribute
-        not specified in the path element, the current position value is used.
-
-        Parameters
-        ----------
-        x : PathElement
-            Path element containing the desired position attributes
-
-        Returns
-        -------
-        Pose
-            The calculated target pose
-
-        Notes
-        -----
-        If a coordinate in the path element is None, the current position
-        value for that coordinate is used instead.
+        For any attribute not specified in the path element, the current
+        position value is used.
         """
-        # Get current position
         pos = self.get_position()
-        # Create new pose
         target_pose = Pose()
-
-        # For each attribute (x, y, z, pan, tilt)
         for attr in pos.attributes():
             if getattr(x, attr) is None:
-                # If path element doesn't specify this attribute, use current position
                 setattr(target_pose, attr, getattr(pos, attr))
             else:
-                # Otherwise use the value from the path element
                 setattr(target_pose, attr, getattr(x, attr))
-
         return target_pose
-
-    def scan(self) -> None:
-        """Execute the complete scanning process.
-
-        This method performs a full scan by:
-        1. Validating that all required components are available
-        2. Creating the scan and fileset in the database
-        3. Following the scan path and capturing images at each position
-        4. Uploading all captured images with metadata
-
-        Raises
-        ------
-        RuntimeError
-            If any required component is missing
-
-        Notes
-        -----
-        - Validates all prerequisites before starting
-        - Creates scan and fileset in the database
-        - Follows the scan path, moving the CNC to each position
-        - Captures images from all cameras at each position
-        - Uploads images with position and camera metadata
-        - Uses a thread pool for parallel image capture
-        - Updates progress throughout the scan
-
-        Examples
-        --------
-        >>> scanner.set_db_url("http://localhost:5000")
-        >>> scanner.configure_scan(config_dict)
-        >>> scanner.set_scan_id("plant_scan_001")
-        >>> scanner.scan()  # Execute the scan
-        """
-        # Validate all required components are available
-        if not self.config: raise RuntimeError("Config not set for scan")
-        if not self.scan_path: raise RuntimeError("Path not set for scan")
-        if not self.db_url: raise RuntimeError("DB url not set for scan")
-        if not self.db_client: raise RuntimeError("DB client not set for scan")
-        if not self.uploader: raise RuntimeError("Uploader not set for scan")
-        if not self.scan_id: raise RuntimeError("Scan id not set for scan")
-        if not self.cameras: raise RuntimeError("No Cameras connected")
-
-        # Update metadata if using dummy CNC
-        if isinstance(self.cnc, DummyCNC):
-            self.hw_metadata["name"] = "DummyCNC"
-
-        self._scan_in_progress = True
-        self.scanInProgressChanged.emit(self.scan_in_progress)
-
-        # Create the scan on the remote database
-        try:
-            # Combine dataset and hardware metadata
-            self.db_client.create_scan(self.scan_id, metadata=self.config)
-        except RequestException as e:
-            logger.error(f"{e}")
-        except ValueError as e:
-            logger.error(f"{e}")
-            logger.error(f"Scan {self.scan_id} already exists in plantdb")
-
-        # Create the image fileset on the remote database
-        try:
-            self.db_client.create_fileset(self.fileset, self.scan_id)
-        except RequestException as e:
-            logger.error(f"{e}")
-        except ValueError as e:
-            logger.error(f"{e}")
-            logger.error(f"Fileset {self.fileset} already exists for scan {self.scan_id}")
-
-        # Execute the scan using a thread pool for parallel image capture
-        with ThreadPoolExecutor(max_workers=4) as executor:
-            shot_id = 0  # Initialize shot counter
-            self._progress = 0  # Reset progress
-
-            # Follow each point in the scan path
-            for x in self.scan_path:
-                # Update progress
-                self._progress += 1
-                self.progressChanged.emit(self._progress)
-
-                # Calculate and move to the target position
-                pose = self.get_target_pose(x)
-                self.set_position(pose)
-
-                # Get actual arm position after movement
-                arm_pose = self.get_position()
-                jobs = []  # List to track image capture jobs
-
-                # Capture images from each camera
-                for camera in self.cameras:
-                    name = camera.name
-                    # Skip cameras not in config
-                    if name not in self.config:
-                        logger.debug(f"Camera {name} not in config, skipping")
-                        continue
-
-                    # Get camera parameters and calculate camera position
-                    camera_param = self.config[name]
-                    camera_offset = Pose(**camera_param["offset"])
-                    camera_pose = arm_pose + camera_offset  # Apply offset to arm position
-
-                    # Prepare metadata for this shot
-                    metadata = {
-                        **camera_param,  # Include all camera parameters
-                        "camera_name": name,
-                        "approximate_pose": [camera_pose.x, camera_pose.y, camera_pose.z, camera_pose.pan,
-                                             camera_pose.tilt],  # Camera position
-                        "shot_id": shot_id,  # Unique ID for this shot
-                    }
-
-                    # Submit image capture job to thread pool
-                    jobs.append(executor.submit(self.grab, shot_id, metadata, camera))
-
-                shot_id += 1
-                # Wait for all image captures to complete before moving to next position
-                wait(jobs, return_when=ALL_COMPLETED)
-
-        # Move the arm back close to origin
-        # self.cnc.moveto(10, 10,-10)
-        time.sleep(1)
-        # self.cnc.home()
-        self.move_arm(20, 20, 45)
-        self._scan_in_progress = False
-        self.scanInProgressChanged.emit(self.scan_in_progress)
-        logger.info(f"Scan completed")  # Log completion
 
     @Slot(float, float, float)
     def move_arm(self, x: float, y: float, z: float):
@@ -818,7 +638,7 @@ class Scanner(QObject):
 
     @Slot()
     def move_to_center(self):
-        """Move the arm to the center"""
+        """Move the arm to the center."""
         if self.scan_path and isinstance(self.scan_path, Circle):
             self.move_arm(self.scan_path.center_x, self.scan_path.center_y, 0)
         elif self.scan_path and isinstance(self.scan_path, CalibrationPath2):
@@ -850,12 +670,3 @@ class Scanner(QObject):
         if isinstance(self.scan_path, CalibrationPath2):
             return f"{type(self.scan_path).__name__}: center {self.scan_path.center_x:g}, {self.scan_path.center_y:g}, radius {self.scan_path.radius:g} - {len(self.scan_path)} steps"
         return f"{type(self.scan_path).__name__}: {len(self.scan_path)} steps"
-
-    def set_api_token(self, token: str):
-        """Set the API token and re-create the PlantDBClient to access the plantdb server."""
-        self._api_token = token
-        if self.db_client:
-            logger.debug("Initializing PlantDBClient with API token...")
-            self.db_client = PlantDBClient(self.db_client.base_url, api_token=self._api_token)
-            self.uploader.db_client = self.db_client
-            logger.debug("Done.")
