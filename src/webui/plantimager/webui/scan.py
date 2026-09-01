@@ -32,6 +32,9 @@ from dash import dcc
 from dash import get_asset_url
 from dash import html
 from dash.exceptions import PreventUpdate
+import requests
+
+from plantdb.client.rest_api.requests import request_api_token
 from plantdb.client.rest_api.urls import plantdb_url
 from plantdb.commons.auth.models import Permission
 
@@ -509,22 +512,32 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
                 "Not authenticated with plantdb.",
                 "Please log in before starting a scan.")
 
-    client, access_token, refresh_token = ensure_valid_token(url, port, prefix, ssl,
-                                                             access_token, refresh_token, username)
-    if client is None:
+    tokens = ensure_valid_token(url, port, prefix, ssl,
+                                access_token, refresh_token, username)
+    if tokens[0] is None or tokens[1] is None:
         return (access_token, refresh_token, None, scan_job_id,
                 "Failed to authenticate with plantdb.",
                 "The session tokens are invalid or expired. Please log out and log in again.")
+    access_token, refresh_token = tokens
 
     if not dataset_name:
         return (access_token, refresh_token, None, scan_job_id,
                 "No dataset name provided.",
                 "Please enter and validate a dataset name before starting a scan.")
 
-    api_token = client.create_api_token(
-        1800,
-        {dataset_name: (Permission.WRITE, Permission.CREATE, Permission.READ)}
-    )
+    try:
+        datasets = {
+            dataset_name: (
+                Permission.WRITE.value,
+                Permission.CREATE.value,
+                Permission.READ.value,
+            )
+        }
+        api_data = request_api_token(url, 1800, datasets, port=port, prefix=prefix, ssl=ssl,
+                                     session_token=access_token)
+        api_token = api_data.get("api_token") if isinstance(api_data, dict) else None
+    except requests.exceptions.RequestException:
+        api_token = None
     if not api_token:
         return (access_token, refresh_token, None, scan_job_id,
                 "Failed to create the API token for plantdb.",
