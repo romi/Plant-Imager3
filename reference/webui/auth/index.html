@@ -2838,12 +2838,12 @@ credentials (it only receives a scoped per-scan API token).</p>
 
 
 <a href="#plantimager.webui.auth.ensure_valid_token" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>ensure_valid_token(url, port, prefix, ssl, access_token, refresh_token, username)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>ensure_valid_token(url, port, prefix, ssl, access_token, refresh_token, username<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Return <code>(client, access_token, refresh_token)</code> with a valid access token.</p>
+        <p>Return <code>(access_token, refresh_token)</code> with a valid access token.</p>
 <p>The token pair is refreshed <strong>explicitly</strong> whenever the supplied access
 token is no longer accepted, so the resulting rotation is intentional and
 the caller can persist the new pair back to the Dash Stores.</p>
@@ -2956,23 +2956,6 @@ the caller can persist the new pair back to the Dash Stores.</p>
                 <em>required</em>
             </td>
           </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>username</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The logged-in username. Setting it prevents the implicit token
-refresh inside :meth:<code>PlantDBClient.validate_token</code>.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
       </tbody>
     </table>
 
@@ -2988,13 +2971,13 @@ refresh inside :meth:<code>PlantDBClient.validate_token</code>.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> or <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[None, None, None]</code>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> or <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[None, None]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p><code>(client, access_token, refresh_token)</code> where the returned tokens
-are guaranteed to be fresh and valid, or <code>(None, None, None)</code> if the
-session could not be restored (the user must log in again).</p>
+                <p><code>(access_token, refresh_token)</code> where the returned tokens are
+guaranteed to be fresh and valid, or <code>(None, None)</code> if the session
+could not be restored (the user must log in again).</p>
               </div>
             </td>
           </tr>
@@ -3004,12 +2987,7 @@ session could not be restored (the user must log in again).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/auth.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">17</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">18</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">19</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">20</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">24</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">25</span>
@@ -3045,9 +3023,36 @@ session could not be restored (the user must log in again).</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">55</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ensure_valid_token</span>(url: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>, ssl: <span style="color: #008000">bool</span>,
-                       access_token: <span style="color: #008000">str</span>, refresh_token: <span style="color: #008000">str</span>, username: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[PlantDBClient, <span style="color: #008000">str</span>, <span style="color: #008000">str</span>] <span style="color: #666">|</span> <span style="color: #008000">tuple</span>[<span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>]:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return ``(client, access_token, refresh_token)`` with a valid access token.</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">61</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">62</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">63</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">64</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">73</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">74</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">75</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">76</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">77</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">78</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">81</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">84</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ensure_valid_token</span>(url: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>, ssl: <span style="color: #008000">bool</span>,
+                       access_token: <span style="color: #008000">str</span>, refresh_token: <span style="color: #008000">str</span>,
+                       username: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>] <span style="color: #666">|</span> <span style="color: #008000">tuple</span>[<span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>]:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return ``(access_token, refresh_token)`` with a valid access token.</span>
 
 <span style="color: #BA2121; font-style: italic">    The token pair is refreshed **explicitly** whenever the supplied access</span>
 <span style="color: #BA2121; font-style: italic">    token is no longer accepted, so the resulting rotation is intentional and</span>
@@ -3067,26 +3072,46 @@ session could not be restored (the user must log in again).</p>
 <span style="color: #BA2121; font-style: italic">        The current PlantDB REST API access token.</span>
 <span style="color: #BA2121; font-style: italic">    refresh_token : str</span>
 <span style="color: #BA2121; font-style: italic">        The current PlantDB REST API refresh token.</span>
-<span style="color: #BA2121; font-style: italic">    username : str</span>
-<span style="color: #BA2121; font-style: italic">        The logged-in username. Setting it prevents the implicit token</span>
-<span style="color: #BA2121; font-style: italic">        refresh inside :meth:`PlantDBClient.validate_token`.</span>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
-<span style="color: #BA2121; font-style: italic">    tuple or tuple[None, None, None]</span>
-<span style="color: #BA2121; font-style: italic">        ``(client, access_token, refresh_token)`` where the returned tokens</span>
-<span style="color: #BA2121; font-style: italic">        are guaranteed to be fresh and valid, or ``(None, None, None)`` if the</span>
-<span style="color: #BA2121; font-style: italic">        session could not be restored (the user must log in again).</span>
+<span style="color: #BA2121; font-style: italic">    tuple or tuple[None, None]</span>
+<span style="color: #BA2121; font-style: italic">        ``(access_token, refresh_token)`` where the returned tokens are</span>
+<span style="color: #BA2121; font-style: italic">        guaranteed to be fresh and valid, or ``(None, None)`` if the session</span>
+<span style="color: #BA2121; font-style: italic">        could not be restored (the user must log in again).</span>
 <span style="color: #BA2121; font-style: italic">    """</span>
-    client <span style="color: #666">=</span> PlantDBClient(plantdb_url(url, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl))
-    client<span style="color: #666">.</span>_access_token <span style="color: #666">=</span> access_token
-    client<span style="color: #666">.</span>_refresh_token <span style="color: #666">=</span> refresh_token
-    <span style="color: #3D7B7B; font-style: italic"># Set the username so `validate_token` does not silently rotate the pair.</span>
-    client<span style="color: #666">.</span>_username <span style="color: #666">=</span> username
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> client<span style="color: #666">.</span>validate_token(access_token):
-        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> client<span style="color: #666">.</span>refresh_token():
-            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>
-    <span style="color: #008000; font-weight: bold">return</span> client, client<span style="color: #666">.</span>_access_token, client<span style="color: #666">.</span>_refresh_token
+    <span style="color: #3D7B7B; font-style: italic"># Try validating the current access token.</span>
+    <span style="color: #008000; font-weight: bold">try</span>:
+        data <span style="color: #666">=</span> request_token_validation(url, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl,
+                                        session_token<span style="color: #666">=</span>access_token)
+        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(data, <span style="color: #008000">dict</span>) <span style="color: #A2F; font-weight: bold">and</span> data<span style="color: #666">.</span>get(<span style="color: #BA2121">"user"</span>):
+            <span style="color: #008000; font-weight: bold">return</span> access_token, refresh_token
+    <span style="color: #008000; font-weight: bold">except</span> requests<span style="color: #666">.</span>exceptions<span style="color: #666">.</span>RequestException <span style="color: #008000; font-weight: bold">as</span> exc:
+        logger<span style="color: #666">.</span>info(
+            <span style="color: #BA2121">f"ensure_valid_token: access token validation failed for </span><span style="color: #A45A77; font-weight: bold">{</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">/</span><span style="color: #A45A77; font-weight: bold">{</span>prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> (user=</span><span style="color: #A45A77; font-weight: bold">{</span>username<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">): </span><span style="color: #A45A77; font-weight: bold">{</span>exc<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> — attempting refresh"</span>
+        )
+
+    <span style="color: #3D7B7B; font-style: italic"># Validation failed — try refreshing with the refresh token.</span>
+    <span style="color: #008000; font-weight: bold">try</span>:
+        refreshed <span style="color: #666">=</span> request_token_refresh(url, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl,
+                                          refresh_token<span style="color: #666">=</span>refresh_token)
+        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(refreshed, <span style="color: #008000">dict</span>):
+            new_access <span style="color: #666">=</span> refreshed<span style="color: #666">.</span>get(<span style="color: #BA2121">"access_token"</span>)
+            new_refresh <span style="color: #666">=</span> refreshed<span style="color: #666">.</span>get(<span style="color: #BA2121">"refresh_token"</span>)
+            <span style="color: #008000; font-weight: bold">if</span> new_access <span style="color: #A2F; font-weight: bold">and</span> new_refresh:
+                <span style="color: #008000; font-weight: bold">return</span> new_access, new_refresh
+            logger<span style="color: #666">.</span>info(
+                <span style="color: #BA2121">f"ensure_valid_token: token refresh returned incomplete data for </span><span style="color: #A45A77; font-weight: bold">{</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">/</span><span style="color: #A45A77; font-weight: bold">{</span>prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> (user=</span><span style="color: #A45A77; font-weight: bold">{</span>username<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">): </span><span style="color: #A45A77; font-weight: bold">{</span>refreshed<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>
+            )
+        <span style="color: #008000; font-weight: bold">else</span>:
+            logger<span style="color: #666">.</span>info(
+                <span style="color: #BA2121">f"ensure_valid_token: token refresh returned non-dict for </span><span style="color: #A45A77; font-weight: bold">{</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">/</span><span style="color: #A45A77; font-weight: bold">{</span>prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> (user=</span><span style="color: #A45A77; font-weight: bold">{</span>username<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">): </span><span style="color: #A45A77; font-weight: bold">{</span>refreshed<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121">"</span>
+            )
+    <span style="color: #008000; font-weight: bold">except</span> requests<span style="color: #666">.</span>exceptions<span style="color: #666">.</span>RequestException <span style="color: #008000; font-weight: bold">as</span> exc:
+        logger<span style="color: #666">.</span>info(
+            <span style="color: #BA2121">f"ensure_valid_token: token refresh failed for </span><span style="color: #A45A77; font-weight: bold">{</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">/</span><span style="color: #A45A77; font-weight: bold">{</span>prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> (user=</span><span style="color: #A45A77; font-weight: bold">{</span>username<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">): </span><span style="color: #A45A77; font-weight: bold">{</span>exc<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>
+        )
+    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #008000; font-weight: bold">None</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
