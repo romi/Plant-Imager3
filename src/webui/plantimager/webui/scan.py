@@ -32,11 +32,14 @@ from dash import dcc
 from dash import get_asset_url
 from dash import html
 from dash.exceptions import PreventUpdate
-from plantdb.client.plantdb_client import PlantDBClient
+import requests
+
+from plantdb.client.rest_api.requests import request_api_token
 from plantdb.client.rest_api.urls import plantdb_url
 from plantdb.commons.auth.models import Permission
 
 from plantimager.commons.RPC import NoResult
+from plantimager.webui.auth import ensure_valid_token
 from plantimager.webui.controller_proxy import RPCController
 from plantimager.webui.utils import config_upload
 
@@ -444,7 +447,11 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
 
 
 @callback(
-    Output('scan-response', 'children'),
+    Output('access-token', 'data', allow_duplicate=True),
+    Output('refresh-token', 'data', allow_duplicate=True),
+    Output('scan-api-token', 'data'),
+    Output('scan-job-id', 'data'),
+    Output('scan-response', 'children', allow_duplicate=True),
     Output('scan-output', 'children', allow_duplicate=True),
     Input('start-scan-button', 'n_clicks'),
     State('plantdb-host', 'data'),
@@ -453,6 +460,102 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     State('plantdb-ssl', 'data'),
     State('access-token', 'data'),
     State('refresh-token', 'data'),
+    State('logged-username', 'data'),
+    State('dataset-input-name', 'value'),
+    State('scan-job-id', 'data'),
+    prevent_initial_call=True,
+)
+def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: str, refresh_token: str,
+                 username: str, dataset_name: str, scan_job_id: int):
+    """Authenticate and create a scoped per-scan API token.
+
+    This runs in the main web UI process only. It makes the user token
+    refresh deliberate (persisting any rotated pair back to the Dash Stores)
+    and creates the short-lived API token that the scanner will use, so the
+    background scan process never receives the user credentials.
+
+    Parameters
+    ----------
+    _ : Any
+        Unused parameter (n_clicks from the button).
+    url : str
+        The hostname or IP address of the PlantDB REST API server.
+    port : str
+        The port number of the PlantDB REST API server.
+    prefix : str
+        The prefix of the PlantDB REST API server.
+    ssl : bool
+        Whether the PlantDB REST API server is using SSL.
+    access_token : str
+        The PlantDB REST API access token of the user.
+    refresh_token : str
+        The PlantDB REST API refresh token of the user.
+    username : str
+        The logged-in username.
+    dataset_name : str
+        The name of the dataset to create the scoped API token for.
+    scan_job_id : int
+        The current scan job identifier, used to trigger the background scan.
+
+    Returns
+    -------
+    tuple
+        ``(access_token, refresh_token, api_token, scan_job_id, response_msg, output_msg)``.
+        On success the first two are the fresh token pair, the API token is the
+        scoped token for the scan and the job id is incremented to trigger the
+        background scan, followed by a success status message. On failure the
+        tokens are unmodified, the API token ``None``, the job id unchanged and
+        the status messages describe what went wrong.
+    """
+    if not username:
+        return (access_token, refresh_token, None, scan_job_id,
+                "Not authenticated with plantdb.",
+                "Please log in before starting a scan.")
+
+    tokens = ensure_valid_token(url, port, prefix, ssl,
+                                access_token, refresh_token, username)
+    if tokens[0] is None or tokens[1] is None:
+        return (access_token, refresh_token, None, scan_job_id,
+                "Failed to authenticate with plantdb.",
+                "The session tokens are invalid or expired. Please log out and log in again.")
+    access_token, refresh_token = tokens
+
+    if not dataset_name:
+        return (access_token, refresh_token, None, scan_job_id,
+                "No dataset name provided.",
+                "Please enter and validate a dataset name before starting a scan.")
+
+    try:
+        datasets = {
+            dataset_name: (
+                Permission.WRITE.value,
+                Permission.CREATE.value,
+                Permission.READ.value,
+            )
+        }
+        api_data = request_api_token(url, 1800, datasets, port=port, prefix=prefix, ssl=ssl,
+                                     session_token=access_token)
+        api_token = api_data.get("api_token") if isinstance(api_data, dict) else None
+    except requests.exceptions.RequestException:
+        api_token = None
+    if not api_token:
+        return (access_token, refresh_token, None, scan_job_id,
+                "Failed to create the API token for plantdb.",
+                "Unable to create the scoped API token used by the scanner.")
+
+    return (access_token, refresh_token, api_token, (scan_job_id or 0) + 1,
+            "Scan ready to start", "API token created, starting scanner...")
+
+
+@callback(
+    Output('scan-response', 'children'),
+    Output('scan-output', 'children', allow_duplicate=True),
+    Input('scan-job-id', 'data'),
+    State('plantdb-host', 'data'),
+    State('plantdb-port', 'data'),
+    State('plantdb-prefix', 'data'),
+    State('plantdb-ssl', 'data'),
+    State('scan-api-token', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
     background=True,
@@ -471,14 +574,20 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
         Output('scan-progress', 'label'),
     ]
 )
-def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, access_token: str, refresh_token: str,
-             cfg: str, dataset_name: str):
+def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, ssl: bool,
+             api_token: str, cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
+
+    This runs in a separate background process and therefore never touches the
+    user's access/refresh tokens: it only uses the scoped API token prepared by
+    :func:`prepare_scan`.
 
     Parameters
     ----------
-    _ : Any
-        Unused parameter (n_clicks from the button).
+    set_progress : Callable
+        The progress callback provided by Dash.
+    scan_job_id : int
+        The scan job identifier that triggered this callback (unused).
     url : str
         The hostname or IP address of the PlantDB REST API server.
     port : str
@@ -487,10 +596,8 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
         The prefix of the PlantDB REST API server.
     ssl : bool
         Whether the PlantDB REST API server is using SSL.
-    access_token : str
-        The PlantDB REST API access token of the user.
-    refresh_token : str
-        The PlantDB REST API refresh token of the user.
+    api_token : str
+        The scoped API token granting access to the scan dataset.
     cfg : str
         The TOML configuration string for the scan.
     dataset_name : str
@@ -502,12 +609,10 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
         A tuple containing two status messages:
         - First message: Short status for the alert component
         - Second message: Detailed status for the output component
-
-    Raises
-    ------
-    RuntimeError
-        If the Raspberry Pi Controller is not initialized.
     """
+    if not api_token:
+        return "Failed to authenticate with plantdb.", "No API token available, please log in and retry."
+
     # Background callbacks run in a new process. We must re-init the ZMQ context and Controller proxy.
     ctx = zmq.Context()
     # Using the same URL as app.py
@@ -517,17 +622,6 @@ def run_scan(set_progress, _, url: str, port: str, prefix: str, ssl: bool, acces
     if isinstance(res, NoResult):
         return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
 
-    client = PlantDBClient(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
-    client._access_token = access_token
-    client._refresh_token = refresh_token
-    if not client.validate_token(access_token):
-        return "Failed to authenticate with plantdb.", "Failed to authenticate with plantdb."
-    api_token = client.create_api_token(
-        1800,
-        {dataset_name: (Permission.WRITE, Permission.CREATE, Permission.READ)}
-    )
-    if not api_token:
-        return "Failed to authenticate with plantdb.", "Failed to authenticate with plantdb and create the API token."
     res: None | NoResult = controller.set_api_token(api_token)
     if isinstance(res, NoResult):
         return "Failed to connect to set access token.", res.traceback
