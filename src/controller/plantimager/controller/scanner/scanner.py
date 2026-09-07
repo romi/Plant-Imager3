@@ -28,7 +28,7 @@ Usage Examples:
 >>> scanner = Scanner()
 >>> scanner.set_db_url("http://localhost:5000")
 >>> scanner.configure_scan(config_dict)  # Configure scan parameters
->>> scanner.set_scan_id("plant_scan_001")  # Set scan identifier
+>>> scanner.set_base_name("plant_scan_001")  # Set base name (scan or timelapse)
 >>> scanner.run_scan()  # Start a single scanning operation
 ```
 """
@@ -173,6 +173,8 @@ class Scanner(QObject):
         self.db_client: PlantDBClient | None = None  # Database client
         self.fileset = "images"  # Default fileset name
         self._api_token = ""
+        self.base_name: str = ""
+        self.scan_id: str = ""  # alias for bare-scan path (kept for compat)
 
         self._cnc_connection_timer = QTimer()
         self._cnc_connection_timer.setInterval(5000)
@@ -357,15 +359,17 @@ class Scanner(QObject):
                 camera.encoding = self.config[camera.name]["encoding"]
                 camera.config = self.config[camera.name]["config"]
 
-    def set_scan_id(self, scan_id: str):
-        """Set the identifier for the scan dataset.
+    def set_base_name(self, name: str):
+        """Set the base name — bare scan treats it as scan_id, timelapse treats it as timelapse_id.
 
         Parameters
         ----------
-        scan_id : str
-            Unique identifier for the scan in the database.
+        name : str
+            Base identifier (single PlantDB id namespace).
         """
-        self.scan_id = scan_id  # Store the scan ID
+        self.base_name = name.strip()  # Store the base name
+        # keep scan_id alias for internal bare-scan path
+        self.scan_id = self.base_name
 
     @Property(bool, notify=readyToScanChanged)
     def ready_to_scan(self) -> bool:
@@ -376,7 +380,7 @@ class Scanner(QObject):
         """
         if (self.cnc and self.scan_path and self.cameras and
                 self.db_client and
-                hasattr(self, 'scan_id') and self.scan_id and self.fileset and
+                hasattr(self, 'base_name') and self.base_name and self.fileset and
                 not self._scan_in_progress and not self._scanner_working
         ):
             return True
@@ -415,7 +419,7 @@ class Scanner(QObject):
         """Execute a single scanning operation by delegating to a :class:`Scan`.
 
         This preserves the legacy single-scan semantics: a custom dataset id
-        (via :meth:`set_scan_id`) and a synchronous, blocking run whose
+        (via :meth:`set_base_name`) and a synchronous, blocking run whose
         per-position progress is exposed through ``progress``/``max_progress``.
 
         Raises
@@ -440,7 +444,7 @@ class Scanner(QObject):
         if not self.config: raise RuntimeError("Config not set for scan")
         if not self.scan_path: raise RuntimeError("Path not set for scan")
         if not self.db_client: raise RuntimeError("DB client not set for scan")
-        if not self.scan_id: raise RuntimeError("Scan id not set for scan")
+        if not getattr(self, "base_name", ""): raise RuntimeError("Base name not set for scan — call set_base_name first")
         if not self.cameras: raise RuntimeError("No Cameras connected")
 
         self._scan_in_progress = True
@@ -449,7 +453,7 @@ class Scanner(QObject):
         self.scannerWorkingChanged.emit(self.scanner_working)
 
         scan = Scan(self.cnc, self.db_client, self.cameras, self.scan_path,
-                    self.scan_id, self.config, parent=self)
+                    self.base_name.strip(), self.config, parent=self)
         self._bridge_scan_signals(scan)
         try:
             scan.scan()
@@ -466,6 +470,10 @@ class Scanner(QObject):
     def start_timelapse(self, config: dict) -> str:
         """Create and start a new :class:`TimeLapse` and return its id.
 
+        The timelapse id is the base name previously set via :meth:`set_base_name`.
+        For a single-scan timelapse (ONE_SHOT / n=1) no PlantDB timelapse
+        container is created — a bare scan is produced instead.
+
         Parameters
         ----------
         config : dict
@@ -476,17 +484,20 @@ class Scanner(QObject):
         Returns
         -------
         str
-            The unique id of the created timelapse.
+            The base name / timelapse id.
 
         Raises
         ------
         RuntimeError
-            If a timelapse is already running (``SCHEDULED`` or ``RUNNING``).
+            If a timelapse is already running (``SCHEDULED`` or ``RUNNING``)
+            or no base name has been set.
         """
         if self.timelapse is not None and self.timelapse.state in (
                 TimeLapseState.SCHEDULED, TimeLapseState.RUNNING):
             raise RuntimeError("A timelapse is already running")
-        name = f"tl_{datetime.datetime.now(timezone.utc):%Y_%m_%d_%H%M%S}"
+        if not getattr(self, "base_name", ""):
+            raise RuntimeError("Base name not set — call set_base_name first")
+        name = self.base_name.strip()
         tl = TimeLapse(
             cnc=self.cnc,
             db_url=self.db_url,
@@ -500,6 +511,9 @@ class Scanner(QObject):
         # Reuse the single database connection instead of re-deriving it.
         if self.db_client is not None:
             tl.db_client = self.db_client
+        # Create PlantDB timelapse container if this is a multi-scan timelapse
+        if getattr(tl, "plantdb_timelapse_id", None) is not None and tl.db_client is not None:
+            tl.db_client.create_timelapse(tl.plantdb_timelapse_id, metadata=config.get("Metadata", {}))
         self._wire_timelapse(tl)
         self.timelapse = tl
         self.timelapseChanged.emit(tl)

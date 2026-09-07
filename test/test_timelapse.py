@@ -287,36 +287,55 @@ def test_scan_missed_is_skipped_and_persisted(fake_timers, tmp_xdg, mock_gpio, m
 
 
 def test_scan_success_transitions_and_deterministic_id(fake_timers, tmp_xdg, mock_gpio, mock_plantdb):
-    # use real Scan mock but check id
+    # use real Scan mock but check id — n=1 is bare (no container), n>1 is indexed
     scan_instances = []
 
-    def fake_scan_ctor(cnc, db_client, cameras, path, scan_id, config, parent=None):
+    def fake_scan_ctor(cnc, db_client, cameras, path, scan_id, config, parent=None, **kwargs):
         inst = MagicMock()
         inst.scan_id = scan_id
+        inst.timelapse_id = kwargs.get("timelapse_id")
         inst.scan = MagicMock()
         inst._start_time = datetime.datetime.now(timezone.utc).timestamp()
         inst._stop_time = inst._start_time + 5
         inst.status = "succeeded"
         inst.error = None
-        scan_instances.append((scan_id, inst))
+        scan_instances.append((scan_id, inst, kwargs))
         return inst
 
     with patch("plantimager.controller.scanner.timelapse.Scan", side_effect=fake_scan_ctor):
+        # n=1 → bare scan (no timelapse container)
         cfg = minimal_config(mode="interval", interval=60, n_shots=1, grace_period=120)
         from plantimager.controller.scanner.powermanager import PowerManager
         from plantimager.controller.scanner.dummy_cnc import DummyCNC
         pm = PowerManager(warmup_period=30)
         tl = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-xyz", config=cfg, power_manager=pm)
-        # put schedule now so delta within grace
         now = datetime.datetime.now(timezone.utc)
         tl.schedule_times = [now - datetime.timedelta(seconds=10)]
         tl.next_idx = 0
         tl.state = TimeLapseState.SCHEDULED
+        assert tl.plantdb_timelapse_id is None
         tl.scan(0)
-        assert scan_instances[0][0] == f"tl-xyz--{tl._slug_for_schedule(tl.schedule_times[0])}"
-        assert ":" not in scan_instances[0][0]  # FSDB-safe
-        assert tl.state == TimeLapseState.SCHEDULED  # back from RUNNING
+        assert scan_instances[0][0] == "tl-xyz"  # bare, no slug
+        assert ":" not in scan_instances[0][0]
+        assert scan_instances[0][2].get("timelapse_id") is None
+        assert tl.state == TimeLapseState.SCHEDULED
         assert len(tl.scans) == 1
+
+        # n=3 → indexed scans under container
+        scan_instances.clear()
+        cfg2 = minimal_config(mode="interval", interval=60, n_shots=3, grace_period=120)
+        tl2 = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-abc", config=cfg2, power_manager=pm)
+        assert tl2.plantdb_timelapse_id == "tl-abc"
+        tl2.schedule_times = [now - datetime.timedelta(seconds=10) + datetime.timedelta(seconds=i*60) for i in range(3)]
+        tl2.next_idx = 0
+        tl2.state = TimeLapseState.SCHEDULED
+        tl2.scan(0)
+        assert scan_instances[0][0] == "tl-abc_0"
+        assert scan_instances[0][2].get("timelapse_id") == "tl-abc"
+        assert scan_instances[0][2].get("timelapse_index") == 0
+        tl2.next_idx = 1
+        tl2.scan(1)
+        assert scan_instances[1][0] == "tl-abc_1"
 
 
 def test_scan_failure_goes_failed_and_emits(fake_timers, tmp_xdg, mock_gpio, mock_plantdb, qtbot):

@@ -206,7 +206,8 @@ class Scan(QObject):
     maxProgressChanged = Signal(int)
 
     def __init__(self, cnc: AbstractCNC, db_client: PlantDBClient, cameras: list[PiCameraComm], path: Path, scan_id: str,
-                 config: dict[str, Any], parent=None):
+                  config: dict[str, Any], parent=None, timelapse_id: str | None = None,
+                  timelapse_index: int | None = None, timelapse_scheduled: str | None = None):
         super().__init__(parent)
         self.cnc = cnc
         self.db_client = db_client
@@ -214,6 +215,9 @@ class Scan(QObject):
         self.cameras = cameras
         self.path = path
         self.scan_id = scan_id
+        self.timelapse_id = timelapse_id
+        self.timelapse_index = timelapse_index
+        self.timelapse_scheduled = timelapse_scheduled
         self.fileset = "images"
         self._progress = 0
         self._max_progress = len(path)
@@ -428,10 +432,20 @@ class Scan(QObject):
         }
         self.config.update(time_info)
 
+        # Build metadata — inject timelapse back-ref if this scan belongs to a timelapse
+        scan_metadata = dict(self.config)
+        if self.timelapse_id is not None:
+            tl_meta: dict[str, Any] = {"id": self.timelapse_id}
+            if self.timelapse_index is not None:
+                tl_meta["index"] = self.timelapse_index
+            if self.timelapse_scheduled is not None:
+                tl_meta["scheduled"] = self.timelapse_scheduled
+            scan_metadata = dict(scan_metadata)
+            scan_metadata["timelapse"] = tl_meta
+
         # Create the scan on the remote database
         try:
-            # Combine dataset and hardware metadata
-            self.db_client.create_scan(self.scan_id, metadata=self.config)
+            self.db_client.create_scan(self.scan_id, metadata=scan_metadata)
         except RequestException as e:
             logger.error(f"{e}")
         except ValueError as e:

@@ -70,7 +70,7 @@ def _make_ready_scanner(scanner):
     from plantimager.controller.scanner.path import Circle
     scanner.scan_path = Circle(center_x=0, center_y=0, z=10, tilt=0, radius=10, n_points=4)
     scanner.db_client = MagicMock()
-    scanner.scan_id = "test_dataset"
+    scanner.set_base_name("test_dataset")
     cam = MagicMock()
     cam.name = "cam1"
     scanner.cameras = [cam]
@@ -80,7 +80,7 @@ def _make_ready_scanner(scanner):
 def test_ready_to_scan_reflects_prerequisites(scanner):
     _make_ready_scanner(scanner)
     assert scanner.ready_to_scan is True
-    scanner.scan_id = ""
+    scanner.set_base_name("")
     assert scanner.ready_to_scan is False
 
 
@@ -120,8 +120,11 @@ def test_run_scan_delegates_to_single_scan_and_bridges_progress(scanner, monkeyp
 
 
 def test_start_timelapse_returns_id_and_sets_lock(scanner):
+    scanner.set_base_name("myExp")
+    # need dummy db_client for timelapse container creation
+    scanner.db_client = MagicMock()
     tl_id = scanner.start_timelapse(minimal_timelapse_config())
-    assert tl_id.startswith("tl_")
+    assert tl_id == "myExp"
     assert isinstance(scanner.timelapse, TimeLapse)
     assert scanner.timelapse.state == TimeLapseState.SCHEDULED
     # Second start rejected while a job is scheduled/running
@@ -130,6 +133,8 @@ def test_start_timelapse_returns_id_and_sets_lock(scanner):
 
 
 def test_cancel_timelapse_unlocks_for_new_start(scanner):
+    scanner.set_base_name("myExp")
+    scanner.db_client = MagicMock()
     scanner.start_timelapse(minimal_timelapse_config())
     finished = []
     scanner.timelapseFinished.connect(lambda: finished.append(True))
@@ -137,12 +142,15 @@ def test_cancel_timelapse_unlocks_for_new_start(scanner):
     assert scanner.timelapse.state == TimeLapseState.CANCELLED
     assert finished == [True]
     # Terminal state unlocks a fresh start
+    scanner.set_base_name("myExp2")
     new_id = scanner.start_timelapse(minimal_timelapse_config())
-    assert new_id.startswith("tl_")
+    assert new_id == "myExp2"
 
 
 def test_get_active_timelapse_returns_serialisable_dict(scanner):
     assert scanner.get_active_timelapse() is None
+    scanner.set_base_name("myExp")
+    scanner.db_client = MagicMock()
     scanner.start_timelapse(minimal_timelapse_config())
     snap = scanner.get_active_timelapse()
     assert snap is not None
@@ -158,7 +166,9 @@ def test_preview_timelapse_returns_schedule(scanner):
 
 
 def test_timelapse_progress_forwarded(scanner):
-    tl_id = scanner.start_timelapse(minimal_timelapse_config())
+    scanner.set_base_name("myExp")
+    scanner.db_client = MagicMock()
+    scanner.start_timelapse(minimal_timelapse_config())
     captured = []
     scanner.timelapseProgressChanged.connect(lambda c, t: captured.append((c, t)))
     tl = scanner.timelapse

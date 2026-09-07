@@ -30,8 +30,8 @@ class ControllerDevice(ABC):
         pass
 
     @abstractmethod
-    def set_dataset_name(self, name: str):
-        """Set the name of the dataset to be created."""
+    def set_base_name(self, name: str):
+        """Set the base name — bare scan uses it as scan_id, timelapse uses it as timelapse_id."""
         pass
 
     @abstractmethod

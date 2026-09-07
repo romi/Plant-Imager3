@@ -137,7 +137,7 @@ class PowerManager(QObject):
 
         """
         if isinstance(self.cnc, CNC):
-            self.cnc_connect_timer.stop()
+            self._safe_stop(self.cnc_connect_timer)
             return
 
         try:
@@ -147,7 +147,7 @@ class PowerManager(QObject):
         except RuntimeError:
             return
 
-        self.cnc_connect_timer.stop()
+        self._safe_stop(self.cnc_connect_timer)
         if self._mode == PowerManagerMode.MANUAL:
             activity_monitor(self.cnc, self.manual_mode_timer.start)
             self.manual_mode_timer.start()
@@ -178,7 +178,7 @@ class PowerManager(QObject):
             If `self._next_warmup_date` or `self.warmup_period` is not properly
             initialized as expected.
         """
-        self.manual_mode_timer.stop()
+        self._safe_stop(self.manual_mode_timer)
 
         if self._next_warmup_date is None:
             self.mode = PowerManagerMode.AUTO
@@ -263,6 +263,18 @@ class PowerManager(QObject):
         """Warm-up timer fired — power up the scanner for an imminent scan."""
         self.mode = PowerManagerMode.SCAN
 
+    def _safe_stop(self, timer):
+        try:
+            timer.stop()
+        except RuntimeError:
+            pass
+
+    def _safe_start(self, timer):
+        try:
+            timer.start()
+        except RuntimeError:
+            pass
+
     def arm_for_scan(self, next_scan_at: datetime.datetime, standby_threshold_sec: int):
         """
         Decide and schedule power so the scanner is ready for a scan at ``next_scan_at``.
@@ -283,7 +295,7 @@ class PowerManager(QObject):
             If the next scan is sooner than this many seconds, keep the scanner powered
             on in ``SCAN`` mode instead of dropping to ``AUTO``.
         """
-        self.warmup_timer.stop()
+        self._safe_stop(self.warmup_timer)
         if next_scan_at.tzinfo is None:
             next_scan_at = next_scan_at.replace(tzinfo=datetime.timezone.utc)
         now = datetime.datetime.now(datetime.timezone.utc)
@@ -297,14 +309,20 @@ class PowerManager(QObject):
             self._next_warmup_date = next_scan_at - datetime.timedelta(seconds=self.warmup_period)
             self.mode = PowerManagerMode.AUTO
             warmup_in = max(0, delta - self.warmup_period)
-            self.warmup_timer.setInterval(int(warmup_in * 1000))
-            self.warmup_timer.start()
+            try:
+                self.warmup_timer.setInterval(int(warmup_in * 1000))
+            except RuntimeError:
+                pass
+            self._safe_start(self.warmup_timer)
         else:
             logger.info(
                 f"Next scan in {delta:.0f}s (within standby threshold {standby_threshold_sec}s), "
                 f"keeping scanner powered in SCAN mode."
             )
-            self.mode = PowerManagerMode.SCAN
+            if self._mode != PowerManagerMode.SCAN:
+                self.mode = PowerManagerMode.SCAN
+            else:
+                self._prepare_for_scan()
 
     def set_manual(self):
         """Enter MANUAL mode, powering up the scanner for manual operation."""

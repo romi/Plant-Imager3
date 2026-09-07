@@ -119,15 +119,15 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         self.scanner.configure_scan(config)
 
     @RPCServer.register_method_json
-    def set_dataset_name(self, name: str):
-        """Set the name of the dataset to be created.
+    def set_base_name(self, name: str):
+        """Set the base name — bare scan uses it as scan_id, timelapse as timelapse_id.
 
         Parameters
         ----------
         name : str
-            The name of the dataset to be created.
+            Base name for the next scan or timelapse.
         """
-        self.scanner.set_scan_id(name)
+        self.scanner.set_base_name(name)
 
     @RPCServer.register_method_json
     def set_api_token(self, token: str):
