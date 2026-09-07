@@ -68,11 +68,22 @@ import importlib
 import os
 import re
 import datetime
+import weakref
 from datetime import timezone
 from enum import StrEnum
 from typing import Any, Literal
 
 from PySide6.QtCore import QObject, Signal, Property, QTimer, Slot
+
+
+def _stop_timers(*timers):
+    for t in timers:
+        if t is None:
+            continue
+        try:
+            t.stop()
+        except RuntimeError:
+            pass
 
 from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
@@ -235,6 +246,8 @@ class TimeLapse(QObject):
 
         self._next_scan_timer = QTimer(self, singleShot=True)
         self._next_scan_timer.timeout.connect(self._trigger_next_scan)
+        self.destroyed.connect(lambda _=None, _t=self._next_scan_timer: _stop_timers(_t))
+        weakref.finalize(self, _stop_timers, self._next_scan_timer)
         self._setup_next_scan_timer()
 
     def _setup_timelapse_settings(self):
@@ -426,34 +439,24 @@ class TimeLapse(QObject):
         """
         Initiates the scan at ``next_idx`` and advances the schedule.
 
-        Called by ``_next_scan_timer`` or a zero-delay ``singleShot`` from
-        ``_setup_next_scan_timer``. Wraps ``scan()`` (skipped scans do not
+        Called by ``_next_scan_timer``. Wraps ``scan()`` (skipped scans do not
         raise), increments ``next_idx``, persists, and either completes
         (``COMPLETED`` + ``scanFinished``) or re-arms via
         ``_setup_next_scan_timer``.
         """
         try:
-            try:
-                self.scan(self.next_idx)
-            except Exception:
-                pass
-            self.next_idx += 1
+            self.scan(self.next_idx)
+        except Exception:
+            pass
+        self.next_idx += 1
+        self._persist_state()
+        if self.next_idx >= len(self.schedule_times):
+            self.state = TimeLapseState.COMPLETED
+            self.scanFinished.emit()
             self._persist_state()
-            if self.next_idx >= len(self.schedule_times):
-                self.state = TimeLapseState.COMPLETED
-                try:
-                    self.scanFinished.emit()
-                except RuntimeError:
-                    pass
-                self._persist_state()
-                try:
-                    self._next_scan_timer.stop()
-                except RuntimeError:
-                    pass
-            else:
-                self._setup_next_scan_timer()
-        except RuntimeError:
-            return
+            self._next_scan_timer.stop()
+        else:
+            self._setup_next_scan_timer()
 
     @Slot(object)
     def cnc_ready(self, cnc):
@@ -474,58 +477,44 @@ class TimeLapse(QObject):
         (which decides AUTO/SCAN and arms its own warm-up timer); only the scan
         trigger timer lives here.
         """
-        try:
+        if self.next_idx >= len(self.schedule_times):
+            self.state = TimeLapseState.COMPLETED
+            return
+        next_time = self.schedule_times[self.next_idx]
+        if next_time.tzinfo is None:
+            next_time = next_time.replace(tzinfo=timezone.utc)
+        now = datetime.datetime.now(timezone.utc)
+        delta = (next_time - now).total_seconds()
+
+        if delta <= -self.grace_period:
+            logger.warning(f"Scan {self.next_idx} already missed by {-delta:.1f}s, skipping.")
+            self.next_idx += 1
+            self._persist_state()
             if self.next_idx >= len(self.schedule_times):
                 self.state = TimeLapseState.COMPLETED
+                self.scanFinished.emit()
                 return
-            next_time = self.schedule_times[self.next_idx]
-            if next_time.tzinfo is None:
-                next_time = next_time.replace(tzinfo=timezone.utc)
-            now = datetime.datetime.now(timezone.utc)
-            delta = (next_time - now).total_seconds()
-
-            if delta <= -self.grace_period:
-                logger.warning(f"Scan {self.next_idx} already missed by {-delta:.1f}s, skipping.")
-                self.next_idx += 1
-                self._persist_state()
-                if self.next_idx >= len(self.schedule_times):
-                    self.state = TimeLapseState.COMPLETED
-                    try:
-                        self.scanFinished.emit()
-                    except RuntimeError:
-                        pass
-                    return
-                self._setup_next_scan_timer()
-                return
-
-            if delta <= self.grace_period:
-                QTimer.singleShot(0, self._trigger_next_scan)
-                return
-        except RuntimeError:
+            self._setup_next_scan_timer()
             return
 
-        try:
-            self._next_scan_timer.stop()
-        except RuntimeError:
-            pass
+        if delta <= self.grace_period:
+            self._next_scan_timer.setInterval(0)
+            self._next_scan_timer.start()
+            return
+
+        self._next_scan_timer.stop()
 
         if self.power_manager:
             self.power_manager.arm_for_scan(next_time, self.standby_threshold_sec)
 
-        try:
-            self._next_scan_timer.setInterval(int(delta * 1000))
-            self._next_scan_timer.start()
-        except RuntimeError:
-            pass
+        self._next_scan_timer.setInterval(int(delta * 1000))
+        self._next_scan_timer.start()
         self.state = TimeLapseState.SCHEDULED
         self._persist_state()
 
     def cancel(self):
         """Cancels the timelapse, stops timers, persists ``CANCELLED``."""
-        try:
-            self._next_scan_timer.stop()
-        except RuntimeError:
-            pass
+        self._next_scan_timer.stop()
         self.state = TimeLapseState.CANCELLED
         self._persist_state()
         self.scanFinished.emit()
@@ -583,10 +572,7 @@ class TimeLapse(QObject):
             value = TimeLapseState(value)
         if self._state != value:
             self._state = value
-            try:
-                self.stateChanged.emit(value.value if isinstance(value, TimeLapseState) else str(value))
-            except RuntimeError:
-                pass
+            self.stateChanged.emit(value.value if isinstance(value, TimeLapseState) else str(value))
 
     @Property(int, notify=progressChanged)
     def progress(self):

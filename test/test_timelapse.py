@@ -387,10 +387,10 @@ def test_setup_next_scan_timer_immediate_singleshot(fake_timers, tmp_xdg, mock_g
     now = datetime.datetime.now(timezone.utc)
     tl.schedule_times = [now + datetime.timedelta(seconds=30)]  # within grace 120
     tl.next_idx = 0
-    with patch("plantimager.controller.scanner.timelapse.QTimer.singleShot") as ss:
-        tl._setup_next_scan_timer()
-        ss.assert_called_once()
-        assert ss.call_args[0][1] == tl._trigger_next_scan
+    tl._setup_next_scan_timer()
+    # B: immediate dispatch uses owned timer (start(0)) not static singleShot
+    assert tl._next_scan_timer.isActive()
+    assert tl._next_scan_timer.interval() == 0
 
 
 def test_setup_next_scan_timer_power_auto_vs_scan(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):

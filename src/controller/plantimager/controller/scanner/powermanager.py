@@ -4,6 +4,7 @@ Manages the switching on and off of the various components of the scanner via th
 import os
 import datetime
 import inspect
+import weakref
 from enum import StrEnum
 from typing import Callable
 from functools import update_wrapper
@@ -11,6 +12,16 @@ from functools import update_wrapper
 import serial
 from PySide6.QtCore import QObject, Signal, Slot, Property, QTimer
 import gpio
+
+
+def _stop_timers(*timers):
+    for t in timers:
+        if t is None:
+            continue
+        try:
+            t.stop()
+        except RuntimeError:
+            pass
 
 from plantimager.commons.logging import create_logger
 from plantimager.controller.scanner.grbl import CNC
@@ -111,6 +122,10 @@ class PowerManager(QObject):
         self.warmup_timer.timeout.connect(self._on_warmup_timer)
         self.cnc_connect_timer = QTimer(parent=self, singleShot=False, interval=1200)
         self.cnc_connect_timer.timeout.connect(self._cnc_connect)
+        self.destroyed.connect(
+            lambda _=None, _a=self.warmup_timer, _b=self.manual_mode_timer, _c=self.cnc_connect_timer: _stop_timers(_a, _b, _c)
+        )
+        weakref.finalize(self, _stop_timers, self.warmup_timer, self.manual_mode_timer, self.cnc_connect_timer)
         self._mode: PowerManagerMode = PowerManagerMode.AUTO
         self.modeChanged.connect(self._on_mode_changed)
         self._next_warmup_date: datetime.datetime | None = None
@@ -137,7 +152,7 @@ class PowerManager(QObject):
 
         """
         if isinstance(self.cnc, CNC):
-            self._safe_stop(self.cnc_connect_timer)
+            self.cnc_connect_timer.stop()
             return
 
         try:
@@ -147,7 +162,7 @@ class PowerManager(QObject):
         except RuntimeError:
             return
 
-        self._safe_stop(self.cnc_connect_timer)
+        self.cnc_connect_timer.stop()
         if self._mode == PowerManagerMode.MANUAL:
             activity_monitor(self.cnc, self.manual_mode_timer.start)
             self.manual_mode_timer.start()
@@ -178,7 +193,7 @@ class PowerManager(QObject):
             If `self._next_warmup_date` or `self.warmup_period` is not properly
             initialized as expected.
         """
-        self._safe_stop(self.manual_mode_timer)
+        self.manual_mode_timer.stop()
 
         if self._next_warmup_date is None:
             self.mode = PowerManagerMode.AUTO
@@ -263,18 +278,6 @@ class PowerManager(QObject):
         """Warm-up timer fired — power up the scanner for an imminent scan."""
         self.mode = PowerManagerMode.SCAN
 
-    def _safe_stop(self, timer):
-        try:
-            timer.stop()
-        except RuntimeError:
-            pass
-
-    def _safe_start(self, timer):
-        try:
-            timer.start()
-        except RuntimeError:
-            pass
-
     def arm_for_scan(self, next_scan_at: datetime.datetime, standby_threshold_sec: int):
         """
         Decide and schedule power so the scanner is ready for a scan at ``next_scan_at``.
@@ -295,7 +298,7 @@ class PowerManager(QObject):
             If the next scan is sooner than this many seconds, keep the scanner powered
             on in ``SCAN`` mode instead of dropping to ``AUTO``.
         """
-        self._safe_stop(self.warmup_timer)
+        self.warmup_timer.stop()
         if next_scan_at.tzinfo is None:
             next_scan_at = next_scan_at.replace(tzinfo=datetime.timezone.utc)
         now = datetime.datetime.now(datetime.timezone.utc)
@@ -309,11 +312,8 @@ class PowerManager(QObject):
             self._next_warmup_date = next_scan_at - datetime.timedelta(seconds=self.warmup_period)
             self.mode = PowerManagerMode.AUTO
             warmup_in = max(0, delta - self.warmup_period)
-            try:
-                self.warmup_timer.setInterval(int(warmup_in * 1000))
-            except RuntimeError:
-                pass
-            self._safe_start(self.warmup_timer)
+            self.warmup_timer.setInterval(int(warmup_in * 1000))
+            self.warmup_timer.start()
         else:
             logger.info(
                 f"Next scan in {delta:.0f}s (within standby threshold {standby_threshold_sec}s), "
