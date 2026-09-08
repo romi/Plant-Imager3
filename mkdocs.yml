@@ -17,6 +17,7 @@ nav:
     - developer/guidelines.md
     - developer/architecture.md
     - developer/RPC.md
+    - 'Full-Stack Dev Setup': developer/full_stack_dev_setup.md
     - developer/NTP_server.md.md
 
 
