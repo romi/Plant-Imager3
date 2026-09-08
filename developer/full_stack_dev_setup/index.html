@@ -12,28 +12,26 @@
         <meta name="author" content="ROMI Team">
       
       
-        <link rel="canonical" href="https://github.com/romi/Plant-Imager3/reference/controller/camera/pyav_receiver/">
+        <link rel="canonical" href="https://github.com/romi/Plant-Imager3/developer/full_stack_dev_setup/">
       
       
-        <link rel="prev" href="../PiCameraComm/">
+        <link rel="prev" href="../RPC/">
       
-      
-        <link rel="next" href="../../main/">
       
       
         
       
       
-      <link rel="icon" href="../../../../assets/images/ROMI_ICON_green.png">
+      <link rel="icon" href="../../assets/images/ROMI_ICON_green.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>pyav_receiver - Plant-Imager3</title>
+        <title>Full-Stack Dev Setup - Plant-Imager3</title>
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -52,15 +50,15 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/_markdown_exec_pyodide.css">
+      <link rel="stylesheet" href="../../assets/_markdown_exec_pyodide.css">
     
-      <link rel="stylesheet" href="../../../../assets/_markdown_exec_ansi.css">
+      <link rel="stylesheet" href="../../assets/_markdown_exec_ansi.css">
     
-      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../../assets/css/extra.css">
+      <link rel="stylesheet" href="../../assets/css/extra.css">
     
-    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#plantimager.controller.camera.pyav_receiver" class="md-skip">
+        <a href="#full-stack-local-development-setup" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +94,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="https://github.com/romi/Plant-Imager3" title="Plant-Imager3" class="md-header__button md-logo" aria-label="Plant-Imager3" data-md-component="logo">
       
-  <img src="../../../../assets/images/ROMI_logo_white.svg" alt="logo">
+  <img src="../../assets/images/ROMI_logo_white.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -113,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              pyav_receiver
+              Full-Stack Dev Setup
             
           </span>
         </div>
@@ -192,7 +190,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -209,8 +207,6 @@
   
   
   
-    
-  
   
     
     
@@ -218,13 +214,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../../commons/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../reference/commons/" class="md-tabs__link">
           
   
   
@@ -247,7 +241,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../../usage/services_overview/" class="md-tabs__link">
+        <a href="../../usage/services_overview/" class="md-tabs__link">
           
   
   
@@ -263,9 +257,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../../../../developer/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="../" class="md-tabs__link">
         
   
   
@@ -308,7 +304,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="https://github.com/romi/Plant-Imager3" title="Plant-Imager3" class="md-nav__button md-logo" aria-label="Plant-Imager3" data-md-component="logo">
       
-  <img src="../../../../assets/images/ROMI_logo_white.svg" alt="logo">
+  <img src="../../assets/images/ROMI_logo_white.svg" alt="logo">
 
     </a>
     Plant-Imager3
@@ -335,7 +331,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -359,29 +355,24 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -399,7 +390,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -482,7 +473,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../commons/" class="md-nav__link ">
+            <a href="../../reference/commons/" class="md-nav__link ">
               
   
   
@@ -524,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../commons/RPC/" class="md-nav__link">
+      <a href="../../reference/commons/RPC/" class="md-nav__link">
         
   
   
@@ -552,7 +543,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../commons/cameradevice/" class="md-nav__link">
+      <a href="../../reference/commons/cameradevice/" class="md-nav__link">
         
   
   
@@ -580,7 +571,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../commons/controller_device/" class="md-nav__link">
+      <a href="../../reference/commons/controller_device/" class="md-nav__link">
         
   
   
@@ -608,7 +599,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../commons/deviceregistry/" class="md-nav__link">
+      <a href="../../reference/commons/deviceregistry/" class="md-nav__link">
         
   
   
@@ -651,7 +642,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../commons/examples/" class="md-nav__link ">
+            <a href="../../reference/commons/examples/" class="md-nav__link ">
               
   
   
@@ -693,7 +684,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../commons/examples/cameraclient/" class="md-nav__link">
+      <a href="../../reference/commons/examples/cameraclient/" class="md-nav__link">
         
   
   
@@ -721,7 +712,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../commons/examples/cameraserver/" class="md-nav__link">
+      <a href="../../reference/commons/examples/cameraserver/" class="md-nav__link">
         
   
   
@@ -757,7 +748,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../commons/logging/" class="md-nav__link">
+      <a href="../../reference/commons/logging/" class="md-nav__link">
         
   
   
@@ -785,7 +776,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../commons/systemd/" class="md-nav__link">
+      <a href="../../reference/commons/systemd/" class="md-nav__link">
         
   
   
@@ -813,7 +804,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../commons/utils/" class="md-nav__link">
+      <a href="../../reference/commons/utils/" class="md-nav__link">
         
   
   
@@ -854,8 +845,6 @@
                 
   
   
-    
-  
   
   
     
@@ -866,11 +855,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
         
           
           <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -891,7 +880,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -906,8 +895,6 @@
                 
   
   
-    
-  
   
   
     
@@ -918,15 +905,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../reference/controller/" class="md-nav__link ">
               
   
   
@@ -950,7 +937,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_2_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -968,7 +955,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../AppBridge/" class="md-nav__link">
+      <a href="../../reference/controller/AppBridge/" class="md-nav__link">
         
   
   
@@ -996,7 +983,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../ImageProvider/" class="md-nav__link">
+      <a href="../../reference/controller/ImageProvider/" class="md-nav__link">
         
   
   
@@ -1039,7 +1026,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../PlantImagerApp/" class="md-nav__link ">
+            <a href="../../reference/controller/PlantImagerApp/" class="md-nav__link ">
               
   
   
@@ -1081,7 +1068,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../PlantImagerApp/Controls/" class="md-nav__link">
+      <a href="../../reference/controller/PlantImagerApp/Controls/" class="md-nav__link">
         
   
   
@@ -1109,7 +1096,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../PlantImagerApp/Style/" class="md-nav__link">
+      <a href="../../reference/controller/PlantImagerApp/Style/" class="md-nav__link">
         
   
   
@@ -1137,7 +1124,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../PlantImagerApp/rc_style/" class="md-nav__link">
+      <a href="../../reference/controller/PlantImagerApp/rc_style/" class="md-nav__link">
         
   
   
@@ -1180,7 +1167,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../PlantImagerApp/ttf/" class="md-nav__link ">
+            <a href="../../reference/controller/PlantImagerApp/ttf/" class="md-nav__link ">
               
   
   
@@ -1222,7 +1209,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../PlantImagerApp/ttf/rc_ttf/" class="md-nav__link">
+      <a href="../../reference/controller/PlantImagerApp/ttf/rc_ttf/" class="md-nav__link">
         
   
   
@@ -1263,8 +1250,6 @@
                 
   
   
-    
-  
   
   
     
@@ -1275,15 +1260,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1_4" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../reference/controller/camera/" class="md-nav__link ">
               
   
   
@@ -1307,7 +1292,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_1_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_2_1_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_2_1_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1325,7 +1310,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CameraBridge/" class="md-nav__link">
+      <a href="../../reference/controller/camera/CameraBridge/" class="md-nav__link">
         
   
   
@@ -1353,7 +1338,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../CameraVideoReceiver/" class="md-nav__link">
+      <a href="../../reference/controller/camera/CameraVideoReceiver/" class="md-nav__link">
         
   
   
@@ -1381,7 +1366,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../PiCameraComm/" class="md-nav__link">
+      <a href="../../reference/controller/camera/PiCameraComm/" class="md-nav__link">
         
   
   
@@ -1406,35 +1391,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    pyav_receiver
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../reference/controller/camera/pyav_receiver/" class="md-nav__link">
         
   
   
@@ -1450,69 +1410,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#plantimager.controller.camera.pyav_receiver" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;pyav_receiver
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" pyav_receiver">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#plantimager.controller.camera.pyav_receiver.PyAVReceiver" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;PyAVReceiver
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" PyAVReceiver">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#plantimager.controller.camera.pyav_receiver.PyAVReceiver.open" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;open
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1533,7 +1430,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../main/" class="md-nav__link">
+      <a href="../../reference/controller/main/" class="md-nav__link">
         
   
   
@@ -1576,7 +1473,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../scanner/" class="md-nav__link ">
+            <a href="../../reference/controller/scanner/" class="md-nav__link ">
               
   
   
@@ -1618,7 +1515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scanner/dummy_cnc/" class="md-nav__link">
+      <a href="../../reference/controller/scanner/dummy_cnc/" class="md-nav__link">
         
   
   
@@ -1646,7 +1543,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scanner/grbl/" class="md-nav__link">
+      <a href="../../reference/controller/scanner/grbl/" class="md-nav__link">
         
   
   
@@ -1674,7 +1571,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scanner/hal/" class="md-nav__link">
+      <a href="../../reference/controller/scanner/hal/" class="md-nav__link">
         
   
   
@@ -1702,7 +1599,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scanner/path/" class="md-nav__link">
+      <a href="../../reference/controller/scanner/path/" class="md-nav__link">
         
   
   
@@ -1730,7 +1627,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scanner/rpc_controller/" class="md-nav__link">
+      <a href="../../reference/controller/scanner/rpc_controller/" class="md-nav__link">
         
   
   
@@ -1758,7 +1655,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scanner/scanner/" class="md-nav__link">
+      <a href="../../reference/controller/scanner/scanner/" class="md-nav__link">
         
   
   
@@ -1786,7 +1683,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scanner/units/" class="md-nav__link">
+      <a href="../../reference/controller/scanner/units/" class="md-nav__link">
         
   
   
@@ -1903,7 +1800,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../webui/" class="md-nav__link ">
+            <a href="../../reference/webui/" class="md-nav__link ">
               
   
   
@@ -1945,7 +1842,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/app/" class="md-nav__link">
+      <a href="../../reference/webui/app/" class="md-nav__link">
         
   
   
@@ -1973,7 +1870,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/auth/" class="md-nav__link">
+      <a href="../../reference/webui/auth/" class="md-nav__link">
         
   
   
@@ -2001,7 +1898,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/carousel/" class="md-nav__link">
+      <a href="../../reference/webui/carousel/" class="md-nav__link">
         
   
   
@@ -2029,7 +1926,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/config/" class="md-nav__link">
+      <a href="../../reference/webui/config/" class="md-nav__link">
         
   
   
@@ -2057,7 +1954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/controller_proxy/" class="md-nav__link">
+      <a href="../../reference/webui/controller_proxy/" class="md-nav__link">
         
   
   
@@ -2085,7 +1982,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/login/" class="md-nav__link">
+      <a href="../../reference/webui/login/" class="md-nav__link">
         
   
   
@@ -2113,7 +2010,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/nav/" class="md-nav__link">
+      <a href="../../reference/webui/nav/" class="md-nav__link">
         
   
   
@@ -2141,7 +2038,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/new_user/" class="md-nav__link">
+      <a href="../../reference/webui/new_user/" class="md-nav__link">
         
   
   
@@ -2184,7 +2081,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../webui/pages/" class="md-nav__link ">
+            <a href="../../reference/webui/pages/" class="md-nav__link ">
               
   
   
@@ -2226,7 +2123,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/pages/home/" class="md-nav__link">
+      <a href="../../reference/webui/pages/home/" class="md-nav__link">
         
   
   
@@ -2254,7 +2151,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/pages/table/" class="md-nav__link">
+      <a href="../../reference/webui/pages/table/" class="md-nav__link">
         
   
   
@@ -2290,7 +2187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/scan/" class="md-nav__link">
+      <a href="../../reference/webui/scan/" class="md-nav__link">
         
   
   
@@ -2318,7 +2215,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/utils/" class="md-nav__link">
+      <a href="../../reference/webui/utils/" class="md-nav__link">
         
   
   
@@ -2346,7 +2243,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/visu/" class="md-nav__link">
+      <a href="../../reference/webui/visu/" class="md-nav__link">
         
   
   
@@ -2374,7 +2271,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../webui/wsgi/" class="md-nav__link">
+      <a href="../../reference/webui/wsgi/" class="md-nav__link">
         
   
   
@@ -2475,7 +2372,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../usage/services_overview/" class="md-nav__link">
+      <a href="../../usage/services_overview/" class="md-nav__link">
         
   
   
@@ -2503,7 +2400,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../usage/services_startup/" class="md-nav__link">
+      <a href="../../usage/services_startup/" class="md-nav__link">
         
   
   
@@ -2531,7 +2428,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../usage/services_usage/" class="md-nav__link">
+      <a href="../../usage/services_usage/" class="md-nav__link">
         
   
   
@@ -2563,25 +2460,30 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../developer/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -2599,13 +2501,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2623,7 +2525,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../developer/guidelines/" class="md-nav__link">
+      <a href="../guidelines/" class="md-nav__link">
         
   
   
@@ -2651,7 +2553,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../developer/architecture/" class="md-nav__link">
+      <a href="../architecture/" class="md-nav__link">
         
   
   
@@ -2679,7 +2581,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../developer/RPC/" class="md-nav__link">
+      <a href="../RPC/" class="md-nav__link">
         
   
   
@@ -2704,10 +2606,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../../developer/full_stack_dev_setup/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Full-Stack Dev Setup
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2723,6 +2652,170 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What runs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-start-the-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Start the services
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Start the services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controller-qt-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controller (Qt app)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dummy-cameras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dummy cameras
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantdb-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PlantDB REST API:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-connect-a-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Connect a client
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-run-a-full-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Run a full scan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Run a full scan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#webui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WebUI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2735,7 +2828,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../developer/NTP_server.md.md" class="md-nav__link">
+      <a href="../NTP_server.md.md" class="md-nav__link">
         
   
   
@@ -2780,6 +2873,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2788,34 +2883,66 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#plantimager.controller.camera.pyav_receiver" class="md-nav__link">
+  <a href="#what-runs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;pyav_receiver
+        What runs
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" pyav_receiver">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#plantimager.controller.camera.pyav_receiver.PyAVReceiver" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;PyAVReceiver
+        Prerequisites
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" PyAVReceiver">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-start-the-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Start the services
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Start the services">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#plantimager.controller.camera.pyav_receiver.PyAVReceiver.open" class="md-nav__link">
+  <a href="#controller-qt-app" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;open
+        Controller (Qt app)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dummy-cameras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dummy cameras
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantdb-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PlantDB REST API:
       
     </span>
   </a>
@@ -2826,9 +2953,76 @@
     </nav>
   
 </li>
+      
+        <li class="md-nav__item">
+  <a href="#2-connect-a-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Connect a client
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-run-a-full-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Run a full scan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Run a full scan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#webui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WebUI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python API
+      
+    </span>
+  </a>
+  
+</li>
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2852,215 +3046,183 @@
   
 
 
-  <h1>pyav_receiver</h1>
-
-<div class="doc doc-object doc-module">
-
-
-
-<h2 id="plantimager.controller.camera.pyav_receiver" class="doc doc-heading">
-            <span class="doc doc-object-name doc-module-name">plantimager.controller.camera.pyav_receiver</span>
-
-
-<a href="#plantimager.controller.camera.pyav_receiver" class="headerlink" title="Permanent link">Link</a></h2>
-
-    <div class="doc doc-contents first">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h3 id="plantimager.controller.camera.pyav_receiver.PyAVReceiver" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">PyAVReceiver</span>
-
-
-<a href="#plantimager.controller.camera.pyav_receiver.PyAVReceiver" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>PyAVReceiver()
+<h1 id="full-stack-local-development-setup">Full-Stack Local Development Setup<a class="headerlink" href="#full-stack-local-development-setup" title="Permanent link">Link</a></h1>
+<p>This guide explains how to run the complete Plant-Imager3 stack <strong>locally, for development</strong>, so you can exercise the controller, dummy cameras, and plant database together.
+It mirrors the setup performed by <a href="../../test/test_scan_integration.py"><code>test/test_scan_integration.py</code></a> and is the fastest way to drive the WebUI (or an <code>RPCController</code> client) against a realistic set of services.</p>
+<h2 id="what-runs">What runs<a class="headerlink" href="#what-runs" title="Permanent link">Link</a></h2>
+<p>The local stack is made of four cooperating processes:</p>
+<table>
+<thead>
+<tr>
+<th>Process</th>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dummy cameras</td>
+<td><code>python -m plantimager.commons.examples.cameraserver</code></td>
+<td>Simulate cameras; register with the device registry so the controller discovers them</td>
+</tr>
+<tr>
+<td>Controller</td>
+<td><code>python -m plantimager.controller.main</code></td>
+<td>Qt app that hosts the RPC server on <code>tcp://localhost:14567</code> and manages the scanner/CNC</td>
+</tr>
+<tr>
+<td>PlantDB</td>
+<td><code>fsdb_rest_api --test --empty ...</code></td>
+<td>Empty REST API for storing scan results</td>
+</tr>
+<tr>
+<td>Client</td>
+<td><code>RPCController("tcp://localhost:14567")</code></td>
+<td>The WebUI, or your own script, driving the controller over RPC</td>
+</tr>
+</tbody>
+</table>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">Link</a></h2>
+<ul>
+<li>The <code>plant-imager3</code> Conda environment (see <a href="../#development-environment">index.md</a>) with:</li>
+<li><code>plantimager.commons</code>, <code>plantimager.controller</code>, <code>plantimager.picamera</code> installed in editable mode</li>
+<li><code>plantdb.server</code> installed (provides the <code>fsdb_rest_api</code> command)</li>
+<li>Mesa/OpenGL packages to run the Qt controller app (see <a href="../#development-environment">index.md</a>)</li>
+<li>A display for the Qt app, or run it headless with:
+  <div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000">export</span><span style="color: #BBB"> </span><span style="color: #19177C">QT_QPA_PLATFORM</span><span style="color: #666">=</span>offscreen
+</code></pre></div></li>
+</ul>
+<h2 id="1-start-the-services">1. Start the services<a class="headerlink" href="#1-start-the-services" title="Permanent link">Link</a></h2>
+<p>In separate terminals (or as background processes), run:</p>
+<h3 id="controller-qt-app">Controller (Qt app)<a class="headerlink" href="#controller-qt-app" title="Permanent link">Link</a></h3>
+<p>It hosts the RPC server on <code>tcp://localhost:14567</code> and discovers cameras via the registry:</p>
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>conda<span style="color: #BBB"> </span>activate<span style="color: #BBB"> </span>plant-imager3
+python<span style="color: #BBB"> </span>-m<span style="color: #BBB"> </span>plantimager.controller.main
 </code></pre></div>
+<div class="admonition notes">
+<p class="admonition-title">Notes</p>
+<ul>
+<li>The controller falls back to a <code>DummyCNC</code> automatically when no real CNC is reachable (<code>scanner.py</code>), so this stack runs entirely without physical hardware.</li>
+</ul>
+</div>
+<h3 id="dummy-cameras">Dummy cameras<a class="headerlink" href="#dummy-cameras" title="Permanent link">Link</a></h3>
+<p>It serves images from a directory.
+You have to start at least one (the test uses two):
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>conda<span style="color: #BBB"> </span>activate<span style="color: #BBB"> </span>plant-imager3
+<span style="color: #3D7B7B; font-style: italic"># Optional: provide a directory of images via the PI3_CAMERASERVER_IMAGE environment variable</span>
+<span style="color: #008000">export</span><span style="color: #BBB"> </span><span style="color: #19177C">PI3_CAMERASERVER_IMAGE</span><span style="color: #666">=</span>/path/to/a/dir/of/images
+<span style="color: #3D7B7B; font-style: italic"># Optional: simulate network latency between frames (milliseconds)</span>
+<span style="color: #008000">export</span><span style="color: #BBB"> </span><span style="color: #19177C">PI3_CAMERASERVER_LAG</span><span style="color: #666">=100</span>
+python<span style="color: #BBB"> </span>-m<span style="color: #BBB"> </span>plantimager.commons.examples.cameraserver
+</code></pre></div></p>
+<div class="admonition notes">
+<p class="admonition-title">Notes</p>
+<ul>
+<li>The dummy camera server reads images from a directory and serves them in a loop.</li>
+<li>Provide a directory of images via the <code>PI3_CAMERASERVER_IMAGE</code> environment variable.</li>
+<li>If unset, the test falls back to the bundled <code>real_plant</code> test dataset.</li>
+</ul>
+</div>
+<h3 id="plantdb-rest-api">PlantDB REST API:<a class="headerlink" href="#plantdb-rest-api" title="Permanent link">Link</a></h3>
+<p>It hosts the database that receives images and metadata (<em>e.g.</em> from the controller) and serves them (<em>e.g.</em> to the WebUI):
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>conda<span style="color: #BBB"> </span>activate<span style="color: #BBB"> </span>plant-imager3
+fsdb_rest_api<span style="color: #BBB"> </span>--test<span style="color: #BBB"> </span>--empty<span style="color: #BBB"> </span>--host<span style="color: #BBB"> </span>localhost<span style="color: #BBB"> </span>--port<span style="color: #BBB"> </span><span style="color: #666">23656</span>
+</code></pre></div></p>
+<p>Allow the services a few seconds to start up and register with each other.</p>
+<h2 id="2-connect-a-client">2. Connect a client<a class="headerlink" href="#2-connect-a-client" title="Permanent link">Link</a></h2>
+<p>You can now connect to the controller over RPC exactly as the WebUI does.
+For example, a quick smoke test using the <code>plantimager.webui.controller_proxy.RPCController</code> proxy:</p>
+<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">time</span>
+<span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">zmq</span>
+<span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.webui.controller_proxy</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> RPCController
 
-    <div class="doc doc-contents ">
+context <span style="color: #666">=</span> zmq<span style="color: #666">.</span>Context()
+controller <span style="color: #666">=</span> RPCController(context, <span style="color: #BA2121">"tcp://localhost:14567"</span>)
 
+<span style="color: #3D7B7B; font-style: italic"># Wait for the dummy cameras to be discovered</span>
+<span style="color: #008000; font-weight: bold">while</span> <span style="color: #008000">len</span>(controller<span style="color: #666">.</span>camera_names) <span style="color: #666">&lt;</span> <span style="color: #666">2</span>:
+    <span style="color: #008000">print</span>(<span style="color: #BA2121">f"Waiting for cameras... found: </span><span style="color: #A45A77; font-weight: bold">{</span>controller<span style="color: #666">.</span>camera_names<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
+    time<span style="color: #666">.</span>sleep(<span style="color: #666">0.5</span>)
 
-
-
-
-
-
-
-
-
-                  <details class="mkdocstrings-source">
-                    <summary>Source code in <code>plantimager/controller/camera/pyav_receiver.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">10</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">11</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">12</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">13</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">14</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">15</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">16</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">17</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">18</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">19</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">20</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">24</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, ):
-    <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>()
-    <span style="color: #008000">self</span><span style="color: #666">.</span>uri <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>format <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_opened <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_wait_times <span style="color: #666">=</span> [<span style="color: #666">0</span>]<span style="color: #666">*30</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_decode_times <span style="color: #666">=</span> [<span style="color: #666">0</span>]<span style="color: #666">*30</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_base_rate: <span style="color: #008000">int</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_t0: <span style="color: #008000">float</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_stream: av<span style="color: #666">.</span>VideoStream <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_container: av<span style="color: #666">.</span>container<span style="color: #666">.</span>InputContainer <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_finalizer</span>():
-        <span style="color: #008000">print</span>(<span style="color: #BA2121">"Closing stream"</span>)
-        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_container: <span style="color: #008000">self</span><span style="color: #666">.</span>_container<span style="color: #666">.</span>close()
-    finalize(<span style="color: #008000">self</span>, _finalizer)
-</code></pre></div></td></tr></table></div>
-                  </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="plantimager.controller.camera.pyav_receiver.PyAVReceiver.open" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">open</span>
-
-
-<a href="#plantimager.controller.camera.pyav_receiver.PyAVReceiver.open" class="headerlink" title="Permanent link">Link</a></h4>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000">open</span>(uri, <span style="color: #008000">format</span>)
+<span style="color: #008000">print</span>(controller<span style="color: #666">.</span>camera_names)
+<span style="color: #008000">print</span>(controller<span style="color: #666">.</span>ready_to_scan)
 </code></pre></div>
+<h2 id="3-run-a-full-scan">3. Run a full scan<a class="headerlink" href="#3-run-a-full-scan" title="Permanent link">Link</a></h2>
+<h3 id="webui">WebUI<a class="headerlink" href="#webui" title="Permanent link">Link</a></h3>
+<p>Use the demo WebUI to drive the controller and run a full scan:
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>conda<span style="color: #BBB"> </span>activate<span style="color: #BBB"> </span>plant-imager3
+python<span style="color: #BBB"> </span>-m<span style="color: #BBB"> </span>plantimager.webui.main
+</code></pre></div></p>
+<h3 id="python-api">Python API<a class="headerlink" href="#python-api" title="Permanent link">Link</a></h3>
+<p>The following mirrors <code>test_full_scan_process</code> from <code>test_scan_integration.py</code>:</p>
+<ol>
+<li>configure the scanner</li>
+<li>point it at the database</li>
+<li>run a scan</li>
+</ol>
+<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
+<span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">time</span>
+<span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">tomllib</span>
+<span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">zmq</span>
+<span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantdb.client.plantdb_client</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> PlantDBClient
+<span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantdb.commons.auth.models</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Permission
+<span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.webui.controller_proxy</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> RPCController
 
-    <div class="doc doc-contents ">
+db_url <span style="color: #666">=</span> <span style="color: #BA2121">"http://localhost:23656"</span>
+rpc_addr <span style="color: #666">=</span> <span style="color: #BA2121">"tcp://localhost:14567"</span>
 
-        <p>Open a new video stream from uri using the specified format.
-:param uri:
-:param format:
-:return bool:</p>
+<span style="color: #3D7B7B; font-style: italic"># 1. Connect to the controller</span>
+context <span style="color: #666">=</span> zmq<span style="color: #666">.</span>Context()
+controller <span style="color: #666">=</span> RPCController(context, rpc_addr)
 
+<span style="color: #3D7B7B; font-style: italic"># 2. Wait for the dummy cameras to be discovered</span>
+<span style="color: #008000; font-weight: bold">while</span> <span style="color: #008000">len</span>(controller<span style="color: #666">.</span>camera_names) <span style="color: #666">&lt;</span> <span style="color: #666">2</span>:
+    <span style="color: #008000">print</span>(<span style="color: #BA2121">f"Waiting for cameras... found: </span><span style="color: #A45A77; font-weight: bold">{</span>controller<span style="color: #666">.</span>camera_names<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
+    time<span style="color: #666">.</span>sleep(<span style="color: #666">0.5</span>)
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>plantimager/controller/camera/pyav_receiver.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">27</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">28</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">29</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">30</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">31</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">32</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">33</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">34</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">35</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">36</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">37</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">38</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">44</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">45</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">47</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">48</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">54</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">55</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">open</span>(<span style="color: #008000">self</span>, uri: <span style="color: #008000">str</span>, <span style="color: #008000">format</span>: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
-<span style="color: #BA2121; font-style: italic">    Open a new video stream from uri using the specified format.</span>
-<span style="color: #BA2121; font-style: italic">    :param uri:</span>
-<span style="color: #BA2121; font-style: italic">    :param format:</span>
-<span style="color: #BA2121; font-style: italic">    :return bool:</span>
-<span style="color: #BA2121; font-style: italic">    """</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>uri <span style="color: #666">=</span> uri
-    <span style="color: #008000">self</span><span style="color: #666">.</span>format <span style="color: #666">=</span> <span style="color: #008000">format</span>
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_container:
-        <span style="color: #008000">self</span><span style="color: #666">.</span>_container<span style="color: #666">.</span>close()
-        <span style="color: #008000">self</span><span style="color: #666">.</span>_opened <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
-    <span style="color: #008000; font-weight: bold">try</span>:
-        <span style="color: #008000">self</span><span style="color: #666">.</span>_container <span style="color: #666">=</span> av<span style="color: #666">.</span>open(
-            <span style="color: #008000">self</span><span style="color: #666">.</span>uri, <span style="color: #BA2121">"r"</span>, <span style="color: #008000">format</span><span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>format, buffer_size<span style="color: #666">=1024</span>, timeout<span style="color: #666">=60</span>
-        )
-    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">UnicodeDecodeError</span>:
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
-    <span style="color: #008000; font-weight: bold">except</span> av<span style="color: #666">.</span>TimeoutError:
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
-    <span style="color: #008000; font-weight: bold">except</span> av<span style="color: #666">.</span>ConnectionRefusedError:
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
-    <span style="color: #008000; font-weight: bold">except</span> av<span style="color: #666">.</span>FFmpegError:
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_container<span style="color: #666">.</span>flags <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_container<span style="color: #666">.</span>flags <span style="color: #666">|</span> <span style="color: #666">0x40</span> <span style="color: #3D7B7B; font-style: italic"># NO_BUFFER</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_stream <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_container<span style="color: #666">.</span>streams<span style="color: #666">.</span>video[<span style="color: #666">0</span>]
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_base_rate <span style="color: #666">=</span> <span style="color: #008000">int</span>(<span style="color: #008000">self</span><span style="color: #666">.</span>_stream<span style="color: #666">.</span>base_rate)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_wait_times <span style="color: #666">=</span> [<span style="color: #666">0</span>] <span style="color: #666">*</span> <span style="color: #008000">int</span>(<span style="color: #008000">self</span><span style="color: #666">.</span>_base_rate)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_decode_times <span style="color: #666">=</span> [<span style="color: #666">0</span>] <span style="color: #666">*</span> <span style="color: #008000">int</span>(<span style="color: #008000">self</span><span style="color: #666">.</span>_base_rate)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_opened <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_t0 <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+<span style="color: #3D7B7B; font-style: italic"># 3. Connect to the database and get an API token</span>
+db_client <span style="color: #666">=</span> PlantDBClient(db_url)
+db_client<span style="color: #666">.</span>login(<span style="color: #BA2121">"admin"</span>, <span style="color: #BA2121">"admin"</span>)
+api_token <span style="color: #666">=</span> db_client<span style="color: #666">.</span>create_api_token(
+    <span style="color: #666">600</span>,
+    {<span style="color: #BA2121">"test_dataset"</span>: (Permission<span style="color: #666">.</span>WRITE, Permission<span style="color: #666">.</span>CREATE, Permission<span style="color: #666">.</span>READ)},
+)
 
-</div>
+<span style="color: #3D7B7B; font-style: italic"># 4. Load and prepare the scan configuration</span>
+config_path <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>abspath(os<span style="color: #666">.</span>path<span style="color: #666">.</span>join(
+    <span style="color: #BA2121">"src/webui/plantimager/webui/assets/config_scan.toml"</span>,
+))
+<span style="color: #008000; font-weight: bold">with</span> <span style="color: #008000">open</span>(config_path, <span style="color: #BA2121">"rb"</span>) <span style="color: #008000; font-weight: bold">as</span> f:
+    conf <span style="color: #666">=</span> tomllib<span style="color: #666">.</span>load(f)
 
+conf[<span style="color: #BA2121">"ScanPath"</span>][<span style="color: #BA2121">"kwargs"</span>][<span style="color: #BA2121">"n_points"</span>] <span style="color: #666">=</span> <span style="color: #666">4</span>
+<span style="color: #008000; font-weight: bold">for</span> cam_name <span style="color: #A2F; font-weight: bold">in</span> controller<span style="color: #666">.</span>camera_names:
+    conf[cam_name] <span style="color: #666">=</span> conf[<span style="color: #BA2121">"picamera"</span>]<span style="color: #666">.</span>copy()
 
+<span style="color: #3D7B7B; font-style: italic"># 5. Configure the controller</span>
+controller<span style="color: #666">.</span>set_api_token(api_token)
+controller<span style="color: #666">.</span>set_db_url(db_url)
+controller<span style="color: #666">.</span>set_dataset_name(<span style="color: #BA2121">"test_dataset"</span>)
+controller<span style="color: #666">.</span>set_config(conf)
 
-  </div>
+<span style="color: #3D7B7B; font-style: italic"># 6. Run the scan and wait for completion</span>
+controller<span style="color: #666">.</span>run_scan()
+<span style="color: #008000; font-weight: bold">while</span> controller<span style="color: #666">.</span>progress <span style="color: #666">&lt;</span> controller<span style="color: #666">.</span>max_progress:
+    time<span style="color: #666">.</span>sleep(<span style="color: #666">1</span>)
 
-    </div>
-
-</div>
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
+<span style="color: #3D7B7B; font-style: italic"># 7. Verify the results were stored</span>
+<span style="color: #008000">print</span>(<span style="color: #BA2121">"test_dataset"</span> <span style="color: #A2F; font-weight: bold">in</span> db_client<span style="color: #666">.</span>list_scans())
+<span style="color: #008000">print</span>(db_client<span style="color: #666">.</span>list_scan_filesets(<span style="color: #BA2121">"test_dataset"</span>))
+</code></pre></div>
+<h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">Link</a></h2>
+<p>Stop each process with <code>Ctrl+C</code> (SIGINT).
+The controller and camera servers exit gracefully on <code>KeyboardInterrupt</code>.</p>
+<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">Link</a></h2>
+<ul>
+<li><a href="../../test/test_scan_integration.py"><code>test_scan_integration.py</code></a> — the integration test this guide is based on</li>
+<li><a href="../RPC/">RPC.md</a> — the ZeroMQ RPC framework used between controller and WebUI</li>
+<li><a href="../architecture/">architecture.md</a> — how the components communicate</li>
+</ul>
 
 
 
@@ -3163,12 +3325,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
-        <script src="../../../../assets/_markdown_exec_pyodide.js"></script>
+        <script src="../../assets/_markdown_exec_pyodide.js"></script>
       
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
       

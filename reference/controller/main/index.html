@@ -1511,6 +1511,56 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.controller.main--plant-imager3-controller-entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plant-Imager3 Controller Entry Point
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Plant-Imager3 Controller Entry Point">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.main--key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.main--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.main.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;main
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.controller.main.sigint_handler" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2688,6 +2738,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../developer/full_stack_dev_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Full-Stack Dev Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../developer/NTP_server.md.md" class="md-nav__link">
         
   
@@ -2753,6 +2831,56 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.controller.main--plant-imager3-controller-entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plant-Imager3 Controller Entry Point
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Plant-Imager3 Controller Entry Point">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.main--key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.main--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.main.main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;main
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.controller.main.sigint_handler" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2802,6 +2930,24 @@
 
     <div class="doc doc-contents first">
 
+        <h3 id="plantimager.controller.main--plant-imager3-controller-entry-point">Plant-Imager3 Controller Entry Point<a class="headerlink" href="#plantimager.controller.main--plant-imager3-controller-entry-point" title="Permanent link">Link</a></h3>
+<p>Entry point for the Plant-Imager3 controller, a PySide6/QML desktop
+application that drives the plant imaging hardware.</p>
+<h4 id="plantimager.controller.main--key-features">Key Features<a class="headerlink" href="#plantimager.controller.main--key-features" title="Permanent link">Link</a></h4>
+<ul>
+<li>Boots the Qt GUI and loads the QML user interface from the PlantImagerApp module.</li>
+<li>Registers the camera image provider with the QML engine.</li>
+<li>Keeps the Python interpreter alive via a watchdog timer so unix signals (SIGINT) are handled.</li>
+<li>Reports service lifecycle state (ready, watchdog, stopping) to systemd.</li>
+</ul>
+<h4 id="plantimager.controller.main--usage-examples">Usage Examples<a class="headerlink" href="#plantimager.controller.main--usage-examples" title="Permanent link">Link</a></h4>
+<p>Run the controller directly as a script:</p>
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>python<span style="color: #BBB"> </span>src/controller/plantimager/controller/main.py
+</code></pre></div>
+<p>or</p>
+<div class="language-shell highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>python<span style="color: #BBB"> </span>-m<span style="color: #BBB"> </span>plantimager.controller.main
+</code></pre></div>
+
 
 
 
@@ -2825,6 +2971,116 @@
 <div class="doc doc-object doc-function">
 
 
+<h3 id="plantimager.controller.main.main" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">main</span>
+
+
+<a href="#plantimager.controller.main.main" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>main()
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Run the Plant-Imager3 controller.</p>
+<p>Creates the Qt application, loads the QML UI, installs signal handling,
+and blocks in the Qt event loop until the app quits.</p>
+<p>Exits with a non-zero code if the QML module fails to load.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>plantimager/controller/main.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 74</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 75</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 76</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 77</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 78</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 79</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 80</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 81</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 82</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 83</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 84</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 85</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 86</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 87</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 88</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 89</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 90</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 91</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 92</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 93</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 94</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 95</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 96</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 97</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 98</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 99</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">100</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">101</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">103</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">104</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">105</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">106</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
+<span style="color: #BA2121; font-style: italic">    Run the Plant-Imager3 controller.</span>
+
+<span style="color: #BA2121; font-style: italic">    Creates the Qt application, loads the QML UI, installs signal handling,</span>
+<span style="color: #BA2121; font-style: italic">    and blocks in the Qt event loop until the app quits.</span>
+
+<span style="color: #BA2121; font-style: italic">    Exits with a non-zero code if the QML module fails to load.</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Starting Plant-Imager3 controller"</span>)
+    app <span style="color: #666">=</span> QGuiApplication(sys<span style="color: #666">.</span>argv)
+
+    font <span style="color: #666">=</span> QFont(<span style="color: #BA2121">"Nunito Sans"</span>)
+    app<span style="color: #666">.</span>setFont(font)
+    QQuickStyle<span style="color: #666">.</span>setStyle(<span style="color: #BA2121">"Material"</span>)
+    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">"Using Material style and Nunito Sans font"</span>)
+
+    engine <span style="color: #666">=</span> QQmlApplicationEngine()
+    engine<span style="color: #666">.</span>addImageProvider(<span style="color: #BA2121">"provider"</span>, imageProvider)
+    engine<span style="color: #666">.</span>addImportPath(dirname(<span style="color: #19177C">__file__</span>))
+    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">"Loading QML module PlantImagerApp"</span>)
+    engine<span style="color: #666">.</span>loadFromModule(<span style="color: #BA2121">"PlantImagerApp"</span>, <span style="color: #BA2121">"Loader"</span>)
+
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> engine<span style="color: #666">.</span>rootObjects():
+        logger<span style="color: #666">.</span>error(<span style="color: #BA2121">"Failed to load QML module PlantImagerApp, no root objects created"</span>)
+        sys<span style="color: #666">.</span>exit(<span style="color: #666">-1</span>)  <span style="color: #3D7B7B; font-style: italic"># A load error is fatal: there is no UI to show</span>
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"QML module loaded successfully"</span>)
+
+    <span style="color: #3D7B7B; font-style: italic"># Keep the interpreter running so Python receives unix signals (SIGINT) between Qt's event loop iterations</span>
+    timer <span style="color: #666">=</span> QTimer()
+    timer<span style="color: #666">.</span>start(<span style="color: #666">500</span>)
+    timer<span style="color: #666">.</span>timeout<span style="color: #666">.</span>connect(notify_watchdog)  <span style="color: #3D7B7B; font-style: italic"># Let the interpreter run each 500 ms.</span>
+    signal<span style="color: #666">.</span>signal(signal<span style="color: #666">.</span>SIGINT, sigint_handler)
+    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">"Watchdog timer started, SIGINT handler installed"</span>)
+
+    <span style="color: #3D7B7B; font-style: italic"># view.setFlag(Qt.WindowType.FramelessWindowHint)</span>
+    notify_ready()  <span style="color: #3D7B7B; font-style: italic"># Tell systemd the service is up</span>
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Controller ready, entering event loop"</span>)
+    app<span style="color: #666">.</span>aboutToQuit<span style="color: #666">.</span>connect(notify_stopping)  <span style="color: #3D7B7B; font-style: italic"># Notify systemd on shutdown</span>
+    ex <span style="color: #666">=</span> app<span style="color: #666">.</span>exec()
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">"Event loop exited with code </span><span style="color: #A45A77; font-weight: bold">%s</span><span style="color: #BA2121">"</span>, ex)
+    sys<span style="color: #666">.</span>exit(ex)
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="plantimager.controller.main.sigint_handler" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">sigint_handler</span>
 
@@ -2835,16 +3091,85 @@
 
     <div class="doc doc-contents ">
 
-        <p>Handle SIGINT (ctrl+c)</p>
+        <p>Handle SIGINT (ctrl+c).</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>sig</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" title="signal.Signals" href="https://docs.python.org/3/library/signal.html#signal.Signals">Signals</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The signal number received.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>frame</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" title="types.FrameType" href="https://docs.python.org/3/library/types.html#types.FrameType">FrameType</a> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The interrupted stack frame.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/main.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">sigint_handler</span>(sig, frame):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Handle SIGINT (ctrl+c)"""</span>
-    QGuiApplication<span style="color: #666">.</span>quit()
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">61</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">62</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">63</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">64</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">sigint_handler</span>(sig: signal<span style="color: #666">.</span>Signals, frame: FrameType <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
+<span style="color: #BA2121; font-style: italic">    Handle SIGINT (ctrl+c).</span>
+
+<span style="color: #BA2121; font-style: italic">    Parameters</span>
+<span style="color: #BA2121; font-style: italic">    ----------</span>
+<span style="color: #BA2121; font-style: italic">    sig : signal.Signals</span>
+<span style="color: #BA2121; font-style: italic">        The signal number received.</span>
+<span style="color: #BA2121; font-style: italic">    frame : FrameType or None</span>
+<span style="color: #BA2121; font-style: italic">        The interrupted stack frame.</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
+    QGuiApplication<span style="color: #666">.</span>quit()  <span style="color: #3D7B7B; font-style: italic"># Ctrl+C only lands if the event loop keeps running, see the watchdog timer below</span>
+    logger<span style="color: #666">.</span>info(<span style="color: #BA2121">f"Received signal '</span><span style="color: #A45A77; font-weight: bold">{</span>signal<span style="color: #666">.</span>strsignal(sig)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">' (</span><span style="color: #A45A77; font-weight: bold">{</span>sig<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">), quitting"</span>)
+    logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">f"Signal received from </span><span style="color: #A45A77; font-weight: bold">{</span>frame<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
