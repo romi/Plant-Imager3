@@ -1,3 +1,4 @@
+import os
 import sys
 from os.path import dirname
 import signal
@@ -24,6 +25,16 @@ def sigint_handler(sig, frame):
 
 
 def main():
+    if "--allow-dummy-cnc" in sys.argv:
+        os.environ["PI3_ALLOW_DUMMY_CNC"] = "1"
+    if "--cnc" in sys.argv:
+        try:
+            idx = sys.argv.index("--cnc")
+            val = sys.argv[idx + 1].lower()
+            if val in ("dummy", "real"):
+                os.environ["PI3_CNC_MODE"] = val
+        except Exception:
+            pass
     app = QGuiApplication(sys.argv)
 
     font = QFont("Nunito Sans")

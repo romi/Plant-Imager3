@@ -87,10 +87,9 @@ def _stop_timers(*timers):
 
 from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
-from plantimager.controller.scanner.grbl import CNC
-from plantimager.controller.scanner.hal import AbstractCNC
 from plantimager.controller.scanner.path import Path
 from plantimager.controller.scanner.powermanager import PowerManager
+from plantimager.controller.scanner.powermanager import _is_grbl_cnc
 from plantimager.controller.scanner.scan import Scan
 from plantdb.client.plantdb_client import PlantDBClient
 
@@ -191,7 +190,6 @@ class TimeLapse(QObject):
     next_idx: int  # index of next-scheduled scan
     current_idx: int
     _state: TimeLapseState
-    cnc: AbstractCNC
     db_url: str
     db_client: PlantDBClient | None
     path: Path
@@ -206,10 +204,14 @@ class TimeLapse(QObject):
     scanCreated = Signal(object)
     pathInfoChanged = Signal(str)
 
-    def __init__(self, cnc: AbstractCNC, db_url: str, cameras: list[PiCameraComm], path: Path,
-                  timelapse_name: str, config: dict[str, Any], power_manager: PowerManager, parent=None):
+    def __init__(self, db_url: str, cameras: list[PiCameraComm], path: Path,
+                  timelapse_name: str, config: dict[str, Any], power_manager: PowerManager, parent=None, **kwargs):
         super().__init__(parent)
-        self.cnc = cnc
+        if "cnc" in kwargs and kwargs["cnc"] is not None:
+            try:
+                power_manager.cnc = kwargs["cnc"]
+            except Exception:
+                pass
         self.db_url = db_url
         self.db_client = PlantDBClient(db_url) if db_url else None
         self.cameras = cameras
@@ -317,13 +319,14 @@ class TimeLapse(QObject):
 
         self.mode = TimeLapseMode(timelapse_config["mode"])
         now_utc = datetime.datetime.now(timezone.utc)
+        is_grbl = _is_grbl_cnc(self.power_manager.get_cnc()) if self.power_manager else False
         if self.mode == TimeLapseMode.ONE_SHOT:
-            if isinstance(self.cnc, CNC):
+            if is_grbl:
                 self.schedule_times.append(now_utc)
             else:
                 self.schedule_times.append(now_utc + datetime.timedelta(seconds=self.warmup_sec))
         elif self.mode == TimeLapseMode.INTERVAL:
-            if isinstance(self.cnc, CNC):
+            if is_grbl:
                 self.start_at = now_utc
             else:
                 self.start_at = now_utc + datetime.timedelta(seconds=self.warmup_sec)
@@ -402,9 +405,7 @@ class TimeLapse(QObject):
             self._persist_state()
             return
 
-        cnc = self.power_manager.get_cnc() if self.power_manager else self.cnc
-        if cnc is None:
-            cnc = self.cnc
+        cnc = self.power_manager.get_cnc() if self.power_manager else None
         db_client = self.db_client or PlantDBClient(self.db_url) if self.db_url else None
         if getattr(self, "plantdb_timelapse_id", None) is not None:
             scan_id = f"{self.plantdb_timelapse_id}_{index}"
@@ -461,7 +462,6 @@ class TimeLapse(QObject):
     @Slot(object)
     def cnc_ready(self, cnc):
         """PowerManager reports CNC connected; (re)arm schedule if not terminal."""
-        self.cnc = cnc
         if self._state not in (TimeLapseState.COMPLETED, TimeLapseState.FAILED, TimeLapseState.CANCELLED):
             self.state = TimeLapseState.SCHEDULED
             self._setup_next_scan_timer()

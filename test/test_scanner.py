@@ -45,10 +45,12 @@ def scanner(monkeypatch):
 
 
 def test_construction_owns_power_manager_and_falls_back_to_dummy_cnc(scanner):
-    assert isinstance(scanner.cnc, DummyCNC)
+    assert isinstance(scanner.power_manager.get_cnc(), DummyCNC)
     assert isinstance(scanner.power_manager, PowerManager)
     assert scanner.timelapse is None
     assert scanner.cnc_type == "DummyCNC"
+    assert scanner.cnc_state == "dummy"
+    assert not hasattr(scanner, "cnc")
 
 
 class _FakeScan(QObject):
@@ -180,8 +182,9 @@ def test_power_manager_cnc_ready_swaps_dummy_for_real(scanner, monkeypatch):
     real = MagicMock()
     real.__class__.__name__ = "CNC"
     scanner.power_manager.cnc_ready.emit(real)
-    assert scanner.cnc is real
+    assert scanner.power_manager.get_cnc() is real
     assert scanner.cnc_type == "GRBL CNC"
+    assert scanner.cnc_state == "ready"
 
 
 # ----------------------------------------------------------------------

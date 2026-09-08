@@ -9,9 +9,16 @@ from enum import StrEnum
 from typing import Callable
 from functools import update_wrapper
 
+import threading
+
 import serial
 from PySide6.QtCore import QObject, Signal, Slot, Property, QTimer
 import gpio
+
+from plantimager.commons.logging import create_logger
+from plantimager.controller.scanner.dummy_cnc import DummyCNC
+from plantimager.controller.scanner.grbl import CNC
+from plantimager.controller.scanner.hal import AbstractCNC
 
 
 def _stop_timers(*timers):
@@ -23,9 +30,22 @@ def _stop_timers(*timers):
         except RuntimeError:
             pass
 
-from plantimager.commons.logging import create_logger
-from plantimager.controller.scanner.grbl import CNC
-from plantimager.controller.scanner.hal import AbstractCNC
+
+def _is_grbl_cnc(obj) -> bool:
+    if obj is None:
+        return False
+    try:
+        return isinstance(obj, CNC)
+    except TypeError:
+        return getattr(obj, "__class__", None).__name__ == "CNC" if hasattr(obj, "__class__") else False
+
+
+def _allow_dummy_cnc(cli_allow: bool | None = None) -> bool:
+    if cli_allow is not None:
+        return cli_allow
+    if os.getenv("PI3_ALLOW_DUMMY_CNC", "").lower() in ("1", "true", "yes"):
+        return True
+    return os.getenv("PI3_CNC_MODE", "real").lower() == "dummy"
 
 logger = create_logger(__name__)
 
@@ -67,8 +87,9 @@ class PowerManager(QObject):
     cnc: CNC | None
     cnc_ready = Signal(CNC)
     modeChanged = Signal(str)
+    _cnc_result_signal = Signal(object)
 
-    def __init__(self, warmup_period: float, parent=None):
+    def __init__(self, warmup_period: float, parent=None, allow_dummy: bool | None = None):
         """
         Initialize the PowerManager instance.
 
@@ -85,6 +106,9 @@ class PowerManager(QObject):
         parent : optional
             The parent QObject for the timers created within the object. Defaults
             to ``None``.
+        allow_dummy : bool | None
+            Exclusive CNC backend: True → only DummyCNC, False/None → only GRBL CNC
+            (env `PI3_ALLOW_DUMMY_CNC`/`PI3_CNC_MODE` or CLI overrides). None defers to env.
 
         Attributes
         ----------
@@ -114,57 +138,110 @@ class PowerManager(QObject):
             mode=gpio.OUT,
             initial=gpio.LOW
         )
+        self._allow_dummy: bool = _allow_dummy_cnc(allow_dummy)
         self.cnc: AbstractCNC | None = None
+        self._connecting: bool = False
+        self._pending_cnc: AbstractCNC | None = None
         self.warmup_period: float = warmup_period
         self.manual_mode_timer = QTimer(parent=self, singleShot=True, interval=60 * 5 * 1000)  # 5 minutes in ms
         self.manual_mode_timer.timeout.connect(self._manual_mode_timeout)
         self.warmup_timer = QTimer(parent=self, singleShot=True)
         self.warmup_timer.timeout.connect(self._on_warmup_timer)
         self.cnc_connect_timer = QTimer(parent=self, singleShot=False, interval=1200)
-        self.cnc_connect_timer.timeout.connect(self._cnc_connect)
+        self.cnc_connect_timer.timeout.connect(self._dispatch_cnc_connect)
+        self._cnc_result_timer = QTimer(parent=self, singleShot=True)
+        self._cnc_result_timer.timeout.connect(self._on_cnc_connect_result_owned)
+        self._cnc_result_signal.connect(self._on_cnc_connect_result)
         self.destroyed.connect(
-            lambda _=None, _a=self.warmup_timer, _b=self.manual_mode_timer, _c=self.cnc_connect_timer: _stop_timers(_a, _b, _c)
+            lambda _=None, _a=self.warmup_timer, _b=self.manual_mode_timer, _c=self.cnc_connect_timer, _d=self._cnc_result_timer: _stop_timers(_a, _b, _c, _d)
         )
-        weakref.finalize(self, _stop_timers, self.warmup_timer, self.manual_mode_timer, self.cnc_connect_timer)
+        weakref.finalize(self, _stop_timers, self.warmup_timer, self.manual_mode_timer, self.cnc_connect_timer, self._cnc_result_timer)
         self._mode: PowerManagerMode = PowerManagerMode.AUTO
         self.modeChanged.connect(self._on_mode_changed)
         self._next_warmup_date: datetime.datetime | None = None
         self._resume_auto()
+        if self._allow_dummy:
+            try:
+                self.cnc = self._create_cnc()
+                if self._mode == PowerManagerMode.MANUAL:
+                    activity_monitor(self.cnc, self.manual_mode_timer.start)
+                    self.manual_mode_timer.start()
+                self.cnc_ready.emit(self.cnc)
+            except Exception:
+                self.cnc = None
+        else:
+            self.cnc_connect_timer.start()
+            try:
+                self._dispatch_cnc_connect()
+            except Exception:
+                pass
+
+    def _create_cnc(self) -> AbstractCNC:
+        if self._allow_dummy:
+            return DummyCNC()
+        return CNC()
+
+    @Slot()
+    def _dispatch_cnc_connect(self):
+        if _is_grbl_cnc(self.cnc):
+            return
+        if self._allow_dummy and isinstance(self.cnc, DummyCNC):
+            return
+        if self._connecting:
+            return
+        self._connecting = True
+        t = threading.Thread(target=self._do_cnc_connect_blocking, daemon=True)
+        t.start()
+
+    def _do_cnc_connect_blocking(self):
+        cnc = None
+        try:
+            cnc = self._create_cnc()
+        except (serial.SerialException, RuntimeError, Exception):
+            cnc = None
+        self._cnc_result_signal.emit(cnc)
+
+    @Slot(object)
+    def _on_cnc_connect_result(self, cnc):
+        self._connecting = False
+        if cnc is None:
+            return
+        if _is_grbl_cnc(self.cnc):
+            return
+        if self._allow_dummy and isinstance(self.cnc, DummyCNC):
+            return
+        self.cnc = cnc
+        if self._mode == PowerManagerMode.MANUAL:
+            try:
+                activity_monitor(self.cnc, self.manual_mode_timer.start)
+            except Exception:
+                pass
+            self.manual_mode_timer.start()
+        self.cnc_ready.emit(self.cnc)
+
+    @Slot()
+    def _on_cnc_connect_result_owned(self):
+        cnc = getattr(self, "_pending_cnc", None)
+        self._pending_cnc = None
+        self._on_cnc_connect_result(cnc)
 
     @Slot()
     def _cnc_connect(self):
-        """
-        Establishes a connection to the CNC machine and configures its operational state.
-
-        This method initializes and connects to a CNC machine instance if it is not
-        already connected. It handles exceptions related to communication issues
-        during the initialization process, ensures timers associated with CNC modes
-        are started, and emits a signal indicating the CNC machine is ready.
-
-        Notes
-        -----
-        - If an instance of the CNC machine (`self.cnc`) is already initialized, this method
-          does not reinitialize it.
-
-        See Also
-        --------
-        activity_monitor : Monitors CNC activity for logging and synchronization purposes.
-
-        """
-        if isinstance(self.cnc, CNC):
-            self.cnc_connect_timer.stop()
+        """Legacy synchronous entry (kept for tests that call it directly)."""
+        if _is_grbl_cnc(self.cnc):
             return
-
+        if self._allow_dummy and isinstance(self.cnc, DummyCNC):
+            return
         try:
-            if self.cnc is None: self.cnc = CNC()
-        except serial.SerialException:
+            cnc = self._create_cnc()
+        except (serial.SerialException, RuntimeError, Exception):
             return
-        except RuntimeError:
-            return
-
-        self.cnc_connect_timer.stop()
+        self.cnc = cnc
         if self._mode == PowerManagerMode.MANUAL:
-            activity_monitor(self.cnc, self.manual_mode_timer.start)
+            try:
+                activity_monitor(self.cnc, self.manual_mode_timer.start)
+            except Exception:
+                pass
             self.manual_mode_timer.start()
         self.cnc_ready.emit(self.cnc)
 
@@ -324,6 +401,10 @@ class PowerManager(QObject):
             else:
                 self._prepare_for_scan()
 
-    def set_manual(self):
-        """Enter MANUAL mode, powering up the scanner for manual operation."""
-        self.mode = PowerManagerMode.MANUAL
+    def try_set_mode(self, mode: PowerManagerMode) -> bool:
+        self.mode = mode
+        return self.mode == mode
+
+    def set_manual(self) -> bool:
+        """Enter MANUAL mode, powering up the scanner for manual operation. Returns False if SCAN preempts."""
+        return self.try_set_mode(PowerManagerMode.MANUAL)

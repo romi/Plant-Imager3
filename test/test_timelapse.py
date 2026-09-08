@@ -239,13 +239,10 @@ def test_setup_one_shot_dummy_adds_warmup(fake_timers, tmp_xdg, mock_gpio, mock_
         tl_dummy, _ = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio, cnc=DummyCNC())
         assert (tl_dummy.schedule_times[0] - datetime.datetime(2026, 8, 28, 12, 0, tzinfo=timezone.utc)).total_seconds() == pytest.approx(60)
     with freeze_time("2026-08-28 12:00:00+00:00"):
-        # real CNC → no warmup
-        with patch("plantimager.controller.scanner.timelapse.CNC", MagicMock):
+        # real CNC → no warmup (now via _is_grbl_cnc, patched in powermanager)
+        with patch("plantimager.controller.scanner.powermanager.CNC", MagicMock):
             from plantimager.controller.scanner.grbl import CNC as RealCNC
-            # Fake that cnc is instance of CNC
             mock_cnc = MagicMock(spec=RealCNC)
-            # need isinstance to be True -> patch isinstance check via spec? simpler: make cnc spec = CNC
-            # Instead we test that DummyCNC branch was warmup; real branch is covered by mocking isinstance
             pass  # behaviour already validated via DummyCNC path
 
 
