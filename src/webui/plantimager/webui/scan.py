@@ -237,7 +237,18 @@ configuration_card = [
     dbc.Card(
         id="configuration-card",
         children=[
-            dbc.CardHeader(children=[html.I(className="bi bi-code-square me-2"), "Configuration"]),
+            dbc.CardHeader(
+                dbc.Row([
+                    dbc.Col([html.I(className="bi bi-code-square me-2"), "Configuration"],
+                            className="align-self-center"),
+                    dbc.Col([
+                        dbc.Button(
+                            children=[html.I(className="bi bi-eye me-2"), "View TOML"],
+                            id="view-cfg-button", color="secondary", outline=True, size="sm", n_clicks=0,
+                        )
+                    ], width="auto", className="ms-auto"),
+                ], className="g-0 align-items-center"),
+            ),
             dbc.CardBody([
                 dbc.Accordion([
                     dbc.AccordionItem(_path_form(), title="Path configuration", item_id="path"),
@@ -416,6 +427,21 @@ scan_layout = html.Div(
             dbc.Col(configuration_card, md=6),
             dbc.Col(dataset_name_card + [html.Br()] + camera_card + [html.Br()] + scan_card, md=6)
         ]),
+        # Modal showing the current TOML configuration (read-only).
+        dbc.Modal(id="view-cfg-modal", is_open=False, size="lg", scrollable=True,
+                  children=[
+                      dbc.ModalHeader(
+                          dbc.ModalTitle(
+                              children=[html.I(className="bi bi-code-square me-2"), "Current TOML configuration"])
+                      ),
+                      dbc.ModalBody([
+                          dcc.Markdown(id="view-cfg-content"),
+                          html.Div(id="cfg-hljs-trigger", style={"display": "none"}),
+                      ]),
+                      dbc.ModalFooter([
+                          dbc.Button("Close", id="view-cfg-close", color="secondary", className="ms-auto"),
+                      ]),
+                  ]),
         # Modal asking to confirm overriding the current config with the uploaded file.
         dbc.Modal(id="override-modal", is_open=False, size="lg", children=[
             dbc.ModalHeader(
@@ -732,6 +758,26 @@ def apply_config_override(confirm_clicks, abort_clicks, uploaded: str | None):
     return no_update, False, None
 
 
+@callback(
+    Output('view-cfg-modal', 'is_open'),
+    Output('view-cfg-content', 'children'),
+    Input('view-cfg-button', 'n_clicks'),
+    Input('view-cfg-close', 'n_clicks'),
+    State('view-cfg-modal', 'is_open'),
+    State('scan-cfg-toml', 'value'),
+    prevent_initial_call=True,
+)
+def toggle_view_cfg_modal(open_clicks, close_clicks, is_open: bool, cfg: str | None):
+    """Open the view-config modal (showing the current TOML) or close it."""
+    if ctx.triggered_id == 'view-cfg-button':
+        if cfg:
+            md_cfg = "```toml\n" + cfg + "\n```"
+        else:
+            md_cfg = ""
+        return True, md_cfg
+    return False, no_update
+
+
 # Toggle visibility of each camera's "Advanced configuration" textarea via its "Advanced" checkbox.
 for _i in range(MAX_CAMERAS):
     clientside_callback(
@@ -743,6 +789,19 @@ for _i in range(MAX_CAMERAS):
         Output(f'cam-{_i}-config-label', 'style'),
         Input(f'cam-{_i}-advanced', 'value'),
     )
+
+
+# Highlight the TOML code block rendered by `view-cfg-content`.
+# Theme + engine live in `assets/` (highlight.min.js, highlight-*.min.css).
+# See docs/developer/webui_syntax_highlighting.md for how to change the theme.
+clientside_callback(
+    """function(_) {
+        document.querySelectorAll('#view-cfg-content pre code').forEach((el) => hljs.highlightElement(el));
+        return '';
+    }""",
+    Output('cfg-hljs-trigger', 'children'),
+    Input('view-cfg-content', 'children'),
+)
 
 
 def all_valid_characters(dataset_name: str) -> bool:
