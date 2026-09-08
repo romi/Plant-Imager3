@@ -158,14 +158,7 @@ class Scanner(QObject):
     powerModeChanged = Signal(str)
 
     def __init__(self, allow_dummy: bool | None = None):
-        """Initialize the Scanner with default settings.
-
-        Notes
-        -----
-        PowerManager is the sole owner of the CNC (real or DummyCNC via
-        `allow_dummy`/env `PI3_ALLOW_DUMMY_CNC`). Scanner borrows it via
-        `power_manager.get_cnc()` for scans and manual moves.
-        """
+        """Initialize the Scanner with default settings."""
         super().__init__()
         self.config = {}  # Configuration dictionary
 
@@ -216,35 +209,27 @@ class Scanner(QObject):
             return "DummyCNC"
         if name == "CNC":
             return "GRBL CNC"
-        return "None"
+        raise TypeError(f"Incorrect type from PowerManager.get_cnc(). Expected DummyCNC, CNC or None, got {c}")
 
     @Property(str, notify=cncStateChanged)
     def cnc_state(self) -> str:
         """Qt-visible CNC state for the UI."""
         c = self.power_manager.get_cnc()
         if c is not None:
-            try:
-                if isinstance(c, DummyCNC):
-                    return "dummy"
-                if isinstance(c, CNC):
-                    return "ready"
-            except TypeError:
-                pass
+            if isinstance(c, DummyCNC):
+                return "dummy"
+            if isinstance(c, CNC):
+                return "ready"
             name = getattr(c, "__class__", type(c)).__name__ if hasattr(c, "__class__") else ""
             if name == "DummyCNC":
                 return "dummy"
             if name == "CNC":
                 return "ready"
-        try:
-            if self.power_manager.cnc_connect_timer.isActive():
-                return "connecting"
-        except Exception:
-            pass
-        try:
-            if self.power_manager.warmup_timer.isActive():
-                return "warming_up"
-        except Exception:
-            pass
+
+        if self.power_manager.cnc_connect_timer.isActive():
+            return "connecting"
+        if self.power_manager.warmup_timer.isActive():
+            return "standby"
         return "disconnected"
 
     @Property(str, notify=powerModeChanged)
@@ -254,11 +239,6 @@ class Scanner(QObject):
     @Slot(object)
     def _on_power_cnc_ready(self, cnc):
         """PowerManager reports CNC ready — forward to QML."""
-        try:
-            if cnc is not None and self.power_manager.get_cnc() is not cnc:
-                self.power_manager.cnc = cnc
-        except Exception:
-            pass
         self.cncTypeChanged.emit(self.cnc_type)
         self.cncStateChanged.emit(self.cnc_state)
         self.readyToScanChanged.emit(self.ready_to_scan)
@@ -271,7 +251,7 @@ class Scanner(QObject):
     @Slot(result=bool)
     def enable_manual(self) -> bool:
         """Controller-app only — enter MANUAL, power up. No RPC."""
-        return self.power_manager.try_set_mode(PowerManagerMode.MANUAL) if hasattr(self.power_manager, "try_set_mode") else bool(self.power_manager.set_manual())
+        return self.power_manager.try_set_mode(PowerManagerMode.MANUAL)
 
     @Slot(result=bool)
     def is_manual(self) -> bool:
@@ -469,11 +449,8 @@ class Scanner(QObject):
             except (RuntimeError, TypeError):
                 pass
         self._watched_scan = scan
-        try:
-            scan.progressChanged.connect(self.progressChanged)
-            scan.maxProgressChanged.connect(self.maxProgressChanged)
-        except Exception:
-            pass
+        scan.progressChanged.connect(self.progressChanged)
+        scan.maxProgressChanged.connect(self.maxProgressChanged)
 
     # ------------------------------------------------------------------
     # Single-scan execution (bridge for the legacy `run_scan` RPC)
@@ -509,9 +486,15 @@ class Scanner(QObject):
         if not self.db_client: raise RuntimeError("DB client not set for scan")
         if not getattr(self, "base_name", ""): raise RuntimeError("Base name not set for scan — call set_base_name first")
         if not self.cameras: raise RuntimeError("No Cameras connected")
-        cnc = self.power_manager.get_cnc()
+        self.power_manager.try_set_mode(PowerManagerMode.SCAN)
+
+        t_start = time.time()
+        while (cnc := self.power_manager.get_cnc()) is None and (time.time() - t_start < 60):
+            time.sleep(0.1)
+
         if cnc is None:
-            raise RuntimeError("CNC not ready — connecting/warming up")
+            self.power_manager.try_set_mode(PowerManagerMode.AUTO)
+            raise RuntimeError("CNC not ready")
 
         self._scan_in_progress = True
         self.scanInProgressChanged.emit(self.scan_in_progress)
@@ -620,6 +603,7 @@ class Scanner(QObject):
         # Reuse TimeLapse's schedule computation by building a throwaway instance
         # is heavy; instead expose the deterministic schedule via the store shape.
         from plantimager.controller.scanner.timelapse import TimeLapse as _TL
+        # TODO: create a static method in Timelapse computing the schedule without instanciating everything
         probe = _TL(db_url=self.db_url, cameras=self.cameras,
                     path=self.scan_path, timelapse_name="preview", config=config,
                     power_manager=self.power_manager, parent=self)

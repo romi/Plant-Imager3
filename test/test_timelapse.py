@@ -127,7 +127,7 @@ def mock_plantdb(monkeypatch):
 
 
 def make_timelapse(config, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio, cnc=None):
-    # cnc: MagicMock or real DummyCNC
+    # cnc: MagicMock or real DummyCNC — set on PowerManager before TimeLapse (mirrors exclusive factory)
     from plantimager.controller.scanner.dummy_cnc import DummyCNC
     from plantimager.controller.scanner.powermanager import PowerManager
 
@@ -135,8 +135,8 @@ def make_timelapse(config, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, 
         cnc = DummyCNC()
 
     pm = PowerManager(warmup_period=config["timelapse"].get("warmup_period", 30))
+    pm.cnc = cnc
     tl = TimeLapse(
-        cnc=cnc,
         db_url="http://dummy",
         cameras=[],
         path=[],
@@ -238,12 +238,6 @@ def test_setup_one_shot_dummy_adds_warmup(fake_timers, tmp_xdg, mock_gpio, mock_
     with freeze_time("2026-08-28 12:00:00+00:00"):
         tl_dummy, _ = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio, cnc=DummyCNC())
         assert (tl_dummy.schedule_times[0] - datetime.datetime(2026, 8, 28, 12, 0, tzinfo=timezone.utc)).total_seconds() == pytest.approx(60)
-    with freeze_time("2026-08-28 12:00:00+00:00"):
-        # real CNC → no warmup (now via _is_grbl_cnc, patched in powermanager)
-        with patch("plantimager.controller.scanner.powermanager.CNC", MagicMock):
-            from plantimager.controller.scanner.grbl import CNC as RealCNC
-            mock_cnc = MagicMock(spec=RealCNC)
-            pass  # behaviour already validated via DummyCNC path
 
 
 # ---------------------------------------------------------------------------
@@ -305,7 +299,8 @@ def test_scan_success_transitions_and_deterministic_id(fake_timers, tmp_xdg, moc
         from plantimager.controller.scanner.powermanager import PowerManager
         from plantimager.controller.scanner.dummy_cnc import DummyCNC
         pm = PowerManager(warmup_period=30)
-        tl = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-xyz", config=cfg, power_manager=pm)
+        pm.cnc = DummyCNC()
+        tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-xyz", config=cfg, power_manager=pm)
         now = datetime.datetime.now(timezone.utc)
         tl.schedule_times = [now - datetime.timedelta(seconds=10)]
         tl.next_idx = 0
@@ -321,7 +316,8 @@ def test_scan_success_transitions_and_deterministic_id(fake_timers, tmp_xdg, moc
         # n=3 → indexed scans under container
         scan_instances.clear()
         cfg2 = minimal_config(mode="interval", interval=60, n_shots=3, grace_period=120)
-        tl2 = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-abc", config=cfg2, power_manager=pm)
+        pm.cnc = DummyCNC()
+        tl2 = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-abc", config=cfg2, power_manager=pm)
         assert tl2.plantdb_timelapse_id == "tl-abc"
         tl2.schedule_times = [now - datetime.timedelta(seconds=10) + datetime.timedelta(seconds=i*60) for i in range(3)]
         tl2.next_idx = 0
@@ -351,7 +347,8 @@ def test_scan_failure_goes_failed_and_emits(fake_timers, tmp_xdg, mock_gpio, moc
         from plantimager.controller.scanner.powermanager import PowerManager
         from plantimager.controller.scanner.dummy_cnc import DummyCNC
         pm = PowerManager(warmup_period=30)
-        tl = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-fail", config=cfg, power_manager=pm)
+        pm.cnc = DummyCNC()
+        tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-fail", config=cfg, power_manager=pm)
         tl.schedule_times = [datetime.datetime.now(timezone.utc) - datetime.timedelta(seconds=5)]
         tl.next_idx = 0
         tl.state = TimeLapseState.SCHEDULED
@@ -425,7 +422,8 @@ def test_trigger_next_scan_advances_and_completes(fake_timers, tmp_xdg, mock_gpi
         from plantimager.controller.scanner.powermanager import PowerManager
         from plantimager.controller.scanner.dummy_cnc import DummyCNC
         pm = PowerManager(warmup_period=30)
-        tl = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-trig", config=cfg, power_manager=pm)
+        pm.cnc = DummyCNC()
+        tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-trig", config=cfg, power_manager=pm)
         # mock timers to avoid real arming in __init__, then set schedule now
         tl._next_scan_timer = FakeTimer()
         tl.schedule_times = [datetime.datetime.now(timezone.utc) - datetime.timedelta(seconds=5),

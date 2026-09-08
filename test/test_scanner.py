@@ -45,11 +45,12 @@ def scanner(monkeypatch):
 
 
 def test_construction_owns_power_manager_and_falls_back_to_dummy_cnc(scanner):
-    assert isinstance(scanner.power_manager.get_cnc(), DummyCNC)
+    # In AUTO, no CNC (mirrors real) — even with DummyCNC flag, creation is via dispatch on MANUAL/SCAN
+    assert scanner.power_manager.get_cnc() is None
     assert isinstance(scanner.power_manager, PowerManager)
     assert scanner.timelapse is None
-    assert scanner.cnc_type == "DummyCNC"
-    assert scanner.cnc_state == "dummy"
+    assert scanner.cnc_type == "None"
+    assert scanner.cnc_state in ("connecting", "disconnected", "standby")
     assert not hasattr(scanner, "cnc")
 
 
@@ -73,6 +74,7 @@ def _make_ready_scanner(scanner):
     scanner.scan_path = Circle(center_x=0, center_y=0, z=10, tilt=0, radius=10, n_points=4)
     scanner.db_client = MagicMock()
     scanner.set_base_name("test_dataset")
+    scanner.power_manager.cnc = DummyCNC()
     cam = MagicMock()
     cam.name = "cam1"
     scanner.cameras = [cam]
@@ -181,6 +183,7 @@ def test_timelapse_progress_forwarded(scanner):
 def test_power_manager_cnc_ready_swaps_dummy_for_real(scanner, monkeypatch):
     real = MagicMock()
     real.__class__.__name__ = "CNC"
+    scanner.power_manager.cnc = real
     scanner.power_manager.cnc_ready.emit(real)
     assert scanner.power_manager.get_cnc() is real
     assert scanner.cnc_type == "GRBL CNC"

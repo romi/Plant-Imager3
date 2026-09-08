@@ -205,13 +205,8 @@ class TimeLapse(QObject):
     pathInfoChanged = Signal(str)
 
     def __init__(self, db_url: str, cameras: list[PiCameraComm], path: Path,
-                  timelapse_name: str, config: dict[str, Any], power_manager: PowerManager, parent=None, **kwargs):
+                  timelapse_name: str, config: dict[str, Any], power_manager: PowerManager, parent=None):
         super().__init__(parent)
-        if "cnc" in kwargs and kwargs["cnc"] is not None:
-            try:
-                power_manager.cnc = kwargs["cnc"]
-            except Exception:
-                pass
         self.db_url = db_url
         self.db_client = PlantDBClient(db_url) if db_url else None
         self.cameras = cameras
@@ -319,7 +314,7 @@ class TimeLapse(QObject):
 
         self.mode = TimeLapseMode(timelapse_config["mode"])
         now_utc = datetime.datetime.now(timezone.utc)
-        is_grbl = _is_grbl_cnc(self.power_manager.get_cnc()) if self.power_manager else False
+        is_grbl = _is_grbl_cnc(self.power_manager.get_cnc())
         if self.mode == TimeLapseMode.ONE_SHOT:
             if is_grbl:
                 self.schedule_times.append(now_utc)
@@ -405,7 +400,7 @@ class TimeLapse(QObject):
             self._persist_state()
             return
 
-        cnc = self.power_manager.get_cnc() if self.power_manager else None
+        cnc = self.power_manager.get_cnc()
         db_client = self.db_client or PlantDBClient(self.db_url) if self.db_url else None
         if getattr(self, "plantdb_timelapse_id", None) is not None:
             scan_id = f"{self.plantdb_timelapse_id}_{index}"

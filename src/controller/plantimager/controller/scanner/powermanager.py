@@ -35,9 +35,11 @@ def _is_grbl_cnc(obj) -> bool:
     if obj is None:
         return False
     try:
-        return isinstance(obj, CNC)
+        if isinstance(obj, CNC):
+            return True
     except TypeError:
-        return getattr(obj, "__class__", None).__name__ == "CNC" if hasattr(obj, "__class__") else False
+        pass
+    return getattr(obj, "__class__", None).__name__ == "CNC"
 
 
 def _allow_dummy_cnc(cli_allow: bool | None = None) -> bool:
@@ -85,7 +87,7 @@ class PowerManagerMode(StrEnum):
 class PowerManager(QObject):
 
     cnc: CNC | None
-    cnc_ready = Signal(CNC)
+    cnc_ready = Signal(object)
     modeChanged = Signal(str)
     _cnc_result_signal = Signal(object)
 
@@ -160,21 +162,8 @@ class PowerManager(QObject):
         self.modeChanged.connect(self._on_mode_changed)
         self._next_warmup_date: datetime.datetime | None = None
         self._resume_auto()
-        if self._allow_dummy:
-            try:
-                self.cnc = self._create_cnc()
-                if self._mode == PowerManagerMode.MANUAL:
-                    activity_monitor(self.cnc, self.manual_mode_timer.start)
-                    self.manual_mode_timer.start()
-                self.cnc_ready.emit(self.cnc)
-            except Exception:
-                self.cnc = None
-        else:
-            self.cnc_connect_timer.start()
-            try:
-                self._dispatch_cnc_connect()
-            except Exception:
-                pass
+        self.cnc_connect_timer.start()
+        self._dispatch_cnc_connect()
 
     def _create_cnc(self) -> AbstractCNC:
         if self._allow_dummy:
@@ -188,6 +177,8 @@ class PowerManager(QObject):
         if self._allow_dummy and isinstance(self.cnc, DummyCNC):
             return
         if self._connecting:
+            return
+        if self.mode == PowerManagerMode.AUTO:  # No CNC on AUTO
             return
         self._connecting = True
         t = threading.Thread(target=self._do_cnc_connect_blocking, daemon=True)
@@ -212,10 +203,7 @@ class PowerManager(QObject):
             return
         self.cnc = cnc
         if self._mode == PowerManagerMode.MANUAL:
-            try:
-                activity_monitor(self.cnc, self.manual_mode_timer.start)
-            except Exception:
-                pass
+            activity_monitor(self.cnc, self.manual_mode_timer.start)
             self.manual_mode_timer.start()
         self.cnc_ready.emit(self.cnc)
 
@@ -225,25 +213,6 @@ class PowerManager(QObject):
         self._pending_cnc = None
         self._on_cnc_connect_result(cnc)
 
-    @Slot()
-    def _cnc_connect(self):
-        """Legacy synchronous entry (kept for tests that call it directly)."""
-        if _is_grbl_cnc(self.cnc):
-            return
-        if self._allow_dummy and isinstance(self.cnc, DummyCNC):
-            return
-        try:
-            cnc = self._create_cnc()
-        except (serial.SerialException, RuntimeError, Exception):
-            return
-        self.cnc = cnc
-        if self._mode == PowerManagerMode.MANUAL:
-            try:
-                activity_monitor(self.cnc, self.manual_mode_timer.start)
-            except Exception:
-                pass
-            self.manual_mode_timer.start()
-        self.cnc_ready.emit(self.cnc)
 
     @Slot()
     def _manual_mode_timeout(self):
@@ -271,6 +240,8 @@ class PowerManager(QObject):
             initialized as expected.
         """
         self.manual_mode_timer.stop()
+        if self.mode == PowerManagerMode.SCAN:
+            return
 
         if self._next_warmup_date is None:
             self.mode = PowerManagerMode.AUTO
@@ -287,10 +258,17 @@ class PowerManager(QObject):
     def _cnc_power_on(self):
         gpio.write(GPIO_CNC_PIN, True)
 
-    def _cnc_power_off(self):
-        self.cnc.stop()
-        self.cnc = None
+    def _cnc_cleanup_complete(self):
+        """Power down the CNC after its cleanup (after finalized)."""
         gpio.write(GPIO_CNC_PIN, False)
+
+    def _cnc_power_off(self):
+        if self.cnc is not None:
+            self.cnc.stop()
+            weakref.finalize(self.cnc, self._cnc_cleanup_complete)
+            self.cnc = None
+        else:
+            gpio.write(GPIO_CNC_PIN, False)
 
     def _lights_power_on(self):
         gpio.write(GPIO_LIGHTS_PIN, True)
@@ -336,7 +314,7 @@ class PowerManager(QObject):
         self._prepare_for_scan()
 
     def _resume_auto(self):
-        self._cnc_power_on()
+        self._cnc_power_off()
         self._lights_power_off()
         self._glights_power_on()
 
