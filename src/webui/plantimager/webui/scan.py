@@ -15,6 +15,7 @@ Key Features
 - Comprehensive error handling and user feedback
 """
 import os
+import re
 import tomllib
 import traceback
 from base64 import b64decode
@@ -115,6 +116,10 @@ def _free_camera_name(used: set[str]) -> str:
         i += 1
         name = f"picamera{i}"
     return name
+
+
+#: Matches auto-generated default camera names (``picamera``, ``picameraN``).
+AUTO_NAME = re.compile(r"picamera\d*")
 
 
 def _bio_field_id(path: str) -> str:
@@ -611,8 +616,9 @@ def rebuild_cameras(*args):
     for s in active:
         d = cam_vals(s)
         if s == added_slot:
-            cameras[new_name] = {"res_x": 2000, "res_y": 1500, "encoding": "jpeg",
-                                 "offset": {a: 0 for a in CAMERA_AXES}, "config": {}}
+            name = new_name
+            cam = {"res_x": 2000, "res_y": 1500, "encoding": "jpeg",
+                   "offset": {a: 0 for a in CAMERA_AXES}, "config": {}}
         else:
             name = d['name'] or f"picamera{s}"
             offset = {a: _num(d[f'offset-{a}']) for a in CAMERA_AXES}
@@ -673,8 +679,11 @@ def update_available_cameras(val):
 
 @callback(
     Output('available-cameras', 'children'),
-    Input('main-interval', 'n_intervals'))
-def update_interval(n_intervals):
+    *[Output(f'cam-{i}-name', 'value', allow_duplicate=True) for i in range(MAX_CAMERAS)],
+    Input('main-interval', 'n_intervals'),
+    *[State(f'cam-{i}-name', 'value') for i in range(MAX_CAMERAS)],
+    prevent_initial_call=True)
+def update_interval(n_intervals, *current):
     """Updates various components on a timer.
 
     Returns
@@ -685,18 +694,21 @@ def update_interval(n_intervals):
     try:
         controller = RPCController.instance()
     except RuntimeError as e:
-        return f"**Controller not connected**: {e}"
+        return f"**Controller not connected**: {e}", *([no_update] * MAX_CAMERAS)
     if update_available_cameras not in controller.cameraNamesChanged.connections:
         controller.cameraNamesChanged.connect(update_available_cameras)
         update_available_cameras(controller.camera_names)
 
-    if available_cameras:
-        lines = []
-        for camera in available_cameras:
-            lines.append(f"- {camera}")
-        return "\n".join(lines)
-    else:
-        return "No camera connected"
+    markdown = "\n".join(f"- {camera}" for camera in available_cameras) if available_cameras \
+        else "No camera connected"
+    names = []
+    for i in range(MAX_CAMERAS):
+        # Only fill empty / auto-generated slots, keep manual names.
+        if i < len(available_cameras) and (not current[i] or AUTO_NAME.match(current[i])):
+            names.append(available_cameras[i])
+        else:
+            names.append(no_update)
+    return markdown, *names
 
 
 @callback(
