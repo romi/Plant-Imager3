@@ -1,7 +1,7 @@
 # Full-Stack Local Development Setup
 
 This guide explains how to run the complete Plant-Imager3 stack **locally, for development**, so you can exercise the controller, dummy cameras, and plant database together.
-It mirrors the setup performed by [`test/test_scan_integration.py`](../../test/test_scan_integration.py) and is the fastest way to drive the WebUI (or an `RPCController` client) against a realistic set of services.
+It mirrors the setup performed by [`test/test_scan_integration.py`](https://github.com/romi/Plant-Imager3/blob/main/test/test_scan_integration.py) and is the fastest way to drive the WebUI (or an `RPCController` client) against a realistic set of services.
 
 ## What runs
 
@@ -172,6 +172,6 @@ The controller and camera servers exit gracefully on `KeyboardInterrupt`.
 
 ## Related
 
-- [`test_scan_integration.py`](../../test/test_scan_integration.py) — the integration test this guide is based on
+- [`test_scan_integration.py`](https://github.com/romi/Plant-Imager3/blob/main/test/test_scan_integration.py) — the integration test this guide is based on
 - [RPC.md](RPC.md) — the ZeroMQ RPC framework used between controller and WebUI
 - [architecture.md](architecture.md) — how the components communicate

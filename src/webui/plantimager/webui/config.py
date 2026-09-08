@@ -618,7 +618,7 @@ def update_dataset_list(
     connected : bool
         The connection status of the PlantDB API server.
     host : str
-       The hostname or IP address of the PlantDB API server.
+        The hostname or IP address of the PlantDB API server.
     port : int
         The port number of the PlantDB API server.
     prefix : str

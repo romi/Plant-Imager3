@@ -18,7 +18,8 @@ nav:
     - developer/architecture.md
     - developer/RPC.md
     - 'Full-Stack Dev Setup': developer/full_stack_dev_setup.md
-    - developer/NTP_server.md.md
+    - developer/NTP_server.md
+    - 'WebUI Syntax Highlighting': developer/webui_syntax_highlighting.md
 
 
 theme:
@@ -105,7 +106,6 @@ plugins:
             - https://pyserial.readthedocs.io/en/latest/objects.inv
             - https://click.palletsprojects.com/en/latest/objects.inv
             - https://imageio.readthedocs.io/en/stable/objects.inv
-            - https://psutil.readthedocs.io/en/latest/objects.inv
           options:
             docstring_style: numpy
             docstring_section_style: table

@@ -282,7 +282,7 @@ def validate_username(username: str | None, is_modal_open: bool, host: str, port
     is_modal_open : bool
         Whether the login modal is currently open
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
@@ -354,7 +354,7 @@ def login(
     password : str
         Password entered in the login form.
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
@@ -609,7 +609,7 @@ def logout(_: int, host: str, port: int | str, prefix: str, ssl: bool, access_to
     _ : int
         Placeholder for the click event of the 'logout-button' (unused).
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
