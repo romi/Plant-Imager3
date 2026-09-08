@@ -1762,6 +1762,51 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" units">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.units--unit-type-definitions-for-plant-imaging-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unit Type Definitions for Plant Imaging Systems.
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Unit Type Definitions for Plant Imaging Systems.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.units--key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.units--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2762,6 +2807,51 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" units">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.units--unit-type-definitions-for-plant-imaging-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unit Type Definitions for Plant Imaging Systems.
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Unit Type Definitions for Plant Imaging Systems.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.units--key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.units--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2798,14 +2888,27 @@
 
     <div class="doc doc-contents first">
 
-        <p>Unit Type Definitions for Plant Imaging Systems.</p>
-<p>This module provides strongly typed unit definitions for physical quantities used in the
-plant imaging system, enabling better type checking and preventing unit conversion errors.</p>
-<p>Key Features:
-- Type-safe unit definitions for physical quantities
-- Clear distinction between different units of measurement
-- Support for static type checking with mypy
-- Improved code readability and maintainability</p>
+        <h3 id="plantimager.controller.scanner.units--unit-type-definitions-for-plant-imaging-systems">Unit Type Definitions for Plant Imaging Systems.<a class="headerlink" href="#plantimager.controller.scanner.units--unit-type-definitions-for-plant-imaging-systems" title="Permanent link">Link</a></h3>
+<p>Type aliases carrying unit information for the physical quantities used by the
+plant imaging system. They are defined with <code>typing.Annotated[float, ...]</code> so
+that, for type checkers, they behave exactly as <code>float</code> — plain <code>float</code>
+values are accepted anywhere these types are used — while the unit is preserved
+as annotation metadata for documentation and static analysis.</p>
+<h4 id="plantimager.controller.scanner.units--key-features">Key Features<a class="headerlink" href="#plantimager.controller.scanner.units--key-features" title="Permanent link">Link</a></h4>
+<ul>
+<li>Unit semantics expressed as annotation metadata (<code>Annotated[float, ...]</code>)</li>
+<li>No runtime cost: values are plain <code>float</code>, no conversion or wrapping</li>
+<li>Clear distinction between different units of measurement at type-check time</li>
+<li>Compatible with static type checking (mypy)</li>
+</ul>
+<h4 id="plantimager.controller.scanner.units--usage-examples">Usage Examples<a class="headerlink" href="#plantimager.controller.scanner.units--usage-examples" title="Permanent link">Link</a></h4>
+<p>Unit types are interchangeable with plain floats for type checkers:</p>
+<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #666">&gt;&gt;&gt;</span> <span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.controller.scanner.units</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> length_mm, deg
+<span style="color: #666">&gt;&gt;&gt;</span> length_mm
+typing<span style="color: #666">.</span>Annotated[<span style="color: #008000">float</span>, <span style="color: #BA2121">'Length in millimeters'</span>]
+<span style="color: #666">&gt;&gt;&gt;</span> deg
+typing<span style="color: #666">.</span>Annotated[<span style="color: #008000">float</span>, <span style="color: #BA2121">'Angle in degrees'</span>]
+</code></pre></div>
 
 
 
