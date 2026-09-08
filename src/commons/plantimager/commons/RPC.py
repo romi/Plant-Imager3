@@ -30,6 +30,7 @@ import weakref
 from enum import StrEnum
 from functools import partial
 from functools import wraps
+from threading import Lock
 from threading import Thread
 from typing import Any
 from typing import Callable
@@ -610,6 +611,7 @@ class RPCClient:
         self.url: str = url
         self.socket: zmq.Socket = context.socket(zmq.REQ)
         self.socket.connect(self.url)
+        self._lock: Lock = Lock()
 
         # replacing class attribute signals with instance signals
         for base in self.__class__.__bases__:
@@ -741,16 +743,27 @@ class RPCClient:
         print("<------------", file=sys.stderr)
 
     def _property_getter_proxy(self, property_name: str) -> Any:
+        """Fetch a property value from the remote server.
+
+        Notes
+        -----
+        Serialized under :attr:`_lock` so the send/receive cycle on the
+        shared REQ socket is atomic. Without this, concurrent callers (e.g.
+        the WebUI's Dash callbacks running in a thread pool) interleave
+        requests on the same socket, corrupting the ZMQ REQ state machine
+        and causing spurious timeouts.
+        """
         package = {
             "event": RPCEvents.PROPERTY_GET,
             "property": property_name
         }
         logger.debug(f"getting property {property_name}")
-        self.socket.send_json(package, flags=zmq.NOBLOCK)
-        if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
-            logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
-            return NoResult("Timeout reached", "")
-        reply = self.socket.recv_json()
+        with self._lock:
+            self.socket.send_json(package, flags=zmq.NOBLOCK)
+            if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
+                logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
+                return NoResult("Timeout reached", "")
+            reply = self.socket.recv_json()
         if reply["success"]:
             return reply["value"]
         else:
@@ -761,17 +774,26 @@ class RPCClient:
             return NoResult(err, traceback_)
 
     def _property_setter_proxy(self, value: Any, property_name: str) -> None:
+        """Set a property value on the remote server.
+
+        Notes
+        -----
+        Serialized under :attr:`_lock` so the send/receive cycle on the
+        shared REQ socket is atomic. See :meth:`_property_getter_proxy` for
+        the rationale.
+        """
         package = {
             "event": RPCEvents.PROPERTY_SET,
             "property": property_name,
             "value": value
         }
         logger.debug(f"setting property {property_name} to {value}")
-        self.socket.send_json(package, flags=zmq.NOBLOCK)
-        if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
-            logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
-            return
-        reply = self.socket.recv_json()
+        with self._lock:
+            self.socket.send_json(package, flags=zmq.NOBLOCK)
+            if self.socket.poll(timeout=10000, flags=zmq.POLLIN) == 0:
+                logger.warning(f"Timeout reached, proxy of {self._interface} at {self.url} did not respond")
+                return
+            reply = self.socket.recv_json()
         if not reply["success"]:
             err, traceback_ = reply["error"], reply["traceback"]
             logger.error(f"Failed to get property {property_name} on remote due to {err}")
@@ -800,32 +822,41 @@ class RPCClient:
         ------
         TimeoutError
             If the server does not respond within the configured timeout.
+
+        Notes
+        -----
+        The full request/response cycle runs under :attr:`_lock` so calls
+        from multiple threads are serialized on the single shared REQ socket.
+        ZMQ REQ sockets are not thread-safe: concurrent send/receive
+        interleaving corrupts the socket state machine and surfaces as a
+        `POLLOUT`/`POLLIN` timeout even when the server is healthy.
         """
         package = {
             "event": RPCEvents.METHOD_CALL,
             "method": method_name,
             "params": params,
         }
-        if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
-            logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
-            raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
-        logger.debug(f"Executing {package}")
-        self.socket.send_json(package, flags=zmq.NOBLOCK)
+        with self._lock:
+            if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
+                logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
+                raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
+            logger.debug(f"Executing {package}")
+            self.socket.send_json(package, flags=zmq.NOBLOCK)
 
-        if method_name in self._json_methods:
-            if self.socket.poll(timeout=self._json_methods[method_name], flags=zmq.POLLIN) == 0:
-                logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
-                raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
-            reply = self.socket.recv_json()
-            if reply["success"]:
-                return True, reply["result"]
-            else:
-                return False, (reply["error"], reply["traceback"])
-        elif method_name in self._buffer_methods:
-            if self.socket.poll(timeout=self._buffer_methods[method_name], flags=zmq.POLLIN) == 0:
-                logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
-                raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
-            reply_frames: list[zmq.Frame] = self.socket.recv_multipart(copy=False)
+            if method_name in self._json_methods:
+                if self.socket.poll(timeout=self._json_methods[method_name], flags=zmq.POLLIN) == 0:
+                    logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
+                    raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
+                reply = self.socket.recv_json()
+                if reply["success"]:
+                    return True, reply["result"]
+                else:
+                    return False, (reply["error"], reply["traceback"])
+            elif method_name in self._buffer_methods:
+                if self.socket.poll(timeout=self._buffer_methods[method_name], flags=zmq.POLLIN) == 0:
+                    logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
+                    raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
+                reply_frames: list[zmq.Frame] = self.socket.recv_multipart(copy=False)
             buffer_info = json.loads(reply_frames[0].bytes)
             if "error" in buffer_info:
                 return False, (buffer_info["error"], buffer_info["traceback"])
@@ -839,18 +870,25 @@ class RPCClient:
 
         Sends a non-blocking `STOP_SERVER` event to the remote server.
         If the server responds, it logs the reply.
+
+        Notes
+        -----
+        Serialized under :attr:`_lock` for the same reason as
+        :meth:`execute`: it touches the shared REQ socket and must not
+        interleave with concurrent requests from other threads.
         """
         logger.info(f"Stopping server {self.url}")
-        if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
-            logger.info(f"Server {self.url} could not be joined (might already be dead)")
-            return
-        self.socket.send_json({
-            "event": RPCEvents.STOP_SERVER
-        }, flags=zmq.NOBLOCK)
-        if self.socket.poll(timeout=1000, flags=zmq.POLLIN) == 0:
-            logger.info(f"Server {self.url} did not respond (might already be dead)")
-            return
-        reply = self.socket.recv_json()
+        with self._lock:
+            if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
+                logger.info(f"Server {self.url} could not be joined (might already be dead)")
+                return
+            self.socket.send_json({
+                "event": RPCEvents.STOP_SERVER
+            }, flags=zmq.NOBLOCK)
+            if self.socket.poll(timeout=1000, flags=zmq.POLLIN) == 0:
+                logger.info(f"Server {self.url} did not respond (might already be dead)")
+                return
+            reply = self.socket.recv_json()
         logger.debug(f"Got stop reply {reply}")
 
 

@@ -142,7 +142,7 @@ def create_dataset_cfg_icon(is_connected: bool = False, dataset_list: list | Non
                 children=f"{len(dataset_list)}",
                 id="dataset-count-badge",
                 color="primary",
-                className="position-absolute top-45 start-100 translate-middle",
+                className="position-absolute top-50 start-100 translate-middle",
                 pill=True
             )
         ],
@@ -618,7 +618,7 @@ def update_dataset_list(
     connected : bool
         The connection status of the PlantDB API server.
     host : str
-       The hostname or IP address of the PlantDB API server.
+        The hostname or IP address of the PlantDB API server.
     port : int
         The port number of the PlantDB API server.
     prefix : str

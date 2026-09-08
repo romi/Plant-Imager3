@@ -75,16 +75,13 @@ dataset_table_tooltip: dbc.Tooltip = dbc.Tooltip(
     placement="bottom",
 )
 
-#: Get the directory where the current file is located
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
 # Callback to update the ROMI project logo (used in the navigation bar) src once the app is running
 @callback(
     Output('navbar-logo', 'src'),
     Input('url', 'pathname')
 )
 def update_logo_url(_):
-    return current_dir + "/.." + get_asset_url("logo.svg")
+    return get_asset_url("logo.svg")
 
 # Then update the href through a callback when the app starts
 @callback(
@@ -134,7 +131,7 @@ navbar_layout = dbc.Navbar(
         ),
         dbc.Nav(
             children=nav_items,
-            navbar=True, className="align-items-center"
+            navbar=True, className="align-items-center gap-3"
         ),
     ], className="align-items-center"),
     color="#00a960", class_name="mb-3",

@@ -138,10 +138,8 @@ def refresh_table_data(n_clicks, host, port, prefix, ssl, access_token):
     ----------
     n_clicks : int
         The number of times the button has been clicked.
-    url : str
-        The URL of the page.
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
@@ -150,7 +148,6 @@ def refresh_table_data(n_clicks, host, port, prefix, ssl, access_token):
         Whether the PlantDB REST API server is using SSL or not.
     access_token
         The PlantDB REST API access token.
-
     """
     if n_clicks > 0:
         dataset_dict = get_dataset_dict(host, port, prefix, ssl, access_token)
@@ -176,7 +173,7 @@ def update_on_url_change(url, host, port, prefix, ssl, access_token):
     url : str
         The URL of the page.
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
@@ -206,7 +203,7 @@ def update_table(dataset_dict, host, port, prefix, ssl, access_token):
     dataset_dict : dict
         The currently stored dataset dictionary.
     host : str
-        The hostname or IP address of the PlantDB REST API server.
+         The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
