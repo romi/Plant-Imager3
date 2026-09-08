@@ -142,7 +142,7 @@ def create_dataset_cfg_icon(is_connected: bool = False, dataset_list: list | Non
                 children=f"{len(dataset_list)}",
                 id="dataset-count-badge",
                 color="primary",
-                className="position-absolute top-45 start-100 translate-middle",
+                className="position-absolute top-50 start-100 translate-middle",
                 pill=True
             )
         ],
