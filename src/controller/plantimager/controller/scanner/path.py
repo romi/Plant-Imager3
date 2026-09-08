@@ -19,14 +19,14 @@ Usage Examples:
 >>> from plantimager.controller.scanner.path import Circle, Pose
 >>> # Create a circular path with 10 points
 >>> center_x, center_y = 200, 200  # Center coordinates in mm
->>> height = 50  # Height in mm
->>> tilt = 0  # Camera tilt in degrees
 >>> radius = 100  # Circle radius in mm
 >>> n_points = 10  # Number of points in the circle
->>> circular_path = Circle(center_x, center_y, height, tilt, radius, n_points)
+>>> circular_path = Circle(center_x, center_y, radius, n_points)
 >>> # Access the first point in the path
 >>> first_point = circular_path[0]
 >>> print(f"First point: x={first_point.x}, y={first_point.y}, z={first_point.z}")
+First point: x=100.0, y=200.0, z=0
+
 ```
 """
 
@@ -47,10 +47,11 @@ class Pose(object):
     >>> from plantimager.controller.scanner.path import Pose
     >>> p = Pose(50, 250, 80, 270, 0)
     >>> print(p)
-
+    x: 50, y: 250, z: 80, pan: 270, tilt: 0
     """
 
-    def __init__(self, x=0., y=0., z=0., pan=0., tilt=0.):
+    def __init__(self, x: length_mm = 0., y: length_mm = 0., z: length_mm = 0.,
+                 pan: deg = 0., tilt: deg = 0.):
         """Pose constructor.
 
         Parameters
@@ -75,10 +76,10 @@ class Pose(object):
     def __repr__(self):
         return ", ".join(f"{k}: {v}" for k, v in self.__dict__.items())
 
-    def attributes(self):
+    def attributes(self) -> list[str]:
         return ["x", "y", "z", "pan", "tilt"]
 
-    def __add__(self, other):
+    def __add__(self, other: "Pose") -> "Pose":
         return Pose(self.x + other.x, self.y + other.y, self.z + other.z, self.pan + other.pan, self.tilt + other.tilt)
 
 
@@ -90,10 +91,13 @@ class PathElement(Pose):
     >>> from plantimager.controller.scanner.path import PathElement
     >>> elt = PathElement(50, 250, 80, 270, 0, True)
     >>> print(elt)
+    x: 50, y: 250, z: 80, pan: 270, tilt: 0, exact_pose: True
 
     """
 
-    def __init__(self, x=None, y=None, z=None, pan=None, tilt=None, exact_pose=True):
+    def __init__(self, x: length_mm | None = None, y: length_mm | None = None,
+                 z: length_mm | None = None, pan: deg | None = None, tilt: deg | None = None,
+                 exact_pose: bool = True):
         """
         Parameters
         ----------
@@ -106,7 +110,7 @@ class PathElement(Pose):
         pan : deg, optional
             Relative rotation, in degrees, to the origin along the xy-plane.
         tilt : deg, optional
-            Relative rotation, in degrees, to the origin along the xy-plane.
+            Relative rotation, in degrees, to the origin orthogonal to the xy-plane.
         exact_pose : bool, optional
             If ``True``, the above parameter values are exact, else they are approximations.
 
@@ -128,11 +132,14 @@ class Path(list):
     >>> from plantimager.controller.scanner.path import Path
     >>> p = Path()
     >>> type(p)
+    <class 'plantimager.controller.scanner.path.Path'>
     >>> p.append(elt)
     >>> p2 = Path()
     >>> p2.append(elt)
     >>> p == p2
+    True
     >>> p != p2
+    False
 
     """
 
@@ -140,7 +147,8 @@ class Path(list):
         super().__init__()
 
 
-def circle(center_x, center_y, radius, n_points):
+def circle(center_x: length_mm, center_y: length_mm, radius: length_mm,
+           n_points: int) -> tuple[list[length_mm], list[length_mm], list[deg]]:
     """Create a 2D circle of N points with given center and radius.
 
     Pan orientations are also computed to always face the center of the circle.
@@ -169,9 +177,7 @@ def circle(center_x, center_y, radius, n_points):
     --------
     >>> from plantimager.controller.scanner.path import circle
     >>> circle(10, 10, 5, 3)
-    ([5.0, 12.5, 12.500000000000002],
-     [10.0, 5.669872981077806, 14.330127018922191],
-     [270.0, 29.999999999999986, 149.99999999999997])
+    ([5.0, 12.5, 12.500000000000002], [10.0, 5.669872981077806, 14.330127018922191], [0.0, 119.99999999999999, 239.99999999999997])
 
     """
     x, y, p = [], [], []
@@ -193,32 +199,28 @@ class Circle(Path):
     Notes
     -----
     The `pan` is computed to always face the center of the circle.
-    If an iterable is given for `tilt`, performs more than one camera acquisition at same xyz position.
+
+    The `z` and `tilt` ``PathElement`` values are hard-coded to ``0.`` here;
+    the offset to these values is provided by each camera configuration at scan time.
 
     Examples
     --------
     >>> from plantimager.controller.scanner.path import Circle
-    >>> circular_path = Circle(200, 200, 50, 0, 200, 9)
-    >>> circular_path
-    [x = 0.00, y = 200.00, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 46.79, y = 71.44, z = 50.00, pan = 310.00, tilt = 0.00,
-     x = 165.27, y = 3.04, z = 50.00, pan = 350.00, tilt = 0.00,
-     x = 300.00, y = 26.79, z = 50.00, pan = 30.00, tilt = 0.00,
-     x = 387.94, y = 131.60, z = 50.00, pan = 70.00, tilt = 0.00,
-     x = 387.94, y = 268.40, z = 50.00, pan = 110.00, tilt = 0.00,
-     x = 300.00, y = 373.21, z = 50.00, pan = 150.00, tilt = 0.00,
-     x = 165.27, y = 396.96, z = 50.00, pan = 190.00, tilt = 0.00,
-     x = 46.79, y = 328.56, z = 50.00, pan = 230.00, tilt = 0.00]
-    >>> circular_path = Circle(200, 200, 50, (0, 10), 200, 9)
-    >>> circular_path[:4]  # print the first 4 position to show tilt change at given xyzp position
-    [x = 0.00, y = 200.00, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 0.00, y = 200.00, z = 50.00, pan = 270.00, tilt = 10.00,
-     x = 46.79, y = 71.44, z = 50.00, pan = 310.00, tilt = 0.00,
-     x = 46.79, y = 71.44, z = 50.00, pan = 310.00, tilt = 10.00]
-
+    >>> circular_path = Circle(200, 200, 50, 9)
+    >>> for pose in circular_path: print(pose)
+    x: 150.0, y: 200.0, z: 0, pan: 0.0, tilt: 0, exact_pose: False
+    x: 161.6977778440511, y: 167.86061951567302, z: 0, pan: 40.0, tilt: 0, exact_pose: False
+    x: 191.3175911166535, y: 150.7596123493896, z: 0, pan: 80.0, tilt: 0, exact_pose: False
+    x: 225.0, y: 156.69872981077805, z: 0, pan: 119.99999999999999, tilt: 0, exact_pose: False
+    x: 246.9846310392954, y: 182.89899283371656, z: 0, pan: 160.0, tilt: 0, exact_pose: False
+    x: 246.98463103929544, y: 217.10100716628344, z: 0, pan: 200.0, tilt: 0, exact_pose: False
+    x: 225.00000000000003, y: 243.30127018922192, z: 0, pan: 239.99999999999997, tilt: 0, exact_pose: False
+    x: 191.3175911166535, y: 249.24038765061042, z: 0, pan: 280.0, tilt: 0, exact_pose: False
+    x: 161.6977778440511, y: 232.13938048432698, z: 0, pan: 320.0, tilt: 0, exact_pose: False
     """
 
-    def __init__(self, center_x, center_y, z, tilt, radius, n_points):
+    def __init__(self, center_x: length_mm, center_y: length_mm, radius: length_mm,
+                 n_points: int, **kwargs):
         """
         Parameters
         ----------
@@ -226,11 +228,6 @@ class Circle(Path):
             X-axis position, in millimeters, of the circle's center, relative to the origin.
         center_y : length_mm
             Y-axis position, in millimeters, of the circle's center, relative to the origin.
-        z : length_mm
-            Height at which to make the circle.
-        tilt : deg or list(deg)
-            Camera tilt(s), in degrees, to use for this circle.
-            If an iterable is given, performs more than one camera acquisition at same xyz position.
         radius : length_mm
             Radius, in millimeters, of the circular path to create.
         n_points : int
@@ -244,69 +241,11 @@ class Circle(Path):
         self.radius = radius
         self.n_points = n_points
 
-        if not isinstance(tilt, Iterable):
-            tilt = [tilt]
-
         for i in range(n_points):
-            for t in tilt:
-                self.append(PathElement(x[i], y[i], z, pan[i], t, exact_pose=False))
+            self.append(PathElement(x[i], y[i], 0, pan[i], 0, exact_pose=False))
 
 
-class Cylinder(Path):
-    """Creates a z-axis aligned cylinder path for the scanner.
-
-    Makes as much circular paths as `n_circles` within the given z range.
-
-    Notes
-    -----
-    The `pan` is computed to always face the center of the circle.
-    If an iterable is given for `tilt`, performs more than one camera acquisition at same xyz position.
-
-    Examples
-    --------
-    >>> from plantimager.controller.scanner.path import Cylinder
-    >>> n_points = 9
-    >>> cylinder_path = Cylinder(200, 200, (0, 50), 0, 200, n_points, 2)
-    >>> cylinder_path[:2]
-    [x = 0.00, y = 200.00, z = 0.00, pan = 270.00, tilt = 0.00,
-     x = 46.79, y = 71.44, z = 0.00, pan = 310.00, tilt = 0.00]
-    >>> cylinder_path[n_points:2+n_points]
-    [x = 0.00, y = 200.00, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 46.79, y = 71.44, z = 50.00, pan = 310.00, tilt = 0.00]
-
-    """
-
-    def __init__(self, center_x, center_y, z_range, tilt, radius, n_points, n_circles=2):
-        """
-        Parameters
-        ----------
-        center_x : length_mm
-            X-axis position, in millimeters, of the circle's center, relative to the origin.
-        center_y : length_mm
-            Y-axis position, in millimeters, of the circle's center, relative to the origin.
-        z_range : (length_mm, length_mm)
-            Height range, in millimeters, at which to make the cylinder.
-        tilt : deg or list of deg
-            Camera tilt(s), in degrees, to use for this circle.
-            If an iterable is given, performs more than one camera acquisition at same xyz position.
-        radius : length_mm
-            Radius of the circular path to create.
-        n_points : int
-            Number of points (``PathElement``) used to generate the circular path.
-        n_circles : int, optional
-            Number of circular path to make within the cylinder, minimum value is 2.
-        """
-        super().__init__()
-        try:
-            assert n_circles >= 2
-        except AssertionError:
-            raise ValueError("You need a minimum of two circles to make a cylinder!")
-        min_z, max_z = z_range
-        for z_circle in range(min_z, max_z + 1, int((max_z - min_z) / (n_circles - 1))):
-            self.extend(Circle(center_x, center_y, z_circle, tilt, radius, n_points))
-
-
-def line1d(start, stop, n_points):
+def line1d(start: length_mm, stop: length_mm, n_points: int) -> list[length_mm]:
     """Create a 1D line of N points between start and stop position (included).
 
     Parameters
@@ -326,14 +265,16 @@ def line1d(start, stop, n_points):
     Examples
     --------
     >>> from plantimager.controller.scanner.path import line1d
-    >>> line1d(0,10,5)
+    >>> line1d(0, 10, 5)
     [0.0, 2.5, 5.0, 7.5, 10.0]
 
     """
     return [(1 - i / (n_points - 1)) * start + (i / (n_points - 1)) * stop for i in range(n_points)]
 
 
-def line3d(x_0, y_0, z_0, x_1, y_1, z_1, n_points):
+def line3d(x_0: length_mm, y_0: length_mm, z_0: length_mm,
+           x_1: length_mm, y_1: length_mm, z_1: length_mm,
+           n_points: int) -> tuple[list[length_mm], list[length_mm], list[length_mm]]:
     """Create a 3D line of N points between start and stop position (included).
 
     Parameters
@@ -366,9 +307,7 @@ def line3d(x_0, y_0, z_0, x_1, y_1, z_1, n_points):
     --------
     >>> from plantimager.controller.scanner.path import line3d
     >>> line3d(0, 0, 0, 10, 10, 10, 5)
-    ([0.0, 2.5, 5.0, 7.5, 10.0],
-     [0.0, 2.5, 5.0, 7.5, 10.0],
-     [0.0, 2.5, 5.0, 7.5, 10.0])
+    ([0.0, 2.5, 5.0, 7.5, 10.0], [0.0, 2.5, 5.0, 7.5, 10.0], [0.0, 2.5, 5.0, 7.5, 10.0])
 
     """
     return line1d(x_0, x_1, n_points), line1d(y_0, y_1, n_points), line1d(z_0, z_1, n_points)
@@ -383,12 +322,13 @@ class Line(Path):
     >>> n_points = 2
     >>> linear_path = Line(0, 0, 0, 10, 10, 0, 180, 0, n_points)
     >>> linear_path
-    [x = 0.00, y = 0.00, z = 0.00, pan = 180.00, tilt = 0.00,
-     x = 10.00, y = 10.00, z = 0.00, pan = 180.00, tilt = 0.00]
+    [x: 0.0, y: 0.0, z: 0.0, pan: 180, tilt: 0, exact_pose: True, x: 10.0, y: 10.0, z: 0.0, pan: 180, tilt: 0, exact_pose: True]
 
     """
 
-    def __init__(self, x_0, y_0, z_0, x_1, y_1, z_1, pan, tilt, n_points):
+    def __init__(self, x_0: length_mm, y_0: length_mm, z_0: length_mm,
+                 x_1: length_mm, y_1: length_mm, z_1: length_mm,
+                 pan: deg, tilt: deg | Iterable[deg], n_points: int):
         """
         Parameters
         ----------
@@ -407,7 +347,7 @@ class Line(Path):
         pan : deg
             Camera pan value, in degrees, to use for the linear path.
         tilt : deg or list(deg)
-            Camera tilt(s), in degrees, to use for this circle.
+            Camera tilt(s), in degrees, to use for this line.
             If an iterable is given, performs more than one camera acquisition at same xyz position.
         n_points : int
             Number of points used to create the linear path.
@@ -451,32 +391,32 @@ class CalibrationPath(Path):
     --------
     >>> from plantimager.controller.scanner.path import CalibrationPath
     >>> from plantimager.controller.scanner.path import Circle
-    >>> circular_path = Circle(200, 200, 50, 0, 200, 9)
+    >>> circular_path = Circle(200, 200, 50, 9)
     >>> n_points_line = 5
     >>> calib_path = CalibrationPath(circular_path, n_points_line)
-    >>> calib_path
-    [x = 0.00, y = 200.00, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 0.00, y = 167.86, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 0.00, y = 135.72, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 0.00, y = 103.58, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 0.00, y = 71.44, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 0.00, y = 200.00, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 11.70, y = 200.00, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 23.40, y = 200.00, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 35.09, y = 200.00, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 46.79, y = 200.00, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 0.00, y = 200.00, z = 50.00, pan = 270.00, tilt = 0.00,
-     x = 46.79, y = 71.44, z = 50.00, pan = 310.00, tilt = 0.00,
-     x = 165.27, y = 3.04, z = 50.00, pan = 350.00, tilt = 0.00,
-     x = 300.00, y = 26.79, z = 50.00, pan = 30.00, tilt = 0.00,
-     x = 387.94, y = 131.60, z = 50.00, pan = 70.00, tilt = 0.00,
-     x = 387.94, y = 268.40, z = 50.00, pan = 110.00, tilt = 0.00,
-     x = 300.00, y = 373.21, z = 50.00, pan = 150.00, tilt = 0.00,
-     x = 165.27, y = 396.96, z = 50.00, pan = 190.00, tilt = 0.00,
-     x = 46.79, y = 328.56, z = 50.00, pan = 230.00, tilt = 0.00]
+    >>> for pose in calib_path: print(pose)
+    x: 150.0, y: 200.0, z: 0, pan: 0.0, tilt: 0, exact_pose: False
+    x: 161.6977778440511, y: 167.86061951567302, z: 0, pan: 40.0, tilt: 0, exact_pose: False
+    x: 191.3175911166535, y: 150.7596123493896, z: 0, pan: 80.0, tilt: 0, exact_pose: False
+    x: 225.0, y: 156.69872981077805, z: 0, pan: 119.99999999999999, tilt: 0, exact_pose: False
+    x: 246.9846310392954, y: 182.89899283371656, z: 0, pan: 160.0, tilt: 0, exact_pose: False
+    x: 246.98463103929544, y: 217.10100716628344, z: 0, pan: 200.0, tilt: 0, exact_pose: False
+    x: 225.00000000000003, y: 243.30127018922192, z: 0, pan: 239.99999999999997, tilt: 0, exact_pose: False
+    x: 191.3175911166535, y: 249.24038765061042, z: 0, pan: 280.0, tilt: 0, exact_pose: False
+    x: 161.6977778440511, y: 232.13938048432698, z: 0, pan: 320.0, tilt: 0, exact_pose: False
+    x: 150.0, y: 200.0, z: 0.0, pan: 0.0, tilt: 0, exact_pose: True
+    x: 143.25, y: 200.0, z: 0.0, pan: 0.0, tilt: 0, exact_pose: True
+    x: 136.5, y: 200.0, z: 0.0, pan: 0.0, tilt: 0, exact_pose: True
+    x: 129.75, y: 200.0, z: 0.0, pan: 0.0, tilt: 0, exact_pose: True
+    x: 123.0, y: 200.0, z: 0.0, pan: 0.0, tilt: 0, exact_pose: True
+    x: 150.0, y: 200.0, z: 0.0, pan: 0.0, tilt: 0, exact_pose: True
+    x: 150.0, y: 212.3100969126526, z: 0.0, pan: 0.0, tilt: 0, exact_pose: True
+    x: 150.0, y: 224.6201938253052, z: 0.0, pan: 0.0, tilt: 0, exact_pose: True
+    x: 150.0, y: 236.93029073795782, z: 0.0, pan: 0.0, tilt: 0, exact_pose: True
+    x: 150.0, y: 249.24038765061042, z: 0.0, pan: 0.0, tilt: 0, exact_pose: True
     """
 
-    def __init__(self, path, n_points_line):
+    def __init__(self, path: Path, n_points_line: int):
         """
         Parameters
         ----------
@@ -508,7 +448,8 @@ class CalibrationPath2(Path):
 
     """
 
-    def __init__(self, center_x: length_mm, center_y: length_mm, radius: length_mm, z: length_mm, tilt: length_mm, n_points_line: int):
+    def __init__(self, center_x: length_mm, center_y: length_mm, radius: length_mm, z: length_mm, tilt: length_mm,
+                 n_points_line: int):
         """
         # TODO: remake later, target too much on the side or not visible
         """
@@ -519,22 +460,22 @@ class CalibrationPath2(Path):
         x0, xn = center_x - radius, center_x + radius
         y0, yn = center_y - radius, center_y + radius
         self.extend(Line(x0, y0, z, x0, yn, z, 0., tilt, n_points_line))
-        self.extend(Line(x0, yn, z, center_x, yn, z, 0., tilt, n_points_line//2))
-        self.extend(Line(center_x, yn, z, x0, center_y, z, -45, tilt, n_points_line//2))
-        for pan in np.arange(-30, 30, n_points_line//2):
+        self.extend(Line(x0, yn, z, center_x, yn, z, 0., tilt, n_points_line // 2))
+        self.extend(Line(center_x, yn, z, x0, center_y, z, -45, tilt, n_points_line // 2))
+        for pan in np.arange(-30, 30, n_points_line // 2):
             self.append(Pose(x0, center_y, z, pan, tilt))
 
 
 class CustomPath(Path):
     """Creates a custom path for the scanner."""
 
-    def __init__(self, waypoints: list[list[float]], scheme=("x", "y", "z", "pan", "tilt")):
+    def __init__(self, waypoints: list[list[float]], scheme: tuple[str, ...] = ("x", "y", "z", "pan", "tilt")):
         """
-        Initialize a PoseList object with given waypoints and a scheme.
+        Initialize a Path object with given waypoints and a scheme.
 
         This constructor creates a list of `Pose` objects by mapping the provided
         waypoints to the specified scheme. It ensures that each waypoint matches the
-        length of the scheme and appends the resulting `Pose` objects to the PoseList.
+        length of the scheme and appends the resulting `Pose` objects to the path.
 
         Parameters
         ----------
@@ -553,15 +494,25 @@ class CustomPath(Path):
 
         Notes
         -----
-        Each `waypoint` is converted into a dictionary by zipping the `shceme` with
+        Each `waypoint` is converted into a dictionary by zipping the `scheme` with
         the waypoint values, and then passed as keyword arguments to the `Pose` class
-        constructor. It is essential that the `shceme` matches the keys expected by
+        constructor. It is essential that the `scheme` matches the keys expected by
         the `Pose` class.
+
+        Examples
+        --------
+        >>> from plantimager.controller.scanner.path import CustomPath
+        >>> waypoints = [[25, 375, 0], [25, 475, 90], [125, 375, 180], [125, 475, 270]]
+        >>> custom_path = CustomPath(waypoints, scheme=("x", "y", "pan"))
+        >>> for pose in custom_path: print(pose)
+        x: 25, y: 375, z: 0.0, pan: 0, tilt: 0.0
+        x: 25, y: 475, z: 0.0, pan: 90, tilt: 0.0
+        x: 125, y: 375, z: 0.0, pan: 180, tilt: 0.0
+        x: 125, y: 475, z: 0.0, pan: 270, tilt: 0.0
         """
         super().__init__()
+
         for waypoint in waypoints:
             assert len(waypoint) == len(scheme)
             kwargs = dict(zip(scheme, waypoint))
             self.append(Pose(**kwargs))
-
-
