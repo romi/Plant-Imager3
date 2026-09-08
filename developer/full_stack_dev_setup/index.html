@@ -18,6 +18,8 @@
         <link rel="prev" href="../RPC/">
       
       
+        <link rel="next" href="../NTP_server/">
+      
       
         
       
@@ -2828,14 +2830,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../NTP_server.md.md" class="md-nav__link">
+      <a href="../NTP_server/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    None
+    Chrony NTP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../webui_syntax_highlighting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WebUI Syntax Highlighting
   
 
     
@@ -3048,7 +3078,7 @@
 
 <h1 id="full-stack-local-development-setup">Full-Stack Local Development Setup<a class="headerlink" href="#full-stack-local-development-setup" title="Permanent link">Link</a></h1>
 <p>This guide explains how to run the complete Plant-Imager3 stack <strong>locally, for development</strong>, so you can exercise the controller, dummy cameras, and plant database together.
-It mirrors the setup performed by <a href="../../test/test_scan_integration.py"><code>test/test_scan_integration.py</code></a> and is the fastest way to drive the WebUI (or an <code>RPCController</code> client) against a realistic set of services.</p>
+It mirrors the setup performed by <a href="https://github.com/romi/Plant-Imager3/blob/main/test/test_scan_integration.py"><code>test/test_scan_integration.py</code></a> and is the fastest way to drive the WebUI (or an <code>RPCController</code> client) against a realistic set of services.</p>
 <h2 id="what-runs">What runs<a class="headerlink" href="#what-runs" title="Permanent link">Link</a></h2>
 <p>The local stack is made of four cooperating processes:</p>
 <table>
@@ -3219,7 +3249,7 @@ controller<span style="color: #666">.</span>run_scan()
 The controller and camera servers exit gracefully on <code>KeyboardInterrupt</code>.</p>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">Link</a></h2>
 <ul>
-<li><a href="../../test/test_scan_integration.py"><code>test_scan_integration.py</code></a> — the integration test this guide is based on</li>
+<li><a href="https://github.com/romi/Plant-Imager3/blob/main/test/test_scan_integration.py"><code>test_scan_integration.py</code></a> — the integration test this guide is based on</li>
 <li><a href="../RPC/">RPC.md</a> — the ZeroMQ RPC framework used between controller and WebUI</li>
 <li><a href="../architecture/">architecture.md</a> — how the components communicate</li>
 </ul>
