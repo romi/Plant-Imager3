@@ -38,9 +38,5 @@ deg = Annotated[float, "Angle in degrees"]
 rad = Annotated[float, "Angle in radians"]
 #: Length in millimeters.
 length_mm = Annotated[float, "Length in millimeters"]
-#: Velocity in millimeters per second.
-velocity_mm_p_s = Annotated[float, "Velocity in millimeters per second"]
-#: Velocity in degrees per second.
-velocity_deg_p_s = Annotated[float, "Velocity in degrees per second"]
 #: Time in seconds.
 time_s = Annotated[float, "Time in seconds"]
