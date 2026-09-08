@@ -131,7 +131,7 @@ navbar_layout = dbc.Navbar(
         ),
         dbc.Nav(
             children=nav_items,
-            navbar=True, className="align-items-center"
+            navbar=True, className="align-items-center gap-3"
         ),
     ], className="align-items-center"),
     color="#00a960", class_name="mb-3",
