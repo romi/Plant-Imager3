@@ -11,7 +11,7 @@ dependencies = [
 description = "A PiCamera package, transfering video and images to the main controller of the ROMI Plant Imager."
 readme = "README.md"
 requires-python = ">=3.11, <3.13"  # 3.13 upper bound for open3d dependency from plantdb.commons[io]
-license = { 'text' = "LGPL-3.0-or-later" }   # to replace by "LGPL-3.0-or-later" only in next release, pending deprecation
+license = "LGPL-3.0-or-later"
 authors = [
     { name = "Nabil Ait Taleb", email = "mohamednabil.aittaleb@sony.com" },
     { name = "Julie Charlaix", email = "julie.charlaix@ens-lyon.fr" },
@@ -48,3 +48,6 @@ issues = "https://github.com/romi/Plant-Imager3/issues"
 
 [project.scripts]
 picamera-server = "plantimager.picamera.RPCCamera:main"
+
+[tool.setuptools.packages.find]
+include = ["plantimager*"]
