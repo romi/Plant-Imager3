@@ -15,6 +15,7 @@ dependencies = [
     "numpy",
     "plantimager.commons",
     "gpio",
+    "plantdb.client>=0.15.1",
 ]
 description = "A Qt-based interface turning a Raspberry Pi 4/5 into the main controller of the ROMI Plant Imager."
 readme = "README.md"

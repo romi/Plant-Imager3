@@ -25,10 +25,10 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import html
-from plantdb.client.rest_api import request_check_username
-from plantdb.client.rest_api import request_login
-from plantdb.client.rest_api import request_logout
-from plantdb.client.rest_api import request_token_validation
+from plantdb.client.rest_api.requests import request_check_username
+from plantdb.client.rest_api.requests import request_login
+from plantdb.client.rest_api.requests import request_logout
+from plantdb.client.rest_api.requests import request_token_validation
 
 from plantimager.webui.new_user import new_user_button
 

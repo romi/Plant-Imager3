@@ -121,6 +121,14 @@ class DummyCNC(AbstractCNC):
         logger.info("Dummy CNC homing completed")
         self._standby = True
 
+    def reset_pos(self):
+        logger.info("Dummy CNC reset...")
+        self._busy = True
+        time.sleep(0.5)
+        self._position = (20, 20, 0)
+        self._busy = False
+        logger.info("Dummy CNC reset completed")
+
     def get_position(self) -> tuple[length_mm, length_mm, deg]:
         """Get the current XYZ position of the dummy CNC machine.
 

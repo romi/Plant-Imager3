@@ -47,7 +47,7 @@ Now any machine on the same network that uses the local DNS server will resolve 
 1. **Switch to the production network**  
    In `docker-compose.yml` set `plantimager-net` to `external: true` and create the network beforehand:
 
-    ```shell script
+    ```shell
     docker network create plantimager-net
     ```
 
@@ -59,7 +59,7 @@ Now any machine on the same network that uses the local DNS server will resolve 
 
 5. **Deploy** –
 
-    ```shell script
+    ```shell
     docker compose -f docker-compose.yml up -d
     ```
 

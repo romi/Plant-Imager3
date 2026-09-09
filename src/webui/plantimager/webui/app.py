@@ -39,9 +39,9 @@ from dash import Dash
 from dash import dcc
 from dash import html
 from dotenv import load_dotenv
-from plantdb.client.rest_api import PLANTDB_HOST
-from plantdb.client.rest_api import PLANTDB_PORT
-from plantdb.client.rest_api import PLANTDB_PREFIX
+from plantdb.client.rest_api.urls import PLANTDB_HOST
+from plantdb.client.rest_api.urls import PLANTDB_PORT
+from plantdb.client.rest_api.urls import PLANTDB_PREFIX
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from plantimager.webui.carousel import caroussel_modal
@@ -175,6 +175,8 @@ def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, pla
         dcc.Store(id='logged-fullname', data=None, storage_type='session'),  # real name of the logged user
         dcc.Store(id='access-token', data=None, storage_type='session'),  # access token of the logged user
         dcc.Store(id='refresh-token', data=None, storage_type='session'),  # refresh token of the logged user
+        dcc.Store(id='scan-api-token', data=None, storage_type='session'),  # scoped API token for the current scan
+        dcc.Store(id='scan-job-id', data=0, storage_type='session'),  # trigger to launch the background scan
         dcc.Store(id='dataset-list', data=[]),  # list of datasets known to the database
         dcc.Store(id='dataset-id', data=None),  # name of the dataset to create (scan operation)
         dcc.Store(id='dataset-dict', data={}, storage_type='session'),

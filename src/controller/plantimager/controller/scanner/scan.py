@@ -513,7 +513,7 @@ class Scan(QObject):
         #self.cnc.moveto(10, 10,-10)
         time.sleep(1)
         #self.cnc.home()
-        self.cnc.moveto(20, 20, 45)
+        self.cnc.reset_pos()
 
         self._stop_time = time.time()
         self.db_client.update_scan_metadata(self.scan_id, {

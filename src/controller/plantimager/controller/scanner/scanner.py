@@ -164,6 +164,7 @@ class Scanner(QObject):
 
         self._scan_in_progress = False
         self._scanner_working = False
+        self.scanInProgressChanged.connect(self.scannerWorkingChanged)  # scannerWorking depends on scanInProgress
         self.cameras: list[PiCameraComm] = []  # List of connected cameras
         self.db_url = None  # Database URL
         self.scan_path: Path | None = None  # Path to follow during scanning

@@ -25,8 +25,8 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import html
-from plantdb.client.rest_api import request_check_username
-from plantdb.client.rest_api import request_new_user
+from plantdb.client.rest_api.requests import request_check_username
+from plantdb.client.rest_api.requests import request_new_user
 
 from plantimager.webui.utils import _validate_new_username
 
