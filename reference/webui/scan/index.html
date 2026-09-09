@@ -1636,34 +1636,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../controller/scanner/powermanager/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    powermanager
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../controller/scanner/rpc_controller/" class="md-nav__link">
         
   
@@ -1692,34 +1664,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../controller/scanner/scan/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    scan
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../controller/scanner/scanner/" class="md-nav__link">
         
   
@@ -1728,62 +1672,6 @@
     
   
     scanner
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../controller/scanner/timelapse/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    timelapse
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../controller/scanner/timelapse_store/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    timelapse_store
   
 
     
@@ -3795,7 +3683,7 @@ Otherwise, it will hide the message.</p>
     res: <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">|</span> NoResult <span style="color: #666">=</span> controller<span style="color: #666">.</span>set_db_url(plantdb_url(url, port<span style="color: #666">=</span>port, prefix<span style="color: #666">=</span>prefix, ssl<span style="color: #666">=</span>ssl))
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(res, NoResult):
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">f"Failed to connect to </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #BA2121">'https'</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">if</span><span style="color: #BBB"> </span>ssl<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">else</span><span style="color: #BBB"> </span><span style="color: #BA2121">'http'</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">://</span><span style="color: #A45A77; font-weight: bold">{</span>url<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}{</span>prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, res<span style="color: #666">.</span>traceback
-    res: <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">|</span> NoResult <span style="color: #666">=</span> controller<span style="color: #666">.</span>set_base_name(dataset_name)
+    res: <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">|</span> NoResult <span style="color: #666">=</span> controller<span style="color: #666">.</span>set_dataset_name(dataset_name)
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(res, NoResult):
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">f"Failed to set dataset </span><span style="color: #A45A77; font-weight: bold">{</span>dataset_name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, res<span style="color: #666">.</span>traceback
     <span style="color: #008000; font-weight: bold">try</span>:
@@ -4929,7 +4817,7 @@ user's access/refresh tokens: it only uses the scoped API token prepared by
     res: <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">|</span> NoResult <span style="color: #666">=</span> controller<span style="color: #666">.</span>set_api_token(api_token)
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(res, NoResult):
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">"Failed to connect to set access token."</span>, res<span style="color: #666">.</span>traceback
-    res: <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">|</span> NoResult <span style="color: #666">=</span> controller<span style="color: #666">.</span>set_base_name(dataset_name)
+    res: <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">|</span> NoResult <span style="color: #666">=</span> controller<span style="color: #666">.</span>set_dataset_name(dataset_name)
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(res, NoResult):
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">f"Failed to set dataset </span><span style="color: #A45A77; font-weight: bold">{</span>dataset_name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, res<span style="color: #666">.</span>traceback
     res: <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">|</span> NoResult <span style="color: #666">=</span> controller<span style="color: #666">.</span>set_config(tomllib<span style="color: #666">.</span>loads(cfg))
