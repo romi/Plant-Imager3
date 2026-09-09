@@ -246,64 +246,97 @@ class TimeLapse(QObject):
         weakref.finalize(self, _stop_timers, self._next_scan_timer)
         self._setup_next_scan_timer()
 
-    def _setup_timelapse_settings(self):
-        """
-        Configures and initializes settings for a timelapse operation.
-
-        This method sets up the internal state and scheduling parameters for
-        managing a timelapse capture, based on the configuration provided
-        in `self.config`. It supports multiple modes of operation, such as
-        `ONE_SHOT`, `INTERVAL`, and `FIXED_TIMES`, which determine the manner
-        in which photos or data are scheduled and captured.
+    @staticmethod
+    def compute_schedule(
+        config: dict,
+        *,
+        is_grbl: bool = False,
+        now: datetime.datetime | None = None,
+    ) -> tuple[TimeLapseMode, list[datetime.datetime]]:
+        """Compute the timelapse schedule without instantiating a TimeLapse.
 
         Parameters
         ----------
-        None
+        config : dict
+            Scanner config containing a ``timelapse`` mapping. Required keys
+            depend on ``mode``:
 
-        Other Parameters
-        ----------------
-        None
+            - ``mode`` : ``one_shot`` | ``interval`` | ``fixed_times``
+            - ``warmup_period`` : int, seconds before first scan (default 30,
+              ignored for ``fixed_times`` and for GRBL when ``is_grbl`` is True)
+            - ``interval`` : int seconds or duration string (e.g. ``"1h30m"``,
+              parsed via :func:`parse_duration`) — required for ``interval``
+            - ``n_shots`` : int, number of scans — required for ``interval``
+            - ``dates`` : list[str], ISO-8601 datetimes — required for
+              ``fixed_times``; naive values are interpreted as host-local time
+              then converted to UTC and sorted.
+        is_grbl : bool, optional
+            Whether the CNC is GRBL. When True the warmup delay is skipped and
+            the first scan is scheduled at ``now``. Default is False.
+        now : datetime.datetime | None, optional
+            Reference time in UTC for deterministic computation. When None,
+            ``datetime.now(timezone.utc)`` is used. Naive FIXED_TIMES entries
+            still use the host local timezone for interpretation.
 
         Returns
         -------
-        None
+        tuple[TimeLapseMode, list[datetime.datetime]]
+            The resolved mode and the ordered UTC schedule. ``one_shot`` returns
+            a single entry, ``interval`` returns ``n_shots`` entries spaced by
+            ``interval``, ``fixed_times`` returns parsed and sorted dates.
 
-        Raises
-        ------
-        AssertionError
-            If `timelapse_config["mode"]` is not a valid `TimeLapseMode`.
-        KeyError
-            If required keys are missing in the `self.config["timelapse"]` dictionary.
 
-        Notes
-        -----
-        - The `TimeLapseMode` enum is used to determine the available modes. The
-          valid modes are checked using an assertion.
-        - For the `ONE_SHOT` mode:
-          - If PowerManager.get_cnc() is GRBL (_is_grbl_cnc), the scheduling
-            starts immediately.
-          - Otherwise, it incorporates a warm-up period before scheduling starts.
-        - For the `INTERVAL` mode:
-          - The interval between timelapse captures is derived from the `"interval"`
-            configuration, parsed using the `parse_duration` utility.
-          - Warmup depends on PowerManager.get_cnc() (_is_grbl_cnc).
-          - The number of shots (`"n_shots"`) determines the total number of
-            scheduled captures.
-        - For the `FIXED_TIMES` mode:
-          - Timelapse captures occur at specific dates and times, as defined by the
-            `"dates"` configuration.
-        - The `self.start_at` attribute is set to the first scheduled capture time
-          in all modes.
-
-        See Also
+        Examples
         --------
-        TimeLapseMode : Enum specifying available timelapse modes.
-        parse_duration : Utility function to parse duration strings.
+        >>> from datetime import datetime, timezone
+        >>> from plantimager.controller.scanner.timelapse import TimeLapse
+        >>> now = datetime(2025, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+        >>> cfg = {"timelapse": {"mode": "interval", "interval": 60, "n_shots": 3}}
+        >>> mode, sched = TimeLapse.compute_schedule(cfg, now=now)
+        >>> mode.value
+        'interval'
+        >>> [d.isoformat() for d in sched]
+        ['2025-01-01T12:00:30+00:00', '2025-01-01T12:01:30+00:00', '2025-01-01T12:02:30+00:00']
+        >>> cfg2 = {"timelapse": {"mode": "interval", "interval": 60, "n_shots": 3}}
+        >>> _, sched2 = TimeLapse.compute_schedule(cfg2, is_grbl=True, now=now)
+        >>> [d.isoformat() for d in sched2]
+        ['2025-01-01T12:00:00+00:00', '2025-01-01T12:01:00+00:00', '2025-01-01T12:02:00+00:00']
         """
-        timelapse_config = self.config["timelapse"]
+        timelapse_config = config["timelapse"]
         assert timelapse_config["mode"] in TimeLapseMode, \
             f"Unrecognized mode, expected one of {[m.value for m in TimeLapseMode]}"
 
+        mode = TimeLapseMode(timelapse_config["mode"])
+        warmup_sec = int(timelapse_config.get("warmup_period", 30))
+        now_utc = now if now is not None else datetime.datetime.now(timezone.utc)
+
+        if mode == TimeLapseMode.ONE_SHOT:
+            if is_grbl:
+                return mode, [now_utc]
+            return mode, [now_utc + datetime.timedelta(seconds=warmup_sec)]
+        if mode == TimeLapseMode.INTERVAL:
+            start_at = now_utc if is_grbl else now_utc + datetime.timedelta(seconds=warmup_sec)
+            interval_raw = timelapse_config["interval"]
+            if isinstance(interval_raw, int):
+                interval = datetime.timedelta(seconds=interval_raw)
+            else:
+                interval = parse_duration(str(interval_raw))
+            n_scans = int(timelapse_config["n_shots"])
+            return mode, [start_at + interval * i for i in range(n_scans)]
+        if mode == TimeLapseMode.FIXED_TIMES:
+            parsed: list[datetime.datetime] = []
+            local_tz = datetime.datetime.now().astimezone().tzinfo
+            for datestring in timelapse_config["dates"]:
+                dt = datetime.datetime.fromisoformat(datestring)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=local_tz)
+                dt = dt.astimezone(timezone.utc)
+                parsed.append(dt)
+            return mode, sorted(parsed)
+        return mode, []
+
+    def _setup_timelapse_settings(self):
+        timelapse_config = self.config["timelapse"]
         self.warmup_sec = int(timelapse_config.get("warmup_period", 30))
         self.grace_period = int(timelapse_config.get("grace_period", 120))
         self.standby_threshold_sec = int(timelapse_config.get("standby_threshold_sec", 600))
@@ -312,40 +345,13 @@ class TimeLapse(QObject):
         self.current_idx = 0
         self.next_idx = 0
 
-        self.mode = TimeLapseMode(timelapse_config["mode"])
-        now_utc = datetime.datetime.now(timezone.utc)
-        is_grbl = _is_grbl_cnc(self.power_manager.get_cnc())
-        if self.mode == TimeLapseMode.ONE_SHOT:
-            if is_grbl:
-                self.schedule_times.append(now_utc)
-            else:
-                self.schedule_times.append(now_utc + datetime.timedelta(seconds=self.warmup_sec))
-        elif self.mode == TimeLapseMode.INTERVAL:
-            if is_grbl:
-                self.start_at = now_utc
-            else:
-                self.start_at = now_utc + datetime.timedelta(seconds=self.warmup_sec)
-            interval_raw = timelapse_config["interval"]
-            if isinstance(interval_raw, int):
-                interval = datetime.timedelta(seconds=interval_raw)
-            else:
-                interval = parse_duration(str(interval_raw))
-            n_scans = int(timelapse_config["n_shots"])
-            self.schedule_times = [self.start_at + interval * i for i in range(n_scans)]
-        elif self.mode == TimeLapseMode.FIXED_TIMES:
-            parsed = []
-            local_tz = datetime.datetime.now().astimezone().tzinfo
-            for datestring in timelapse_config["dates"]:
-                dt = datetime.datetime.fromisoformat(datestring)
-                if dt.tzinfo is None:
-                    dt = dt.replace(tzinfo=local_tz)
-                dt = dt.astimezone(timezone.utc)
-                parsed.append(dt)
-            self.schedule_times = sorted(parsed)
+        is_grbl = _is_grbl_cnc(self.power_manager.get_cnc()) if getattr(self, "power_manager", None) is not None else False
+        self.mode, self.schedule_times = self.compute_schedule(
+            self.config, is_grbl=is_grbl,
+        )
 
         self.start_at = self.schedule_times[0] if self.schedule_times else None
 
-        # PlantDB timelapse container: only when we will produce >1 scans
         if len(self.schedule_times) <= 1:
             self.plantdb_timelapse_id = None
         else:

@@ -593,17 +593,14 @@ class Scanner(QObject):
 
     def preview_timelapse(self, config: dict) -> dict:
         """Return the computed schedule for a config, without starting it."""
-        # Reuse TimeLapse's schedule computation by building a throwaway instance
-        # is heavy; instead expose the deterministic schedule via the store shape.
+        from plantimager.controller.scanner.powermanager import _is_grbl_cnc
         from plantimager.controller.scanner.timelapse import TimeLapse as _TL
-        # TODO: create a static method in Timelapse computing the schedule without instanciating everything
-        probe = _TL(db_url=self.db_url, cameras=self.cameras,
-                    path=self.scan_path, timelapse_name="preview", config=config,
-                    power_manager=self.power_manager, parent=self)
+        is_grbl = _is_grbl_cnc(self.power_manager.get_cnc())
+        mode, schedule = _TL.compute_schedule(config, is_grbl=is_grbl)
         return {
-            "mode": probe.mode.value,
-            "schedule_times": [dt.isoformat() for dt in probe.schedule_times],
-            "n_scans": probe.n_scans,
+            "mode": mode.value,
+            "schedule_times": [dt.isoformat() for dt in schedule],
+            "n_scans": len(schedule),
         }
 
     def _on_timelapse_progress(self, current: int, total: int):
