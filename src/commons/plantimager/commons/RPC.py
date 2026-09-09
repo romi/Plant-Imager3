@@ -22,6 +22,7 @@ import copy
 import inspect
 import json
 import logging
+import os
 import re
 import sys
 import time
@@ -664,7 +665,7 @@ class RPCClient:
             if receiver:
                 receiver.stop()
                 receiver.join(2)
-            logger.debug("Client finalized")
+            if os.getenv("PI_LOG_FINALIZE") : logger.info("RPCClient finalized")
 
         finalize(self, _finalizer, self.socket, self._signal_receiver)
 
@@ -1016,7 +1017,7 @@ class RPCServer:
             state["socket"].close()
             if state["signal_socket"]:
                 state["signal_socket"].close()
-            logger.info("Server deleted")
+            if os.getenv("PI_LOG_FINALIZE"): logger.info("RPCServer finalized")
 
         finalize(self, _server_finalizer, self._cleanup_state, self._signals)
 

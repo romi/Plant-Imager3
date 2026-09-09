@@ -1,3 +1,4 @@
+import os
 import weakref
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
@@ -65,6 +66,7 @@ class PiCameraComm(QObject):
             pool.shutdown(wait=False)
             if camera:
                 camera.stop_server()
+            if os.getenv("PI_LOG_FINALIZE"): logger.info("PiCameraComm finalized")
 
         finalize(self, _finalizer, self._thread_pool, self._camera)
 

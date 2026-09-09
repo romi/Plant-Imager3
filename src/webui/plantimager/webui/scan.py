@@ -625,7 +625,7 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
     res: None | NoResult = controller.set_api_token(api_token)
     if isinstance(res, NoResult):
         return "Failed to connect to set access token.", res.traceback
-    res: None | NoResult = controller.set_dataset_name(dataset_name)
+    res: None | NoResult = controller.set_base_name(dataset_name)
     if isinstance(res, NoResult):
         return f"Failed to set dataset {dataset_name}", res.traceback
     res: None | NoResult = controller.set_config(tomllib.loads(cfg))
@@ -709,7 +709,7 @@ def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, datase
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):
         return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
-    res: None | NoResult = controller.set_dataset_name(dataset_name)
+    res: None | NoResult = controller.set_base_name(dataset_name)
     if isinstance(res, NoResult):
         return f"Failed to set dataset {dataset_name}", res.traceback
     try:

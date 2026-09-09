@@ -30,8 +30,8 @@ class ControllerDevice(ABC):
         pass
 
     @abstractmethod
-    def set_dataset_name(self, name: str):
-        """Set the name of the dataset to be created."""
+    def set_base_name(self, name: str):
+        """Set the base name — bare scan uses it as scan_id, timelapse uses it as timelapse_id."""
         pass
 
     @abstractmethod
@@ -42,6 +42,26 @@ class ControllerDevice(ABC):
     @abstractmethod
     def run_scan(self):
         """Start the scan."""
+        pass
+
+    @abstractmethod
+    def start_timelapse(self, config: dict) -> str:
+        """Create and start a timelapse from a configuration dict."""
+        pass
+
+    @abstractmethod
+    def get_active_timelapse(self) -> dict | None:
+        """Return a serialisable snapshot of the active timelapse, or None."""
+        pass
+
+    @abstractmethod
+    def cancel_timelapse(self):
+        """Cancel the active timelapse."""
+        pass
+
+    @abstractmethod
+    def preview_timelapse(self, config: dict) -> dict:
+        """Return the schedule computed for a config, without starting it."""
         pass
 
     @RPCProperty(notify=progressChanged)
