@@ -228,14 +228,11 @@ class TestScanUnit(unittest.TestCase):
 
         # ---- Verify that CNC was moved to each target pose -------------------------
         # There should be as many moveto calls as path points
-        self.assertEqual(self.mock_cnc.moveto.call_count, expected_upload_calls + 1)  # add return call
+        self.assertEqual(self.mock_cnc.moveto.call_count, expected_upload_calls)
 
-        # ---- Verify that after the scan the arm was moved to the final safe position
-        # (the last moveto in Scan.scan() after the loop)
-        self.assertTrue(
-            any(call_args[0][0:3] == (20, 20, 45) for call_args in self.mock_cnc.moveto.call_args_list),
-            "Final safety move (20,20,45) not performed"
-        )
+        # ---- Verify that after the scan the arm was parked via reset_pos ------
+        # (Scan.scan() ends with cnc.reset_pos(), not a hardcoded moveto)
+        self.mock_cnc.reset_pos.assert_called_once()
 
 class DummyCNC:
     """Very small stand‑in for a real CNC controller."""
