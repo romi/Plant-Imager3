@@ -305,18 +305,24 @@ class PowerManager(QObject):
         else:
             logger.error(f"Unknown mode: {mode}")
 
+    def _apply_power(self, mode: PowerManagerMode):
+        if mode == PowerManagerMode.AUTO:
+            self._cnc_power_off()
+            gpio.write(GPIO_LIGHTS_PIN, False)
+            gpio.write(GPIO_GROWTH_LIGHTS_PIN, True)
+        else:
+            self._cnc_power_on()
+            gpio.write(GPIO_LIGHTS_PIN, True)
+            gpio.write(GPIO_GROWTH_LIGHTS_PIN, False)
+
     def _prepare_for_scan(self):
-        self._cnc_power_on()
-        self._lights_power_on()
-        self._glights_power_off()
+        self._apply_power(PowerManagerMode.SCAN)
 
     def prepare_for_scan(self):
         self._prepare_for_scan()
 
     def _resume_auto(self):
-        self._cnc_power_off()
-        self._lights_power_off()
-        self._glights_power_on()
+        self._apply_power(PowerManagerMode.AUTO)
 
     def resume_auto(self):
         self._resume_auto()
@@ -382,7 +388,3 @@ class PowerManager(QObject):
     def try_set_mode(self, mode: PowerManagerMode) -> bool:
         self.mode = mode
         return self.mode == mode
-
-    def set_manual(self) -> bool:
-        """Enter MANUAL mode, powering up the scanner for manual operation. Returns False if SCAN preempts."""
-        return self.try_set_mode(PowerManagerMode.MANUAL)
