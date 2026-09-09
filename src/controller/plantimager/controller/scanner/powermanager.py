@@ -83,6 +83,8 @@ class PowerManagerMode(StrEnum):
     SCAN = "scan"
     AUTO = "auto"  # automatic light schedule
     MANUAL = "manual"
+    STARTING = "starting"  # transitional: powered on, connecting the CNC
+    FINALIZING = "finalizing"  # transitional: parking + powering the CNC down
 
 class PowerManager(QObject):
 
@@ -90,6 +92,7 @@ class PowerManager(QObject):
     cnc_ready = Signal(object)
     modeChanged = Signal(str)
     _cnc_result_signal = Signal(object)
+    _powerdown_done = Signal()
 
     def __init__(self, warmup_period: float, parent=None, allow_dummy: bool | None = None):
         """
@@ -143,25 +146,26 @@ class PowerManager(QObject):
         self._allow_dummy: bool = _allow_dummy_cnc(allow_dummy)
         self.cnc: AbstractCNC | None = None
         self._connecting: bool = False
-        self._pending_cnc: AbstractCNC | None = None
+        self._pending_mode: PowerManagerMode | None = None
         self.warmup_period: float = warmup_period
+        self.standby_threshold_sec: int = 600
         self.manual_mode_timer = QTimer(parent=self, singleShot=True, interval=60 * 5 * 1000)  # 5 minutes in ms
         self.manual_mode_timer.timeout.connect(self._manual_mode_timeout)
         self.warmup_timer = QTimer(parent=self, singleShot=True)
         self.warmup_timer.timeout.connect(self._on_warmup_timer)
         self.cnc_connect_timer = QTimer(parent=self, singleShot=False, interval=1200)
         self.cnc_connect_timer.timeout.connect(self._dispatch_cnc_connect)
-        self._cnc_result_timer = QTimer(parent=self, singleShot=True)
-        self._cnc_result_timer.timeout.connect(self._on_cnc_connect_result_owned)
         self._cnc_result_signal.connect(self._on_cnc_connect_result)
+        self._powerdown_done.connect(self._on_powerdown_done)
         self.destroyed.connect(
-            lambda _=None, _a=self.warmup_timer, _b=self.manual_mode_timer, _c=self.cnc_connect_timer, _d=self._cnc_result_timer: _stop_timers(_a, _b, _c, _d)
+            lambda _=None, _a=self.warmup_timer, _b=self.manual_mode_timer, _c=self.cnc_connect_timer: _stop_timers(_a, _b, _c)
         )
-        weakref.finalize(self, _stop_timers, self.warmup_timer, self.manual_mode_timer, self.cnc_connect_timer, self._cnc_result_timer)
+        weakref.finalize(self, _stop_timers, self.warmup_timer, self.manual_mode_timer, self.cnc_connect_timer)
         self._mode: PowerManagerMode = PowerManagerMode.AUTO
-        self.modeChanged.connect(self._on_mode_changed)
         self._next_warmup_date: datetime.datetime | None = None
-        self._resume_auto()
+        self._next_scan_at: datetime.datetime | None = None
+        self._apply_lights(PowerManagerMode.AUTO)
+        self._set_cnc_power(False)
         self.cnc_connect_timer.start()
         self._dispatch_cnc_connect()
 
@@ -169,6 +173,70 @@ class PowerManager(QObject):
         if self._allow_dummy:
             return DummyCNC()
         return CNC()
+
+    # ------------------------------------------------------------------
+    # Mode transitions
+    # ------------------------------------------------------------------
+    @Property(str, notify=modeChanged)
+    def mode(self) -> PowerManagerMode:
+        """Current state. Read-only; transitions go through try_set_mode."""
+        return self._mode
+
+    def try_set_mode(self, mode: PowerManagerMode) -> bool:
+        return self._set_mode(mode)
+
+    def _set_mode(self, mode: PowerManagerMode) -> bool:
+        """Validate and apply an external mode request. Returns whether it was accepted."""
+        if mode == self._mode:
+            return True
+        if mode == PowerManagerMode.MANUAL and self._mode in (PowerManagerMode.SCAN, PowerManagerMode.STARTING):
+            logger.warning("Cannot transition to MANUAL mode from SCAN.")
+            return False
+        if self._mode == PowerManagerMode.STARTING:
+            if mode == PowerManagerMode.AUTO:
+                # Abort an in-flight connection attempt.
+                self._pending_mode = None
+                self._set_stable(PowerManagerMode.AUTO)
+                self._apply_lights(PowerManagerMode.AUTO)
+                self._set_cnc_power(False)
+                return True
+            logger.warning(f"Cannot retarget from STARTING to {mode}.")
+            return False
+        if self._mode == PowerManagerMode.FINALIZING:
+            logger.warning(f"Cannot transition from FINALIZING to {mode}.")
+            return False
+
+        if mode == PowerManagerMode.AUTO:
+            if self.cnc is not None:
+                self._start_powerdown()
+            else:
+                self._set_stable(PowerManagerMode.AUTO)
+                self._apply_lights(PowerManagerMode.AUTO)
+                self._set_cnc_power(False)
+            return True
+        if mode in (PowerManagerMode.SCAN, PowerManagerMode.MANUAL):
+            if self.cnc is None:
+                self._start_connecting(mode)
+            else:
+                self._set_stable(mode)
+                self._apply_lights(mode)
+            return True
+        logger.error(f"Unknown mode: {mode}")
+        return False
+
+    def _set_stable(self, mode: PowerManagerMode):
+        self._mode = mode
+        self.modeChanged.emit(mode)
+
+    # --- powering up (STARTING) ---
+    def _start_connecting(self, target: PowerManagerMode):
+        """Power on the CNC board and begin auto-connecting toward ``target``."""
+        self._pending_mode = target
+        self._mode = PowerManagerMode.STARTING
+        self.modeChanged.emit(PowerManagerMode.STARTING)
+        self._apply_lights(PowerManagerMode.SCAN)  # work lights on, growth off
+        self._set_cnc_power(True)
+        self._dispatch_cnc_connect()
 
     @Slot()
     def _dispatch_cnc_connect(self):
@@ -178,7 +246,7 @@ class PowerManager(QObject):
             return
         if self._connecting:
             return
-        if self.mode == PowerManagerMode.AUTO:  # No CNC on AUTO
+        if self._mode != PowerManagerMode.STARTING:  # only connect while starting up
             return
         self._connecting = True
         t = threading.Thread(target=self._do_cnc_connect_blocking, daemon=True)
@@ -195,149 +263,96 @@ class PowerManager(QObject):
     @Slot(object)
     def _on_cnc_connect_result(self, cnc):
         self._connecting = False
-        if cnc is None:
+        if cnc is None:  # failed; the connect timer will retry
             return
-        if _is_grbl_cnc(self.cnc):
+        if self._mode != PowerManagerMode.STARTING:
+            # Stale result after abort to AUTO — never commit a live CNC. `cnc` here
+            # is a fresh object we never handed off (self.cnc is None), so stop()
+            # only frees its own serial port. NEVER touch the shared GPIO pin here —
+            # pin power is owned solely by the mode transitions.
+            try:
+                cnc.stop()
+            except Exception:
+                pass
             return
-        if self._allow_dummy and isinstance(self.cnc, DummyCNC):
-            return
+        target = self._pending_mode or PowerManagerMode.SCAN
         self.cnc = cnc
-        if self._mode == PowerManagerMode.MANUAL:
+        if target == PowerManagerMode.MANUAL:
             activity_monitor(self.cnc, self.manual_mode_timer.start)
             self.manual_mode_timer.start()
+        self._pending_mode = None
+        self._set_stable(target)
         self.cnc_ready.emit(self.cnc)
 
+    # --- powering down (FINALIZING) ---
+    def _start_powerdown(self):
+        """Stops the CNC, then power the cnc controller off."""
+        self._mode = PowerManagerMode.FINALIZING
+        self.modeChanged.emit(PowerManagerMode.FINALIZING)
+        # work lights off, growth lights on now; CNC power waits for the park
+        self._apply_lights(PowerManagerMode.AUTO)
+        threading.Thread(target=self._do_powerdown_blocking, daemon=True).start()
+
+    def _do_powerdown_blocking(self):
+        try:
+            cnc = self.cnc
+            if cnc is not None:
+                cnc.stop()  # dev: parks (reset_pos + wait) then closes serial — blocks
+            self._set_cnc_power(False)  # only once the CNC is finalized
+        finally:
+            self._powerdown_done.emit()
+
     @Slot()
-    def _on_cnc_connect_result_owned(self):
-        cnc = getattr(self, "_pending_cnc", None)
-        self._pending_cnc = None
-        self._on_cnc_connect_result(cnc)
-
-
-    @Slot()
-    def _manual_mode_timeout(self):
-        """
-        Handles the timeout event for manual mode, switching modes based on
-        the current time and warmup status.
-
-        This method stops the manual mode timer and updates the power manager
-        mode based on the presence of a warmup date and the time elapsed since
-        `self._next_warmup_date`. Depending on the conditions met, the mode is
-        set to either `SCAN` or `AUTO`.
-
-        Notes
-        -----
-        - `self._next_warmup_date` must be a `datetime` object or `None`.
-        - The `warmup_period` is used to determine mode-switching logic based
-          on the time difference.
-        - This private method is intended to be used internally within the system
-          and is not part of a public API.
-
-        Raises
-        ------
-        AttributeError
-            If `self._next_warmup_date` or `self.warmup_period` is not properly
-            initialized as expected.
-        """
+    def _on_powerdown_done(self):
         self.manual_mode_timer.stop()
-        if self.mode == PowerManagerMode.SCAN:
-            return
+        self.cnc = None
+        self._set_stable(PowerManagerMode.AUTO)
 
-        if self._next_warmup_date is None:
-            self.mode = PowerManagerMode.AUTO
-            return
-
-        now = datetime.datetime.now(datetime.timezone.utc) if self._next_warmup_date and self._next_warmup_date.tzinfo else datetime.datetime.now()
-        logger.debug(f"{self._next_warmup_date - now} -- {datetime.timedelta(seconds=self.warmup_period + 1.)}")
-        if self._next_warmup_date - now < datetime.timedelta(seconds=self.warmup_period + 1.):
-            self.mode = PowerManagerMode.SCAN
-        else:
-            self.mode = PowerManagerMode.AUTO
-
-
-    def _cnc_power_on(self):
-        gpio.write(GPIO_CNC_PIN, True)
-
-    def _cnc_cleanup_complete(self):
-        """Power down the CNC after its cleanup (after finalized)."""
-        gpio.write(GPIO_CNC_PIN, False)
-
-    def _cnc_power_off(self):
-        if self.cnc is not None:
-            self.cnc.stop()
-            weakref.finalize(self.cnc, self._cnc_cleanup_complete)
-            self.cnc = None
-        else:
-            gpio.write(GPIO_CNC_PIN, False)
-
-    def _lights_power_on(self):
-        gpio.write(GPIO_LIGHTS_PIN, True)
-
-    def _lights_power_off(self):
-        gpio.write(GPIO_LIGHTS_PIN, False)
-
-    def _glights_power_on(self):
-        gpio.write(GPIO_GROWTH_LIGHTS_PIN, True)
-
-    def _glights_power_off(self):
-        gpio.write(GPIO_GROWTH_LIGHTS_PIN, False)
-
-    @Property(str, notify=modeChanged)
-    def mode(self) -> PowerManagerMode:
-        return self._mode
-    @mode.setter
-    def mode(self, mode: PowerManagerMode):
-        if mode == PowerManagerMode.MANUAL and self._mode == PowerManagerMode.SCAN:
-            logger.warning("Cannot transition to MANUAL mode from SCAN mode.")
-            return
-        if self._mode != mode:
-            self._mode = mode
-            self.modeChanged.emit(mode)
-
-    @Slot(str)
-    def _on_mode_changed(self, mode):
+    # ------------------------------------------------------------------
+    # GPIO power
+    # ------------------------------------------------------------------
+    def _apply_lights(self, mode: PowerManagerMode):
+        """Sync work/growth lights to a stable mode. Does not touch the CNC pin,
+        whose power is owned by the STARTING/FINALIZING transitions."""
         if mode == PowerManagerMode.AUTO:
-            self._resume_auto()
-        elif mode == PowerManagerMode.SCAN:
-            self._prepare_for_scan()
-        elif mode == PowerManagerMode.MANUAL:
-            self._prepare_for_scan()
-        else:
-            logger.error(f"Unknown mode: {mode}")
-
-    def _apply_power(self, mode: PowerManagerMode):
-        if mode == PowerManagerMode.AUTO:
-            self._cnc_power_off()
             gpio.write(GPIO_LIGHTS_PIN, False)
             gpio.write(GPIO_GROWTH_LIGHTS_PIN, True)
-        else:
-            self._cnc_power_on()
+        else:  # SCAN / MANUAL powered
             gpio.write(GPIO_LIGHTS_PIN, True)
             gpio.write(GPIO_GROWTH_LIGHTS_PIN, False)
 
-    def _prepare_for_scan(self):
-        self._apply_power(PowerManagerMode.SCAN)
-
-    def prepare_for_scan(self):
-        self._prepare_for_scan()
-
-    def _resume_auto(self):
-        self._apply_power(PowerManagerMode.AUTO)
-
-    def resume_auto(self):
-        self._resume_auto()
+    def _set_cnc_power(self, on: bool):
+        gpio.write(GPIO_CNC_PIN, on)
 
     def get_cnc(self):
         return self.cnc
 
-    def set_light_policy(self, policy: dict):
-        # For future automatic light management
-        pass
+    # ------------------------------------------------------------------
+    # Manual mode timeout
+    # ------------------------------------------------------------------
+    @Slot()
+    def _manual_mode_timeout(self):
+        """Handle the manual-mode timeout, returning to AUTO/SCAN based on the next scan."""
+        self.manual_mode_timer.stop()
+        if self._mode != PowerManagerMode.MANUAL:
+            return
 
+        if self._next_scan_at is None:
+            self.try_set_mode(PowerManagerMode.AUTO)
+            return
+        now = datetime.datetime.now(datetime.timezone.utc) if self._next_scan_at.tzinfo else datetime.datetime.now()
+        if self._next_scan_at - now < datetime.timedelta(seconds=self.standby_threshold_sec):
+            self.try_set_mode(PowerManagerMode.SCAN)  # scan too soon to power down
+        else:
+            self.try_set_mode(PowerManagerMode.AUTO)
+
+    # ------------------------------------------------------------------
+    # Scheduled scanning / warm-up
+    # ------------------------------------------------------------------
     @Slot()
     def _on_warmup_timer(self):
         """Warm-up timer fired — power up the scanner for an imminent scan."""
-        self.mode = PowerManagerMode.SCAN
+        self.try_set_mode(PowerManagerMode.SCAN)
 
     def arm_for_scan(self, next_scan_at: datetime.datetime, standby_threshold_sec: int):
         """
@@ -364,6 +379,8 @@ class PowerManager(QObject):
             next_scan_at = next_scan_at.replace(tzinfo=datetime.timezone.utc)
         now = datetime.datetime.now(datetime.timezone.utc)
         delta = (next_scan_at - now).total_seconds()
+        self._next_scan_at = next_scan_at
+        self.standby_threshold_sec = standby_threshold_sec
 
         if delta > standby_threshold_sec:
             logger.info(
@@ -371,7 +388,7 @@ class PowerManager(QObject):
                 f"dropping to AUTO and warming up before the scan."
             )
             self._next_warmup_date = next_scan_at - datetime.timedelta(seconds=self.warmup_period)
-            self.mode = PowerManagerMode.AUTO
+            self.try_set_mode(PowerManagerMode.AUTO)
             warmup_in = max(0, delta - self.warmup_period)
             self.warmup_timer.setInterval(int(warmup_in * 1000))
             self.warmup_timer.start()
@@ -381,10 +398,6 @@ class PowerManager(QObject):
                 f"keeping scanner powered in SCAN mode."
             )
             if self._mode != PowerManagerMode.SCAN:
-                self.mode = PowerManagerMode.SCAN
+                self.try_set_mode(PowerManagerMode.SCAN)
             else:
-                self._prepare_for_scan()
-
-    def try_set_mode(self, mode: PowerManagerMode) -> bool:
-        self.mode = mode
-        return self.mode == mode
+                self._apply_lights(PowerManagerMode.SCAN)

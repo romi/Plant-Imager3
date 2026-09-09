@@ -376,20 +376,22 @@ def test_setup_next_scan_timer_immediate_singleshot(fake_timers, tmp_xdg, mock_g
     assert tl._next_scan_timer.interval() == 0
 
 
-def test_setup_next_scan_timer_power_auto_vs_scan(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+def test_setup_next_scan_timer_power_auto_vs_scan(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb, qtbot):
+    from plantimager.controller.scanner.dummy_cnc import DummyCNC
     cfg = minimal_config(mode="interval", interval=60, n_shots=2, grace_period=10, warmup_period=30, standby_threshold_sec=600)
     tl, pm = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
     now = datetime.datetime.now(timezone.utc)
-    # far → AUTO (+ PowerManager arms its own warm-up timer)
+    # far → AUTO (power-down happens asynchronously, so wait for it) + warm-up timer armed
     tl.schedule_times = [now + datetime.timedelta(seconds=3600)]
     tl.next_idx = 0
     tl._setup_next_scan_timer()
-    assert pm.mode == PowerManagerMode.AUTO
+    qtbot.waitUntil(lambda: pm.mode == PowerManagerMode.AUTO, timeout=3000)
     assert pm.warmup_timer.isActive()
     assert pm._next_warmup_date == tl.schedule_times[0] - datetime.timedelta(seconds=30)
-    # close → SCAN
+    # close → SCAN stays powered
     tl.schedule_times = [now + datetime.timedelta(seconds=100)]
     tl.next_idx = 0
+    pm.cnc = DummyCNC()  # re-attach a fresh CNC so re-entering SCAN is a stable transition
     tl._setup_next_scan_timer()
     assert pm.mode == PowerManagerMode.SCAN
     assert not pm.warmup_timer.isActive()
@@ -459,24 +461,25 @@ def test_cnc_ready_rearms_if_not_terminal(fake_timers, tmp_xdg, mock_gpio, mock_
 # signal order with pytest-qt (stateChanged vs PowerManager.modeChanged)
 # ---------------------------------------------------------------------------
 def test_signal_emission_order_timelapse_vs_power(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb, qtbot):
+    from plantimager.controller.scanner.dummy_cnc import DummyCNC
     cfg = minimal_config(mode="interval", interval=60, n_shots=1, grace_period=10, standby_threshold_sec=600, warmup_period=30)
     tl, pm = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
-    from pytestqt.qt_compat import qt_api
+    # Deterministic baseline: powered (cnc present) and in AUTO.
+    pm.cnc = DummyCNC()
+    pm._mode = PowerManagerMode.AUTO
     state_spy = []
     power_spy = []
     tl.stateChanged.connect(lambda s: state_spy.append(s))
     pm.modeChanged.connect(lambda m: power_spy.append(m))
+    # power transition does not emit timelapse state
+    assert pm.try_set_mode(PowerManagerMode.SCAN) is True
+    assert power_spy == ["scan"]
+    assert state_spy == []
+    # timelapse state transitions do not emit power
     tl.state = TimeLapseState.RUNNING
     tl.state = TimeLapseState.SCHEDULED
     assert state_spy == ["running", "scheduled"]
-    # pm may already be SCAN after __init__, so toggle to ensure emission
-    pm.mode = PowerManagerMode.AUTO
-    assert power_spy[-1] == "auto"
-    pm.mode = PowerManagerMode.SCAN
-    assert power_spy[-1] == "scan"
-    # verify independence: timelapse state changes do not emit power, and vice-versa
-    assert len(state_spy) == 2
-    assert len(power_spy) == 2
+    assert power_spy == ["scan"]
 
 
 def test_progress_signals(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb, qtbot):
