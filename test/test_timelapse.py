@@ -180,17 +180,6 @@ def test_parse_duration_invalid_raises():
         parse_duration("invalid-string")
 
 
-# ---------------------------------------------------------------------------
-# slug
-# ---------------------------------------------------------------------------
-def test_slug_for_schedule_is_fsdb_safe(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
-    cfg = minimal_config(mode="one_shot")
-    tl, _ = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
-    dt = datetime.datetime(2025, 11, 24, 10, 0, 0, tzinfo=timezone.utc)
-    assert tl._slug_for_schedule(dt) == "2025-11-24T10-00-00_00-00"
-    # aware +02:00 normalises to UTC before slug
-    dt2 = datetime.datetime(2025, 11, 24, 12, 0, 0, tzinfo=datetime.timezone(datetime.timedelta(hours=2)))
-    assert tl._slug_for_schedule(dt2) == "2025-11-24T10-00-00_00-00"
 
 
 # ---------------------------------------------------------------------------

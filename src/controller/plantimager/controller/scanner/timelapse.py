@@ -28,13 +28,13 @@ Timers vs methods
     _setup_next_scan_timer()  ◀──────────────────────────────────────────────┘
       ├─ next_idx >= len  → COMPLETED
       ├─ delta <= -grace  → skip, next_idx++, persist, recurse
-      ├─ delta <=  grace  → QTimer.singleShot(0, _trigger_next_scan)
+      ├─ delta <=  grace  → _next_scan_timer.start(0) (owned, no standalone singleShot)
       └─ delta >   grace
            ├─ PowerManager.arm_for_scan(next_time, standby_threshold_sec)
            │     (PowerManager decides AUTO/SCAN + arms its own warm-up timer)
            └─ _next_scan_timer(delta) → SCHEDULED (persist)
 
-    _trigger_next_scan()  ← QTimer timeout or singleShot
+    _trigger_next_scan()  ← owned _next_scan_timer
       ├─ scan(next_idx)  ──────────┐
       ├─ next_idx++ + persist      │
       └─ if done → COMPLETED else ─┘ → _setup_next_scan_timer()
@@ -45,7 +45,7 @@ Timers vs methods
       ├─ delta <= -grace → skip (persist)
       └─ else
            ├─ state = RUNNING
-           ├─ Scan(cnc=db_client, id=f"{id}--{slug(scheduled)}", scan_path).scan()
+           ├─ Scan(cnc=power_manager.get_cnc(), id=f"{plantdb_timelapse_id}_{index}" if plantdb else base_name, scan_path).scan()
            ├─ state = SCHEDULED or FAILED (+ errorOccurred)
            └─ persist
 
@@ -62,7 +62,6 @@ Timers vs methods
     _persist_state()  ← every state/next_idx mutation
       └─ TimelapseStore.from_timelapse(self).save()  (XDG, atomic mkstemp+fsync+replace)
 
-    _slug_for_schedule(dt)  helper for deterministic PlantDB scan_id.
 """
 import importlib
 import os
@@ -281,12 +280,13 @@ class TimeLapse(QObject):
         - The `TimeLapseMode` enum is used to determine the available modes. The
           valid modes are checked using an assertion.
         - For the `ONE_SHOT` mode:
-          - If the `self.cnc` attribute is an instance of `CNC`, the scheduling
+          - If PowerManager.get_cnc() is GRBL (_is_grbl_cnc), the scheduling
             starts immediately.
           - Otherwise, it incorporates a warm-up period before scheduling starts.
         - For the `INTERVAL` mode:
           - The interval between timelapse captures is derived from the `"interval"`
             configuration, parsed using the `parse_duration` utility.
+          - Warmup depends on PowerManager.get_cnc() (_is_grbl_cnc).
           - The number of shots (`"n_shots"`) determines the total number of
             scheduled captures.
         - For the `FIXED_TIMES` mode:
@@ -352,10 +352,6 @@ class TimeLapse(QObject):
             self.plantdb_timelapse_id = self.id
 
 
-    def _slug_for_schedule(self, scheduled: datetime.datetime) -> str:
-        """Deterministic, FSDB-safe slug for a scheduled time (UTC ISO, ``:``→``-``)."""
-        iso = scheduled.astimezone(timezone.utc).isoformat(timespec="seconds")
-        return iso.replace(":", "-").replace("+", "_")
 
     @Slot(int)
     def scan(self, index: int):
@@ -366,7 +362,7 @@ class TimeLapse(QObject):
         blocks. If called early (``delta > grace``) it re-arms the timer; if
         ``delta <= -grace`` the scan is skipped per persistence policy (one
         dataset per time, ``skip`` without catch-up). Otherwise creates a
-        ``Scan`` with ``f"{id}--{slug(scheduled)}"`` and runs it synchronously,
+        ``Scan`` with ``f"{plantdb_timelapse_id}_{index}" if plantdb else base_name`` and runs it synchronously,
         transitioning ``SCHEDULED → RUNNING → SCHEDULED`` (or ``FAILED``).
 
         Parameters

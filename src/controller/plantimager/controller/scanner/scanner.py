@@ -177,7 +177,6 @@ class Scanner(QObject):
         self.fileset = "images"  # Default fileset name
         self._api_token = ""
         self.base_name: str = ""
-        self.scan_id: str = ""  # alias for bare-scan path (kept for compat)
 
         # Timelapse / power management — PowerManager owns the CNC
         self.timelapse: TimeLapse | None = None
@@ -252,10 +251,6 @@ class Scanner(QObject):
     def enable_manual(self) -> bool:
         """Controller-app only — enter MANUAL, power up. No RPC."""
         return self.power_manager.try_set_mode(PowerManagerMode.MANUAL)
-
-    @Slot(result=bool)
-    def is_manual(self) -> bool:
-        return self.power_manager.mode == PowerManagerMode.MANUAL
 
     # ------------------------------------------------------------------
     # Working / ready state
@@ -407,9 +402,7 @@ class Scanner(QObject):
         name : str
             Base identifier (single PlantDB id namespace).
         """
-        self.base_name = name.strip()  # Store the base name
-        # keep scan_id alias for internal bare-scan path
-        self.scan_id = self.base_name
+        self.base_name = name.strip()
 
     @Property(bool, notify=readyToScanChanged)
     def ready_to_scan(self) -> bool:
@@ -420,7 +413,7 @@ class Scanner(QObject):
         """
         if (self.power_manager.get_cnc() and self.scan_path and self.cameras and
                 self.db_client and
-                hasattr(self, 'base_name') and self.base_name and self.fileset and
+                self.base_name and self.fileset and
                 not self._scan_in_progress and not self._scanner_working
         ):
             return True
