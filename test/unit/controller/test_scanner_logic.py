@@ -16,6 +16,10 @@ import time
 # Need QCoreApplication for QObject
 from PySide6.QtCore import QCoreApplication
 
+# Import the submodule so `plantimager.controller.scanner.scanner` is registered
+# as an attribute of the package before it is patched in setUp().
+import plantimager.controller.scanner.scanner  # noqa: F401
+
 
 class TestScannerLogic(unittest.TestCase):
     """Tests for Scanner state management and scan orchestration."""
