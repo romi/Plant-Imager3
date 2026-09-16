@@ -1,3 +1,14 @@
+"""Unit tests for the Scanner orchestration logic.
+
+These tests exercise :class:`plantimager.controller.scanner.scanner.Scanner`
+with the real CNC patched out (so construction falls back to ``DummyCNC``) and
+cameras, database client, uploader, and thread pool all mocked. The design
+verifies the scanner's state transitions and orchestration — camera
+management, scan configuration, readiness, target-pose resolution, image
+grabbing, and the full scan loop — without touching hardware or a real
+database.
+"""
+
 import unittest
 from unittest import mock
 import time
@@ -7,6 +18,8 @@ from PySide6.QtCore import QCoreApplication
 
 
 class TestScannerLogic(unittest.TestCase):
+    """Tests for Scanner state management and scan orchestration."""
+
     @classmethod
     def setUpClass(cls):
         cls.app = QCoreApplication.instance()
@@ -55,10 +68,12 @@ class TestScannerLogic(unittest.TestCase):
         self.mock_camera.config = {}
 
     def test_init_defaults_to_dummy(self):
+        """Scanner falls back to DummyCNC when no real CNC is available."""
         self.assertEqual(self.scanner.cnc, self.mock_dummy)
         self.assertEqual(self.scanner.cnc_type, "DummyCNC")
 
     def test_add_remove_camera(self):
+        """Cameras can be added to and removed from the scanner."""
         self.scanner.add_camera(self.mock_camera)
         self.assertIn("cam1", self.scanner.camera_names)
         self.assertEqual(len(self.scanner.cameras), 1)
@@ -67,6 +82,7 @@ class TestScannerLogic(unittest.TestCase):
         self.assertNotIn("cam1", self.scanner.camera_names)
 
     def test_set_db_url_creates_uploader(self):
+        """Setting a DB URL creates the client and uploader."""
         mock_client = mock.MagicMock()
         with mock.patch("plantimager.controller.scanner.scanner.PlantDBClient", return_value=mock_client):
             with mock.patch("plantimager.controller.scanner.scanner.DataUploader") as MockUploader:
@@ -78,6 +94,7 @@ class TestScannerLogic(unittest.TestCase):
                 self.assertIsNotNone(self.scanner.uploader)
 
     def test_configure_scan(self):
+        """configure_scan builds the scan path and metadata from config."""
         # need to mock importlib
         config = {
             "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "z": 50, "tilt": 0, "radius": 100, "n_points": 4}},
@@ -92,6 +109,7 @@ class TestScannerLogic(unittest.TestCase):
         self.assertEqual(self.scanner.dataset_metadata, {"species": "test"})
 
     def test_ready_to_scan_false_without_everything(self):
+        """ready_to_scan is true once all required components are present."""
         self.assertFalse(self.scanner.ready_to_scan)
         # set up minimal required
         self.scanner.add_camera(self.mock_camera)
@@ -109,6 +127,7 @@ class TestScannerLogic(unittest.TestCase):
         self.assertTrue(self.scanner.ready_to_scan)
 
     def test_get_target_pose(self):
+        """Unspecified path coordinates fall back to the current position."""
         from plantimager.controller.scanner.path import PathElement, Pose
         # current pos 20,20,45
         self.scanner.cnc.get_position.return_value = (20, 20, 45)
@@ -121,6 +140,7 @@ class TestScannerLogic(unittest.TestCase):
         self.assertEqual(target.pan, 90)
 
     def test_set_position(self):
+        """set_position moves the CNC to the pose coordinates."""
         from plantimager.controller.scanner.path import Pose
         pose = Pose(100, 100, 0, pan=45, tilt=0)
         with mock.patch.object(self.scanner.cnc, "moveto") as mock_moveto:
@@ -128,6 +148,7 @@ class TestScannerLogic(unittest.TestCase):
             mock_moveto.assert_called_with(100, 100, 45)
 
     def test_grab(self):
+        """grab captures an image and uploads it with metadata."""
         # Need db_client and uploader and scan_id
         self.scanner.db_client = mock.MagicMock()
         self.scanner.uploader = mock.MagicMock()
@@ -142,6 +163,7 @@ class TestScannerLogic(unittest.TestCase):
         self.assertEqual(data.metadata["camera_name"], "cam1")
 
     def test_scan_orchestrates(self):
+        """scan() moves and grabs an image for every path point."""
         # Full scan with mocked components
         # Setup config and path
         config = {
@@ -182,6 +204,7 @@ class TestScannerLogic(unittest.TestCase):
                     self.assertEqual(mock_uploader.upload.call_count, 2)
 
     def test_progress_signals(self):
+        """progressChanged emits the current progress value."""
         # Check that progressChanged is emitted during scan
         # Use mock to capture
         self.scanner._progress = 0

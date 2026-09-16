@@ -1,3 +1,13 @@
+"""Unit tests for the DataUploader.
+
+These tests exercise :class:`plantimager.controller.scanner.scanner.DataUploader`,
+which asynchronously uploads captured images to a PlantDB backend. The design
+mocks ``PlantDBClient`` for the fast, deterministic cases (upload call
+arguments, filename formatting, queue blocking, exception handling, worker
+count) and, when the ``fsdb_rest_api`` binary is available, runs one
+end-to-end upload against a real temporary database.
+"""
+
 import io
 import unittest
 from unittest import mock
@@ -6,6 +16,8 @@ from plantimager.controller.scanner.hal import DataItem
 
 
 class TestDataUploader(unittest.TestCase):
+    """Tests for DataUploader against a mocked and optionally real database."""
+
     def setUp(self):
         # Mock PlantDBClient
         self.mock_db = mock.MagicMock()
@@ -21,6 +33,7 @@ class TestDataUploader(unittest.TestCase):
             pass
 
     def test_upload_calls_db(self):
+        """upload() calls create_file with the scan, fileset, and extension."""
         img = b"fakeimagebytes"
         meta = {"camera_name": "cam1", "shot_id": 0, "format": "jpeg"}
         data = DataItem(idx=0, image=img, image_ext="jpeg", metadata=meta)
@@ -36,6 +49,7 @@ class TestDataUploader(unittest.TestCase):
         self.assertEqual(call_kwargs["ext"], "jpeg")
 
     def test_upload_filename_format(self):
+        """The file id is formatted as camera-name plus zero-padded index."""
         img = b"data"
         meta = {"camera_name": "piCam", "shot_id": 1}
         data = DataItem(idx=5, image=img, image_ext="jpeg", metadata=meta)
@@ -47,6 +61,7 @@ class TestDataUploader(unittest.TestCase):
         self.assertEqual(call_kwargs["file_id"], "piCam-00005")
 
     def test_upload_queues_and_blocks(self):
+        """Uploads are queued and block when the queue is full."""
         # queue_size=2, submit 3 should block on 3rd until one completes
         # Mock _upload to be slow
         original_upload = self.uploader._upload
@@ -65,6 +80,7 @@ class TestDataUploader(unittest.TestCase):
             self.assertGreaterEqual(len(self.uploader.jobs), 0)
 
     def test_upload_handles_exception(self):
+        """A database failure during upload does not raise."""
         self.mock_db.create_file.side_effect = Exception("db down")
         di = DataItem(0, b"img", "jpeg", {"camera_name": "cam", "shot_id": 0})
         # should not raise
@@ -76,10 +92,12 @@ class TestDataUploader(unittest.TestCase):
             self.fail(f"upload raised {e}")
 
     def test_threadpool_workers(self):
+        """The uploader uses the expected worker and queue sizes."""
         self.assertEqual(self.uploader.pool._max_workers, 4)
         self.assertEqual(self.uploader.queue_size, 2)
 
     def test_real_fsdb_if_available(self):
+        """End-to-end upload against a real temporary fsdb database when available."""
         # Try to use real fsdb_rest_api --test --empty if available
         import subprocess
         import time

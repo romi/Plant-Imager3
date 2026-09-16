@@ -1,3 +1,13 @@
+"""Unit tests for the GRBL CNC driver with a mocked serial port.
+
+These tests exercise :mod:`plantimager.controller.scanner.grbl` without real
+hardware by patching ``serial.Serial``, the serial port discovery, timing
+calls, and hardware-dependent methods. The design lets the ``CNC`` object be
+constructed and driven against a fake serial device that always replies
+``ok``, so move-time computation, bounds checking, angle helpers, command
+sending, stop, and position parsing can be verified deterministically.
+"""
+
 import unittest
 from unittest import mock
 
@@ -10,6 +20,8 @@ except ImportError:
 
 @unittest.skipUnless(HAS_SERIAL, "pyserial not installed")
 class TestGRBLMocked(unittest.TestCase):
+    """Tests for the GRBL CNC driver using a mocked serial port."""
+
     def setUp(self):
         self.patcher_serial = mock.patch("plantimager.controller.scanner.grbl.serial.Serial")
         self.mock_serial_class = self.patcher_serial.start()
@@ -66,6 +78,7 @@ class TestGRBLMocked(unittest.TestCase):
                 self._orig_stop = CNC.stop
 
     def test_compute_move_time(self):
+        """Move time is computed as a non-negative float from GRBL settings."""
         self.cnc.grbl_settings = {"$110": 1000, "$111": 1000, "$112": 1000, "$120": 500, "$121": 500, "$122": 500}
         # get_position is globally mocked to (20,20,45), which is fine
         t = self.cnc.compute_move_time(100, 100, 0)
@@ -73,10 +86,12 @@ class TestGRBLMocked(unittest.TestCase):
         self.assertGreaterEqual(t, 0)
 
     def test_check_move_raises(self):
+        """A move outside the machine limits raises an error."""
         with self.assertRaises((ValueError, AssertionError)):
             self.cnc._check_move(800, 0, 0)
 
     def test_angle_helpers(self):
+        """Angle travel helpers return sensible numeric results."""
         from plantimager.controller.scanner.grbl import angle_min_travel, angle_min_travel_distance
         self.assertAlmostEqual(angle_min_travel(0, 90), 90)
         result = angle_min_travel(350, 10)
@@ -84,6 +99,7 @@ class TestGRBLMocked(unittest.TestCase):
         self.assertIsInstance(angle_min_travel_distance(0, 90), (float, int))
 
     def test_send_cmd(self):
+        """send_cmd writes to the serial port and returns the response."""
         self.mock_serial.readline.return_value = b"ok\r\n"
         # Patch reset_input_buffer to avoid error
         res = self.cnc.send_cmd("G0 X10")
@@ -92,6 +108,7 @@ class TestGRBLMocked(unittest.TestCase):
         self.assertIsInstance(res, str)
 
     def test_stop_does_not_raise(self):
+        """stop() completes without raising even with a mocked serial port."""
         # stop should not raise even with mock serial
         # Use original stop but patch its dependencies
         with mock.patch.object(self.cnc.__class__, "reset_pos", return_value=None):
@@ -102,6 +119,7 @@ class TestGRBLMocked(unittest.TestCase):
                     self.fail(f"stop raised {e}")
 
     def test_get_position_with_mocked_status(self):
+        """get_position parses machine coordinates from a GRBL status line."""
         # Temporarily restore real get_position for this test
         self.patcher_get_pos.stop()
         self.patcher_wait_immobile.stop()

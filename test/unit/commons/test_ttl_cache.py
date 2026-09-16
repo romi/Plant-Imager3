@@ -1,10 +1,24 @@
+"""Unit tests for the ttl_cache decorator.
+
+These tests verify :func:`plantimager.commons.utils.ttl_cache`, a
+time-to-live LRU cache. The design uses mocked ``time`` to control expiry
+deterministically and a ``calls`` list to observe how often the wrapped
+function actually runs. Coverage spans basic hits, keyword-argument keying,
+expiry recomputation, safe cleanup of multiple expired entries, LRU
+eviction, the ``clear_cache`` attribute, name preservation, and zero-argument
+functions.
+"""
+
 import unittest
 from unittest import mock
 from plantimager.commons.utils import ttl_cache
 
 
 class TestTTLCache(unittest.TestCase):
+    """Tests for the ttl_cache decorator."""
+
     def test_basic_hit(self):
+        """Repeated calls with the same argument hit the cache."""
         calls = []
 
         @ttl_cache(maxsize=16, ttl=300)
@@ -17,6 +31,7 @@ class TestTTLCache(unittest.TestCase):
         self.assertEqual(len(calls), 1)
 
     def test_kwargs_key_diff(self):
+        """Different keyword arguments produce distinct cache keys."""
         calls = []
 
         @ttl_cache(maxsize=16, ttl=300)
@@ -32,6 +47,7 @@ class TestTTLCache(unittest.TestCase):
         self.assertEqual(len(calls), 2)
 
     def test_expiry_recomputes(self):
+        """Entries are recomputed once their TTL elapses."""
         calls = []
 
         @ttl_cache(maxsize=10, ttl=10)
@@ -53,6 +69,7 @@ class TestTTLCache(unittest.TestCase):
             self.assertEqual(len(calls), 2)  # cached again
 
     def test_expiry_cleans_multiple_without_runtime_error(self):
+        """Cleaning multiple expired entries does not raise RuntimeError."""
         # utils.py: for key, (timestamp, _) in cache.items(): del cache[key] -> RuntimeError if >1 expired
         # This test should fail before fix, pass after fix (list(cache.items())).
         with mock.patch("plantimager.commons.utils.time") as mock_time:
@@ -73,6 +90,7 @@ class TestTTLCache(unittest.TestCase):
                 self.fail(f"ttl_cache expiry cleanup raised RuntimeError: {e}")
 
     def test_lru_eviction(self):
+        """The least-recently-used entry is evicted when the cache is full."""
         calls = []
 
         @ttl_cache(maxsize=2, ttl=300)
@@ -97,6 +115,7 @@ class TestTTLCache(unittest.TestCase):
             self.assertIn(3, calls)
 
     def test_clear_cache_attr(self):
+        """clear_cache() empties the cache so the next call recomputes."""
         @ttl_cache()
         def f(x):
             return x
@@ -118,6 +137,7 @@ class TestTTLCache(unittest.TestCase):
         self.assertEqual(len(calls), 2)
 
     def test_preserves_wrapped_name(self):
+        """The decorator preserves the wrapped function's __name__."""
         @ttl_cache()
         def my_func():
             pass
@@ -125,6 +145,7 @@ class TestTTLCache(unittest.TestCase):
         self.assertEqual(my_func.__name__, "my_func")
 
     def test_ttl_cache_with_no_args(self):
+        """A zero-argument function is cached correctly."""
         calls = []
 
         @ttl_cache(maxsize=4, ttl=300)

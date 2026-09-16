@@ -1,8 +1,19 @@
+"""Unit tests for the web UI RPCController singleton proxy.
+
+These tests verify that :class:`plantimager.webui.controller_proxy.RPCController`
+behaves as a singleton and inherits from the expected base classes. The design
+mocks ``RPCClient.__init__`` and the ZMQ context so no real sockets are
+created, and resets the singleton ``_instance`` between tests to keep each
+case independent.
+"""
+
 import unittest
 from unittest import mock
 
 
 class TestControllerProxy(unittest.TestCase):
+    """Tests for RPCController singleton and inheritance behavior."""
+
     def setUp(self):
         from plantimager.webui import controller_proxy
 
@@ -18,6 +29,7 @@ class TestControllerProxy(unittest.TestCase):
 
     @mock.patch("plantimager.webui.controller_proxy.RPCClient.__init__", return_value=None)
     def test_singleton_same_object(self, mock_init):
+        """Two constructions return the same singleton object."""
         from plantimager.webui.controller_proxy import RPCController
         import zmq
 
@@ -30,6 +42,7 @@ class TestControllerProxy(unittest.TestCase):
 
     @mock.patch("plantimager.webui.controller_proxy.RPCClient.__init__", return_value=None)
     def test_instance_returns_singleton(self, mock_init):
+        """instance() returns the previously created singleton."""
         from plantimager.webui.controller_proxy import RPCController
         import zmq
 
@@ -39,6 +52,7 @@ class TestControllerProxy(unittest.TestCase):
         self.assertIs(created, fetched)
 
     def test_instance_without_init_raises(self):
+        """instance() raises RuntimeError before any instance is created."""
         from plantimager.webui.controller_proxy import RPCController
 
         with self.assertRaises(RuntimeError):
@@ -46,6 +60,7 @@ class TestControllerProxy(unittest.TestCase):
 
     @mock.patch("plantimager.webui.controller_proxy.RPCClient.__init__", return_value=None)
     def test_reset_via_none_allows_new(self, mock_init):
+        """Resetting _instance to None allows a new singleton to be created."""
         from plantimager.webui.controller_proxy import RPCController
         import zmq
 
@@ -57,6 +72,7 @@ class TestControllerProxy(unittest.TestCase):
 
     @mock.patch("plantimager.webui.controller_proxy.RPCClient.__init__", return_value=None)
     def test_controller_proxy_inherits(self, mock_init):
+        """RPCController subclasses ControllerDevice and RPCClient."""
         from plantimager.webui.controller_proxy import RPCController
         from plantimager.commons.controller_device import ControllerDevice
         from plantimager.commons.RPC import RPCClient

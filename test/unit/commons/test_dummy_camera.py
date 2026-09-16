@@ -1,3 +1,13 @@
+"""Unit tests for the DummyCamera example camera server.
+
+These tests verify that :class:`plantimager.commons.examples.cameraserver.DummyCamera`
+conforms to the :class:`plantimager.commons.cameradevice.Camera` interface
+without requiring real camera hardware. The design uses ``__new__`` plus
+mocked ``__init__`` to inspect the class contract (subclassing, expected
+attributes) while avoiding any real ZMQ server setup, and checks that the
+optional ``PI3_CAMERASERVER_LAG`` environment variable is honored.
+"""
+
 import os
 import unittest
 from unittest import mock
@@ -5,6 +15,8 @@ import numpy as np
 
 
 class TestDummyCamera(unittest.TestCase):
+    """Tests for the DummyCamera example implementation."""
+
     def test_dummy_camera_basic(self):
         from plantimager.commons.examples.cameraserver import DummyCamera
         from plantimager.commons.cameradevice import Camera
@@ -27,6 +39,7 @@ class TestDummyCamera(unittest.TestCase):
                 pass
 
     def test_dummy_camera_resolution_noop(self):
+        """Verify the resolution and get_image interface exist on DummyCamera."""
         from plantimager.commons.examples.cameraserver import DummyCamera
         import zmq
         ctx = zmq.Context()
@@ -46,6 +59,7 @@ class TestDummyCamera(unittest.TestCase):
             pass
 
     def test_cameraserver_lag_env(self):
+        """Verify the PI3_CAMERASERVER_LAG environment variable is read."""
         # Check that CAMERASERVER_LAG is read
         os.environ["PI3_CAMERASERVER_LAG"] = "123"
         # Reimport to check env handling

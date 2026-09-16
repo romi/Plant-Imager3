@@ -1,3 +1,25 @@
+"""Integration-style unit tests for the RPC and device-registry stack.
+
+These tests exercise the real :mod:`plantimager.commons.RPC` client/server
+and :mod:`plantimager.commons.deviceregistry` over in-process ZMQ sockets,
+covering the full request/reply lifecycle rather than isolated units.
+
+The design is layered by concern:
+
+* ``TestDeviceRegistryCore`` drives the registry protocol directly over raw
+  ZMQ ``REQ`` sockets to verify registration, unregistration, and name
+  conflict handling without a client proxy in the way.
+* ``TestRPCProtocol`` spins up a real server plus a generated client proxy to
+  verify JSON and buffer method calls, property get/set, signal propagation,
+  and unknown-method handling.
+* ``TestRobustness`` documents expected-failure scenarios (registry restart,
+  server hang, server restart) that the current implementation does not yet
+  handle gracefully.
+
+A shared ``BaseRPCTest`` fixture manages a fresh ZMQ context and a
+``DeviceRegistry`` per test so socket state never leaks between cases.
+"""
+
 import gc
 import logging
 import threading
@@ -85,6 +107,8 @@ class TestClientProxy(TestInterface, RPCClient):
 
 
 class BaseRPCTest(unittest.TestCase):
+    """Shared fixture providing a fresh ZMQ context and registry per test."""
+
     def setUp(self):
         # Use a fresh context for each test to avoid lingering socket states
         self.context = zmq.Context()
@@ -118,6 +142,7 @@ class BaseRPCTest(unittest.TestCase):
 # --- Section 1: Core Functionality Tests ---
 
 class TestDeviceRegistryCore(BaseRPCTest):
+    """Tests for the device registry protocol over raw ZMQ sockets."""
 
     def test_registry_lifecycle(self):
         """Test starting registry, registering a device, and unregistering."""
@@ -214,6 +239,7 @@ class TestDeviceRegistryCore(BaseRPCTest):
 
 
 class TestRPCProtocol(BaseRPCTest):
+    """Tests for client/server RPC over a live server and generated proxy."""
 
     def setUp(self):
         super().setUp()
