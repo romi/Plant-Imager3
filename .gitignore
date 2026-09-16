@@ -178,3 +178,7 @@ cython_debug/
 /.idea/modules.xml
 /.idea/Plant-Imager3.iml
 /.idea/vcs.xml
+
+/.idea/
+
+/cache/
