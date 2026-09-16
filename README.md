@@ -95,3 +95,13 @@ For development purposes, providing that you have the `plantdb.commons` and `pla
 ```shell
 fsdb_rest_api --test
 ```
+### Running the unit tests
+
+You may run the unit tests with `unittest`:
+
+```shell
+python -m unittest discover -s test/unit -v
+```
+
+The `plantimager.picamera` tests are skipped on non-Raspberry-Pi platforms.
+The same tests run automatically on every merge request via the `Unit tests` GitHub Action.
