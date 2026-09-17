@@ -893,10 +893,10 @@ class RPCClient:
                     raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
                 reply_frames: list[zmq.Frame] = self.socket.recv_multipart(copy=False)
                 buffer_info = json.loads(reply_frames[0].bytes)
-            if "error" in buffer_info:
-                return False, (buffer_info["error"], buffer_info["traceback"])
-            else:
-                return True, (reply_frames[1].buffer, buffer_info)
+                if "error" in buffer_info:
+                    return False, (buffer_info["error"], buffer_info["traceback"])
+                else:
+                    return True, (reply_frames[1].buffer, buffer_info)
         return False, (Warning(f"Unknown method {method_name}"), "")
 
     def _reset_socket(self):
