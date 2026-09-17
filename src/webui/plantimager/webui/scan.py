@@ -47,9 +47,12 @@ from plantdb.client.rest_api.requests import request_api_token
 from plantdb.client.rest_api.urls import plantdb_url
 from plantdb.commons.auth.models import Permission
 from plantimager.commons.RPC import NoResult
+from plantimager.commons.logging import create_logger
 
 from plantimager.webui.auth import ensure_valid_token
 from plantimager.webui.controller_proxy import RPCController
+
+logger = create_logger(__name__)
 
 #: Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
@@ -503,12 +506,8 @@ def populate_path(toml_text):
     kwargs = sp.get("kwargs") or {}
     vals = {f: "" for f in PATH_ORDER}
     if cls == "Cylinder":
-        zr = kwargs.get("z_range")
-        if isinstance(zr, (list, tuple)) and len(zr) == 2:
-            vals["z_min"], vals["z_max"] = zr[0], zr[1]
-        for f in PATH_FIELDS["Cylinder"]:
-            if f not in ("z_min", "z_max"):
-                vals[f] = kwargs.get(f)
+        logger.warning("Cylinder path not supported in PIv3")
+        raise PreventUpdate
     else:
         for f in PATH_FIELDS.get(cls, []):
             vals[f] = kwargs.get(f)
@@ -747,9 +746,12 @@ def handle_config_upload(contents: str | None):
         return None, False, "", "", False
     try:
         text = b64decode(contents.split(',', 1)[1]).decode()
-        tomllib.loads(text)
+        cfg = tomllib.loads(text)
     except Exception:
         return (None, True, "Invalid TOML configuration file: could not be parsed.",
+                "", False)
+    if cfg.get("ScanPath", {}).get("class_name") == "Cylinder":
+        return (None, True, "Cylinder path not supported in PIv3 \u2014 use Circle (z via camera offset).",
                 "", False)
     return text, False, "", text, True
 
