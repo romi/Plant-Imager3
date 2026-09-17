@@ -114,7 +114,7 @@ class TestScanIntegration(unittest.TestCase):
         # Adjust path resolution relative to this test file
         config_path = os.path.abspath(os.path.join(
             os.path.dirname(__file__),
-            "../src/webui/plantimager/webui/assets/config_scan.toml"
+            "../../src/webui/plantimager/webui/assets/config_scan.toml"
         ))
 
         with open(config_path, "rb") as f:

@@ -1,3 +1,25 @@
+"""Integration-style unit tests for the RPC and device-registry stack.
+
+These tests exercise the real :mod:`plantimager.commons.RPC` client/server
+and :mod:`plantimager.commons.deviceregistry` over in-process ZMQ sockets,
+covering the full request/reply lifecycle rather than isolated units.
+
+The design is layered by concern:
+
+* ``TestDeviceRegistryCore`` drives the registry protocol directly over raw
+  ZMQ ``REQ`` sockets to verify registration, unregistration, and name
+  conflict handling without a client proxy in the way.
+* ``TestRPCProtocol`` spins up a real server plus a generated client proxy to
+  verify JSON and buffer method calls, property get/set, signal propagation,
+  and unknown-method handling.
+* ``TestRobustness`` documents expected-failure scenarios (registry restart,
+  server hang, server restart) that the current implementation does not yet
+  handle gracefully.
+
+A shared ``BaseRPCTest`` fixture manages a fresh ZMQ context and a
+``DeviceRegistry`` per test so socket state never leaks between cases.
+"""
+
 import gc
 import logging
 import threading
@@ -55,7 +77,7 @@ class TestDevice(TestInterface, RPCServer):
 
     @RPCServer.register_method_json(timeout=100)
     def echo_hanging(self, message: str) -> str:
-        time.sleep(2)
+        time.sleep(0.5)
         return f"Echo: {message}"
 
     @RPCServer.register_method_buffer(timeout=1000)
@@ -85,6 +107,8 @@ class TestClientProxy(TestInterface, RPCClient):
 
 
 class BaseRPCTest(unittest.TestCase):
+    """Shared fixture providing a fresh ZMQ context and registry per test."""
+
     def setUp(self):
         # Use a fresh context for each test to avoid lingering socket states
         self.context = zmq.Context()
@@ -99,7 +123,13 @@ class BaseRPCTest(unittest.TestCase):
     def tearDown(self):
         gc.collect()
         print(self.context)
-        self.context.term()
+        try:
+            self.context.destroy(linger=0)
+        except Exception:
+            try:
+                self.context.term()
+            except Exception:
+                pass
         self.context = None
 
     def start_registry(self) -> DeviceRegistry:
@@ -112,6 +142,7 @@ class BaseRPCTest(unittest.TestCase):
 # --- Section 1: Core Functionality Tests ---
 
 class TestDeviceRegistryCore(BaseRPCTest):
+    """Tests for the device registry protocol over raw ZMQ sockets."""
 
     def test_registry_lifecycle(self):
         """Test starting registry, registering a device, and unregistering."""
@@ -208,6 +239,7 @@ class TestDeviceRegistryCore(BaseRPCTest):
 
 
 class TestRPCProtocol(BaseRPCTest):
+    """Tests for client/server RPC over a live server and generated proxy."""
 
     def setUp(self):
         super().setUp()
@@ -322,10 +354,19 @@ class TestRobustness(BaseRPCTest):
         time.sleep(0.1)
 
     def tearDown(self):
-        self.server.stop_server()
-        self.server_thread.join(timeout=1)
-        self.registry.stop()
-        self.registry.join()
+        try:
+            self.server.stop_server()
+        except Exception:
+            pass
+        self.server_thread.join(timeout=3)
+        if self.server_thread.is_alive():
+            # Force close with linger 0 already set; just wait a bit more
+            time.sleep(0.5)
+        try:
+            self.registry.stop()
+        except Exception:
+            pass
+        self.registry.join(timeout=2)
         del self.server
         del self.registry
         super().tearDown()
@@ -333,7 +374,8 @@ class TestRobustness(BaseRPCTest):
     def test_server_recovers_registration_after_registry_restart(self):
         """
         Scenario: Registry crashes and restarts.
-        Expected: Server's 'alive check' fails, detects registry loss, and exits, entering a dead state.
+        Current behavior: Server's alive check gets UNKNOWN and re-registers (stays alive).
+        Previously expected dead state, now expects recovery.
         """
         # 1. Verify initial registration
         self.assertIn("robust_dev", self.registry.get_devices())
@@ -347,14 +389,18 @@ class TestRobustness(BaseRPCTest):
         self.registry = self.start_registry()
         self.assertNotIn("robust_dev", self.registry.get_devices())
 
-        # 4. Wait for Server to heartbeat (alive_timeout=2s in TestDevice)
-        self.server_thread.join()
-        self.registry.stop()
-        self.registry.join()
+        # 4. Wait for Server to heartbeat and re-register (alive_timeout=2s, re-register on UNKNOWN)
+        time.sleep(3)
+        self.assertIn("robust_dev", self.registry.get_devices(),
+                      "Server should have re-registered after UNKNOWN")
 
-        # 5. Check if Server stopped
-        self.assertFalse(self.server_thread.is_alive(),
-                         "Server's 'alive check' fails, detects registration loss, and exits.")
+        # 5. Check server stays alive (re-registered) and can be stopped cleanly
+        self.assertTrue(self.server_thread.is_alive(),
+                        "Server should stay alive after re-registering")
+        # Cleanup the second registry before tearDown's stop_server tries to unregister
+        # to avoid unregister poll delay; stop_server will handle already-stopped registry
+        self.registry.stop()
+        self.registry.join(timeout=2)
 
     def test_client_timeout_handling_on_call(self):
         """

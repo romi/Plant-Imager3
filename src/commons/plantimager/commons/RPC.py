@@ -390,7 +390,25 @@ class RPCProperty(property):
         self._auto_notify: bool = auto_notify
 
     def __call__(self, func: Callable):
-        return RPCProperty(fget=func, notify=self._notifier)
+        return RPCProperty(fget=func, notify=self._notifier, auto_notify=self._auto_notify)
+
+    def getter(self, fget):
+        prop = super().getter(fget)
+        prop._notifier = self._notifier
+        prop._auto_notify = self._auto_notify
+        return prop
+
+    def setter(self, fset):
+        prop = super().setter(fset)
+        prop._notifier = self._notifier
+        prop._auto_notify = self._auto_notify
+        return prop
+
+    def deleter(self, fdel):
+        prop = super().deleter(fdel)
+        prop._notifier = self._notifier
+        prop._auto_notify = self._auto_notify
+        return prop
 
     def __set__(self, obj, value):
         """
@@ -490,6 +508,7 @@ class RPCSignalReceiver(Thread):
         self._stop_flag = False
         self.signals = signals
         self.socket: zmq.Socket = context.socket(zmq.SUB)
+        self.socket.setsockopt(zmq.LINGER, 0)
         self.socket.connect(url)  # connect to the server's PUB endpoint
         self.socket.setsockopt_string(zmq.SUBSCRIBE, "")  # subscribe to all
 
@@ -545,7 +564,13 @@ class RPCSignalReceiver(Thread):
                 logger.debug(f"Emitting signal {signal} with args {args}")
                 self.signals[signal].emit(*args)
         finally:
-            self.socket.close()
+            try:
+                self.socket.close(linger=0)
+            except Exception:
+                try:
+                    self.socket.close()
+                except Exception:
+                    pass
             del self.socket
         logger.debug(f"Stopping signal receiver {self}")
 
@@ -610,6 +635,7 @@ class RPCClient:
         self.context: zmq.Context = context
         self.url: str = url
         self.socket: zmq.Socket = context.socket(zmq.REQ)
+        self.socket.setsockopt(zmq.LINGER, 0)
         self.socket.connect(self.url)
         self._lock: Lock = Lock()
 
@@ -662,7 +688,13 @@ class RPCClient:
             logger.info("<-- Successfully initialized signal handling")
 
         def _finalizer(sock, receiver):
-            sock.close()
+            try:
+                sock.close(linger=0)
+            except Exception:
+                try:
+                    sock.close()
+                except Exception:
+                    pass
             if receiver:
                 receiver.stop()
                 receiver.join(2)
@@ -839,6 +871,7 @@ class RPCClient:
         with self._lock:
             if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
                 logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
+                self._reset_socket()
                 raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
             logger.debug(f"Executing {package}")
             self.socket.send_json(package, flags=zmq.NOBLOCK)
@@ -846,6 +879,7 @@ class RPCClient:
             if method_name in self._json_methods:
                 if self.socket.poll(timeout=self._json_methods[method_name], flags=zmq.POLLIN) == 0:
                     logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
+                    self._reset_socket()
                     raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
                 reply = self.socket.recv_json()
                 if reply["success"]:
@@ -855,14 +889,35 @@ class RPCClient:
             elif method_name in self._buffer_methods:
                 if self.socket.poll(timeout=self._buffer_methods[method_name], flags=zmq.POLLIN) == 0:
                     logger.error(f"Proxy of {self._interface} at {self.url} did not respond")
+                    self._reset_socket()
                     raise TimeoutError(f"Proxy of {self._interface} at {self.url} did not respond")
                 reply_frames: list[zmq.Frame] = self.socket.recv_multipart(copy=False)
-            buffer_info = json.loads(reply_frames[0].bytes)
+                buffer_info = json.loads(reply_frames[0].bytes)
             if "error" in buffer_info:
                 return False, (buffer_info["error"], buffer_info["traceback"])
             else:
                 return True, (reply_frames[1].buffer, buffer_info)
         return False, (Warning(f"Unknown method {method_name}"), "")
+
+    def _reset_socket(self):
+        """Reset REQ socket after timeout to avoid REQ/REP desync."""
+        try:
+            self.socket.setsockopt(zmq.LINGER, 0)
+        except Exception:
+            pass
+        try:
+            self.socket.close(linger=0)
+        except Exception:
+            try:
+                self.socket.close()
+            except Exception:
+                pass
+        try:
+            self.socket = self.context.socket(zmq.REQ)
+            self.socket.setsockopt(zmq.LINGER, 0)
+            self.socket.connect(self.url)
+        except Exception as e:
+            logger.error(f"Failed to reset socket: {e}")
 
     def stop_server(self):
         """
@@ -1019,6 +1074,7 @@ class RPCServer:
     def _bind_socket(self, url: str) -> tuple[zmq.Socket, int]:
         """Creates and binds the ZMQ REP socket."""
         socket: zmq.Socket[zmq.REP] = self.context.socket(zmq.REP)
+        socket.setsockopt(zmq.LINGER, 0)
         _, ip_addr, port_str = url_parser.match(url).groups()
 
         if port_str:
@@ -1329,9 +1385,21 @@ class RPCServer:
 
         # cleanup
         if self._socket:
-            self._socket.close()
+            try:
+                self._socket.close(linger=0)
+            except Exception:
+                try:
+                    self._socket.close()
+                except Exception:
+                    pass
         if self._signal_socket:
-            self._signal_socket.close()
+            try:
+                self._signal_socket.close(linger=0)
+            except Exception:
+                try:
+                    self._signal_socket.close()
+                except Exception:
+                    pass
         self._dead = True
         logger.info("Server stopped")
 
@@ -1504,6 +1572,7 @@ class RPCServer:
         logger.info("Initializing signal handling")
         if self._signal_socket is None:
             self._signal_socket = self.context.socket(zmq.PUB)
+            self._signal_socket.setsockopt(zmq.LINGER, 0)
             protocol, addr, _ = url_parser.search(self.url).groups()
             self._signal_port = self._signal_socket.bind_to_random_port(f"{protocol}://{addr}")
             self._cleanup_state["signal_socket"] = self._signal_socket

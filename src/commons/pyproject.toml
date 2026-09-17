@@ -8,6 +8,8 @@ version = "0.0.1"
 dependencies = [
     "colorlog",
     "decorator",
+    "matplotlib",
+    "Pillow",
     "pyzmq",
     "sdnotify",
     "simplejpeg",
