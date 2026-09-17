@@ -98,10 +98,9 @@ class TestScannerLogic(unittest.TestCase):
                 self.assertIsNotNone(self.scanner.uploader)
 
     def test_configure_scan(self):
-        """configure_scan builds the scan path and metadata from config."""
-        # need to mock importlib
+        """configure_scan builds the scan path and metadata from config (PIv3 Circle API)."""
         config = {
-            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "z": 50, "tilt": 0, "radius": 100, "n_points": 4}},
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 100, "n_points": 4}},
             "Metadata": {"object": {"species": "test"}, "hardware": {"version": "1"}},
             "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "jpeg", "config": {}},
         }
@@ -167,11 +166,9 @@ class TestScannerLogic(unittest.TestCase):
         self.assertEqual(data.metadata["camera_name"], "cam1")
 
     def test_scan_orchestrates(self):
-        """scan() moves and grabs an image for every path point."""
-        # Full scan with mocked components
-        # Setup config and path
+        """scan() moves and grabs an image for every path point (PIv3 API)."""
         config = {
-            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "z": 50, "tilt": 0, "radius": 100, "n_points": 2}},
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 100, "n_points": 2}},
             "Metadata": {"object": {}, "hardware": {}},
             "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "jpeg", "config": {}},
         }
@@ -209,8 +206,6 @@ class TestScannerLogic(unittest.TestCase):
 
     def test_progress_signals(self):
         """progressChanged emits the current progress value."""
-        # Check that progressChanged is emitted during scan
-        # Use mock to capture
         self.scanner._progress = 0
         self.scanner._max_progress = 2
         spy = mock.MagicMock()
@@ -218,6 +213,43 @@ class TestScannerLogic(unittest.TestCase):
         self.scanner._progress = 1
         self.scanner.progressChanged.emit(1)
         spy.assert_called_with(1)
+
+    def test_configure_scan_defensive_missing_metadata(self):
+        """configure_scan tolerates missing Metadata (PIv3 defensive)."""
+        config = {
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 100, "n_points": 2}},
+            "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "jpeg", "config": {}},
+        }
+        self.scanner.add_camera(self.mock_camera)
+        # should not raise KeyError
+        self.scanner.configure_scan(config)
+        self.assertEqual(self.scanner.dataset_metadata, {})
+        self.assertEqual(self.scanner.hw_metadata, {})
+
+    def test_configure_scan_empty_metadata_object(self):
+        """Empty Metadata.object still produces empty dataset_metadata."""
+        config = {
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 50, "n_points": 3}},
+            "Metadata": {},
+            "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "jpeg", "config": {}},
+        }
+        self.scanner.add_camera(self.mock_camera)
+        self.scanner.configure_scan(config)
+        self.assertEqual(self.scanner.dataset_metadata, {})
+
+    def test_configure_scan_old_kwargs_ignored(self):
+        """Old Circle kwargs z/tilt are ignored via **kwargs (backward compat)."""
+        config = {
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 100, "n_points": 2, "z": 50, "tilt": 0}},
+            "Metadata": {"object": {}, "hardware": {}},
+            "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "jpeg", "config": {}},
+        }
+        self.scanner.add_camera(self.mock_camera)
+        self.scanner.configure_scan(config)
+        # path still 2 points, z/tilt hard-coded to 0
+        self.assertEqual(len(self.scanner.scan_path), 2)
+        self.assertEqual(self.scanner.scan_path[0].z, 0)
+        self.assertEqual(self.scanner.scan_path[0].tilt, 0)
 
 
 if __name__ == "__main__":

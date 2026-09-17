@@ -492,8 +492,9 @@ class Scanner(QObject):
         self.maxProgressChanged.emit(self._max_progress)
 
         # Store metadata for the scan
-        self.dataset_metadata = config["Metadata"]["object"]  # Biological metadata
-        self.hw_metadata = config["Metadata"]["hardware"]  # Hardware metadata
+        metadata = config.get("Metadata", {})
+        self.dataset_metadata = metadata.get("object", {})  # Biological metadata
+        self.hw_metadata = metadata.get("hardware", {})  # Hardware metadata
 
         # Configure cameras
         self._configure_cameras(self.cameras)
