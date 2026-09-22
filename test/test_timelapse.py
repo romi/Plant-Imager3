@@ -488,3 +488,65 @@ def test_progress_signals(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock
     with qtbot.waitSignal(tl.progressChanged, timeout=1000):
         tl.current_idx = 2
         tl.progressChanged.emit(tl.current_idx, tl._max_progress)
+
+
+# ---------------------------------------------------------------------------
+# CONFIGURED draft — recompute at arm, no persist/power until arm
+# ---------------------------------------------------------------------------
+def test_configured_no_arm_no_persist(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    from plantimager.controller.scanner.powermanager import PowerManager
+    from plantimager.controller.scanner.dummy_cnc import DummyCNC
+    cfg = minimal_config(mode="interval", interval=60, n_shots=3, warmup_period=30)
+    pm = PowerManager(warmup_period=30)
+    pm.cnc = DummyCNC()
+    tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-cfg", config=cfg, power_manager=pm, auto_start=False)
+    assert tl.state == TimeLapseState.CONFIGURED
+    assert not tl._next_scan_timer.isActive()
+    from plantimager.controller.scanner.timelapse_store import get_storage_dir
+    assert not (get_storage_dir() / "timelapse_storage.json").exists()
+
+
+def test_arm_recomputes_interval_with_warmup(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    from plantimager.controller.scanner.powermanager import PowerManager
+    from plantimager.controller.scanner.dummy_cnc import DummyCNC
+    import freezegun
+    cfg = minimal_config(mode="interval", interval=30, n_shots=3, warmup_period=10)
+    pm = PowerManager(warmup_period=10)
+    pm.cnc = DummyCNC()
+    with freezegun.freeze_time("2026-09-22 10:00:00+00:00"):
+        tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-arm", config=cfg, power_manager=pm, auto_start=False)
+        pre = list(tl.schedule_times)
+        # wait a bit then arm — schedule should move forward
+        with freezegun.freeze_time("2026-09-22 10:05:00+00:00"):
+            tl.arm()
+            assert tl.state == TimeLapseState.SCHEDULED
+            assert tl.schedule_times[0] > pre[0]
+            assert (tl.schedule_times[1] - tl.schedule_times[0]).total_seconds() == 30
+
+
+def test_arm_fixed_times_no_recompute(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    from plantimager.controller.scanner.powermanager import PowerManager
+    from plantimager.controller.scanner.dummy_cnc import DummyCNC
+    import datetime as dt
+    future = (dt.datetime.now(timezone.utc) + dt.timedelta(hours=1)).isoformat()
+    cfg = minimal_config(mode="fixed_times", dates=[future])
+    pm = PowerManager(warmup_period=30)
+    pm.cnc = DummyCNC()
+    tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-fixed", config=cfg, power_manager=pm, auto_start=False)
+    pre = list(tl.schedule_times)
+    tl.arm()
+    assert tl.schedule_times == pre
+    assert tl.state == TimeLapseState.SCHEDULED
+
+
+def test_cnc_ready_ignored_while_configured(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    from plantimager.controller.scanner.powermanager import PowerManager
+    from plantimager.controller.scanner.dummy_cnc import DummyCNC
+    cfg = minimal_config(mode="interval", interval=60, n_shots=2)
+    pm = PowerManager(warmup_period=30)
+    pm.cnc = DummyCNC()
+    tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-cnc", config=cfg, power_manager=pm, auto_start=False)
+    tl._setup_next_scan_timer = MagicMock()
+    tl.cnc_ready(DummyCNC())
+    tl._setup_next_scan_timer.assert_not_called()
+    assert tl.state == TimeLapseState.CONFIGURED

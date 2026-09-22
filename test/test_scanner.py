@@ -216,3 +216,76 @@ def test_rpc_timelapse_methods_delegate_to_scanner():
     fake.cancel_timelapse.assert_called_once()
     assert server.preview_timelapse({"timelapse": {}})["n_scans"] == 2
     fake.preview_timelapse.assert_called_once_with({"timelapse": {}})
+
+
+# ----------------------------------------------------------------------
+# CONFIGURED draft lifecycle — Scanner bridge
+# ----------------------------------------------------------------------
+def test_config_start_recompute_and_discard(scanner):
+    scanner.set_base_name("cfgExp")
+    scanner.db_client = MagicMock()
+    cfg = minimal_timelapse_config(interval="30s", n_shots=5, warmup_period=10)
+    snap = scanner.config_timelapse(cfg)
+    assert snap["state"] == "configured"
+    assert scanner.timelapse.state == TimeLapseState.CONFIGURED
+    assert scanner.get_active_timelapse()["state"] == "configured"
+    # not persisted yet — file may exist from previous but CONFIGURED itself is in-memory
+    pre = list(scanner.timelapse.schedule_times)
+    import time
+    time.sleep(0.02)
+    scanner.start_timelapse()
+    assert scanner.timelapse.state == TimeLapseState.SCHEDULED
+    assert scanner.timelapse.schedule_times[0] > pre[0]
+    # scheduled locks second config
+    with pytest.raises(RuntimeError):
+        scanner.config_timelapse(cfg)
+    with pytest.raises(RuntimeError):
+        scanner.start_timelapse(cfg)
+    # cancel scheduled → CANCELLED, then new draft allowed
+    scanner.cancel_timelapse()
+    assert scanner.timelapse.state == TimeLapseState.CANCELLED
+
+
+def test_config_replace_and_cancel_discard(scanner):
+    scanner.set_base_name("cfgExp")
+    scanner.db_client = MagicMock()
+    cfg1 = minimal_timelapse_config(interval="30s", n_shots=5, warmup_period=10)
+    cfg2 = minimal_timelapse_config(interval="60s", n_shots=3, warmup_period=10)
+    scanner.config_timelapse(cfg1)
+    assert len(scanner.get_active_timelapse()["schedule_times"]) == 5
+    scanner.config_timelapse(cfg2)
+    assert len(scanner.get_active_timelapse()["schedule_times"]) == 3
+    assert scanner.timelapse.state == TimeLapseState.CONFIGURED
+    scanner.cancel_timelapse()
+    assert scanner.timelapse is None
+    assert scanner.get_active_timelapse() is None
+
+
+def test_one_shot_bare_stays_bare(scanner):
+    scanner.set_base_name("bareExp")
+    scanner.db_client = MagicMock()
+    scanner.db_client.create_timelapse = MagicMock()
+    cfg = minimal_timelapse_config(mode="one_shot", warmup_period=10)
+    # monkeypatch interval specifics
+    cfg["timelapse"].pop("interval", None)
+    cfg["timelapse"].pop("n_shots", None)
+    scanner.config_timelapse(cfg)
+    assert scanner.timelapse.plantdb_timelapse_id is None
+    scanner.start_timelapse()
+    assert scanner.timelapse.plantdb_timelapse_id is None
+    assert not scanner.db_client.create_timelapse.called
+    assert scanner.timelapse.state == TimeLapseState.SCHEDULED
+    scanner.cancel_timelapse()
+
+
+def test_fixed_times_not_recomputed_on_arm(scanner):
+    scanner.set_base_name("fixedExp")
+    scanner.db_client = MagicMock()
+    import datetime
+    from datetime import timezone as tz
+    future = (datetime.datetime.now(tz.utc) + datetime.timedelta(hours=1)).isoformat()
+    cfg = minimal_timelapse_config(mode="fixed_times", dates=[future])
+    scanner.config_timelapse(cfg)
+    pre = list(scanner.timelapse.schedule_times)
+    scanner.start_timelapse()
+    assert scanner.timelapse.schedule_times == pre
