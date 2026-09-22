@@ -49,12 +49,13 @@ Control {
             P.Scanner {
                 id: scanner_pannel
                 Layout.fillWidth: true
-                Layout.preferredHeight: P.Style.cameraDelegateHeight*3
+                Layout.preferredHeight: P.Style.cameraDelegateHeight*4
                 Layout.minimumHeight: P.Style.cameraDelegateHeight*2
 
                 scanner: P.AppBridge ? P.AppBridge.scanner : null
 
                 onSwitchToCncPanel: stack.currentIndex = 1
+                onSwitchToTimelapsePanel: stack.currentIndex = 2
             }
         }
 
