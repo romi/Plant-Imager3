@@ -10,7 +10,7 @@ import PlantImagerApp as P
 Control {
     id: self
 
-    property var scanner: P.AppBridge.scanner
+    property var scanner: P.AppBridge ? P.AppBridge.scanner : null
 
     ColumnLayout {
         id: layout
@@ -27,9 +27,9 @@ Control {
                 text: "Move to center"
 
                 onClicked: {
-                    scanner.move_to_center()
+                    if (scanner) scanner.move_to_center()
                 }
-                enabled: !scanner.scanner_working
+                enabled: scanner ? !scanner.scanner_working : false
             }
         }
 
@@ -47,7 +47,7 @@ Control {
             Layout.alignment: Qt.AlignTop
             Label {
 
-                text: scanner.path_info
+                text: scanner ? scanner.path_info : ""
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft;
                 padding: P.Style.smallMargin
@@ -67,10 +67,10 @@ Control {
                 text: "Move to position in path"
 
                 onClicked: {
-                    scanner.move_to_position_in_path(parseInt(pos_edit.text))
+                    if (scanner) scanner.move_to_position_in_path(parseInt(pos_edit.text))
                 }
 
-                enabled: !scanner.scanner_working
+                enabled: scanner ? !scanner.scanner_working : false
             }
 
             TextInput {

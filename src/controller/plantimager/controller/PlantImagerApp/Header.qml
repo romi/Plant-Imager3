@@ -54,7 +54,7 @@ Control {
                 id: _restart_app_button
                 text: "Restart App"
                 Layout.fillWidth: true
-                enabled: P.AppBridge.is_systemd_service
+                enabled: P.AppBridge ? P.AppBridge.is_systemd_service : false
                 visible: enabled
 
                 onClicked: {

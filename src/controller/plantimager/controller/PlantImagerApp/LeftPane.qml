@@ -26,13 +26,13 @@ Control {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                model: P.AppBridge.deviceList
+                model: P.AppBridge ? P.AppBridge.deviceList : null
 
                 delegate: P.CameraDelegate {
 
                 }
                 onCurrentItemChanged: {
-                    if(currentIndex>=0) {
+                    if(currentIndex>=0 && P.AppBridge && currentItem) {
                         P.AppBridge.currentCamera = currentItem.bridge
                     }
                 }
@@ -52,7 +52,7 @@ Control {
                 Layout.preferredHeight: P.Style.cameraDelegateHeight*3
                 Layout.minimumHeight: P.Style.cameraDelegateHeight*2
 
-                scanner: P.AppBridge.scanner
+                scanner: P.AppBridge ? P.AppBridge.scanner : null
 
                 onSwitchToCncPanel: stack.currentIndex = 1
             }

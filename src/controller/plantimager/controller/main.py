@@ -45,8 +45,26 @@ def main():
     engine.addImportPath(dirname(__file__))
     engine.loadFromModule("PlantImagerApp", "Loader")
 
+    try:
+        from plantimager.controller.AppBridge import _last_init_error
+
+        if _last_init_error is not None:
+            import traceback
+
+            print("\n--- AppBridge init failed ---", file=sys.stderr)
+            traceback.print_exception(
+                type(_last_init_error),
+                _last_init_error,
+                _last_init_error.__traceback__,
+            )
+            sys.exit(1)
+    except SystemExit:
+        raise
+    except Exception:
+        pass
+
     if not engine.rootObjects():
-        sys.exit(-1)
+        sys.exit(1)
 
     # Set a timer to let the interpreter run every so often and handle unix signals such as SIGINT
     timer = QTimer()

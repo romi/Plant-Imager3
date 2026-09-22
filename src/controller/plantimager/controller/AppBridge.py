@@ -26,6 +26,8 @@ QML_IMPORT_NAME = "PlantImagerApp"
 QML_IMPORT_MAJOR_VERSION = 1
 QML_IMPORT_MINOR_VERSION = 0  # Optional
 
+_last_init_error: BaseException | None = None
+
 
 @QmlElement
 @QmlSingleton
@@ -56,42 +58,50 @@ class AppBridge(QObject):
     _registryRemoveDevice = Signal(str, str, str)
 
     def __init__(self, parent=None):
-        super().__init__(parent)
-        self.context = zmq.Context()
-        self.registry = deviceregistry.DeviceRegistry(context=self.context)
-        # /!\ callback will be executed in registry thread
-        # callback will only emit a signal
-        # connection must be queued so that the slot is executed in the main thread
-        self.registry.add_new_device_callback(self._new_device_callback)
-        self.registry.add_device_removed_callback(self._remove_device_callback)
-        self.registry.daemon = True
-        self._registryNewDevice.connect(self._create_new_device, Qt.ConnectionType.QueuedConnection)
-        self._registryRemoveDevice.connect(self._remove_device, Qt.ConnectionType.QueuedConnection)
-        self.device_list: list[str] = []
-        self.device_bridges: list[CameraBridge] = []
+        try:
+            super().__init__(parent)
+            self.context = zmq.Context()
+            self.registry = deviceregistry.DeviceRegistry(context=self.context)
+            # /!\ callback will be executed in registry thread
+            # callback will only emit a signal
+            # connection must be queued so that the slot is executed in the main thread
+            self.registry.add_new_device_callback(self._new_device_callback)
+            self.registry.add_device_removed_callback(self._remove_device_callback)
+            self.registry.daemon = True
+            self._registryNewDevice.connect(self._create_new_device, Qt.ConnectionType.QueuedConnection)
+            self._registryRemoveDevice.connect(self._remove_device, Qt.ConnectionType.QueuedConnection)
+            self.device_list: list[str] = []
+            self.device_bridges: list[CameraBridge] = []
 
-        self._currentCamera = DummyCameraBridge(self)
-        self._scanner = Scanner()
+            self._currentCamera = DummyCameraBridge(self)
+            self._scanner = Scanner()
 
-        self._controller_server = RPCControllerServer(self.context, "tcp://localhost:14567", self._scanner)
-        self.scannerChanged.connect(self._controller_server.handle_scanner_changed)
-        self._controller_thread = Thread(target=self._controller_server.serve_forever, name="RPCControllerServer")
-        self._controller_thread.daemon = True
-        self._controller_thread.start()
+            self._controller_server = RPCControllerServer(self.context, "tcp://localhost:14567", self._scanner)
+            self.scannerChanged.connect(self._controller_server.handle_scanner_changed)
+            self._controller_thread = Thread(target=self._controller_server.serve_forever, name="RPCControllerServer")
+            self._controller_thread.daemon = True
+            self._controller_thread.start()
 
-        self.registry.start()
+            self.registry.start()
 
-        def finalizer(registry, controller_server, controller_thread, context):
-            logger.debug("finalizing AppBridge")
-            registry.stop()
-            registry.join()
-            controller_server.stop_server()
-            print(controller_thread, context)
-            controller_thread.join()
-            context.term()
-            logger.debug("AppBridge finalized")
+            def finalizer(registry, controller_server, controller_thread, context):
+                logger.debug("finalizing AppBridge")
+                registry.stop()
+                registry.join()
+                controller_server.stop_server()
+                print(controller_thread, context)
+                controller_thread.join()
+                context.term()
+                logger.debug("AppBridge finalized")
 
-        finalize(self, finalizer, self.registry, self._controller_server, self._controller_thread, self.context)
+            finalize(self, finalizer, self.registry, self._controller_server, self._controller_thread, self.context)
+        except BaseException as exc:
+            global _last_init_error
+            _last_init_error = exc
+            import traceback
+
+            traceback.print_exc()
+            raise
 
     @Property(QObject, notify=currentCameraChanged)
     def currentCamera(self) -> CameraBridge:

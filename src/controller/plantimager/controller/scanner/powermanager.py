@@ -138,11 +138,16 @@ class PowerManager(QObject):
             Holds the date and time of the next warmup operation. Defaults to ``None``.
         """
         super().__init__(parent)
-        gpio.setup(
-            (GPIO_CNC_PIN, GPIO_LIGHTS_PIN, GPIO_GROWTH_LIGHTS_PIN),
-            mode=gpio.OUT,
-            initial=gpio.LOW
-        )
+        self._gpio_available = True
+        try:
+            gpio.setup(
+                (GPIO_CNC_PIN, GPIO_LIGHTS_PIN, GPIO_GROWTH_LIGHTS_PIN),
+                mode=gpio.OUT,
+                initial=gpio.LOW
+            )
+        except OSError as exc:
+            logger.warning(f"GPIO unavailable ({exc}); running without hardware GPIO")
+            self._gpio_available = False
         self._allow_dummy: bool = _allow_dummy_cnc(allow_dummy)
         self.cnc: AbstractCNC | None = None
         self._connecting: bool = False
@@ -314,15 +319,25 @@ class PowerManager(QObject):
     def _apply_lights(self, mode: PowerManagerMode):
         """Sync work/growth lights to a stable mode. Does not touch the CNC pin,
         whose power is owned by the STARTING/FINALIZING transitions."""
-        if mode == PowerManagerMode.AUTO:
-            gpio.write(GPIO_LIGHTS_PIN, False)
-            gpio.write(GPIO_GROWTH_LIGHTS_PIN, True)
-        else:  # SCAN / MANUAL powered
-            gpio.write(GPIO_LIGHTS_PIN, True)
-            gpio.write(GPIO_GROWTH_LIGHTS_PIN, False)
+        if not getattr(self, "_gpio_available", True):
+            return
+        try:
+            if mode == PowerManagerMode.AUTO:
+                gpio.write(GPIO_LIGHTS_PIN, False)
+                gpio.write(GPIO_GROWTH_LIGHTS_PIN, True)
+            else:  # SCAN / MANUAL powered
+                gpio.write(GPIO_LIGHTS_PIN, True)
+                gpio.write(GPIO_GROWTH_LIGHTS_PIN, False)
+        except (OSError, RuntimeError) as exc:
+            logger.warning(f"GPIO write failed in _apply_lights: {exc}")
 
     def _set_cnc_power(self, on: bool):
-        gpio.write(GPIO_CNC_PIN, on)
+        if not getattr(self, "_gpio_available", True):
+            return
+        try:
+            gpio.write(GPIO_CNC_PIN, on)
+        except (OSError, RuntimeError) as exc:
+            logger.warning(f"GPIO write failed in _set_cnc_power: {exc}")
 
     def get_cnc(self):
         return self.cnc

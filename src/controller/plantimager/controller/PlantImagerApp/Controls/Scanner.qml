@@ -8,7 +8,7 @@ import PlantImagerApp as P
 
 Control {
     id: self_
-    property var scanner: P.AppBridge.scanner
+    property var scanner: P.AppBridge ? P.AppBridge.scanner : null
     signal switchToCncPanel()
 
     Label {
@@ -17,7 +17,7 @@ Control {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        text: scanner.cnc_type
+        text: scanner ? scanner.cnc_type : ""
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignLeft;
         padding: P.Style.smallMargin
@@ -34,7 +34,7 @@ Control {
         anchors.margins: P.Style.mediumMargin
 
         text: "CNC Panel"
-        enabled: scanner.cnc_type === "GRBL CNC" && !scanner.scanInProgress || true
+        enabled: scanner ? (scanner.cnc_type === "GRBL CNC" && !scanner.scanInProgress || true) : false
 
         onClicked: switchToCncPanel()
 
@@ -48,7 +48,7 @@ Control {
         anchors.bottom: parent.bottom
         anchors.margins: P.Style.largeMargin
 
-        to: scanner.max_progress
-        value: scanner.progress
+        to: scanner ? scanner.max_progress : 1
+        value: scanner ? scanner.progress : 0
     }
 }
