@@ -234,5 +234,63 @@ Control {
                 }
             }
         }
+
+        // Footer
+        RowLayout {
+            visible: hasJob
+            Layout.fillWidth: true
+            Layout.preferredHeight: P.Style.mediumHeight
+
+            Button {
+                Layout.fillWidth: true
+                Layout.preferredHeight: P.Style.mediumHeight
+                text: "Cancel timelapse"
+                enabled: tlState === "SCHEDULED" || tlState === "RUNNING"
+                onClicked: confirmDialog.open()
+            }
+        }
+    }
+
+    Dialog {
+        id: confirmDialog
+        modal: true
+        closePolicy: Popup.NoAutoClose
+        anchors.centerIn: Overlay.overlay
+        width: 360
+        title: "Cancel timelapse?"
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: P.Style.smallMargin
+
+            Label {
+                Layout.fillWidth: true
+                text: "Stop '" + (tlInfo ? tlInfo.timelapse_id : "") + "' now? " + tlNextIdx + "/" + tlTotal + " scans done. This cannot be undone."
+                wrapMode: Text.Wrap
+                font: P.Style.fonts.label
+            }
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: P.Style.smallMargin
+
+                Button {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: P.Style.mediumHeight
+                    Layout.preferredWidth: 140
+                    text: "Keep running"
+                    onClicked: confirmDialog.close()
+                }
+                Button {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: P.Style.mediumHeight
+                    Layout.preferredWidth: 140
+                    text: "Cancel timelapse"
+                    onClicked: {
+                        if (scanner) scanner.cancel_timelapse()
+                        confirmDialog.close()
+                    }
+                }
+            }
+        }
     }
 }
