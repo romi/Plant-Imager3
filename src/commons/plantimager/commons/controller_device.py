@@ -45,8 +45,13 @@ class ControllerDevice(ABC):
         pass
 
     @abstractmethod
-    def start_timelapse(self, config: dict) -> str:
-        """Create and start a timelapse from a configuration dict."""
+    def config_timelapse(self, config: dict) -> dict | None:
+        """Create a CONFIGURED draft (no arm/persist) and return its snapshot."""
+        pass
+
+    @abstractmethod
+    def start_timelapse(self, config: dict | None = None) -> str:
+        """Create and start a timelapse. With config=None arms the CONFIGURED draft."""
         pass
 
     @abstractmethod

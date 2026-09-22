@@ -145,21 +145,14 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         """Start a scanning operation with the current configuration."""
         self.scanner.scan()
 
+    @RPCServer.register_method_json
+    def config_timelapse(self, config):
+        """Create a CONFIGURED draft (no arm/persist) and return its snapshot."""
+        return self.scanner.config_timelapse(config)
+
     @RPCServer.register_method_json(timeout=None)
-    def start_timelapse(self, config):
-        """Create and start a timelapse from a configuration dict.
-
-        Parameters
-        ----------
-        config : dict
-            Timelapse configuration (``timelapse`` sub-dict for mode/schedule,
-            plus ``ScanPath``/``Metadata``/camera settings).
-
-        Returns
-        -------
-        str
-            The unique id of the created timelapse.
-        """
+    def start_timelapse(self, config=None):
+        """Create and start a timelapse. With config=None arms the CONFIGURED draft."""
         return self.scanner.start_timelapse(config)
 
     @RPCServer.register_method_json()
