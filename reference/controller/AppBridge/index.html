@@ -1761,6 +1761,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../scanner/powermanager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    powermanager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../scanner/rpc_controller/" class="md-nav__link">
         
   
@@ -1789,6 +1817,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../scanner/scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../scanner/scanner/" class="md-nav__link">
         
   
@@ -1797,6 +1853,62 @@
     
   
     scanner
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scanner/timelapse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    timelapse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scanner/timelapse_store/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    timelapse_store
   
 
     
@@ -2738,70 +2850,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../developer/full_stack_dev_setup/" class="md-nav__link">
+      <a href="../../../developer/NTP_server.md.md" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Full-Stack Dev Setup
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../developer/NTP_server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Chrony NTP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../developer/webui_syntax_highlighting/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    WebUI Syntax Highlighting
+    None
   
 
     
@@ -3067,79 +3123,95 @@ appropriate bridge for the application.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/controller/AppBridge.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">61</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">62</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">63</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">64</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">65</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">66</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">67</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">73</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">74</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">75</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">76</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">77</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">78</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">79</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">80</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">81</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">82</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">83</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">84</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">85</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">86</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">87</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">88</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">89</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">90</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">91</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">92</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">93</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">94</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, parent<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>):
-    <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>(parent)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>context <span style="color: #666">=</span> zmq<span style="color: #666">.</span>Context()
-    <span style="color: #008000">self</span><span style="color: #666">.</span>registry <span style="color: #666">=</span> deviceregistry<span style="color: #666">.</span>DeviceRegistry(context<span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>context)
-    <span style="color: #3D7B7B; font-style: italic"># /!\ callback will be executed in registry thread</span>
-    <span style="color: #3D7B7B; font-style: italic"># callback will only emit a signal</span>
-    <span style="color: #3D7B7B; font-style: italic"># connection must be queued so that the slot is executed in the main thread</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>registry<span style="color: #666">.</span>add_new_device_callback(<span style="color: #008000">self</span><span style="color: #666">.</span>_new_device_callback)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>registry<span style="color: #666">.</span>add_device_removed_callback(<span style="color: #008000">self</span><span style="color: #666">.</span>_remove_device_callback)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>registry<span style="color: #666">.</span>daemon <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_registryNewDevice<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>_create_new_device, Qt<span style="color: #666">.</span>ConnectionType<span style="color: #666">.</span>QueuedConnection)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_registryRemoveDevice<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>_remove_device, Qt<span style="color: #666">.</span>ConnectionType<span style="color: #666">.</span>QueuedConnection)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>device_list: <span style="color: #008000">list</span>[<span style="color: #008000">str</span>] <span style="color: #666">=</span> []
-    <span style="color: #008000">self</span><span style="color: #666">.</span>device_bridges: <span style="color: #008000">list</span>[CameraBridge] <span style="color: #666">=</span> []
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 60</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 61</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 62</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 63</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 64</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 65</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 66</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 67</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 68</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 72</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 73</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 74</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 75</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 76</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 77</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 78</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 79</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 80</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 81</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 82</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 83</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 84</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 85</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 86</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 87</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 88</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 89</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 90</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 91</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 92</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 93</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 94</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 95</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 96</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 97</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 98</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 99</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">100</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">101</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">103</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">104</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, parent<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>):
+    <span style="color: #008000; font-weight: bold">try</span>:
+        <span style="color: #008000">super</span>()<span style="color: #666">.</span><span style="color: #00F">__init__</span>(parent)
+        <span style="color: #008000">self</span><span style="color: #666">.</span>context <span style="color: #666">=</span> zmq<span style="color: #666">.</span>Context()
+        <span style="color: #008000">self</span><span style="color: #666">.</span>registry <span style="color: #666">=</span> deviceregistry<span style="color: #666">.</span>DeviceRegistry(context<span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>context)
+        <span style="color: #3D7B7B; font-style: italic"># /!\ callback will be executed in registry thread</span>
+        <span style="color: #3D7B7B; font-style: italic"># callback will only emit a signal</span>
+        <span style="color: #3D7B7B; font-style: italic"># connection must be queued so that the slot is executed in the main thread</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>registry<span style="color: #666">.</span>add_new_device_callback(<span style="color: #008000">self</span><span style="color: #666">.</span>_new_device_callback)
+        <span style="color: #008000">self</span><span style="color: #666">.</span>registry<span style="color: #666">.</span>add_device_removed_callback(<span style="color: #008000">self</span><span style="color: #666">.</span>_remove_device_callback)
+        <span style="color: #008000">self</span><span style="color: #666">.</span>registry<span style="color: #666">.</span>daemon <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_registryNewDevice<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>_create_new_device, Qt<span style="color: #666">.</span>ConnectionType<span style="color: #666">.</span>QueuedConnection)
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_registryRemoveDevice<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>_remove_device, Qt<span style="color: #666">.</span>ConnectionType<span style="color: #666">.</span>QueuedConnection)
+        <span style="color: #008000">self</span><span style="color: #666">.</span>device_list: <span style="color: #008000">list</span>[<span style="color: #008000">str</span>] <span style="color: #666">=</span> []
+        <span style="color: #008000">self</span><span style="color: #666">.</span>device_bridges: <span style="color: #008000">list</span>[CameraBridge] <span style="color: #666">=</span> []
 
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_currentCamera <span style="color: #666">=</span> DummyCameraBridge(<span style="color: #008000">self</span>)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_scanner <span style="color: #666">=</span> Scanner()
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_currentCamera <span style="color: #666">=</span> DummyCameraBridge(<span style="color: #008000">self</span>)
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_scanner <span style="color: #666">=</span> Scanner()
 
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server <span style="color: #666">=</span> RPCControllerServer(<span style="color: #008000">self</span><span style="color: #666">.</span>context, <span style="color: #BA2121">"tcp://localhost:14567"</span>, <span style="color: #008000">self</span><span style="color: #666">.</span>_scanner)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>scannerChanged<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server<span style="color: #666">.</span>handle_scanner_changed)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread <span style="color: #666">=</span> Thread(target<span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server<span style="color: #666">.</span>serve_forever, name<span style="color: #666">=</span><span style="color: #BA2121">"RPCControllerServer"</span>)
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread<span style="color: #666">.</span>daemon <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
-    <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread<span style="color: #666">.</span>start()
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server <span style="color: #666">=</span> RPCControllerServer(<span style="color: #008000">self</span><span style="color: #666">.</span>context, <span style="color: #BA2121">"tcp://localhost:14567"</span>, <span style="color: #008000">self</span><span style="color: #666">.</span>_scanner)
+        <span style="color: #008000">self</span><span style="color: #666">.</span>scannerChanged<span style="color: #666">.</span>connect(<span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server<span style="color: #666">.</span>handle_scanner_changed)
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread <span style="color: #666">=</span> Thread(target<span style="color: #666">=</span><span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server<span style="color: #666">.</span>serve_forever, name<span style="color: #666">=</span><span style="color: #BA2121">"RPCControllerServer"</span>)
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread<span style="color: #666">.</span>daemon <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread<span style="color: #666">.</span>start()
 
-    <span style="color: #008000">self</span><span style="color: #666">.</span>registry<span style="color: #666">.</span>start()
+        <span style="color: #008000">self</span><span style="color: #666">.</span>registry<span style="color: #666">.</span>start()
 
-    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">finalizer</span>(registry, controller_server, controller_thread, context):
-        logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">"finalizing AppBridge"</span>)
-        registry<span style="color: #666">.</span>stop()
-        registry<span style="color: #666">.</span>join()
-        controller_server<span style="color: #666">.</span>stop_server()
-        <span style="color: #008000">print</span>(controller_thread, context)
-        controller_thread<span style="color: #666">.</span>join()
-        context<span style="color: #666">.</span>term()
-        logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">"AppBridge finalized"</span>)
+        <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">finalizer</span>(registry, controller_server, controller_thread, context):
+            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">"finalizing AppBridge"</span>)
+            registry<span style="color: #666">.</span>stop()
+            registry<span style="color: #666">.</span>join()
+            controller_server<span style="color: #666">.</span>stop_server()
+            <span style="color: #008000">print</span>(controller_thread, context)
+            controller_thread<span style="color: #666">.</span>join()
+            context<span style="color: #666">.</span>term()
+            logger<span style="color: #666">.</span>debug(<span style="color: #BA2121">"AppBridge finalized"</span>)
 
-    finalize(<span style="color: #008000">self</span>, finalizer, <span style="color: #008000">self</span><span style="color: #666">.</span>registry, <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server, <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread, <span style="color: #008000">self</span><span style="color: #666">.</span>context)
+        finalize(<span style="color: #008000">self</span>, finalizer, <span style="color: #008000">self</span><span style="color: #666">.</span>registry, <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_server, <span style="color: #008000">self</span><span style="color: #666">.</span>_controller_thread, <span style="color: #008000">self</span><span style="color: #666">.</span>context)
+    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">BaseException</span> <span style="color: #008000; font-weight: bold">as</span> exc:
+        <span style="color: #008000; font-weight: bold">global</span> _last_init_error
+        _last_init_error <span style="color: #666">=</span> exc
+        <span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">traceback</span>
+
+        traceback<span style="color: #666">.</span>print_exc()
+        <span style="color: #008000; font-weight: bold">raise</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -3228,21 +3300,21 @@ appropriate bridge for the application.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/AppBridge.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">116</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">123</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">int</span>, result<span style="color: #666">=</span>CameraBridge)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">125</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">126</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">127</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">128</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">129</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">130</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">131</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">132</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">133</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">134</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">int</span>, result<span style="color: #666">=</span>CameraBridge)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getCameraBridgeAtIndex</span>(<span style="color: #008000">self</span>, index: <span style="color: #008000">int</span>) <span style="color: #666">-&gt;</span> CameraBridge:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    (Slot) Returns the camera bridge at a given index.</span>
@@ -3281,10 +3353,10 @@ appropriate bridge for the application.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/AppBridge.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">217</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">218</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">220</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">227</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">228</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">229</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">230</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">reboot_host</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Reboots the host."""</span>
     subprocess<span style="color: #666">.</span>run([<span style="color: #BA2121">"reboot"</span>])
@@ -3312,10 +3384,10 @@ appropriate bridge for the application.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/AppBridge.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">222</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">223</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">224</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">232</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">233</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">234</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">235</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">restart_app</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Reboots the app."""</span>
     subprocess<span style="color: #666">.</span>run([<span style="color: #BA2121">"systemctl"</span>, <span style="color: #BA2121">"--user"</span>, <span style="color: #BA2121">"restart"</span>, <span style="color: #BA2121">"plant-imager-app.service"</span>])
@@ -3343,10 +3415,10 @@ appropriate bridge for the application.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/AppBridge.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">212</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">213</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">215</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">222</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">223</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">224</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">shutdown_host</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Shuts down the host."""</span>
     subprocess<span style="color: #666">.</span>run([<span style="color: #BA2121">"poweroff"</span>])
