@@ -192,13 +192,13 @@ def test_deterministic_id_and_persist(tmp_xdg, fake_timers):
             # make delta within grace so scan proceeds (now = sched + 5s)
             with freezegun.freeze_time(sched + datetime.timedelta(seconds=5)):
                 tl.scan(0)
-            # Scan ctor called with FSDB-safe id (positional arg 4)
-            assert MockScan.call_args[0][4] == f"tl-id--{tl._slug_for_schedule(sched)}"
+            # n==1 bare scan: scan_id == base id (no container/suffix)
+            assert MockScan.call_args[0][4] == "tl-id"
             assert ":" not in MockScan.call_args[0][4]
             # persisted store contains one ScanRecord
             store = TimelapseStore.new_store_from_last()
             assert len(store.scans) == 1
-            assert store.scans[0]["scan_id"].startswith("tl-id--")
+            assert store.scans[0]["scan_id"] == "tl-id"
 
 
 # ---------------------------------------------------------------------------
@@ -307,20 +307,26 @@ def test_live_db_timelapse_creates_scans(tmp_xdg):
             # use admin client directly (has full rights) — no restricted token needed for test
             tl = TimeLapse(cnc=DummyCNC(), db_url=db_url, cameras=[mock_cam], path=[], timelapse_name="tl-live", config=cfg, power_manager=pm)
             tl.db_client = auth_client  # admin session, can create any scan
+            # n>1 requires timelapse container before scans
+            try:
+                auth_client.create_timelapse("tl-live", metadata=cfg.get("Metadata", {}))
+            except Exception:
+                pass
             # override schedule to now+1s and now+3s to be fast
             now = datetime.datetime.now(timezone.utc)
             tl.schedule_times = [now + datetime.timedelta(seconds=1), now + datetime.timedelta(seconds=3)]
             tl.start_at = tl.schedule_times[0]
             tl.next_idx = 0
             tl.grace_period = 60
+            tl.plantdb_timelapse_id = "tl-live"
             # wait for both scans to fire
             tl._trigger_next_scan()
             tl._trigger_next_scan()
             # assert DB has two scans with deterministic ids
             client = auth_client
             scans = client.list_scans()
-            # scans are prefixed with tl-live--
-            live = [s for s in scans if s.startswith("tl-live--")]
+            # scans are f"{id}_{index}" for n>1
+            live = [s for s in scans if s.startswith("tl-live_")]
             assert len(live) == 2
             # each has timelapse grouping via scan_id prefix; verify filesets exist
             for sid in live:

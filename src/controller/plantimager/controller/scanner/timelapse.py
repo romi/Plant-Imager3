@@ -4,15 +4,17 @@ Handles the coordination and the scheduling of multiple scans through the TimeLa
 Call graph and state flow
 -------------------------
 
-State model (persisted via ``TimelapseStore``, ``IDLE`` = no file):
+State model (persisted via ``TimelapseStore``, ``IDLE`` = no file;
+``CONFIGURED`` is in-memory draft, see ``timelapse_configured.md``):
 
-    IDLE(None) ──create──▶ SCHEDULED ──scan──▶ RUNNING ──ok──▶ SCHEDULED ──▶ COMPLETED
-                              │                  │                    ▲
-                              │                  └─fail──▶ FAILED ───┘
-                              └─cancel──────────▶ CANCELLED
+    IDLE(None) ──config──▶ CONFIGURED ──start──▶ SCHEDULED ──scan──▶ RUNNING ──ok──▶ SCHEDULED ──▶ COMPLETED
+                             │   ▲                  │                  │                    ▲
+                             │   └─config(new)      │                  └─fail──▶ FAILED ───┘
+                             └─cancel→IDLE          └─cancel──────────▶ CANCELLED
 
-    ``PowerManager.mode`` (``SCAN``/``AUTO``) is displayed *alongside* the timelapse state
-    in ``Scanner.qml`` — no combined ``WAITING``/``COOLDOWN`` state.
+    ``CONFIGURED`` is not persisted and never arms power. ``PowerManager.mode``
+    (``SCAN``/``AUTO``) is displayed *alongside* the timelapse state in
+    ``Scanner.qml``.
 
 Timers vs methods
 ~~~~~~~~~~~~~~~~~
@@ -166,6 +168,7 @@ class TimeLapseMode(StrEnum):
     ONE_SHOT = "one_shot"
 
 class TimeLapseState(StrEnum):
+    CONFIGURED = "configured"
     SCHEDULED = "scheduled"
     RUNNING = "running"
     COMPLETED = "completed"
@@ -204,7 +207,8 @@ class TimeLapse(QObject):
     pathInfoChanged = Signal(str)
 
     def __init__(self, db_url: str, cameras: list[PiCameraComm], path: Path,
-                  timelapse_name: str, config: dict[str, Any], power_manager: PowerManager, parent=None):
+                  timelapse_name: str, config: dict[str, Any], power_manager: PowerManager, parent=None,
+                  auto_start: bool = True, cnc: Any | None = None, **kwargs):
         super().__init__(parent)
         self.db_url = db_url
         self.db_client = PlantDBClient(db_url) if db_url else None
@@ -213,8 +217,14 @@ class TimeLapse(QObject):
         self.id = timelapse_name
         self.config = config
         self.power_manager = power_manager
+        if cnc is not None and getattr(power_manager, "get_cnc", None) is not None:
+            try:
+                if power_manager.get_cnc() is None:
+                    power_manager.cnc = cnc
+            except Exception:
+                pass
         self.scans: list[Scan] = []
-        self._state = TimeLapseState.SCHEDULED
+        self._state = TimeLapseState.CONFIGURED if not auto_start else TimeLapseState.SCHEDULED
         self.plantdb_timelapse_id: str | None = None
 
         # timelapse settings
@@ -244,7 +254,10 @@ class TimeLapse(QObject):
         self._next_scan_timer.timeout.connect(self._trigger_next_scan)
         self.destroyed.connect(lambda _=None, _t=self._next_scan_timer: _stop_timers(_t))
         weakref.finalize(self, _stop_timers, self._next_scan_timer)
-        self._setup_next_scan_timer()
+        if auto_start:
+            self._setup_next_scan_timer()
+        else:
+            self._state = TimeLapseState.CONFIGURED
 
     @staticmethod
     def compute_schedule(
@@ -357,7 +370,32 @@ class TimeLapse(QObject):
         else:
             self.plantdb_timelapse_id = self.id
 
+    def _slug_for_schedule(self, dt: datetime.datetime) -> str:
+        """Legacy helper retained for test compatibility; bare ONE_SHOT uses ``id`` directly now."""
+        return dt.isoformat().replace(":", "-").replace("+", "_")
 
+    def recompute_schedule_for_start(self, now: datetime.datetime | None = None) -> None:
+        """Recompute schedule from now for INTERVAL/ONE_SHOT; FIXED_TIMES is absolute."""
+        if self.mode == TimeLapseMode.FIXED_TIMES:
+            return
+        is_grbl = _is_grbl_cnc(self.power_manager.get_cnc()) if getattr(self, "power_manager", None) is not None else False
+        now_utc = now if now is not None else datetime.datetime.now(timezone.utc)
+        _, schedule = self.compute_schedule(self.config, is_grbl=is_grbl, now=now_utc)
+        self.schedule_times = schedule
+        self.start_at = schedule[0] if schedule else None
+        self.next_idx = 0
+        self.current_idx = 0
+        if len(schedule) <= 1:
+            self.plantdb_timelapse_id = None
+        else:
+            self.plantdb_timelapse_id = self.id
+
+    def arm(self, now: datetime.datetime | None = None) -> None:
+        """Arm a CONFIGURED draft: recompute (if needed) and schedule."""
+        if self._state != TimeLapseState.CONFIGURED:
+            raise RuntimeError(f"Cannot arm from state {self._state}")
+        self.recompute_schedule_for_start(now=now)
+        self._setup_next_scan_timer()
 
     @Slot(int)
     def scan(self, index: int):
@@ -459,7 +497,7 @@ class TimeLapse(QObject):
     @Slot(object)
     def cnc_ready(self, cnc):
         """PowerManager reports CNC connected; (re)arm schedule if not terminal."""
-        if self._state not in (TimeLapseState.COMPLETED, TimeLapseState.FAILED, TimeLapseState.CANCELLED):
+        if self._state not in (TimeLapseState.CONFIGURED, TimeLapseState.COMPLETED, TimeLapseState.FAILED, TimeLapseState.CANCELLED):
             self.state = TimeLapseState.SCHEDULED
             self._setup_next_scan_timer()
 
@@ -497,6 +535,8 @@ class TimeLapse(QObject):
         if delta <= self.grace_period:
             self._next_scan_timer.setInterval(0)
             self._next_scan_timer.start()
+            self.state = TimeLapseState.SCHEDULED
+            self._persist_state()
             return
 
         self._next_scan_timer.stop()

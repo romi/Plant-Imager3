@@ -510,8 +510,46 @@ class Scanner(QObject):
     # ------------------------------------------------------------------
     # Timelapse management
     # ------------------------------------------------------------------
-    def start_timelapse(self, config: dict) -> str:
+    @Slot("QVariant", result="QVariant")
+    def config_timelapse(self, config: dict) -> dict | None:
+        """Create a CONFIGURED draft (no arm/persist) and return its snapshot.
+
+        Replaces an existing CONFIGURED draft or terminal job; rejects if SCHEDULED/RUNNING.
+        """
+        if self.timelapse is not None and self.timelapse.state in (
+                TimeLapseState.SCHEDULED, TimeLapseState.RUNNING):
+            raise RuntimeError("A timelapse is already running")
+        if not getattr(self, "base_name", ""):
+            raise RuntimeError("Base name not set — call set_base_name first")
+        name = self.base_name.strip()
+        if self.timelapse is not None:
+            self.timelapse._next_scan_timer.stop()
+            self.timelapse.setParent(None)
+            self.timelapse = None
+        tl = TimeLapse(
+            db_url=self.db_url,
+            cameras=self.cameras,
+            path=self.scan_path,
+            timelapse_name=name,
+            config=config,
+            power_manager=self.power_manager,
+            parent=self,
+            auto_start=False,
+        )
+        if self.db_client is not None:
+            tl.db_client = self.db_client
+        self._wire_timelapse(tl)
+        self.timelapse = tl
+        self.timelapseChanged.emit(tl)
+        return self.get_active_timelapse()
+
+    def start_timelapse(self, config: dict | None = None) -> str:
         """Create and start a new :class:`TimeLapse` and return its id.
+
+        Two flows: ``config_timelapse(config)`` → ``start_timelapse()``
+        (recomputes INTERVAL/ONE_SHOT at start) or single-call
+        ``start_timelapse(config)`` (backward compat). Passing ``config``
+        while a CONFIGURED draft exists replaces it.
 
         The timelapse id is the base name previously set via :meth:`set_base_name`.
         For a single-scan timelapse (ONE_SHOT / n=1) no PlantDB timelapse
@@ -519,10 +557,11 @@ class Scanner(QObject):
 
         Parameters
         ----------
-        config : dict
+        config : dict | None
             Configuration dictionary, including a ``"timelapse"`` sub-dict with
             ``mode`` (``interval``/``fixed_times``/``one_shot``) and scheduling
-            parameters plus ``ScanPath``/``Metadata``/camera settings.
+            parameters plus ``ScanPath``/``Metadata``/camera settings. When None,
+            arms the existing CONFIGURED draft.
 
         Returns
         -------
@@ -533,14 +572,28 @@ class Scanner(QObject):
         ------
         RuntimeError
             If a timelapse is already running (``SCHEDULED`` or ``RUNNING``)
-            or no base name has been set.
+            or no draft exists when ``config`` is None.
         """
+        if config is None:
+            if self.timelapse is None or self.timelapse.state != TimeLapseState.CONFIGURED:
+                raise RuntimeError("No configured timelapse — call config_timelapse first")
+            tl = self.timelapse
+            tl.arm()
+            if getattr(tl, "plantdb_timelapse_id", None) is not None and tl.db_client is not None:
+                tl.db_client.create_timelapse(tl.plantdb_timelapse_id, metadata=tl.config.get("Metadata", {}))
+            return tl.id
+
+        # config provided — backward compat or replace CONFIGURED/terminal
         if self.timelapse is not None and self.timelapse.state in (
                 TimeLapseState.SCHEDULED, TimeLapseState.RUNNING):
             raise RuntimeError("A timelapse is already running")
         if not getattr(self, "base_name", ""):
             raise RuntimeError("Base name not set — call set_base_name first")
         name = self.base_name.strip()
+        if self.timelapse is not None:
+            self.timelapse._next_scan_timer.stop()
+            self.timelapse.setParent(None)
+            self.timelapse = None
         tl = TimeLapse(
             db_url=self.db_url,
             cameras=self.cameras,
@@ -586,7 +639,7 @@ class Scanner(QObject):
 
     @Slot()
     def cancel_timelapse(self) -> None:
-        """Cancel the active timelapse.
+        """Cancel the active timelapse; CONFIGURED discards to IDLE (no CANCELLED).
 
         Raises
         ------
@@ -595,6 +648,12 @@ class Scanner(QObject):
         """
         if self.timelapse is None:
             raise RuntimeError("No active timelapse")
+        if self.timelapse.state == TimeLapseState.CONFIGURED:
+            self.timelapse._next_scan_timer.stop()
+            self.timelapse.setParent(None)
+            self.timelapse = None
+            self.timelapseChanged.emit(self.timelapse)  # type: ignore[arg-type]
+            return
         self.timelapse.cancel()
 
     def preview_timelapse(self, config: dict) -> dict:
