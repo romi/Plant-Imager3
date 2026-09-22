@@ -102,5 +102,49 @@ Control {
                 anchors.bottom: parent.bottom
             }
         }
+
+        Control {
+            id: timelapse_panel
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            Label {
+                id: timelapse_panel_title
+                anchors.top: parent.top
+                anchors.left: parent.left
+                height: P.Style.mediumHeight
+
+                text: "Timelapse"
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignLeft
+                leftPadding: P.Style.largeMargin
+
+                font: P.Style.fonts.header
+            }
+
+            P.IconButton {
+                id: close_timelapse_panel
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.rightMargin: P.Style.mediumMargin
+                height: P.Style.mediumHeight
+
+                iconName: P.Icons.icons["close"]
+                color: P.Style.colors.foreground
+                hoverColor: P.Style.colors.accent
+                size: P.Style.iconMedium
+
+                onClicked: {
+                    stack.currentIndex = 0
+                }
+            }
+
+            Label {
+                anchors.centerIn: parent
+                text: "No timelapse"
+                font: P.Style.fonts.label
+                color: P.Style.colors.neutralColor
+            }
+        }
     }
 }
