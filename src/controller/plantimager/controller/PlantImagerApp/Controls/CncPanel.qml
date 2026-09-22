@@ -20,6 +20,32 @@ Control {
         RowLayout {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
+            spacing: P.Style.smallMargin
+
+            Button {
+                id: enableManualButton
+                Layout.fillWidth: true
+                Layout.preferredHeight: P.Style.mediumHeight
+                text: "Enable Manual"
+                visible: scanner ? scanner.power_mode !== "MANUAL" : true
+                enabled: scanner ? true : false
+                onClicked: { if (scanner) scanner.enable_manual() }
+            }
+            Label {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                text: scanner ? (scanner.power_mode + " / " + scanner.cnc_state) : ""
+                font: P.Style.fonts.label
+                color: P.Style.colors.foreground
+                elide: Text.ElideRight
+                horizontalAlignment: Text.AlignRight
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
+            visible: scanner ? scanner.power_mode === "MANUAL" : false
             Button {
                 id: moveToCenterButton
 
@@ -60,6 +86,7 @@ Control {
         RowLayout {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
+            visible: scanner ? scanner.power_mode === "MANUAL" : false
             Button {
                 id: moveToPathButton
 
