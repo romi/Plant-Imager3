@@ -569,8 +569,12 @@ class Scanner(QObject):
         tl.progressChanged.connect(self._on_timelapse_progress)
         tl.scanCreated.connect(self._bridge_scan_signals)
 
+    @Slot(result="QVariant")
     def get_active_timelapse(self) -> dict | None:
-        """Return a serialisable snapshot of the active timelapse, or None."""
+        """Return a serialisable snapshot of the active timelapse, or None.
+
+        QML-callable (Slot) — returns a QVariantMap/Null for QML.
+        """
         if self.timelapse is None:
             return None
         try:
@@ -580,6 +584,7 @@ class Scanner(QObject):
             logger.error(f"Failed to serialise active timelapse: {exc}")
             return None
 
+    @Slot()
     def cancel_timelapse(self) -> None:
         """Cancel the active timelapse.
 
