@@ -20,12 +20,14 @@ Control {
     property string nextLocal: ""
 
     function tlStatusIcon(s) {
+        if (s === "CONFIGURED") return P.Icons.icons["pencil"]
         if (s === "COMPLETED") return P.Icons.icons["check-circle"]
         if (s === "FAILED") return P.Icons.icons["alert-circle"]
         if (s === "SCHEDULED" || s === "RUNNING") return P.Icons.icons["timer"]
         return P.Icons.icons["panorama-fisheye"]
     }
     function tlStatusColor(s) {
+        if (s === "CONFIGURED") return P.Style.colors.okColor
         if (s === "COMPLETED") return P.Style.colors.okColor
         if (s === "FAILED") return P.Style.colors.alertColor
         if (s === "SCHEDULED" || s === "RUNNING") return P.Style.colors.warningColor
@@ -245,7 +247,7 @@ Control {
                 Layout.fillWidth: true
                 Layout.preferredHeight: P.Style.mediumHeight
                 text: "Cancel timelapse"
-                enabled: tlState === "SCHEDULED" || tlState === "RUNNING"
+                enabled: tlState === "CONFIGURED" || tlState === "SCHEDULED" || tlState === "RUNNING"
                 onClicked: confirmDialog.open()
             }
         }

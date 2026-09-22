@@ -22,6 +22,7 @@ Control {
 
     function tlStatusIcon() {
         if (!hasJob || tlState === "") return P.Icons.icons["panorama-fisheye"]
+        if (tlState === "CONFIGURED") return P.Icons.icons["pencil"]
         if (tlState === "COMPLETED") return P.Icons.icons["check-circle"]
         if (tlState === "FAILED") return P.Icons.icons["alert-circle"]
         if (tlState === "SCHEDULED" || tlState === "RUNNING") return P.Icons.icons["timer"]
@@ -29,6 +30,7 @@ Control {
     }
     function tlStatusColor() {
         if (!hasJob || tlState === "") return P.Style.colors.neutralColor
+        if (tlState === "CONFIGURED") return P.Style.colors.okColor
         if (tlState === "COMPLETED") return P.Style.colors.okColor
         if (tlState === "FAILED") return P.Style.colors.alertColor
         if (tlState === "SCHEDULED" || tlState === "RUNNING") return P.Style.colors.warningColor
