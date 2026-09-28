@@ -51,7 +51,7 @@ Control {
         tlInfo = d
         hasJob = !!d
         if (!d) { tlState = ""; tlCurrent = 0; tlTotal = 0; nextIso = ""; remainingText = "\u2014"; return }
-        tlState = d.state || ""
+        tlState = (d.state || "").toString().toUpperCase()
         tlTotal = d.schedule_times ? d.schedule_times.length : 0
         tlCurrent = (d.next_idx !== undefined ? d.next_idx : 0)
         if (d.schedule_times && d.next_idx < d.schedule_times.length) nextIso = d.schedule_times[d.next_idx]

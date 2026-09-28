@@ -82,7 +82,7 @@ Control {
         tlInfo = d
         hasJob = !!d
         if (!d) { tlState = ""; tlTotal = 0; tlNextIdx = 0; nextIso = ""; nextLocal = "\u2014"; scheduleModel.clear(); return }
-        tlState = d.state || ""
+        tlState = (d.state || "").toString().toUpperCase()
         tlTotal = d.schedule_times ? d.schedule_times.length : 0
         tlNextIdx = (d.next_idx !== undefined ? d.next_idx : 0)
         if (d.schedule_times && d.next_idx < d.schedule_times.length) {
