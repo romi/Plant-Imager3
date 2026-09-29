@@ -1772,6 +1772,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.rpc_controller.RPCControllerServer.config_timelapse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;config_timelapse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.controller.scanner.rpc_controller.RPCControllerServer.get_active_timelapse" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3116,6 +3127,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#plantimager.controller.scanner.rpc_controller.RPCControllerServer.config_timelapse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;config_timelapse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.controller.scanner.rpc_controller.RPCControllerServer.get_active_timelapse" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3689,10 +3711,10 @@ plantimager.controller.scanner.scanner.Scanner : The scanner device being contro
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/rpc_controller.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">226</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">227</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">228</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>cameraNamesChanged)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">218</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">220</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">221</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>cameraNamesChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">camera_names</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>[<span style="color: #008000">str</span>]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return the list of camera names."""</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>camera_names
@@ -3720,13 +3742,44 @@ plantimager.controller.scanner.scanner.Scanner : The scanner device being contro
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/rpc_controller.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">171</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">172</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json()
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">163</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">164</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">165</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">cancel_timelapse</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Cancel the active timelapse, if any."""</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>cancel_timelapse()
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="plantimager.controller.scanner.rpc_controller.RPCControllerServer.config_timelapse" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">config_timelapse</span>
+
+
+<a href="#plantimager.controller.scanner.rpc_controller.RPCControllerServer.config_timelapse" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>config_timelapse(config)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Create a CONFIGURED draft (no arm/persist) and return its snapshot.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>plantimager/controller/scanner/rpc_controller.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">149</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">151</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">config_timelapse</span>(<span style="color: #008000">self</span>, config):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create a CONFIGURED draft (no arm/persist) and return its snapshot."""</span>
+    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>config_timelapse(config)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3751,10 +3804,10 @@ plantimager.controller.scanner.scanner.Scanner : The scanner device being contro
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/rpc_controller.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">165</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json()
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">159</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">161</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_active_timelapse</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return a serialisable snapshot of the active timelapse, or None."""</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>get_active_timelapse()
@@ -3815,7 +3868,14 @@ reference to the scanner and emits signals to update progress values.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/rpc_controller.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">230</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">223</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">224</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">226</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">227</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">228</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">229</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">230</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">231</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">232</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">233</span>
@@ -3828,14 +3888,7 @@ reference to the scanner and emits signals to update progress values.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">240</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">241</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">242</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">243</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">244</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">245</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">246</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">248</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">handle_scanner_changed</span>(<span style="color: #008000">self</span>, scanner):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">243</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">handle_scanner_changed</span>(<span style="color: #008000">self</span>, scanner):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Update the controlled scanner and synchronize progress values.</span>
 
 <span style="color: #BA2121; font-style: italic">    This method is called when the scanner device changes. It updates the</span>
@@ -3903,16 +3956,16 @@ reference to the scanner and emits signals to update progress values.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/rpc_controller.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">207</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">209</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">210</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">211</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">212</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>maxProgressChanged)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>maxProgressChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">max_progress</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Get the maximum progress value of the scanner.</span>
 
@@ -4001,7 +4054,14 @@ reference to the scanner and emits signals to update progress values.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/rpc_controller.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">175</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">171</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">172</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">174</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">175</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">176</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">177</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">178</span>
@@ -4009,14 +4069,7 @@ reference to the scanner and emits signals to update progress values.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">180</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">181</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">182</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">183</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">184</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">186</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">187</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">188</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">189</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">190</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json()
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">183</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">preview_timelapse</span>(<span style="color: #008000">self</span>, config):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return the schedule computed for a config, without starting it.</span>
 
@@ -4079,16 +4132,16 @@ reference to the scanner and emits signals to update progress values.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/rpc_controller.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">192</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">186</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">187</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">188</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">189</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">190</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">191</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">192</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>progressChanged)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>progressChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">progress</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Get the current progress value of the scanner.</span>
 
@@ -4145,16 +4198,16 @@ reference to the scanner and emits signals to update progress values.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/rpc_controller.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">207</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">209</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">210</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">211</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">212</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">213</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">214</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">215</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">216</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">217</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">218</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">220</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">221</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">222</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">223</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>readyToScanChanged)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">216</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>ControllerDevice<span style="color: #666">.</span>readyToScanChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">ready_to_scan</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Get whether the scanner is ready to start a scan.</span>
 
@@ -5251,101 +5304,22 @@ _handle_method_call, _handle_property_get, _handle_property_set :
 
 
 <a href="#plantimager.controller.scanner.rpc_controller.RPCControllerServer.start_timelapse" class="headerlink" title="Permanent link">Link</a></h4>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>start_timelapse(config)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>start_timelapse(config<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>)
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Create and start a timelapse from a configuration dict.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>config</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#dict">dict</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Timelapse configuration (<code>timelapse</code> sub-dict for mode/schedule,
-plus <code>ScanPath</code>/<code>Metadata</code>/camera settings).</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The unique id of the created timelapse.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+        <p>Create and start a timelapse. With config=None arms the CONFIGURED draft.</p>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/rpc_controller.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">149</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">151</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">152</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">153</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">153</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">154</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">155</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">156</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">159</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">161</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">162</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">163</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json(timeout<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>)
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">start_timelapse</span>(<span style="color: #008000">self</span>, config):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create and start a timelapse from a configuration dict.</span>
-
-<span style="color: #BA2121; font-style: italic">    Parameters</span>
-<span style="color: #BA2121; font-style: italic">    ----------</span>
-<span style="color: #BA2121; font-style: italic">    config : dict</span>
-<span style="color: #BA2121; font-style: italic">        Timelapse configuration (``timelapse`` sub-dict for mode/schedule,</span>
-<span style="color: #BA2121; font-style: italic">        plus ``ScanPath``/``Metadata``/camera settings).</span>
-
-<span style="color: #BA2121; font-style: italic">    Returns</span>
-<span style="color: #BA2121; font-style: italic">    -------</span>
-<span style="color: #BA2121; font-style: italic">    str</span>
-<span style="color: #BA2121; font-style: italic">        The unique id of the created timelapse.</span>
-<span style="color: #BA2121; font-style: italic">    """</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">156</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@RPCServer</span><span style="color: #666">.</span>register_method_json(timeout<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>)
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">start_timelapse</span>(<span style="color: #008000">self</span>, config<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create and start a timelapse. With config=None arms the CONFIGURED draft."""</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scanner<span style="color: #666">.</span>start_timelapse(config)
 </code></pre></div></td></tr></table></div>
             </details>
