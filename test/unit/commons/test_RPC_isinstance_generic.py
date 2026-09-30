@@ -1,3 +1,18 @@
+"""Unit tests for the generic type-checking and coercion utilities.
+
+These tests exercise ``is_instance_of_generic`` and ``coerce_to_generic``
+from :mod:`plantimager.commons.utils`. The design mirrors the two halves of
+the RPC argument-validation pipeline: first verify that a runtime value
+matches a (possibly generic) type specification, then coerce a value into
+that specification when it does not already conform.
+
+Coverage spans simple types, ``Any``, generic containers (``list``, ``dict``,
+``set``), fixed-size and variadic tuples, nested generics, unions (both
+``typing.Union`` and the ``|`` syntax), and the fallback origin-instantiation
+path. Each test targets one specification shape so failures localize to a
+single kind of type.
+"""
+
 import unittest
 from typing import Any, Union, Tuple
 from plantimager.commons.utils import is_instance_of_generic, coerce_to_generic
@@ -71,6 +86,7 @@ class TestIsInstanceOfGeneric(unittest.TestCase):
 
 
 class TestCoerceToGeneric(unittest.TestCase):
+    """Unit tests for the coerce_to_generic utility function."""
 
     def test_any_type(self):
         """Should return the value unchanged when generic_type is Any."""

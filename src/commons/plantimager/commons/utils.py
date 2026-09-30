@@ -94,9 +94,8 @@ def ttl_cache(maxsize: int = 16, ttl: float = 300):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # clean every expired item
             now = time()
-            for key, (timestamp, _) in cache.items():
+            for key, (timestamp, _) in list(cache.items()):
                 if now - timestamp > ttl:
                     del cache[key]
             # check if item is in cache
