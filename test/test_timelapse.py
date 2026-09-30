@@ -550,3 +550,148 @@ def test_cnc_ready_ignored_while_configured(fake_timers, tmp_xdg, mock_gpio, moc
     tl.cnc_ready(DummyCNC())
     tl._setup_next_scan_timer.assert_not_called()
     assert tl.state == TimeLapseState.CONFIGURED
+
+
+# ---------------------------------------------------------------------------
+# RPC-thread affinity — TimeLapse timers must live on the Qt main thread.
+# Uses the real QTimer (no fake_timers): constructing/arming from the RPC
+# server thread used to bind the timer to a thread with no event loop, so
+# no scan ever fired. Fails before the run_on_main_thread fix.
+# ---------------------------------------------------------------------------
+def _ready_scanner_for_rpc():
+    from unittest.mock import MagicMock
+    from plantimager.controller.scanner.dummy_cnc import DummyCNC
+    from plantimager.controller.scanner.scanner import Scanner
+    from plantimager.controller.scanner.path import Circle
+    scanner = Scanner()
+    scanner.config = minimal_config()
+    scanner.scan_path = Circle(center_x=0, center_y=0, z=10, tilt=0, radius=10, n_points=4)
+    scanner.db_client = MagicMock()
+    scanner.set_base_name("rpc-affinity")
+    scanner.power_manager.cnc = DummyCNC()
+    cam = MagicMock()
+    cam.name = "cam1"
+    scanner.cameras = [cam]
+    return scanner
+
+
+def _rpc_server_for(scanner):
+    import zmq
+    from plantimager.controller.scanner.rpc_controller import RPCControllerServer
+    ctx = zmq.Context()
+    server = RPCControllerServer(ctx, "tcp://127.0.0.1", scanner)
+    return ctx, server
+
+
+def _call_from_worker(app, fn, timeout=10):
+    """Run ``fn`` on a plain thread (like the RPC server thread) while the
+    main thread pumps the Qt event loop so queued slots get delivered."""
+    import threading
+    import time
+    box = {}
+
+    def target():
+        try:
+            box["result"] = fn()
+        except Exception as exc:
+            box["error"] = exc
+
+    t = threading.Thread(target=target)
+    t.start()
+    deadline = time.monotonic() + timeout
+    while t.is_alive() and time.monotonic() < deadline:
+        app.processEvents()
+        time.sleep(0.005)
+    t.join(timeout=5)
+    assert not t.is_alive(), "worker RPC call did not complete"
+    if "error" in box:
+        raise box["error"]
+    return box.get("result")
+
+
+def _assert_timer_on_main_thread(tl):
+    from PySide6.QtCore import QThread
+    main_thread = QThread.currentThread()
+    assert tl.thread() is main_thread
+    assert tl._next_scan_timer.thread() is main_thread
+    assert tl._next_scan_timer.isActive()
+
+
+def test_start_timelapse_from_worker_thread_binds_timer_to_main(
+        tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb, qtbot):
+    from PySide6.QtCore import QCoreApplication
+    app = QCoreApplication.instance()
+    scanner = _ready_scanner_for_rpc()
+    ctx, server = _rpc_server_for(scanner)
+    try:
+        cfg = minimal_config(mode="interval", interval=3600, n_shots=2,
+                             grace_period=5, warmup_period=30)
+        tl_id = _call_from_worker(app, lambda: server.start_timelapse(cfg))
+        assert tl_id == "rpc-affinity"
+        assert scanner.timelapse.state == TimeLapseState.SCHEDULED
+        _assert_timer_on_main_thread(scanner.timelapse)
+    finally:
+        server._socket.close()
+        ctx.term()
+
+
+def test_config_then_arm_from_worker_thread(tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb, qtbot):
+    from PySide6.QtCore import QCoreApplication
+    app = QCoreApplication.instance()
+    scanner = _ready_scanner_for_rpc()
+    ctx, server = _rpc_server_for(scanner)
+    try:
+        cfg = minimal_config(mode="interval", interval=3600, n_shots=2,
+                             grace_period=5, warmup_period=30)
+        snap = _call_from_worker(app, lambda: server.config_timelapse(cfg))
+        assert snap["state"] == "configured"
+        tl_id = _call_from_worker(app, lambda: server.start_timelapse())
+        assert tl_id == "rpc-affinity"
+        assert scanner.timelapse.state == TimeLapseState.SCHEDULED
+        _assert_timer_on_main_thread(scanner.timelapse)
+    finally:
+        server._socket.close()
+        ctx.term()
+
+
+def test_worker_thread_rpc_error_propagates(tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb, qtbot):
+    from PySide6.QtCore import QCoreApplication
+    from plantimager.controller.scanner.scanner import Scanner
+    app = QCoreApplication.instance()
+    scanner = Scanner()  # no base name set
+    ctx, server = _rpc_server_for(scanner)
+    try:
+        cfg = minimal_config(mode="interval", interval=3600, n_shots=1)
+        with pytest.raises(RuntimeError):
+            _call_from_worker(app, lambda: server.start_timelapse(cfg))
+    finally:
+        server._socket.close()
+        ctx.term()
+
+
+def test_run_on_main_thread_preserves_registration():
+    from plantimager.controller.scanner.rpc_controller import RPCControllerServer
+    assert RPCControllerServer.config_timelapse._is_json_method is True
+    assert RPCControllerServer.start_timelapse._is_json_method is True
+    assert RPCControllerServer.config_timelapse._timeout == 10000
+    assert RPCControllerServer.start_timelapse._timeout is None
+
+
+def test_cancel_timelapse_from_worker_thread_stops_timer(
+        tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb, qtbot):
+    from PySide6.QtCore import QCoreApplication
+    app = QCoreApplication.instance()
+    scanner = _ready_scanner_for_rpc()
+    ctx, server = _rpc_server_for(scanner)
+    try:
+        cfg = minimal_config(mode="interval", interval=3600, n_shots=2,
+                             grace_period=5, warmup_period=30)
+        _call_from_worker(app, lambda: server.start_timelapse(cfg))
+        timer = scanner.timelapse._next_scan_timer
+        assert timer.isActive()
+        _call_from_worker(app, lambda: server.cancel_timelapse())
+        assert scanner.timelapse.state == TimeLapseState.CANCELLED
+        assert not timer.isActive()
+    finally:
+        server._socket.close()
+        ctx.term()

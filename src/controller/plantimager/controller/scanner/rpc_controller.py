@@ -37,6 +37,52 @@ from plantimager.commons.RPC import RPCProperty, RPCServer
 from plantimager.commons.controller_device import ControllerDevice
 from plantimager.controller.scanner.scanner import Scanner
 
+import functools
+
+from PySide6.QtCore import QObject, Qt, QThread, Signal, Slot
+
+
+class _MainThreadInvoker(QObject):
+    """Runs callables on the thread that creates it (the Qt main thread).
+
+    The ``request`` signal is connected with ``BlockingQueuedConnection``,
+    so emitting it from the RPC server thread blocks until the slot has
+    run on the main thread — no ``QTimer.singleShot`` needed.
+    """
+
+    request = Signal(object)
+
+    def __init__(self):
+        super().__init__()
+        self.request.connect(self._execute_box, Qt.ConnectionType.BlockingQueuedConnection)
+
+    @Slot(object)
+    def _execute_box(self, box):
+        try:
+            box["result"] = box["call"]()
+        except Exception as exc:
+            box["error"] = exc
+
+
+def run_on_main_thread(fn):
+    """Execute an RPC method on the Qt main thread, blocking for its result.
+
+    RPC requests are served on a plain Python thread with no Qt event
+    loop, so methods that create ``QObject``s (or arm their ``QTimer``s)
+    must hop to the main thread or their timers never fire. Stack this
+    innermost, directly above ``def``; ``functools.wraps`` plus the
+    explicit copy below preserve the ``register_method_*`` flags so RPC
+    registration keeps working.
+    """
+    @functools.wraps(fn)
+    def wrapper(self, *args, **kwargs):
+        return self._invoke_on_main_thread(functools.partial(fn, self, *args, **kwargs))
+
+    for _attr in ("_is_json_method", "_timeout", "_is_buffer_method"):
+        if hasattr(fn, _attr):
+            setattr(wrapper, _attr, getattr(fn, _attr))
+    return wrapper
+
 
 class RPCControllerServer(ControllerDevice, RPCServer):
     """An RPC server controlling a scanner device.
@@ -90,11 +136,31 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         """
         RPCServer.__init__(self, context, url)
         self.scanner = scanner
+        # Created here on the Qt main thread; RPC requests hop back to it
+        # via run_on_main_thread. Plain QObject: no parent, owned by self.
+        self._main_thread_host = _MainThreadInvoker()
         self.scanner.progressChanged.connect(self.progressChanged.emit)
         self.scanner.maxProgressChanged.connect(self.maxProgressChanged.emit)
         self.scanner.readyToScanChanged.connect(self.readyToScanChanged.emit)
         self.scanner.cameraNamesChanged.connect(self.cameraNamesChanged.emit)
 
+    def _invoke_on_main_thread(self, call):
+        """Run ``call`` on the Qt main thread and return its result.
+
+        Falls back to a direct call when already on the main thread (a
+        blocking-queued emit to self would deadlock) or when the invoker
+        is missing (servers built without ``__init__``, as in unit tests).
+        Server-side exceptions are re-raised so ``_exec_json`` still
+        reports ``{"success": False}``.
+        """
+        host = getattr(self, "_main_thread_host", None)
+        if host is None or QThread.currentThread() is host.thread():
+            return call()
+        box = {"call": call, "result": None, "error": None}
+        host.request.emit(box)
+        if box["error"] is not None:
+            raise box["error"]
+        return box["result"]
 
     @RPCServer.register_method_json
     def set_db_url(self, url: str):
@@ -146,11 +212,13 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         self.scanner.scan()
 
     @RPCServer.register_method_json
+    @run_on_main_thread
     def config_timelapse(self, config):
         """Create a CONFIGURED draft (no arm/persist) and return its snapshot."""
         return self.scanner.config_timelapse(config)
 
     @RPCServer.register_method_json(timeout=None)
+    @run_on_main_thread
     def start_timelapse(self, config=None):
         """Create and start a timelapse. With config=None arms the CONFIGURED draft."""
         return self.scanner.start_timelapse(config)
