@@ -98,7 +98,7 @@ print(controller.ready_to_scan)
 Use the demo WebUI to drive the controller and run a full scan:
 ```shell
 conda activate plant-imager3
-python -m plantimager.webui.main
+python -m plantimager.webui.app
 ```
 
 ### Python API
