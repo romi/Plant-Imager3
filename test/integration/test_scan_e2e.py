@@ -33,6 +33,10 @@ class DummyCNC:
         """Record a move – in a real CNC this would command the hardware."""
         self._position = (x, y, pan)
 
+    def reset_pos(self):
+        """Park the arm – mirrors DummyCNC.reset_pos used by Scan.scan()."""
+        self._position = (0, 0, 0)
+
 
 class TestScanIntegration(unittest.TestCase):
     """End‑to‑end test that exercises ``Scan.scan`` with real services."""
