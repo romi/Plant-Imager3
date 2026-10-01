@@ -136,8 +136,12 @@ class TestScanIntegration(unittest.TestCase):
         self.registry = DeviceRegistry(self.context)
         self.registry.start()
 
+        i = 0
         while len([d_type for d_type, addr in self.registry.devices.values() if d_type == "camera"]) < 2:
             time.sleep(1)
+            i += 1
+            if i > 120:
+                self.fail("Timeout: cameras did not register within 120 seconds")
 
         for name, (d_type, addr) in self.registry.devices.items():
             if d_type == "camera":
@@ -145,8 +149,12 @@ class TestScanIntegration(unittest.TestCase):
                     PiCameraComm(self.context, addr)
                 )
 
+        i = 0
         while any(c.state in [CameraStates.DISCONNECTED, CameraStates.INVALID] for c in self.cameras):
             time.sleep(0.5)
+            i += 1
+            if i > 120:
+                self.fail("Timeout: cameras did not connect within 60 seconds")
 
 
 
@@ -201,7 +209,10 @@ class TestScanIntegration(unittest.TestCase):
 
         for camera in self.cameras:
             camera: PiCameraComm
-            camera._camera.stop_server()
+            try:
+                camera._camera.stop_server()
+            finally:
+                camera.close()
             del camera
 
         del self.cameras

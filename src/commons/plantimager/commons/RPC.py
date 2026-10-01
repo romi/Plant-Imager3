@@ -889,6 +889,26 @@ class RPCClient:
         except Exception as e:
             logger.error(f"Failed to reset socket: {e}")
 
+    def close(self):
+        """
+        Close local resources held by this client: the REQ socket and the
+        signal receiver thread, if any.
+
+        Idempotent: safe to call multiple times and after garbage collection
+        (the finalizer performs the same steps as a backstop).
+        """
+        try:
+            self.socket.close(linger=0)
+        except Exception:
+            try:
+                self.socket.close()
+            except Exception:
+                pass
+        receiver, self._signal_receiver = self._signal_receiver, None
+        if receiver:
+            receiver.stop()
+            receiver.join(2)
+
     def stop_server(self):
         """
         Request the connected RPC server to shut down.
@@ -1111,13 +1131,13 @@ class RPCServer:
         )
         if not self.name:
             logger.warning(f"Failed to register device {name} of type {type_} as {registry_url}")
+        else:
+            logger.info(f"Successfully registered device {name} of type {type_} to {registry_url}")
         self.registry_addr = registry_url if self.name else ""
 
         # Update cleanup state so finalizer knows what to unregister
         self._cleanup_state["uuid"] = self.uuid
         self._cleanup_state["registry_addr"] = self.registry_addr
-
-        logger.info(f"Successfully registered device {name} of type {type_} to {registry_url}")
 
         return self.name
 

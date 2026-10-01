@@ -4,6 +4,7 @@ from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from enum import StrEnum
+from threading import RLock
 from typing import Any
 from typing import Literal
 from weakref import finalize
@@ -60,6 +61,8 @@ class PiCameraComm(QObject):
         self.url = url
         self._thread_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"{self.__class__.__name__}Thread")
         self._camera: PiCameraProxy | None = None
+        self._conn_lock = RLock()
+        self._closed = False
         self._attempt_connection()
 
         def _finalizer(pool, camera):
@@ -76,23 +79,60 @@ class PiCameraComm(QObject):
         def _attempt_connection_callback(ft: Future[PiCameraProxy]):
             s = weak_self()
             if s is None:
+                if ft.exception() is None:
+                    try:
+                        ft.result().close()
+                    except Exception:
+                        pass
                 return
-            if ft.exception() is None:
-                s._camera = ft.result()
-                s._camera.modeChanged.connect(lambda mode: (obj := weak_self()) and obj.modeChanged.emit(mode))
-                s._camera.videoUrlChanged.connect(lambda u: (obj := weak_self()) and obj.videoUrlChanged.emit(u))
-                s._camera.rotationChanged.connect(lambda rot: (obj := weak_self()) and obj.rotationChanged.emit(rot))
-                s._camera.resolutionChanged.connect(
-                    lambda res: (obj := weak_self()) and obj.resolutionChanged.emit(*res))
-                s._camera.encodingChanged.connect(lambda e: (obj := weak_self()) and obj.encodingChanged.emit(e))
-                s._camera.configChanged.connect(lambda c: (obj := weak_self()) and obj.configChanged.emit(c))
-                s._set_state(CameraStates.CONNECTED)
-            else:
-                # logger.warning("Connection failed")
-                s._attempt_connection()
+            with s._conn_lock:
+                if s._closed:
+                    if ft.exception() is None:
+                        try:
+                            ft.result().close()
+                        except Exception:
+                            pass
+                    return
+                if ft.exception() is None:
+                    s._camera = ft.result()
+                    s._camera.modeChanged.connect(lambda mode: (obj := weak_self()) and obj.modeChanged.emit(mode))
+                    s._camera.videoUrlChanged.connect(lambda u: (obj := weak_self()) and obj.videoUrlChanged.emit(u))
+                    s._camera.rotationChanged.connect(lambda rot: (obj := weak_self()) and obj.rotationChanged.emit(rot))
+                    s._camera.resolutionChanged.connect(
+                        lambda res: (obj := weak_self()) and obj.resolutionChanged.emit(*res))
+                    s._camera.encodingChanged.connect(lambda e: (obj := weak_self()) and obj.encodingChanged.emit(e))
+                    s._camera.configChanged.connect(lambda c: (obj := weak_self()) and obj.configChanged.emit(c))
+                    s._set_state(CameraStates.CONNECTED)
+                else:
+                    # logger.warning("Connection failed")
+                    s._attempt_connection()
 
-        future = self._thread_pool.submit(lambda: PiCameraProxy(self._context, self.url))
-        future.add_done_callback(_attempt_connection_callback)
+        with self._conn_lock:
+            if self._closed:
+                return
+            future = self._thread_pool.submit(lambda: PiCameraProxy(self._context, self.url))
+            future.add_done_callback(_attempt_connection_callback)
+
+    def close(self):
+        """
+        Release local resources deterministically: stop background
+        (re)connection attempts, shut down the worker pool and close the
+        camera proxy, if any.
+
+        Idempotent. Safe to call from any thread except the pool worker
+        itself. After close the camera reports ``DISCONNECTED`` and no new
+        connection is attempted.
+        """
+        with self._conn_lock:
+            self._closed = True
+            proxy, self._camera = self._camera, None
+        self._thread_pool.shutdown(wait=True, cancel_futures=True)
+        if proxy is not None:
+            try:
+                proxy.close()
+            except Exception as e:
+                logger.warning(f"Error closing camera proxy: {e}")
+        self._set_state(CameraStates.DISCONNECTED)
 
     @contextmanager
     def camera(self):
