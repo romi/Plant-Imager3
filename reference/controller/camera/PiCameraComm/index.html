@@ -1461,6 +1461,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.controller.camera.PiCameraComm.PiCameraComm.close" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;close
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.controller.camera.PiCameraComm.PiCameraComm.getImage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2896,6 +2907,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.controller.camera.PiCameraComm.PiCameraComm.close" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;close
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.controller.camera.PiCameraComm.PiCameraComm.getImage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3000,8 +3022,7 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>plantimager/controller/camera/PiCameraComm.py</code></summary>
-                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
+                    <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">60</span>
@@ -3015,13 +3036,18 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, parent: QObject <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">73</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">74</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, parent: QObject <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
     QObject<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, parent)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_state <span style="color: #666">=</span> CameraStates<span style="color: #666">.</span>DISCONNECTED
     <span style="color: #008000">self</span><span style="color: #666">.</span>_context <span style="color: #666">=</span> context
     <span style="color: #008000">self</span><span style="color: #666">.</span>url <span style="color: #666">=</span> url
     <span style="color: #008000">self</span><span style="color: #666">.</span>_thread_pool <span style="color: #666">=</span> ThreadPoolExecutor(max_workers<span style="color: #666">=1</span>, thread_name_prefix<span style="color: #666">=</span><span style="color: #BA2121">f"</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">self</span><span style="color: #666">.</span><span style="color: #19177C">__class__</span><span style="color: #666">.</span><span style="color: #19177C">__name__</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">Thread"</span>)
     <span style="color: #008000">self</span><span style="color: #666">.</span>_camera: PiCameraProxy <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_conn_lock <span style="color: #666">=</span> RLock()
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_closed <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>
     <span style="color: #008000">self</span><span style="color: #666">.</span>_attempt_connection()
 
     <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_finalizer</span>(pool, camera):
@@ -3046,6 +3072,74 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="plantimager.controller.camera.PiCameraComm.PiCameraComm.close" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">close</span>
+
+
+<a href="#plantimager.controller.camera.PiCameraComm.PiCameraComm.close" class="headerlink" title="Permanent link">Link</a></h4>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>close()
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Release local resources deterministically: stop background
+(re)connection attempts, shut down the worker pool and close the
+camera proxy, if any.</p>
+<p>Idempotent. Safe to call from any thread except the pool worker
+itself. After close the camera reports <code>DISCONNECTED</code> and no new
+connection is attempted.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>plantimager/controller/camera/PiCameraComm.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">116</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">123</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">125</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">126</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">127</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">128</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">129</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">130</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">131</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">132</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">133</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">134</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">135</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">close</span>(<span style="color: #008000">self</span>):
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
+<span style="color: #BA2121; font-style: italic">    Release local resources deterministically: stop background</span>
+<span style="color: #BA2121; font-style: italic">    (re)connection attempts, shut down the worker pool and close the</span>
+<span style="color: #BA2121; font-style: italic">    camera proxy, if any.</span>
+
+<span style="color: #BA2121; font-style: italic">    Idempotent. Safe to call from any thread except the pool worker</span>
+<span style="color: #BA2121; font-style: italic">    itself. After close the camera reports ``DISCONNECTED`` and no new</span>
+<span style="color: #BA2121; font-style: italic">    connection is attempted.</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
+    <span style="color: #008000; font-weight: bold">with</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_conn_lock:
+        <span style="color: #008000">self</span><span style="color: #666">.</span>_closed <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
+        proxy, <span style="color: #008000">self</span><span style="color: #666">.</span>_camera <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_camera, <span style="color: #008000; font-weight: bold">None</span>
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_thread_pool<span style="color: #666">.</span>shutdown(wait<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, cancel_futures<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+    <span style="color: #008000; font-weight: bold">if</span> proxy <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
+        <span style="color: #008000; font-weight: bold">try</span>:
+            proxy<span style="color: #666">.</span>close()
+        <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span> <span style="color: #008000; font-weight: bold">as</span> e:
+            logger<span style="color: #666">.</span>warning(<span style="color: #BA2121">f"Error closing camera proxy: </span><span style="color: #A45A77; font-weight: bold">{</span>e<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
+    <span style="color: #008000">self</span><span style="color: #666">.</span>_set_state(CameraStates<span style="color: #666">.</span>DISCONNECTED)
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 
@@ -3089,33 +3183,33 @@ When camera.get_image() returns and the result is available, the signal imageRea
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/camera/PiCameraComm.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">134</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">135</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">136</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">137</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">138</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">139</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">141</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">142</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">143</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">144</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">145</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">146</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">147</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">149</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">151</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">152</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">153</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">154</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">155</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">156</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">159</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">bool</span>, result<span style="color: #666">=</span>Future)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">174</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">175</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">176</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">177</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">178</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">179</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">180</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">181</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">182</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">183</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">184</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">186</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">187</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">188</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">189</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">190</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">191</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">192</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">bool</span>, result<span style="color: #666">=</span>Future)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">getImage</span>(<span style="color: #008000">self</span>, lores<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> Future[<span style="color: #008000">tuple</span>[<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>]] <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Submits a call to camera.get_image() and returns a future representing the pending result.</span>
