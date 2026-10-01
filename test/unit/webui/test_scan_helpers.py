@@ -72,7 +72,7 @@ class TestNewScanHelpers(unittest.TestCase):
         self.assertIsNone(_num(None))
         self.assertIsNone(_num(""))
         self.assertEqual(_num("3"), 3)
-        self.assertEqual(_num("3.7"), 3)
+        self.assertEqual(_num("3.7"), 3.7)
         self.assertEqual(_num("0"), 0)
         self.assertEqual(_num(5), 5)
         self.assertEqual(_num("bad"), "bad")
