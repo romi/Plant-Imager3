@@ -634,6 +634,7 @@ class RPCClient:
         super().__init__()
         self.context: zmq.Context = context
         self.url: str = url
+        self._closed = False
         self.socket: zmq.Socket = context.socket(zmq.REQ)
         self.socket.setsockopt(zmq.LINGER, 0)
         self.socket.connect(self.url)
@@ -774,6 +775,7 @@ class RPCClient:
         print("<------------", file=sys.stderr)
 
     def _property_getter_proxy(self, property_name: str) -> Any:
+        self._ensure_open()
         package = {
             "event": RPCEvents.PROPERTY_GET,
             "property": property_name
@@ -794,6 +796,7 @@ class RPCClient:
             return NoResult(err, traceback_)
 
     def _property_setter_proxy(self, value: Any, property_name: str) -> None:
+        self._ensure_open()
         package = {
             "event": RPCEvents.PROPERTY_SET,
             "property": property_name,
@@ -833,7 +836,10 @@ class RPCClient:
         ------
         TimeoutError
             If the server does not respond within the configured timeout.
+        RuntimeError
+            If this client was closed with :meth:`close`.
         """
+        self._ensure_open()
         package = {
             "event": RPCEvents.METHOD_CALL,
             "method": method_name,
@@ -897,6 +903,7 @@ class RPCClient:
         Idempotent: safe to call multiple times and after garbage collection
         (the finalizer performs the same steps as a backstop).
         """
+        self._closed = True
         try:
             self.socket.close(linger=0)
         except Exception:
@@ -909,6 +916,11 @@ class RPCClient:
             receiver.stop()
             receiver.join(2)
 
+    def _ensure_open(self):
+        """Raise a clear error if this client was closed with :meth:`close`."""
+        if self._closed:
+            raise RuntimeError(f"RPCClient to {self.url} is closed")
+
     def stop_server(self):
         """
         Request the connected RPC server to shut down.
@@ -916,6 +928,7 @@ class RPCClient:
         Sends a non-blocking `STOP_SERVER` event to the remote server.
         If the server responds, it logs the reply.
         """
+        self._ensure_open()
         logger.info(f"Stopping server {self.url}")
         if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
             logger.info(f"Server {self.url} could not be joined (might already be dead)")
