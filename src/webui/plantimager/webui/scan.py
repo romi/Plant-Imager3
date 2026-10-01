@@ -92,11 +92,11 @@ CAMERA_AXES = ["x", "y", "z", "pan", "tilt"]
 
 
 def _num(value):
-    """Coerce a form value to ``int``/``float``, keeping it as-is if not numeric."""
+    """Coerce a form value to ``float``, keeping it as-is if not numeric."""
     if value is None or value == "":
         return None
     try:
-        return int(float(value))
+        return float(value)
     except (TypeError, ValueError):
         return value
 
