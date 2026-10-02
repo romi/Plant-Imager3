@@ -90,6 +90,11 @@ PATH_SPEC = {
 #: Camera offset axes (matches ``Pose``/``scanner`` offset contract).
 CAMERA_AXES = ["x", "y", "z", "pan", "tilt"]
 
+#: Top-level TOML sections that are not camera configurations.
+#: ``timelapse`` holds the TimeLapse schedule (see scanner/timelapse.py) and must
+#: survive camera add/remove edits untouched — never render it as a camera card.
+NON_CAMERA_SECTIONS = ("ScanPath", "Metadata", "timelapse")
+
 
 def _num(value):
     """Coerce a form value to ``float``, keeping it as-is if not numeric."""
@@ -550,7 +555,7 @@ def rebuild_path(cls, center_x, center_y, radius, n_points, n_circles, x_0, y_0,
 def populate_cameras(toml_text):
     """Fill the camera cards and active-slot list from the hidden config."""
     cfg = _load_cfg(toml_text)
-    cameras = [(k, v) for k, v in cfg.items() if k not in ("ScanPath", "Metadata")]
+    cameras = [(k, v) for k, v in cfg.items() if k not in NON_CAMERA_SECTIONS]
     active = list(range(len(cameras)))
     out = [active]
     for i in range(MAX_CAMERAS):
@@ -608,7 +613,7 @@ def rebuild_cameras(*args):
             active.remove(i)
 
     # Pick a default name for a newly added camera that does not collide with existing ones.
-    used_names = set(cfg.keys()) - {"ScanPath", "Metadata"}
+    used_names = set(cfg.keys()) - set(NON_CAMERA_SECTIONS)
     new_name = _free_camera_name(used_names)
 
     cameras = {}
@@ -632,7 +637,7 @@ def rebuild_cameras(*args):
                    "encoding": d['encoding'] or "jpeg", "offset": offset, "config": config}
         cameras[name] = cam
 
-    for k in [k for k in cfg if k not in ("ScanPath", "Metadata")]:
+    for k in [k for k in cfg if k not in NON_CAMERA_SECTIONS]:
         cfg.pop(k)
     cfg.update(cameras)
     return _dump(cfg), active
