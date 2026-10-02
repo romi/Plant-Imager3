@@ -444,5 +444,54 @@ class TestRobustness(BaseRPCTest):
             t.join()
 
 
+class TestRPCConcurrency(BaseRPCTest):
+    """Verify Lock serialization under concurrent REQ calls (PIv3 fix)."""
+
+    def setUp(self):
+        super().setUp()
+        self.registry = self.start_registry()
+        self.server = TestDevice(self.context, "tcp://127.0.0.1:9010")
+        self.server.register_to_registry("test_type", "conc_dev", self.registry_url)
+        self.server_thread = threading.Thread(target=self.server.serve_forever, daemon=True)
+        self.server_thread.start()
+        time.sleep(0.2)
+
+    def tearDown(self):
+        self.server.stop_server()
+        self.server_thread.join(timeout=2)
+        self.registry.stop()
+        self.registry.join(timeout=2)
+        super().tearDown()
+
+    def test_concurrent_echo(self):
+        """10 threads x 20 calls must all succeed (Lock prevents REQ interleaving)."""
+        from concurrent.futures import ThreadPoolExecutor
+
+        client = TestClientProxy(self.context, "tcp://127.0.0.1:9010")
+
+        def call_echo(i):
+            return client.echo(f"hi-{i}")
+
+        with ThreadPoolExecutor(max_workers=10) as ex:
+            futures = [ex.submit(call_echo, i) for i in range(20)]
+            results = [f.result(timeout=5) for f in futures]
+        self.assertEqual(len(results), 20)
+        for r in results:
+            self.assertTrue(r.startswith("Echo: hi-"))
+        # all expected payloads present
+        expected = {f"Echo: hi-{i}" for i in range(20)}
+        self.assertEqual(set(results), expected)
+        del client
+
+    def test_reset_socket_recovery(self):
+        """Timeout via echo_hanging must not desync REQ — next call succeeds."""
+        client = TestClientProxy(self.context, "tcp://127.0.0.1:9010")
+        with self.assertRaises(TimeoutError):
+            client.echo_hanging("hang")
+        # next call on same client must succeed ( _reset_socket under lock )
+        self.assertEqual(client.echo("after"), "Echo: after")
+        del client
+
+
 if __name__ == "__main__":
     unittest.main()

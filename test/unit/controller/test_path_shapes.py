@@ -1,11 +1,7 @@
-"""Unit tests for the scan path shape generators.
+"""Unit tests for the scan path shape generators — PIv3 Circle API.
 
-These tests verify the concrete path classes in
-:mod:`plantimager.controller.scanner.path` — ``Circle``, ``Cylinder``,
-``Line``, ``CalibrationPath``, and ``CustomPath``. The design checks each
-shape's length, coordinate layout, tilt handling (single value vs. iterable
-that duplicates points), and error conditions, so the generated pose
-sequences are correct before they are fed to the scanner.
+Verifies Circle (center_x, center_y, radius, n_points) with z/tilt hard-coded to 0,
+Line, CalibrationPath and CustomPath. Cylinder was removed in PIv3.
 """
 
 import unittest
@@ -14,68 +10,46 @@ from plantimager.controller.scanner.path import (
     CalibrationPath,
     Circle,
     CustomPath,
-    Cylinder,
     Line,
     Path,
 )
 
 
 class TestCircle(unittest.TestCase):
-    """Tests for the Circle path shape."""
+    """Tests for the Circle path shape (PIv3 API)."""
 
     def test_circle_basic(self):
-        """A circle generates the requested number of points."""
-        c = Circle(200, 200, 50, 0, 200, 9)
+        """A circle generates the requested number of points with z/tilt == 0."""
+        c = Circle(200, 200, 200, 9)
         self.assertEqual(len(c), 9)
         self.assertEqual(c.center_x, 200)
         self.assertEqual(c.radius, 200)
         self.assertFalse(c[0].exact_pose)
-
-    def test_circle_tilt_iterable_dup(self):
-        """An iterable tilt duplicates each point once per tilt value."""
-        c = Circle(200, 200, 50, (0, 10), 200, 9)
-        self.assertEqual(len(c), 18)
-        # each position duplicated with tilt 0 then 10
-        self.assertEqual(c[0].tilt, 0)
-        self.assertEqual(c[1].tilt, 10)
-        self.assertAlmostEqual(c[0].x, c[1].x)
-        self.assertAlmostEqual(c[0].y, c[1].y)
+        for e in c:
+            self.assertEqual(e.z, 0)
+            self.assertEqual(e.tilt, 0)
 
     def test_circle_single_tilt(self):
-        """A single tilt value applies to every point."""
-        c = Circle(0, 0, 0, 5, 10, 4)
+        """z/tilt are hard-coded to 0 regardless of legacy kwargs."""
+        c = Circle(0, 0, 10, 4, z=50, tilt=5)
         self.assertEqual(len(c), 4)
         for e in c:
-            self.assertEqual(e.tilt, 5)
+            self.assertEqual(e.z, 0)
+            self.assertEqual(e.tilt, 0)
 
+    def test_circle_attributes_preserved(self):
+        """Stored center/radius/n_points match construction."""
+        c = Circle(150, 250, 75, 12)
+        self.assertEqual(c.center_x, 150)
+        self.assertEqual(c.center_y, 250)
+        self.assertEqual(c.radius, 75)
+        self.assertEqual(c.n_points, 12)
 
-class TestCylinder(unittest.TestCase):
-    """Tests for the Cylinder path shape."""
-
-    def test_cylinder_two_circles(self):
-        """A two-circle cylinder stacks circles at each z level."""
-        cyl = Cylinder(200, 200, (0, 50), 0, 200, 9, n_circles=2)
-        self.assertEqual(len(cyl), 18)
-        # first circle z=0, second z=50
-        self.assertEqual(cyl[0].z, 0)
-        self.assertEqual(cyl[9].z, 50)
-
-    def test_cylinder_valueerror(self):
-        """A single-circle cylinder raises ValueError."""
-        with self.assertRaises(ValueError):
-            Cylinder(200, 200, (0, 50), 0, 200, 9, n_circles=1)
-
-    def test_cylinder_three_circles_step(self):
-        """Three circles are spaced evenly across the z range."""
-        cyl = Cylinder(0, 0, (0, 10), 0, 10, 4, n_circles=3)
-        # range(0, 11, int(10/2)=5) -> 0,5,10
-        zs = sorted(set(e.z for e in cyl))
-        self.assertEqual(zs, [0, 5, 10])
-
-    def test_cylinder_default_n_circles(self):
-        """The default circle count produces the expected number of points."""
-        cyl = Cylinder(0, 0, (0, 10), 0, 10, 4)
-        self.assertEqual(len(cyl), 8)
+    def test_circle_legacy_kwargs_ignored(self):
+        """Legacy z/tilt kwargs via **kwargs are ignored, not error."""
+        # should not raise
+        c = Circle(200, 200, 200, 9, z=50, tilt=(0, 10))
+        self.assertEqual(len(c), 9)
 
 
 class TestLine(unittest.TestCase):
@@ -107,17 +81,15 @@ class TestCalibrationPath(unittest.TestCase):
 
     def test_calibration_len(self):
         """CalibrationPath appends calibration lines to the base path."""
-        circ = Circle(200, 200, 50, 0, 200, 9)
+        circ = Circle(200, 200, 200, 9)
         cal = CalibrationPath(circ, 5)
         self.assertEqual(len(cal), len(circ) + 10)
-        # first element should be circ[0]
         self.assertAlmostEqual(cal[0].x, circ[0].x)
 
     def test_calibration_contains_lines(self):
         """CalibrationPath includes x- and y-axis calibration lines."""
-        circ = Circle(0, 0, 0, 0, 10, 4)
+        circ = Circle(0, 0, 10, 4)
         cal = CalibrationPath(circ, 3)
-        # after circ, next 3 are x-axis line, then 3 y-axis line
         self.assertEqual(len(cal), 4 + 6)
 
 

@@ -14,9 +14,9 @@ import requests
 
 from plantdb.client.rest_api.requests import request_token_refresh
 from plantdb.client.rest_api.requests import request_token_validation
-from plantdb.commons.log import get_logger
+from plantimager.commons.logging import create_logger
 
-logger = get_logger(__name__)
+logger = create_logger(__name__)
 
 
 def ensure_valid_token(url: str, port: int | str, prefix: str, ssl: bool,

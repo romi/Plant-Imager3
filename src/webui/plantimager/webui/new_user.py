@@ -166,7 +166,7 @@ def validate_new_username(new_username: str | None, is_modal_open: bool, host: s
     is_modal_open : bool
         Current state of the registration modal.
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
@@ -286,7 +286,7 @@ def register_user(n_clicks: int | None, username: str, fullname: str, password: 
     confirm_password : str
         Password confirmation entry.
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
