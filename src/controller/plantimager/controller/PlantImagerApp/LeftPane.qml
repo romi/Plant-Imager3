@@ -26,13 +26,13 @@ Control {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                model: P.AppBridge.deviceList
+                model: P.AppBridge ? P.AppBridge.deviceList : null
 
                 delegate: P.CameraDelegate {
 
                 }
                 onCurrentItemChanged: {
-                    if(currentIndex>=0) {
+                    if(currentIndex>=0 && P.AppBridge && currentItem) {
                         P.AppBridge.currentCamera = currentItem.bridge
                     }
                 }
@@ -49,12 +49,13 @@ Control {
             P.Scanner {
                 id: scanner_pannel
                 Layout.fillWidth: true
-                Layout.preferredHeight: P.Style.cameraDelegateHeight*3
+                Layout.preferredHeight: P.Style.cameraDelegateHeight*4
                 Layout.minimumHeight: P.Style.cameraDelegateHeight*2
 
-                scanner: P.AppBridge.scanner
+                scanner: P.AppBridge ? P.AppBridge.scanner : null
 
                 onSwitchToCncPanel: stack.currentIndex = 1
+                onSwitchToTimelapsePanel: stack.currentIndex = 2
             }
         }
 
@@ -100,6 +101,14 @@ Control {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
             }
+        }
+
+        P.TimelapsePanel {
+            id: timelapse_panel
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            scanner: P.AppBridge ? P.AppBridge.scanner : null
+            onCloseRequested: stack.currentIndex = 0
         }
     }
 }

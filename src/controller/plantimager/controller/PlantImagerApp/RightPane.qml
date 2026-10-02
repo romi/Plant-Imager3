@@ -20,7 +20,7 @@ Control {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            bridge: P.AppBridge.currentCamera
+            bridge: P.AppBridge ? P.AppBridge.currentCamera : null
         }
     }
 }

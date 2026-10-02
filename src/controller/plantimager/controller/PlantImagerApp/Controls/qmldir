@@ -8,3 +8,4 @@ Scanner              1.0 Scanner.qml
 ProgressBar          1.0 ProgressBar.qml
 NumericKeyboardPopup 1.0 NumericKeyboardPopup.qml
 CncPanel             1.0 CncPanel.qml
+TimelapsePanel       1.0 TimelapsePanel.qml

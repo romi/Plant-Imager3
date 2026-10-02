@@ -10,7 +10,10 @@ import unittest
 from dash.exceptions import PreventUpdate
 
 from plantimager.webui.scan import (
+    CAM_FIELDS,
     FORBIDDEN_CHAR,
+    MAX_CAMERAS,
+    NON_CAMERA_SECTIONS,
     _bio_field_id,
     _dump,
     _free_camera_name,
@@ -20,7 +23,9 @@ from plantimager.webui.scan import (
     check_dataset_name_uniqueness,
     handle_config_upload,
     is_valid_dataset_name,
+    populate_cameras,
     populate_path,
+    rebuild_cameras,
     validate_toml_textarea,
 )
 
@@ -140,6 +145,49 @@ class TestNewScanHelpers(unittest.TestCase):
         out = populate_path(cfg_text)
         self.assertEqual(len(out), 1 + 10 + 10)
         self.assertEqual(out[0], "Circle")
+
+
+def _cfg_with_timelapse():
+    import toml as toml_lib
+    return toml_lib.dumps({
+        "ScanPath": {"class_name": "Circle", "kwargs": {"radius": 100, "n_points": 4}},
+        "picamera": {"res_x": 2000, "res_y": 1500, "encoding": "jpeg",
+                     "offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "config": {}},
+        "timelapse": {"mode": "interval", "interval": "30s", "n_shots": 5},
+    })
+
+
+class TestTimelapseSectionPreserved(unittest.TestCase):
+    """The [timelapse] config section is not a camera: never rendered as a
+    camera card and never dropped by camera add/remove rebuilds."""
+
+    def test_non_camera_sections(self):
+        self.assertIn("timelapse", NON_CAMERA_SECTIONS)
+        self.assertIn("ScanPath", NON_CAMERA_SECTIONS)
+        self.assertIn("Metadata", NON_CAMERA_SECTIONS)
+
+    def test_populate_cameras_ignores_timelapse(self):
+        out = populate_cameras(_cfg_with_timelapse())
+        active, styles = out[0], out[1:1 + MAX_CAMERAS]
+        self.assertEqual(active, [0])
+        self.assertEqual(styles[0], {"display": "block"})
+        for style in styles[1:]:
+            self.assertEqual(style, {"display": "none"})
+
+    def test_rebuild_cameras_preserves_timelapse(self):
+        from unittest import mock
+        slot0 = ["picamera", 2000, 1500, "jpeg", 0, 0, 0, 0, 0, ""]
+        empty = [""] * len(CAM_FIELDS)
+        fields = slot0 + empty * (MAX_CAMERAS - 1)
+        args = [None] + [None] * MAX_CAMERAS + fields + [[0], _cfg_with_timelapse()]
+        with mock.patch("plantimager.webui.scan.callback_context") as mock_ctx:
+            mock_ctx.triggered = []  # no add/remove click: pure rebuild from field values
+            new_text, active = rebuild_cameras(*args)
+        cfg = _load_cfg(new_text)
+        self.assertEqual(active, [0])
+        self.assertIn("timelapse", cfg)
+        self.assertEqual(cfg["timelapse"]["mode"], "interval")
+        self.assertIn("picamera", cfg)
 
 
 if __name__ == "__main__":
