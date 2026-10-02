@@ -383,6 +383,11 @@ class Scanner(QObject):
         self._max_progress = len(self.scan_path)
         self.maxProgressChanged.emit(self._max_progress)
 
+        # Store metadata for the scan
+        metadata = config.get("Metadata", {})
+        self.dataset_metadata = metadata.get("object", {})  # Biological metadata
+        self.hw_metadata = metadata.get("hardware", {})  # Hardware metadata
+
         # Configure cameras
         self._configure_cameras(self.cameras)
 

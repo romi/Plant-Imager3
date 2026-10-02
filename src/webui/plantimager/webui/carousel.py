@@ -39,7 +39,7 @@ def update_image_task_dropdown(open_modal, dataset_id, host, port, prefix, ssl, 
     dataset_id : str or None
         Identifier of the selected dataset. Can be None or empty string if no dataset is selected.
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
@@ -87,7 +87,7 @@ def images_carousel(open_modal, image_task, dataset_id, host, port, prefix, ssl,
     dataset_id : str
         Identifier of the dataset to retrieve images from
     host : str
-       The hostname or IP address of the PlantDB REST API server.
+        The hostname or IP address of the PlantDB REST API server.
     port : int
         The port number of the PlantDB REST API server.
     prefix : str
