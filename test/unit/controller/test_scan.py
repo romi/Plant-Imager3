@@ -233,3 +233,23 @@ class TestScanUnit(unittest.TestCase):
         # ---- Verify that after the scan the arm was parked via reset_pos ------
         # (Scan.scan() ends with cnc.reset_pos(), not a hardcoded moveto)
         self.mock_cnc.reset_pos.assert_called_once()
+
+    # ------------------------------------------------------------------
+    def test_hw_metadata_from_constant_without_config_hardware(self):
+        from plantimager.controller.scanner.hardware_metadata import HARDWARE_METADATA
+        config = {"Metadata": {"object": {"species": "testus plantus"}}}
+        scan = Scan(
+            cnc=self.mock_cnc,
+            db_client=self.mock_plantdb_client,
+            cameras=[self.mock_camera],
+            path=self.mock_path,
+            scan_id="no_hw_cfg",
+            config=config,
+        )
+        self.assertEqual(scan.hw_metadata, HARDWARE_METADATA)
+
+    def test_hw_metadata_constant_not_mutated(self):
+        from plantimager.controller.scanner.hardware_metadata import HARDWARE_METADATA
+        self.assertIsNot(self.scan.hw_metadata, HARDWARE_METADATA)
+        self.scan.hw_metadata["name"] = "DummyCNC"
+        self.assertNotEqual(HARDWARE_METADATA["name"], "DummyCNC")

@@ -23,6 +23,7 @@ from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.scanner.dummy_cnc import DummyCNC
 from plantimager.controller.scanner.grbl import CNC
 from plantimager.controller.scanner.hal import DataItem, AbstractCNC
+from plantimager.controller.scanner.hardware_metadata import HARDWARE_METADATA
 from plantimager.controller.scanner.path import Path, Circle, CalibrationPath2, CustomPath
 from plantimager.controller.scanner.path import PathElement
 from plantimager.controller.scanner.path import Pose
@@ -224,7 +225,7 @@ class Scan(QObject):
         self.config = config
         # Store metadata for the scan
         self.dataset_metadata = config["Metadata"]["object"]  # Biological metadata
-        self.hw_metadata = config["Metadata"]["hardware"]  # Hardware metadata
+        self.hw_metadata = dict(HARDWARE_METADATA)  # per-instance copy of the rig constant
 
         # time
         self._start_time: int | None = None

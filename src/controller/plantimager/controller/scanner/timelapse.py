@@ -76,6 +76,8 @@ from typing import Any, Literal
 
 from PySide6.QtCore import QObject, Signal, Property, QTimer, Slot
 
+from plantimager.controller.scanner.hardware_metadata import HARDWARE_METADATA
+
 
 def _stop_timers(*timers):
     for t in timers:
@@ -242,7 +244,7 @@ class TimeLapse(QObject):
 
         # Store metadata for the scan
         self.dataset_metadata = config["Metadata"]["object"]  # Biological metadata
-        self.hw_metadata = config["Metadata"]["hardware"]  # Hardware metadata
+        self.hw_metadata = dict(HARDWARE_METADATA)  # per-instance copy of the rig constant
 
         # Configure cameras
         for camera in self.cameras:

@@ -53,6 +53,7 @@ from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.scanner.dummy_cnc import DummyCNC
 from plantimager.controller.scanner.grbl import CNC
+from plantimager.controller.scanner.hardware_metadata import HARDWARE_METADATA
 from plantimager.controller.scanner.path import CalibrationPath2
 from plantimager.controller.scanner.path import Circle
 from plantimager.controller.scanner.path import CustomPath
@@ -357,7 +358,7 @@ class Scanner(QObject):
 
         Sets up the scanning process by configuring:
         - The path to follow during scanning
-        - Metadata for the dataset (biological and hardware)
+        - Metadata for the dataset (biological)
         - Camera selection and parameters
 
         Parameters
@@ -366,7 +367,7 @@ class Scanner(QObject):
             Configuration dictionary with the following structure:
             {
                 "ScanPath": {"class_name": str, "kwargs": dict},
-                "Metadata": {"object": dict, "hardware": dict},
+                "Metadata": {"object": dict},
                 # Camera configurations (camera name as key)
                 "camera_name": {"offset": dict, ...}
             }
@@ -386,7 +387,7 @@ class Scanner(QObject):
         # Store metadata for the scan
         metadata = config.get("Metadata", {})
         self.dataset_metadata = metadata.get("object", {})  # Biological metadata
-        self.hw_metadata = metadata.get("hardware", {})  # Hardware metadata
+        self.hw_metadata = dict(HARDWARE_METADATA)  # per-instance copy of the rig constant
 
         # Configure cameras
         self._configure_cameras(self.cameras)
