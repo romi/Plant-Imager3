@@ -55,6 +55,19 @@ GPIO_CNC_PIN = int(os.getenv("GPIO_CNC_PIN", 17))
 GPIO_LIGHTS_PIN = int(os.getenv("GPIO_LIGHTS_PIN", 27))
 GPIO_GROWTH_LIGHTS_PIN = int(os.getenv("GPIO_GROWTH_LIGHTS_PIN", 22))
 
+# Floors for timelapse power timing (s): the CNC power-up leg, and the
+# standby floor as a multiple of it (power down + back up). Overridable for
+# tests via PI3_MIN_WARMUP_SEC / PI3_STANDBY_WARMUP_FACTOR.
+MIN_WARMUP_SEC = int(os.getenv("PI3_MIN_WARMUP_SEC", 45))
+STANDBY_WARMUP_FACTOR = int(os.getenv("PI3_STANDBY_WARMUP_FACTOR", 2))
+
+if MIN_WARMUP_SEC != 45 or STANDBY_WARMUP_FACTOR != 2:
+    logger.warning(
+        "Power timing floors overridden via env "
+        f"(PI3_MIN_WARMUP_SEC={MIN_WARMUP_SEC}s, PI3_STANDBY_WARMUP_FACTOR={STANDBY_WARMUP_FACTOR}); "
+        "values below the physical minimums risk cold-CNC scan failures."
+    )
+
 
 def activity_monitor(obj: object, callback: Callable[[], None]):
     """

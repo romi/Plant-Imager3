@@ -91,7 +91,10 @@ def _stop_timers(*timers):
 from plantimager.commons.logging import create_logger
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
 from plantimager.controller.scanner.path import Path
+from plantimager.controller.scanner.powermanager import MIN_WARMUP_SEC
 from plantimager.controller.scanner.powermanager import PowerManager
+from plantimager.controller.scanner.powermanager import PowerManagerMode
+from plantimager.controller.scanner.powermanager import STANDBY_WARMUP_FACTOR
 from plantimager.controller.scanner.powermanager import _is_grbl_cnc
 from plantimager.controller.scanner.scan import Scan
 from plantdb.client.plantdb_client import PlantDBClient
@@ -221,12 +224,6 @@ class TimeLapse(QObject):
         self.id = timelapse_name
         self.config = config
         self.power_manager = power_manager
-        if cnc is not None and getattr(power_manager, "get_cnc", None) is not None:
-            try:
-                if power_manager.get_cnc() is None:
-                    power_manager.cnc = cnc
-            except Exception:
-                pass
         self.scans: list[Scan] = []
         self._state = TimeLapseState.CONFIGURED if not auto_start else TimeLapseState.SCHEDULED
         self.plantdb_timelapse_id: str | None = None
@@ -357,10 +354,22 @@ class TimeLapse(QObject):
 
     def _setup_timelapse_settings(self):
         timelapse_config = self.config["timelapse"]
-        self.warmup_sec = int(timelapse_config.get("warmup_period", 30))
-        self.grace_period = int(timelapse_config.get("grace_period", 120))
-        self.standby_threshold_sec = int(timelapse_config.get("standby_threshold_sec", 600))
+        configured_warmup = int(timelapse_config.get("warmup_period", 30))
+        self.warmup_sec = max(MIN_WARMUP_SEC, configured_warmup)
+        if self.warmup_sec != configured_warmup:
+            logger.warning(
+                f"warmup_period {configured_warmup}s below minimum {MIN_WARMUP_SEC}s — using {self.warmup_sec}s."
+            )
+        configured_standby = int(timelapse_config.get("standby_threshold_sec", 600))
+        self.standby_threshold_sec = max(STANDBY_WARMUP_FACTOR * self.warmup_sec, configured_standby)
+        if self.standby_threshold_sec != configured_standby:
+            logger.warning(
+                f"standby_threshold_sec {configured_standby}s below minimum "
+                f"{STANDBY_WARMUP_FACTOR * self.warmup_sec}s ({STANDBY_WARMUP_FACTOR}x warm-up) — "
+                f"using {self.standby_threshold_sec}s."
+            )
         self.light_policy = timelapse_config.get("light_policy", {})
+        self.grace_period = int(timelapse_config.get("grace_period", 120))
         policy = timelapse_config.get("on_scan_failed", "skip_scan")
         if policy not in ("fail_timelapse", "skip_scan"):
             raise ValueError(
@@ -456,6 +465,20 @@ class TimeLapse(QObject):
             self._persist_state()
             return
 
+        if not self._cnc_ready():
+            if self.next_idx == 0:
+                logger.warning(
+                    "Scan 0 due but CNC not ready — deferring to the scheduler (no retry consumed)."
+                )
+                self._setup_next_scan_timer()
+                return
+            self._fail_terminal(
+                f"Scan {self.next_idx} due at {scheduled.isoformat()} but CNC not ready "
+                f"(power mode {self.power_manager.mode}) — standby_threshold_sec/warmup_sec "
+                "may be insufficient or the CNC connection failed. Failing fast."
+            )
+            return
+
         cnc = self.power_manager.get_cnc()
         db_client = self.db_client or PlantDBClient(self.db_url) if self.db_url else None
         if getattr(self, "plantdb_timelapse_id", None) is not None:
@@ -517,6 +540,31 @@ class TimeLapse(QObject):
             self.state = TimeLapseState.SCHEDULED
             self._setup_next_scan_timer()
 
+    def _cnc_ready(self) -> bool:
+        """Whether a scan can run now: CNC connected and power in SCAN/MANUAL."""
+        return self.power_manager.get_cnc() is not None and self.power_manager.mode in (
+            PowerManagerMode.SCAN, PowerManagerMode.MANUAL,
+        )
+
+    def _advance_and_continue(self) -> None:
+        """Skip the current slot, then complete or re-arm for the next one."""
+        self.next_idx += 1
+        self._persist_state()
+        if self.next_idx >= len(self.schedule_times):
+            self.state = TimeLapseState.COMPLETED
+            self.scanFinished.emit()
+            return
+        self._setup_next_scan_timer()
+
+    def _fail_terminal(self, message: str) -> None:
+        """End the job FAILED immediately: no retry, no policy branch."""
+        logger.error(message)
+        self._next_scan_timer.stop()
+        self.state = TimeLapseState.FAILED
+        self._persist_state()
+        self.errorOccurred.emit(message)
+        self.scanFinished.emit()
+
     def _setup_next_scan_timer(self):
         """
         Arms ``_next_scan_timer`` for ``schedule_times[next_idx]`` and informs
@@ -524,7 +572,13 @@ class TimeLapse(QObject):
 
         Handles ``skip`` for overdue entries (``delta <= -grace``), immediate
         dispatch when inside the grace window (``delta <= grace``), and power-aware
-        scheduling otherwise. Power is delegated to ``PowerManager.arm_for_scan``
+        scheduling otherwise. Immediate dispatch additionally requires a ready
+        CNC (connected, SCAN/MANUAL). Leniency applies to the first slot only
+        (arm time is operator-driven and unknowable in advance): interval/one-shot
+        slots arm power and wait one warm-up, fixed-times slots are skipped.
+        A later slot due while the CNC is not ready fails the job fast — the
+        standby/warmup budget was insufficient or the CNC connection is broken.
+        Power is delegated to ``PowerManager.arm_for_scan``
         (which decides AUTO/SCAN and arms its own warm-up timer); only the scan
         trigger timer lives here.
         """
@@ -539,16 +593,37 @@ class TimeLapse(QObject):
 
         if delta <= -self.grace_period:
             logger.warning(f"Scan {self.next_idx} already missed by {-delta:.1f}s, skipping.")
-            self.next_idx += 1
-            self._persist_state()
-            if self.next_idx >= len(self.schedule_times):
-                self.state = TimeLapseState.COMPLETED
-                self.scanFinished.emit()
-                return
-            self._setup_next_scan_timer()
+            self._advance_and_continue()
             return
 
         if delta <= self.grace_period:
+            if not self._cnc_ready():
+                if self.next_idx > 0:
+                    self._fail_terminal(
+                        f"Scan {self.next_idx} due at {next_time.isoformat()} but CNC not ready "
+                        f"(power mode {self.power_manager.mode}) — standby_threshold_sec/warmup_sec "
+                        "may be insufficient or the CNC connection failed. Failing fast."
+                    )
+                    return
+                if self.mode == TimeLapseMode.FIXED_TIMES:
+                    logger.warning(
+                        f"Scan {self.next_idx} due but CNC not ready (mode {self.power_manager.mode}) — "
+                        "fixed-times slots are never shifted, skipping."
+                    )
+                    self._advance_and_continue()
+                    return
+                logger.warning(
+                    f"Scan {self.next_idx} due but CNC not ready (mode {self.power_manager.mode}) — "
+                    f"arming power and delaying by warmup ({self.warmup_sec}s)."
+                )
+                if self.power_manager:
+                    wake_at = now + datetime.timedelta(seconds=self.warmup_sec)
+                    self.power_manager.arm_for_scan(wake_at, self.standby_threshold_sec)
+                self._next_scan_timer.setInterval(int(self.warmup_sec * 1000))
+                self._next_scan_timer.start()
+                self.state = TimeLapseState.SCHEDULED
+                self._persist_state()
+                return
             self._next_scan_timer.setInterval(0)
             self._next_scan_timer.start()
             self.state = TimeLapseState.SCHEDULED

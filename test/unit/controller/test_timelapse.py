@@ -229,6 +229,105 @@ def test_setup_one_shot_dummy_adds_warmup(fake_timers, tmp_xdg, mock_gpio, mock_
         assert (tl_dummy.schedule_times[0] - datetime.datetime(2026, 8, 28, 12, 0, tzinfo=timezone.utc)).total_seconds() == pytest.approx(60)
 
 
+# ---------------------------------------------------------------------------
+# CNC-readiness gate (cold CNC: delay interval/one-shot, skip fixed-times)
+# ---------------------------------------------------------------------------
+def test_not_ready_interval_delays_by_warmup(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    # construction auto-arms while PowerManager is still AUTO (cnc set, not connected):
+    # no Scan dispatched, power armed (SCAN), timer set to one warm-up
+    # (fixture warmup 30 clamps to the 45s minimum — see minimums tests below)
+    cfg = minimal_config(mode="interval", interval=3600, n_shots=2, warmup_period=30)
+    tl, pm = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+    assert tl.warmup_sec == 45
+    assert tl.next_idx == 0
+    assert tl._next_scan_timer._interval == 45 * 1000
+    assert pm.mode == PowerManagerMode.SCAN
+    mock_scan_class[0].assert_not_called()
+
+
+def test_warmup_and_standby_minimums_clamped(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    cfg = minimal_config(mode="interval", warmup_period=10, standby_threshold_sec=60)
+    tl, _ = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+    assert tl.warmup_sec == 45
+    assert tl.standby_threshold_sec == 2 * 45
+
+
+def test_minimums_env_override(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb, monkeypatch):
+    monkeypatch.setattr("plantimager.controller.scanner.timelapse.MIN_WARMUP_SEC", 5)
+    cfg = minimal_config(mode="interval", warmup_period=30, standby_threshold_sec=600)
+    tl, _ = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+    assert tl.warmup_sec == 30
+    assert tl.standby_threshold_sec == 600
+
+
+def test_not_ready_fixed_times_skips(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    now = datetime.datetime.now(timezone.utc).isoformat()
+    cfg = minimal_config(mode="fixed_times", dates=[now])
+    tl, _ = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+    assert tl.next_idx == 1
+    assert tl.state == TimeLapseState.COMPLETED
+    mock_scan_class[0].assert_not_called()
+
+
+def test_ready_immediate_dispatch_unchanged(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    cfg = minimal_config(mode="interval", interval=3600, n_shots=2)
+    tl, pm = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+    assert pm.try_set_mode(PowerManagerMode.SCAN) is True
+    tl.schedule_times = [datetime.datetime.now(timezone.utc)]
+    tl.next_idx = 0
+    tl._setup_next_scan_timer()
+    assert tl._next_scan_timer._interval == 0
+    assert tl._next_scan_timer._started is True
+
+
+def test_scan_defers_when_cnc_not_ready(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    cfg = minimal_config(mode="interval", interval=60, n_shots=2)
+    tl, pm = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+    pm.cnc = None
+    assert pm.try_set_mode(PowerManagerMode.AUTO) is True
+    tl.schedule_times = [datetime.datetime.now(timezone.utc)]
+    tl.next_idx = 0
+    tl._setup_next_scan_timer = MagicMock()
+    tl.scan(0)
+    tl._setup_next_scan_timer.assert_called_once()
+    mock_scan_class[0].assert_not_called()
+
+
+def test_later_slot_not_ready_fails_fast(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    cfg = minimal_config(mode="interval", interval=60, n_shots=2)
+    tl, pm = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+    pm.cnc = None
+    assert pm.try_set_mode(PowerManagerMode.AUTO) is True
+    now = datetime.datetime.now(timezone.utc)
+    tl.schedule_times = [now - datetime.timedelta(seconds=60), now]
+    tl.next_idx = 1
+    finished, errors = MagicMock(), MagicMock()
+    tl.scanFinished.connect(finished)
+    tl.errorOccurred.connect(errors)
+    tl._setup_next_scan_timer()
+    assert tl.state == TimeLapseState.FAILED
+    assert tl.next_idx == 1
+    assert tl._next_scan_timer._stopped is True
+    finished.assert_called_once()
+    errors.assert_called_once()
+    assert "standby_threshold_sec" in errors.call_args[0][0]
+    mock_scan_class[0].assert_not_called()
+
+
+def test_scan_later_slot_not_ready_fails_fast(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    cfg = minimal_config(mode="interval", interval=60, n_shots=2)
+    tl, pm = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+    pm.cnc = None
+    assert pm.try_set_mode(PowerManagerMode.AUTO) is True
+    now = datetime.datetime.now(timezone.utc)
+    tl.schedule_times = [now - datetime.timedelta(seconds=60), now]
+    tl.next_idx = 1
+    tl.scan(1)
+    assert tl.state == TimeLapseState.FAILED
+    assert tl.next_idx == 1
+    mock_scan_class[0].assert_not_called()
+
+
 def test_setup_failure_policy_defaults(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
     tl, _ = make_timelapse(minimal_config(), tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
     assert tl.on_scan_failed == "skip_scan"
