@@ -190,6 +190,8 @@ class TimeLapse(QObject):
     standby_threshold_sec: int  # stay-on cutoff to next scan
     grace_period: int  # period where late starts are accepted
     light_policy: dict  # lights mode
+    on_scan_failed: str  # "fail_timelapse" or "skip_scan"
+    scan_retries: int  # per-slot re-attempts before the policy applies
     scans: list[Scan]
     next_idx: int  # index of next-scheduled scan
     current_idx: int
@@ -285,6 +287,9 @@ class TimeLapse(QObject):
             - ``dates`` : list[str], ISO-8601 datetimes — required for
               ``fixed_times``; naive values are interpreted as host-local time
               then converted to UTC and sorted.
+            - ``on_scan_failed`` : ``skip_scan`` (default) | ``fail_timelapse``
+            - ``scan_retries`` : int, per-slot re-attempts before the policy
+              applies (default 0)
         is_grbl : bool, optional
             Whether the CNC is GRBL. When True the warmup delay is skipped and
             the first scan is scheduled at ``now``. Default is False.
@@ -356,6 +361,15 @@ class TimeLapse(QObject):
         self.grace_period = int(timelapse_config.get("grace_period", 120))
         self.standby_threshold_sec = int(timelapse_config.get("standby_threshold_sec", 600))
         self.light_policy = timelapse_config.get("light_policy", {})
+        policy = timelapse_config.get("on_scan_failed", "skip_scan")
+        if policy not in ("fail_timelapse", "skip_scan"):
+            raise ValueError(
+                f"Invalid on_scan_failed {policy!r}, expected 'fail_timelapse' or 'skip_scan'"
+            )
+        self.on_scan_failed = policy
+        self.scan_retries = int(timelapse_config.get("scan_retries", 0))
+        if self.scan_retries < 0:
+            raise ValueError(f"Invalid scan_retries {self.scan_retries}, expected >= 0")
         self.schedule_times = []
         self.current_idx = 0
         self.next_idx = 0

@@ -229,6 +229,29 @@ def test_setup_one_shot_dummy_adds_warmup(fake_timers, tmp_xdg, mock_gpio, mock_
         assert (tl_dummy.schedule_times[0] - datetime.datetime(2026, 8, 28, 12, 0, tzinfo=timezone.utc)).total_seconds() == pytest.approx(60)
 
 
+def test_setup_failure_policy_defaults(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    tl, _ = make_timelapse(minimal_config(), tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+    assert tl.on_scan_failed == "skip_scan"
+    assert tl.scan_retries == 0
+
+
+def test_setup_failure_policy_explicit(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    cfg = minimal_config(on_scan_failed="fail_timelapse", scan_retries=2)
+    tl, _ = make_timelapse(cfg, tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+    assert tl.on_scan_failed == "fail_timelapse"
+    assert tl.scan_retries == 2
+
+
+def test_setup_failure_policy_invalid_raises(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    with pytest.raises(ValueError):
+        make_timelapse(minimal_config(on_scan_failed="retry-forever"), tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+
+
+def test_setup_failure_policy_negative_retries_raises(fake_timers, tmp_xdg, mock_gpio, mock_scan_class, mock_plantdb):
+    with pytest.raises(ValueError):
+        make_timelapse(minimal_config(scan_retries=-1), tmp_xdg, fake_timers, mock_scan_class, mock_plantdb, mock_gpio)
+
+
 # ---------------------------------------------------------------------------
 # scan() validation, early re-arm, skip, success/failure, deterministic id
 # ---------------------------------------------------------------------------

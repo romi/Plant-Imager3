@@ -85,6 +85,8 @@ class TimelapseStore:
     warmup_sec: int = 0
     standby_threshold_sec: int = 0
     grace_period: int = 0
+    on_scan_failed: str = "skip_scan"
+    scan_retries: int = 0
     start_at: Optional[str] = None
     scans: List[Dict[str, Any]] = field(default_factory=list)   # list of ScanRecord dicts
     extra: Dict[str, Any] = field(default_factory=dict)        # any additional blob the caller wants to keep
@@ -182,6 +184,8 @@ class TimelapseStore:
                 warmup_sec=raw.get("warmup_sec", 0),
                 standby_threshold_sec=raw.get("standby_threshold_sec", 0),
                 grace_period=raw.get("grace_period", 0),
+                on_scan_failed=raw.get("on_scan_failed", "skip_scan"),
+                scan_retries=raw.get("scan_retries", 0),
                 start_at=raw.get("start_at"),
                 scans=raw.get("scans", []),
                 extra=raw.get("extra", {}),
@@ -215,6 +219,8 @@ class TimelapseStore:
             "warmup_sec": self.warmup_sec,
             "standby_threshold_sec": self.standby_threshold_sec,
             "grace_period": self.grace_period,
+            "on_scan_failed": self.on_scan_failed,
+            "scan_retries": self.scan_retries,
             "start_at": start,
             "scans": [ScanRecord(**s) for s in self.scans],
             "extra": self.extra,
@@ -243,6 +249,8 @@ class TimelapseStore:
             warmup_sec=tl_obj.warmup_sec,
             standby_threshold_sec=tl_obj.standby_threshold_sec,
             grace_period=tl_obj.grace_period,
+            on_scan_failed=getattr(tl_obj, "on_scan_failed", "skip_scan"),
+            scan_retries=getattr(tl_obj, "scan_retries", 0),
             start_at=_dt_to_iso(tl_obj.start_at),
             scans=scan_records,
             extra={},

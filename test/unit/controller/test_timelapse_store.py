@@ -138,6 +138,26 @@ class TimelapseStoreTest(unittest.TestCase):
         # The scans list should contain actual ScanRecord instances
         self.assertTrue(all(isinstance(s, ScanRecord) for s in kwargs["scans"]))
 
+    def test_policy_fields_roundtrip(self):
+        """on_scan_failed/scan_retries persist; legacy objects default."""
+        from plantimager.controller.scanner.timelapse_store import TimelapseStore
+        dummy = DummyTimeLapse()
+        dummy.on_scan_failed = "fail_timelapse"
+        dummy.scan_retries = 2
+        store = TimelapseStore.from_timelapse(dummy)
+        store.save()
+        loaded = TimelapseStore.new_store_from_last()
+        self.assertEqual(loaded.on_scan_failed, "fail_timelapse")
+        self.assertEqual(loaded.scan_retries, 2)
+        self.assertEqual(store.to_timelapse_kwargs()["on_scan_failed"], "fail_timelapse")
+        self.assertEqual(store.to_timelapse_kwargs()["scan_retries"], 2)
+
+        # legacy-shaped object without the attrs → defaults, no AttributeError
+        legacy = DummyTimeLapse()
+        legacy_store = TimelapseStore.from_timelapse(legacy)
+        self.assertEqual(legacy_store.on_scan_failed, "skip_scan")
+        self.assertEqual(legacy_store.scan_retries, 0)
+
     def test_load_missing_file_returns_none(self):
         """When the JSON file does not exist, new_store_from_last should return None."""
         # Ensure the file truly does not exist
