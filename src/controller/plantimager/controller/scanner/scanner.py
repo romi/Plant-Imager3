@@ -64,6 +64,7 @@ from plantimager.controller.scanner.powermanager import PowerManagerMode
 from plantimager.controller.scanner.scan import Scan
 from plantimager.controller.scanner.timelapse import TimeLapse
 from plantimager.controller.scanner.timelapse import TimeLapseState
+from plantimager.controller.scanner.timelapse_store import ScanRecord
 from plantimager.controller.scanner.timelapse_store import TimelapseStore
 
 
@@ -702,13 +703,13 @@ class Scanner(QObject):
         self._bridge_scan_signals(scan)
 
     def _resume_timelapse(self):
-        """Best-effort startup resume of a previously persisted timelapse.
+        """Rebuild a persisted non-terminal timelapse so unattended jobs survive restart.
 
-        A full rehydrate (rebuilding a :class:`TimeLapse` from its persisted
-        schedule/config) is follow-up work. For now, a persisted **non-terminal**
-        job is logged so the operator can decide: a stale ``RUNNING`` file is
-        treated as failed per the resumption policy, and the next slot is
-        evaluated rather than blocking a fresh start.
+        Terminal stores boot to IDLE (history stays in PlantDB). A stale
+        ``RUNNING`` slot is treated as an exhausted failure under the persisted
+        ``on_scan_failed`` policy. Auth is preflighted: without a working DB
+        session the job is *not* resumed (loud log) rather than run unwritable.
+        Never raises — a failed resume must not kill boot.
         """
         try:
             store = TimelapseStore.new_store_from_last()
@@ -717,11 +718,112 @@ class Scanner(QObject):
             return
         if store is None:
             return
-        logger.info(
-            f"Found persisted timelapse '{store.timelapse_id}' in state "
-            f"'{store.state}' — automatic resume construction is not yet wired "
-            f"(see dev_plan/timelapse_next.md); a stale RUNNING is treated as FAILED."
+        if store.state in ("completed", "failed", "cancelled"):
+            logger.info(
+                f"Persisted timelapse '{store.timelapse_id}' is terminal ('{store.state}') — booting IDLE."
+            )
+            return
+        try:
+            self._rebuild_timelapse(store)
+        except Exception as exc:
+            logger.error(f"Timelapse resume failed, booting IDLE: {exc}")
+
+    def _rebuild_timelapse(self, store) -> None:
+        """Rebuild and arm the job described by ``store`` (see _resume_timelapse)."""
+        bundle = store.extra or {}
+        config = bundle.get("config_snapshot")
+        if not config:
+            logger.warning(
+                f"Persisted timelapse '{store.timelapse_id}' has no config snapshot — cannot resume, booting IDLE. "
+                "Re-configure to start a fresh job (this overwrites the stale file)."
+            )
+            return
+        db_url = bundle.get("db_url")
+        token = bundle.get("api_token")
+        if db_url and token:
+            try:
+                # The constructor validates the token server-side: this doubles
+                # as the auth preflight for the resumed job.
+                PlantDBClient(db_url, api_token=token)
+            except Exception as exc:
+                logger.error(
+                    f"Persisted timelapse '{store.timelapse_id}' cannot authenticate PlantDB ({exc}) — "
+                    "not resuming. Re-authenticate and start a fresh job."
+                )
+                return
+        if db_url:
+            self.set_db_url(db_url)
+        if token and self.db_client is not None:
+            try:
+                self.set_api_token(token)
+            except Exception as exc:
+                logger.error(
+                    f"Persisted timelapse '{store.timelapse_id}' token rejected ({exc}) — not resuming."
+                )
+                return
+        self.set_base_name(store.timelapse_id)
+        self.config = dict(config)
+        tl = TimeLapse(
+            db_url=db_url,
+            cameras=self.cameras,
+            path=self.scan_path,
+            timelapse_name=store.timelapse_id,
+            config=dict(config),
+            power_manager=self.power_manager,
+            parent=self,
+            auto_start=False,
         )
+        if self.db_client is not None:
+            tl.db_client = self.db_client
+        tl.api_token = token
+        # Absolute truth is the persisted schedule + policy, not a recompute from now.
+        tl.schedule_times = [datetime.datetime.fromisoformat(s) for s in store.schedule_times]
+        tl.start_at = datetime.datetime.fromisoformat(store.start_at) if store.start_at else None
+        tl.warmup_sec = store.warmup_sec
+        tl.standby_threshold_sec = store.standby_threshold_sec
+        tl.grace_period = store.grace_period
+        tl.on_scan_failed = store.on_scan_failed
+        tl.scan_retries = store.scan_retries
+        tl.next_idx = store.next_idx
+        tl.current_idx = store.current_idx
+        tl.scans = [ScanRecord(**s) for s in store.scans]
+        self._wire_timelapse(tl)
+        self.timelapse = tl
+        self.timelapseChanged.emit(tl)
+        if store.state == "running":
+            self._resume_crashed_slot(tl, store)
+            return
+        logger.info(
+            f"Resumed timelapse '{store.timelapse_id}' at slot {tl.next_idx}/{len(tl.schedule_times)} — arming."
+        )
+        tl._setup_next_scan_timer()
+
+    def _resume_crashed_slot(self, tl, store) -> None:
+        """Close a slot that was RUNNING at crash as an exhausted failure (no execution)."""
+        idx = store.current_idx
+        n = len(tl.schedule_times)
+        scan_id = f"{store.timelapse_id}_{idx}" if n > 1 else store.timelapse_id
+        scheduled_iso = store.schedule_times[idx] if 0 <= idx < len(store.schedule_times) else None
+        tl.scans.append(ScanRecord(
+            scan_id=scan_id,
+            started_at=scheduled_iso,  # approximation: actual start lost in the crash
+            finished_at=datetime.datetime.now(timezone.utc).isoformat(),
+            status="failed",
+            error=None,
+        ))
+        if tl.on_scan_failed == "fail_timelapse":
+            tl.next_idx = idx
+            tl._fail_terminal(
+                f"Scan {idx} {scan_id} did not finish before the app restarted — "
+                "treated as failed per resumption policy."
+            )
+            return
+        tl.next_idx = idx + 1
+        logger.error(
+            f"Scan {idx} {scan_id} did not finish before the app restarted — "
+            "recorded failed per on_scan_failed=skip_scan."
+        )
+        tl._setup_next_scan_timer()
 
     # ------------------------------------------------------------------
     # Manual movement (CNC panel)

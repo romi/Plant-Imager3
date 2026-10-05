@@ -273,6 +273,113 @@ def test_active_snapshot_strips_api_token(scanner):
     assert "secret-token" not in json.dumps(snap)
 
 
+def _resume_store(state="scheduled", next_idx=0, current_idx=0, on_scan_failed="skip_scan",
+                  tmp_path=None, monkeypatch=None, slot_offset_s=3600):
+    """Persist a store file as a previous process would have left it."""
+    import datetime
+    from datetime import timezone
+    from plantimager.controller.scanner.timelapse_store import TimelapseStore, get_storage_dir
+    now = datetime.datetime.now(timezone.utc)
+    store = TimelapseStore(
+        timelapse_id="resumeExp",
+        mode="interval",
+        state=state,
+        schedule_times=[(now + datetime.timedelta(seconds=slot_offset_s + 60 * i)).isoformat() for i in range(2)],
+        next_idx=next_idx,
+        current_idx=current_idx,
+        warmup_sec=45,
+        standby_threshold_sec=600,
+        grace_period=120,
+        on_scan_failed=on_scan_failed,
+        scan_retries=0,
+        start_at=(now + datetime.timedelta(seconds=slot_offset_s)).isoformat(),
+        scans=[],
+        extra={
+            "config_snapshot": {
+                "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 0, "center_y": 0, "z": 10, "tilt": 0, "radius": 10, "n_points": 4}},
+                "Metadata": {"object": {"species": "test"}},
+                "timelapse": {"mode": "interval", "interval": 60, "n_shots": 2},
+            },
+            "db_url": "http://dummy",
+            "api_token": "resume-token",
+        },
+    )
+    store.save()
+    return store
+
+
+@pytest.fixture
+def resume_env(monkeypatch, tmp_path):
+    monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path))
+    with patch("plantimager.controller.scanner.powermanager.gpio.setup"), \
+         patch("plantimager.controller.scanner.powermanager.gpio.write"), \
+         patch("plantimager.controller.scanner.scanner.PlantDBClient") as mock_client:
+        yield mock_client
+
+
+def test_resume_rebuilds_scheduled_job(resume_env):
+    _resume_store()
+    scanner = Scanner()
+    tl = scanner.timelapse
+    assert tl is not None
+    assert tl.id == "resumeExp"
+    assert tl.next_idx == 0
+    assert tl.state == TimeLapseState.SCHEDULED
+    assert scanner.base_name == "resumeExp"
+    assert scanner.db_client is resume_env.return_value
+    # exclusivity holds for the resumed job
+    with pytest.raises(RuntimeError):
+        scanner.start_timelapse(minimal_timelapse_config())
+
+
+def test_resume_stale_running_skip_advances(resume_env):
+    _resume_store(state="running", next_idx=0, current_idx=0)
+    scanner = Scanner()
+    tl = scanner.timelapse
+    assert tl is not None
+    assert tl.next_idx == 1
+    assert tl.state == TimeLapseState.SCHEDULED
+    assert len(tl.scans) == 1
+    assert tl.scans[0].status == "failed"
+    assert tl.scans[0].scan_id == "resumeExp_0"
+
+
+def test_resume_stale_running_fail_goes_terminal(resume_env, qtbot):
+    _resume_store(state="running", next_idx=0, current_idx=0, on_scan_failed="fail_timelapse")
+    scanner = Scanner()
+    tl = scanner.timelapse
+    assert tl is not None
+    assert tl.state == TimeLapseState.FAILED
+    assert tl.next_idx == 0
+    assert tl.scans[0].status == "failed"
+
+
+def test_resume_dead_auth_refuses(resume_env):
+    resume_env.side_effect = ValueError("Invalid API token")
+    _resume_store()
+    scanner = Scanner()
+    assert scanner.timelapse is None
+    # scanner itself still usable for a fresh job
+    scanner.set_base_name("fresh")
+    assert scanner.base_name == "fresh"
+
+
+def test_resume_terminal_boots_idle(resume_env):
+    _resume_store(state="completed", next_idx=2)
+    assert Scanner().timelapse is None
+
+
+def test_resume_no_snapshot_refuses(resume_env):
+    import datetime
+    from datetime import timezone
+    from plantimager.controller.scanner.timelapse_store import TimelapseStore
+    now = datetime.datetime.now(timezone.utc)
+    store = TimelapseStore(timelapse_id="old", mode="interval", state="scheduled",
+                           schedule_times=[now.isoformat()], next_idx=0)
+    store.save()
+    assert Scanner().timelapse is None
+
+
 def test_one_shot_bare_stays_bare(scanner):
     scanner.set_base_name("bareExp")
     scanner.db_client = MagicMock()
