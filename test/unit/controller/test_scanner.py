@@ -274,7 +274,7 @@ def test_active_snapshot_strips_api_token(scanner):
 
 
 def _resume_store(state="scheduled", next_idx=0, current_idx=0, on_scan_failed="skip_scan",
-                  tmp_path=None, monkeypatch=None, slot_offset_s=3600):
+                  tmp_path=None, monkeypatch=None, slot_offset_s=3600, scans=None):
     """Persist a store file as a previous process would have left it."""
     import datetime
     from datetime import timezone
@@ -293,7 +293,7 @@ def _resume_store(state="scheduled", next_idx=0, current_idx=0, on_scan_failed="
         on_scan_failed=on_scan_failed,
         scan_retries=0,
         start_at=(now + datetime.timedelta(seconds=slot_offset_s)).isoformat(),
-        scans=[],
+        scans=scans if scans is not None else [],
         extra={
             "config_snapshot": {
                 "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 0, "center_y": 0, "z": 10, "tilt": 0, "radius": 10, "n_points": 4}},
@@ -327,9 +327,28 @@ def test_resume_rebuilds_scheduled_job(resume_env):
     assert tl.state == TimeLapseState.SCHEDULED
     assert scanner.base_name == "resumeExp"
     assert scanner.db_client is resume_env.return_value
+    # auth + schedule truth carried over for future persists
+    assert scanner._api_token == "resume-token"
+    assert tl.api_token == "resume-token"
+    from plantimager.controller.scanner.timelapse_store import TimelapseStore
+    assert [s.isoformat() for s in tl.schedule_times] == TimelapseStore.new_store_from_last().schedule_times
     # exclusivity holds for the resumed job
     with pytest.raises(RuntimeError):
         scanner.start_timelapse(minimal_timelapse_config())
+
+
+def test_resume_revives_scan_records(resume_env):
+    _resume_store(next_idx=1, current_idx=0, scans=[
+        {"scan_id": "resumeExp_0", "started_at": "2026-10-05T10:00:00+00:00",
+         "finished_at": "2026-10-05T10:00:05+00:00", "status": "succeeded", "error": None},
+    ])
+    scanner = Scanner()
+    tl = scanner.timelapse
+    assert tl is not None
+    assert tl.next_idx == 1
+    assert len(tl.scans) == 1
+    assert tl.scans[0].scan_id == "resumeExp_0"
+    assert tl.scans[0].status == "succeeded"
 
 
 def test_resume_stale_running_skip_advances(resume_env):
