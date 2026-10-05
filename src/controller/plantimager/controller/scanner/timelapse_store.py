@@ -237,7 +237,11 @@ class TimelapseStore:
 
         # Build thin ScanRecord objects – we avoid persisting the whole Scan
         # to keep the JSON small and independent of heavy objects.
-        scan_records = [asdict(ScanRecord.from_scan(s)) for s in getattr(tl_obj, "scans", [])]
+        # Exhausted failures are already ScanRecords — pass them through.
+        scan_records = [
+            asdict(s) if isinstance(s, ScanRecord) else asdict(ScanRecord.from_scan(s))
+            for s in getattr(tl_obj, "scans", [])
+        ]
 
         return TimelapseStore(
             timelapse_id=tl_obj.id,

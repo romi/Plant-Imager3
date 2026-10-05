@@ -484,7 +484,7 @@ class Scanner(QObject):
         if not self.config: raise RuntimeError("Config not set for scan")
         if not self.scan_path: raise RuntimeError("Path not set for scan")
         if not self.db_client: raise RuntimeError("DB client not set for scan")
-        if not getattr(self, "base_name", ""): raise RuntimeError("Base name not set for scan — call set_base_name first")
+        if not self.base_name: raise RuntimeError("Base name not set for scan — call set_base_name first")
         if not self.cameras: raise RuntimeError("No Cameras connected")
         self.power_manager.try_set_mode(PowerManagerMode.SCAN)
 
@@ -525,7 +525,7 @@ class Scanner(QObject):
         if self.timelapse is not None and self.timelapse.state in (
                 TimeLapseState.SCHEDULED, TimeLapseState.RUNNING):
             raise RuntimeError("A timelapse is already running")
-        if not getattr(self, "base_name", ""):
+        if not self.base_name:
             raise RuntimeError("Base name not set — call set_base_name first")
         name = self.base_name.strip()
         if self.timelapse is not None:
@@ -585,15 +585,19 @@ class Scanner(QObject):
                 raise RuntimeError("No configured timelapse — call config_timelapse first")
             tl = self.timelapse
             tl.arm()
-            if getattr(tl, "plantdb_timelapse_id", None) is not None and tl.db_client is not None:
-                tl.db_client.create_timelapse(tl.plantdb_timelapse_id, metadata=tl.config.get("Metadata", {}))
+            if tl.plantdb_timelapse_id is not None and tl.db_client is not None:
+                metadata = dict(tl.config.get("Metadata", {}))
+                metadata["timelapse"] = tl.summary_metadata()
+                # TODO(plantdb-timelapse-update): write the end-of-job timelapse summary
+                # once a timelapse-metadata update endpoint exists.
+                tl.db_client.create_timelapse(tl.plantdb_timelapse_id, metadata=metadata)
             return tl.id
 
         # config provided — backward compat or replace CONFIGURED/terminal
         if self.timelapse is not None and self.timelapse.state in (
                 TimeLapseState.SCHEDULED, TimeLapseState.RUNNING):
             raise RuntimeError("A timelapse is already running")
-        if not getattr(self, "base_name", ""):
+        if not self.base_name:
             raise RuntimeError("Base name not set — call set_base_name first")
         name = self.base_name.strip()
         if self.timelapse is not None:
@@ -613,8 +617,12 @@ class Scanner(QObject):
         if self.db_client is not None:
             tl.db_client = self.db_client
         # Create PlantDB timelapse container if this is a multi-scan timelapse
-        if getattr(tl, "plantdb_timelapse_id", None) is not None and tl.db_client is not None:
-            tl.db_client.create_timelapse(tl.plantdb_timelapse_id, metadata=config.get("Metadata", {}))
+        if tl.plantdb_timelapse_id is not None and tl.db_client is not None:
+            metadata = dict(config.get("Metadata", {}))
+            metadata["timelapse"] = tl.summary_metadata()
+            # TODO(plantdb-timelapse-update): write the end-of-job timelapse summary
+            # once a timelapse-metadata update endpoint exists.
+            tl.db_client.create_timelapse(tl.plantdb_timelapse_id, metadata=metadata)
         self._wire_timelapse(tl)
         self.timelapse = tl
         self.timelapseChanged.emit(tl)

@@ -195,7 +195,7 @@ class TimeLapse(QObject):
     light_policy: dict  # lights mode
     on_scan_failed: str  # "fail_timelapse" or "skip_scan"
     scan_retries: int  # per-slot re-attempts before the policy applies
-    scans: list[Scan]
+    scans: list  # Scan on success, ScanRecord on exhausted failure
     next_idx: int  # index of next-scheduled scan
     current_idx: int
     _state: TimeLapseState
@@ -224,7 +224,13 @@ class TimeLapse(QObject):
         self.id = timelapse_name
         self.config = config
         self.power_manager = power_manager
-        self.scans: list[Scan] = []
+        if cnc is not None and getattr(power_manager, "get_cnc", None) is not None:
+            try:
+                if power_manager.get_cnc() is None:
+                    power_manager.cnc = cnc
+            except Exception:
+                pass
+        self.scans: list = []  # Scan on success, ScanRecord on exhausted failure
         self._state = TimeLapseState.CONFIGURED if not auto_start else TimeLapseState.SCHEDULED
         self.plantdb_timelapse_id: str | None = None
 
@@ -430,9 +436,11 @@ class TimeLapse(QObject):
         Grace/warmup is handled by ``_setup_next_scan_timer``; this method never
         blocks. If called early (``delta > grace``) it re-arms the timer; if
         ``delta <= -grace`` the scan is skipped per persistence policy (one
-        dataset per time, ``skip`` without catch-up). Otherwise creates a
-        ``Scan`` with ``f"{plantdb_timelapse_id}_{index}" if plantdb else base_name`` and runs it synchronously,
-        transitioning ``SCHEDULED → RUNNING → SCHEDULED`` (or ``FAILED``).
+        dataset per time, ``skip`` without catch-up). Otherwise runs the scan
+        synchronously with up to ``scan_retries`` immediate re-attempts
+        (abandoned once the next slot is within grace), then applies
+        ``on_scan_failed``: ``skip_scan`` records the failure and advances,
+        ``fail_timelapse`` ends the job terminal ``FAILED``.
 
         Parameters
         ----------
@@ -479,35 +487,86 @@ class TimeLapse(QObject):
             )
             return
 
+        scan_id = f"{self.plantdb_timelapse_id}_{index}" if self.plantdb_timelapse_id is not None else self.id
+        started_iso = datetime.datetime.now(timezone.utc).isoformat()
+        excuse: Exception | None = None
+        for attempt in range(self.scan_retries + 1):
+            if attempt > 0:
+                if not self._slot_retry_allowed():
+                    logger.warning(
+                        f"Scan {index} retry abandoned — next slot due within grace."
+                    )
+                    break
+                logger.warning(f"Retrying scan {index} (attempt {attempt + 1} of {self.scan_retries + 1}).")
+            scan = self._build_slot_scan(index, scheduled, scan_id)
+            self.scanCreated.emit(scan)
+            self.state = TimeLapseState.RUNNING
+            try:
+                scan.scan()
+            except Exception as exc:
+                excuse = exc
+                logger.error(f"Scan {index} {scan_id} failed on attempt {attempt + 1}: {exc}")
+                continue
+            self.scans.append(scan)
+            self.state = TimeLapseState.SCHEDULED
+            self._persist_state()
+            return
+        self._apply_failure_policy(index, scan_id, started_iso, excuse)
+
+    def summary_metadata(self) -> dict:
+        """Static summary for the PlantDB timelapse container (known at arm time)."""
+        return {
+            "id": self.id,
+            "mode": self.mode.value,
+            "n_scans": len(self.schedule_times),
+            "schedule_times": [dt.isoformat() for dt in self.schedule_times],
+            "on_scan_failed": self.on_scan_failed,
+            "scan_retries": self.scan_retries,
+            "created_at": datetime.datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _build_slot_scan(self, index: int, scheduled: datetime.datetime, scan_id: str) -> Scan:
+        """Build a fresh ``Scan`` for one attempt at ``schedule_times[index]``."""
         cnc = self.power_manager.get_cnc()
         db_client = self.db_client or PlantDBClient(self.db_url) if self.db_url else None
-        if getattr(self, "plantdb_timelapse_id", None) is not None:
-            scan_id = f"{self.plantdb_timelapse_id}_{index}"
+        scan_path = getattr(self, "scan_path", self.path)
+        if self.plantdb_timelapse_id is not None:
             scheduled_iso = scheduled.astimezone(timezone.utc).isoformat()
-            scan_path = getattr(self, "scan_path", self.path)
-            scan = Scan(cnc, db_client, self.cameras, scan_path, scan_id, self.config, parent=self,
+            return Scan(cnc, db_client, self.cameras, scan_path, scan_id, self.config, parent=self,
                         timelapse_id=self.plantdb_timelapse_id, timelapse_index=index,
                         timelapse_scheduled=scheduled_iso)
-        else:
-            scan_id = self.id
-            scan_path = getattr(self, "scan_path", self.path)
-            scan = Scan(cnc, db_client, self.cameras, scan_path, scan_id, self.config, parent=self)
-        self.scanCreated.emit(scan)
-        self.state = TimeLapseState.RUNNING
-        try:
-            scan.scan()
-            self.scans.append(scan)
-        except Exception as exc:
-            logger.error(f"Scan {self.next_idx} {scan_id} failed: {exc}")
-            self.scans.append(scan)
+        return Scan(cnc, db_client, self.cameras, scan_path, scan_id, self.config, parent=self)
+
+    def _slot_retry_allowed(self) -> bool:
+        """Whether another immediate attempt fits before the next slot's grace window."""
+        if self.next_idx + 1 >= len(self.schedule_times):
+            return True
+        deadline = self.schedule_times[self.next_idx + 1]
+        if deadline.tzinfo is None:
+            deadline = deadline.replace(tzinfo=timezone.utc)
+        now = datetime.datetime.now(timezone.utc)
+        return (deadline - now).total_seconds() > self.grace_period
+
+    def _apply_failure_policy(self, index: int, scan_id: str, started_iso: str, exc: Exception | None) -> None:
+        """Handle an exhausted slot: record ``failed`` and apply ``on_scan_failed``."""
+        from plantimager.controller.scanner.timelapse_store import ScanRecord
+        finished_iso = datetime.datetime.now(timezone.utc).isoformat()
+        self.scans.append(ScanRecord(scan_id=scan_id, started_at=started_iso,
+                                     finished_at=finished_iso, status="failed", error=None))
+        message = f"Scan {index} {scan_id} failed: {exc}"
+        if self.on_scan_failed == "fail_timelapse":
+            logger.error(message + " — ending timelapse per on_scan_failed=fail_timelapse.")
+            # TODO(plantdb-timelapse-update): write the end-of-job timelapse summary
+            # once a timelapse-metadata update endpoint exists.
             self.state = TimeLapseState.FAILED
-            self.errorOccurred.emit(str(exc))
             self._persist_state()
-            raise
-        finally:
-            if self._state == TimeLapseState.RUNNING:
-                self.state = TimeLapseState.SCHEDULED
+            self.errorOccurred.emit(str(exc))
+            self.scanFinished.emit()
+            return
+        logger.error(message + " — skipping per on_scan_failed=skip_scan.")
+        self.state = TimeLapseState.SCHEDULED
         self._persist_state()
+        self.errorOccurred.emit(str(exc))
 
     @Slot()
     def _trigger_next_scan(self):
@@ -517,17 +576,25 @@ class TimeLapse(QObject):
         Called by ``_next_scan_timer``. Wraps ``scan()`` (skipped scans do not
         raise), increments ``next_idx``, persists, and either completes
         (``COMPLETED`` + ``scanFinished``) or re-arms via
-        ``_setup_next_scan_timer``.
+        ``_setup_next_scan_timer``. A terminal ``FAILED`` state short-circuits
+        before (and after) the scan call so a stray timer can neither re-run
+        the failed slot nor overwrite the terminal state.
         """
+        if self._state == TimeLapseState.FAILED:
+            return
         try:
             self.scan(self.next_idx)
         except Exception:
             pass
+        if self._state == TimeLapseState.FAILED:
+            return  # terminal failure already reported (errorOccurred + scanFinished)
         self.next_idx += 1
         self._persist_state()
         if self.next_idx >= len(self.schedule_times):
             self.state = TimeLapseState.COMPLETED
             self.scanFinished.emit()
+            # TODO(plantdb-timelapse-update): write the end-of-job timelapse summary
+            # once a timelapse-metadata update endpoint exists.
             self._persist_state()
             self._next_scan_timer.stop()
         else:

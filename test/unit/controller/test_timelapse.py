@@ -442,15 +442,12 @@ def test_scan_success_transitions_and_deterministic_id(fake_timers, tmp_xdg, moc
         assert scan_instances[1][0] == "tl-abc_1"
 
 
-def test_scan_failure_goes_failed_and_emits(fake_timers, tmp_xdg, mock_gpio, mock_plantdb, qtbot):
+def test_scan_failure_skip_records_and_advances(fake_timers, tmp_xdg, mock_gpio, mock_plantdb, qtbot):
+    # default on_scan_failed=skip_scan: no raise, no FAILED transient, honest record
     def fail_ctor(*a, **kw):
         inst = MagicMock()
         inst.scan.side_effect = RuntimeError("boom")
         inst.scan_id = kw.get("scan_id", "x")
-        inst._start_time = None
-        inst._stop_time = None
-        inst.status = "failed"
-        inst.error = {"msg": "boom"}
         return inst
 
     with patch("plantimager.controller.scanner.timelapse.Scan", side_effect=fail_ctor):
@@ -463,11 +460,108 @@ def test_scan_failure_goes_failed_and_emits(fake_timers, tmp_xdg, mock_gpio, moc
         tl.schedule_times = [datetime.datetime.now(timezone.utc) - datetime.timedelta(seconds=5)]
         tl.next_idx = 0
         tl.state = TimeLapseState.SCHEDULED
+        assert tl._cnc_ready()
         with qtbot.waitSignal(tl.errorOccurred, timeout=1000) as blocker:
-            with pytest.raises(RuntimeError):
-                tl.scan(0)
+            tl.scan(0)  # does not raise
             assert "boom" in blocker.args[0]
+        assert tl.state == TimeLapseState.SCHEDULED
+        assert len(tl.scans) == 1
+        assert tl.scans[0].status == "failed"
+        assert tl.scans[0].scan_id == "tl-fail"
+
+
+def test_scan_failure_fail_timelapse_goes_terminal(fake_timers, tmp_xdg, mock_gpio, mock_plantdb, qtbot):
+    def fail_ctor(*a, **kw):
+        inst = MagicMock()
+        inst.scan.side_effect = RuntimeError("boom")
+        inst.scan_id = kw.get("scan_id", "x")
+        return inst
+
+    with patch("plantimager.controller.scanner.timelapse.Scan", side_effect=fail_ctor):
+        cfg = minimal_config(mode="interval", interval=60, n_shots=2, grace_period=120,
+                             on_scan_failed="fail_timelapse")
+        from plantimager.controller.scanner.powermanager import PowerManager
+        from plantimager.controller.scanner.dummy_cnc import DummyCNC
+        pm = PowerManager(warmup_period=30)
+        pm.cnc = DummyCNC()
+        tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-failterm", config=cfg, power_manager=pm)
+        tl.schedule_times = [datetime.datetime.now(timezone.utc) - datetime.timedelta(seconds=5),
+                             datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=3600)]
+        tl.next_idx = 0
+        tl.state = TimeLapseState.SCHEDULED
+        assert tl._cnc_ready()
+        finished = MagicMock()
+        tl.scanFinished.connect(finished)
+        with qtbot.waitSignal(tl.errorOccurred, timeout=1000):
+            tl.scan(0)  # does not raise
         assert tl.state == TimeLapseState.FAILED
+        assert tl.next_idx == 0  # pinned for resume
+        assert tl.scans[0].status == "failed"
+        finished.assert_called_once()
+        # _trigger_next_scan must not overwrite FAILED with COMPLETED
+        finished.reset_mock()
+        tl._trigger_next_scan()
+        assert tl.state == TimeLapseState.FAILED
+        assert tl.next_idx == 0
+        finished.assert_not_called()
+
+
+def test_scan_retries_then_succeeds(fake_timers, tmp_xdg, mock_gpio, mock_plantdb):
+    calls = []
+
+    def flaky_ctor(*a, **kw):
+        inst = MagicMock()
+        inst.scan_id = kw.get("scan_id", "x")
+        n = len(calls)
+        calls.append(inst)
+        if n < 2:
+            inst.scan.side_effect = RuntimeError(f"flaky {n}")
+        return inst
+
+    with patch("plantimager.controller.scanner.timelapse.Scan", side_effect=flaky_ctor):
+        cfg = minimal_config(mode="interval", interval=3600, n_shots=1, grace_period=120, scan_retries=2)
+        from plantimager.controller.scanner.powermanager import PowerManager
+        from plantimager.controller.scanner.dummy_cnc import DummyCNC
+        pm = PowerManager(warmup_period=30)
+        pm.cnc = DummyCNC()
+        tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-retry", config=cfg, power_manager=pm)
+        tl.schedule_times = [datetime.datetime.now(timezone.utc) - datetime.timedelta(seconds=5)]
+        tl.next_idx = 0
+        tl.state = TimeLapseState.SCHEDULED
+        assert tl._cnc_ready()
+        tl.scan(0)
+        assert len(calls) == 3
+        assert tl.state == TimeLapseState.SCHEDULED
+        assert len(tl.scans) == 1
+
+
+def test_scan_retry_abandoned_at_next_slot_deadline(fake_timers, tmp_xdg, mock_gpio, mock_plantdb):
+    calls = []
+
+    def fail_ctor(*a, **kw):
+        inst = MagicMock()
+        inst.scan.side_effect = RuntimeError("boom")
+        inst.scan_id = kw.get("scan_id", "x")
+        calls.append(inst)
+        return inst
+
+    with patch("plantimager.controller.scanner.timelapse.Scan", side_effect=fail_ctor):
+        now = datetime.datetime.now(timezone.utc)
+        cfg = minimal_config(mode="interval", interval=60, n_shots=2, grace_period=120, scan_retries=3)
+        from plantimager.controller.scanner.powermanager import PowerManager
+        from plantimager.controller.scanner.dummy_cnc import DummyCNC
+        pm = PowerManager(warmup_period=30)
+        pm.cnc = DummyCNC()
+        tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-deadline", config=cfg, power_manager=pm)
+        # next slot 10s out — inside grace, so no retry may overrun it
+        tl.schedule_times = [now - datetime.timedelta(seconds=5), now + datetime.timedelta(seconds=10)]
+        tl.next_idx = 0
+        tl.state = TimeLapseState.SCHEDULED
+        assert tl._cnc_ready()
+        tl.scan(0)
+        assert len(calls) == 1
+        assert tl.state == TimeLapseState.SCHEDULED
+        assert tl.scans[0].status == "failed"
 
 
 # ---------------------------------------------------------------------------

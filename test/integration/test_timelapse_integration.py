@@ -143,7 +143,9 @@ def test_power_auto_vs_scan(tmp_xdg, fake_timers):
         pm = PowerManager(warmup_period=5)
         from freezegun import freeze_time
         with freeze_time("2026-08-28 12:00:00+00:00"):
-            tl = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-power", config=cfg_far, power_manager=pm)
+            # auto_start=False: construction must not touch power; the manual
+            # setups below drive the AUTO vs SCAN decision
+            tl = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-power", config=cfg_far, power_manager=pm, auto_start=False)
             far = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=3600)
             tl.schedule_times = [far]
             tl.next_idx = 0
@@ -155,7 +157,7 @@ def test_power_auto_vs_scan(tmp_xdg, fake_timers):
         cfg_close = _minimal_config(mode="interval", interval=60, n_shots=1, grace_period=10, standby_threshold_sec=600, warmup_period=5)
         pm2 = PowerManager(warmup_period=5)
         with freeze_time("2026-08-28 12:00:00+00:00"):
-            tl2 = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-power2", config=cfg_close, power_manager=pm2)
+            tl2 = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-power2", config=cfg_close, power_manager=pm2, auto_start=False)
             close = datetime.datetime.now(timezone.utc) + datetime.timedelta(seconds=100)
             tl2.schedule_times = [close]
             tl2.next_idx = 0
@@ -186,6 +188,9 @@ def test_deterministic_id_and_persist(tmp_xdg, fake_timers):
             pm = PowerManager(warmup_period=5)
             with patch.object(TimeLapse, "_setup_next_scan_timer", lambda self: None):
                 tl = TimeLapse(cnc=DummyCNC(), db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-id", config=cfg, power_manager=pm)
+            # arming was bypassed above: enter SCAN explicitly to mirror an armed job
+            from plantimager.controller.scanner.powermanager import PowerManagerMode
+            assert pm.try_set_mode(PowerManagerMode.SCAN) is True
             sched = datetime.datetime(2025, 11, 24, 10, 0, 0, tzinfo=timezone.utc)
             tl.schedule_times = [sched]
             tl.next_idx = 0
