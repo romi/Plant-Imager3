@@ -109,8 +109,6 @@ def main():
         db_client = PlantDBClient(db_url)
         db_client.login("admin", "admin")
         base_name = os.getenv("PI3_TIMELAPSE_BASE", "dummy_tl")
-        api_token = db_client.create_api_token(600, {base_name: (Permission.WRITE, Permission.CREATE, Permission.READ)})
-        rpc.set_api_token(api_token)
         rpc.set_db_url(db_url)
         rpc.set_base_name(base_name)
 
@@ -125,6 +123,21 @@ def main():
 
         snap = rpc.config_timelapse(conf)
         print(f"CONFIGURED {snap['state']} {snap['next_idx']}/{len(snap['schedule_times'])} next={snap['schedule_times'][0] if snap['schedule_times'] else '-'}")
+        # Long-lived token covering the whole span: a single glob entry
+        # ({base}* matches the container and every base_N scan). Issued now
+        # (post-Configure, schedule known) so the first scan never races it.
+        from datetime import datetime
+        sched = snap["schedule_times"]
+        span = 0.0
+        if len(sched) >= 2:
+            span = max(0.0, (datetime.fromisoformat(sched[-1]) - datetime.fromisoformat(sched[0])).total_seconds())
+        token_exp = int(span + snap.get("grace_period", 120) + 24 * 3600)
+        api_token = db_client.create_api_token(
+            token_exp,
+            {f"{base_name}*": (Permission.WRITE, Permission.CREATE, Permission.READ)},
+        )
+        rpc.set_api_token(api_token)
+        print(f"API token valid ~{token_exp // 3600}h for '{base_name}*'.")
         n = len(snap['schedule_times'])
         print(f"GUI should show CONFIGURED 0/{n} (pencil+ok). Start via WebUI start_timelapse() with no args.")
         print("Waiting for operator to start… Ctrl+C to discard and exit.")
