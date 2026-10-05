@@ -219,6 +219,9 @@ class TimeLapse(QObject):
         super().__init__(parent)
         self.db_url = db_url
         self.db_client = PlantDBClient(db_url) if db_url else None
+        # API token for PlantDB writes, assigned by Scanner (owns auth).
+        # Persisted into the store bundle so a rebooted job stays writable.
+        self.api_token: str | None = None
         self.cameras = cameras
         self.path = path
         self.id = timelapse_name

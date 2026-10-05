@@ -37,7 +37,10 @@ def minimal_timelapse_config(mode="interval", **overrides):
 
 
 @pytest.fixture
-def scanner(monkeypatch):
+def scanner(monkeypatch, tmp_path):
+    # Isolate XDG: persisting tests must not touch (or read) the real store —
+    # a leaked SCHEDULED file would otherwise trigger resume on next boot.
+    monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path))
     # Patch GPIO so a real PowerManager can be constructed safely.
     with patch("plantimager.controller.scanner.powermanager.gpio.setup"), \
          patch("plantimager.controller.scanner.powermanager.gpio.write"):
@@ -259,6 +262,15 @@ def test_config_replace_and_cancel_discard(scanner):
     scanner.cancel_timelapse()
     assert scanner.timelapse is None
     assert scanner.get_active_timelapse() is None
+
+
+def test_active_snapshot_strips_api_token(scanner):
+    import json
+    scanner.set_base_name("tokExp")
+    scanner._api_token = "secret-token"
+    scanner.config_timelapse(minimal_timelapse_config())
+    snap = scanner.get_active_timelapse()
+    assert "secret-token" not in json.dumps(snap)
 
 
 def test_one_shot_bare_stays_bare(scanner):

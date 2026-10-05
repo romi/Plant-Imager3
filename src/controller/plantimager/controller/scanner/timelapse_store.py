@@ -243,6 +243,21 @@ class TimelapseStore:
             for s in getattr(tl_obj, "scans", [])
         ]
 
+        # Resume bundle: everything a rebooted job needs beyond the schedule —
+        # config sections, DB endpoint, and the API token (the store file is
+        # 0600 via mkstemp; the token is stripped from QML-facing snapshots).
+        config = getattr(tl_obj, "config", None) or {}
+        snapshot = {k: config[k] for k in ("ScanPath", "Metadata", "timelapse") if k in config}
+        for cam in getattr(tl_obj, "cameras", None) or []:
+            name = getattr(cam, "name", None)
+            if name and name in config:
+                snapshot[name] = config[name]
+        extra = {
+            "config_snapshot": snapshot,
+            "db_url": getattr(tl_obj, "db_url", None),
+            "api_token": getattr(tl_obj, "api_token", None),
+        }
+
         return TimelapseStore(
             timelapse_id=tl_obj.id,
             mode=_enum_to_str(tl_obj.mode),
@@ -257,5 +272,5 @@ class TimelapseStore:
             scan_retries=getattr(tl_obj, "scan_retries", 0),
             start_at=_dt_to_iso(tl_obj.start_at),
             scans=scan_records,
-            extra={},
+            extra=extra,
         )

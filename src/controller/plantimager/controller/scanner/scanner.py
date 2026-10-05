@@ -544,6 +544,7 @@ class Scanner(QObject):
         )
         if self.db_client is not None:
             tl.db_client = self.db_client
+        tl.api_token = self._api_token
         self._wire_timelapse(tl)
         self.timelapse = tl
         self.timelapseChanged.emit(tl)
@@ -616,6 +617,7 @@ class Scanner(QObject):
         # Reuse the single database connection instead of re-deriving it.
         if self.db_client is not None:
             tl.db_client = self.db_client
+        tl.api_token = self._api_token
         # Create PlantDB timelapse container if this is a multi-scan timelapse
         if tl.plantdb_timelapse_id is not None and tl.db_client is not None:
             metadata = dict(config.get("Metadata", {}))
@@ -646,7 +648,12 @@ class Scanner(QObject):
             return None
         try:
             store = TimelapseStore.from_timelapse(self.timelapse)
-            return store._as_serialisable_dict()
+            data = store._as_serialisable_dict()
+            # Never expose the persisted API token to QML/RPC readers.
+            extra = data.get("extra")
+            if isinstance(extra, dict):
+                extra.pop("api_token", None)
+            return data
         except Exception as exc:
             logger.error(f"Failed to serialise active timelapse: {exc}")
             return None

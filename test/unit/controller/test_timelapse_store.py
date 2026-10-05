@@ -158,6 +158,36 @@ class TimelapseStoreTest(unittest.TestCase):
         self.assertEqual(legacy_store.on_scan_failed, "skip_scan")
         self.assertEqual(legacy_store.scan_retries, 0)
 
+    def test_resume_bundle_roundtrip_and_perms(self):
+        """config snapshot + db_url + api_token persist; file stays 0600."""
+        import stat
+        dummy = DummyTimeLapse()
+        dummy.config = {
+            "ScanPath": {"class_name": "Circle", "kwargs": {}},
+            "Metadata": {"object": {"species": "test"}},
+            "timelapse": {"mode": "interval"},
+            "cam1": {"res_x": 640},
+        }
+        cam1 = mock.Mock()
+        cam1.name = "cam1"
+        cam2 = mock.Mock()
+        cam2.name = "cam2"  # no config section → excluded from snapshot
+        dummy.cameras = [cam1, cam2]
+        dummy.db_url = "http://dummy"
+        dummy.api_token = "secret-token"
+        store = TimelapseStore.from_timelapse(dummy)
+        self.assertEqual(store.extra["config_snapshot"]["ScanPath"]["class_name"], "Circle")
+        self.assertIn("cam1", store.extra["config_snapshot"])
+        self.assertNotIn("cam2", store.extra["config_snapshot"])
+        self.assertEqual(store.extra["db_url"], "http://dummy")
+        self.assertEqual(store.extra["api_token"], "secret-token")
+        store.save()
+        mode = stat.S_IMODE(self._store_path().stat().st_mode)
+        self.assertEqual(mode, 0o600)
+        loaded = TimelapseStore.new_store_from_last()
+        self.assertEqual(loaded.extra["config_snapshot"]["Metadata"]["object"]["species"], "test")
+        self.assertEqual(loaded.extra["api_token"], "secret-token")
+
     def test_load_missing_file_returns_none(self):
         """When the JSON file does not exist, new_store_from_last should return None."""
         # Ensure the file truly does not exist
