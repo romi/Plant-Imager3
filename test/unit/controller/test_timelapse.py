@@ -442,6 +442,38 @@ def test_scan_success_transitions_and_deterministic_id(fake_timers, tmp_xdg, moc
         assert scan_instances[1][0] == "tl-abc_1"
 
 
+def test_scan_persists_running_on_entry(fake_timers, tmp_xdg, mock_gpio, mock_plantdb):
+    # A crash mid-scan must reboot into a stale-RUNNING file (resume closes it
+    # per policy) — so scan() persists the RUNNING state before executing.
+    seen = {}
+
+    def ctor(*a, **kw):
+        inst = MagicMock()
+        inst.scan_id = kw.get("scan_id", "x")
+
+        def do_scan():
+            from plantimager.controller.scanner.timelapse_store import TimelapseStore
+            seen["state"] = TimelapseStore.new_store_from_last().state
+
+        inst.scan.side_effect = do_scan
+        return inst
+
+    with patch("plantimager.controller.scanner.timelapse.Scan", side_effect=ctor):
+        cfg = minimal_config(mode="interval", interval=60, n_shots=1, grace_period=120)
+        from plantimager.controller.scanner.powermanager import PowerManager
+        from plantimager.controller.scanner.dummy_cnc import DummyCNC
+        pm = PowerManager(warmup_period=30)
+        pm.cnc = DummyCNC()
+        tl = TimeLapse(db_url="http://dummy", cameras=[], path=[], timelapse_name="tl-run", config=cfg, power_manager=pm)
+        tl.schedule_times = [datetime.datetime.now(timezone.utc) - datetime.timedelta(seconds=5)]
+        tl.next_idx = 0
+        tl.state = TimeLapseState.SCHEDULED
+        assert tl._cnc_ready()
+        tl.scan(0)
+        assert seen["state"] == "running"
+        assert tl.state == TimeLapseState.SCHEDULED
+
+
 def test_scan_failure_skip_records_and_advances(fake_timers, tmp_xdg, mock_gpio, mock_plantdb, qtbot):
     # default on_scan_failed=skip_scan: no raise, no FAILED transient, honest record
     def fail_ctor(*a, **kw):

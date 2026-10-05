@@ -504,6 +504,10 @@ class TimeLapse(QObject):
             scan = self._build_slot_scan(index, scheduled, scan_id)
             self.scanCreated.emit(scan)
             self.state = TimeLapseState.RUNNING
+            # Persist the RUNNING state before executing: a crash from here on
+            # reboots into a stale-RUNNING file, and resume closes the slot as
+            # an exhausted failure instead of silently re-running it.
+            self._persist_state()
             try:
                 scan.scan()
             except Exception as exc:
