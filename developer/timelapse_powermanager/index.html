@@ -12,13 +12,13 @@
         <meta name="author" content="ROMI Team">
       
       
-        <link rel="canonical" href="https://github.com/romi/Plant-Imager3/developer/architecture/">
+        <link rel="canonical" href="https://github.com/romi/Plant-Imager3/developer/timelapse_powermanager/">
       
       
-        <link rel="prev" href="../guidelines/">
+        <link rel="prev" href="../RPC/">
       
       
-        <link rel="next" href="../RPC/">
+        <link rel="next" href="../full_stack_dev_setup/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>System Architecture - Plant-Imager3</title>
+        <title>Timelapse & PowerManager - Plant-Imager3</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#system-architecture" class="md-skip">
+        <a href="#timelapse-powermanager" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              System Architecture
+              Timelapse &amp; PowerManager
             
           </span>
         </div>
@@ -2692,37 +2692,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    System Architecture
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
         
   
   
@@ -2738,220 +2711,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zmq-based-rpc-communications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ZMQ-based RPC Communications
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ZMQ-based RPC Communications">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rpc-framework" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPC Framework
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="RPC Framework">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rpcclient" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPCClient
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rpcserver" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPCServer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rpcsignal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPCSignal
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rpcproperty" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPCProperty
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#communication-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Communication Flow
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#application-layout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Application Layout
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Application Layout">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-central-pyqt-application" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Central PyQt Application
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-raspberry-pi-camera" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Raspberry Pi Camera
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-web-ui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Web UI
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-grbl-based-plant-scanner" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. GRBL-based Plant Scanner
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-remote-plantdb-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Remote PlantDB REST API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#communication-diagram" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Communication Diagram
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conclusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conclusion
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2989,10 +2748,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../timelapse_powermanager/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timelapse &amp; PowerManager
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -3008,6 +2794,203 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timelapse-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TimeLapse state machine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powermanager-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerManager state machine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequence-diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequence diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sequence diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#steady-state-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steady-state cycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failure-retry-and-cancel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure, retry, and cancel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#signals-and-slots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signals and slots
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Signals and slots">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timelapse-timelapsepy209-214" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TimeLapse (timelapse.py:209-214)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#powermanager-powermanagerpy105-108" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerManager (powermanager.py:105-108)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-object-call-matrix-maintainer-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-object call matrix (maintainer reference)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistence-and-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistence and recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -3142,34 +3125,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#zmq-based-rpc-communications" class="md-nav__link">
+  <a href="#class-diagram" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ZMQ-based RPC Communications
+        Class diagram
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ZMQ-based RPC Communications">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timelapse-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TimeLapse state machine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powermanager-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerManager state machine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequence-diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequence diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sequence diagrams">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#rpc-framework" class="md-nav__link">
+  <a href="#steady-state-cycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        RPC Framework
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="RPC Framework">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rpcclient" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPCClient
+        Steady-state cycle
       
     </span>
   </a>
@@ -3177,48 +3181,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#rpcserver" class="md-nav__link">
+  <a href="#failure-retry-and-cancel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        RPCServer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rpcsignal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPCSignal
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rpcproperty" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPCProperty
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#communication-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Communication Flow
+        Failure, retry, and cancel
       
     </span>
   </a>
@@ -3231,22 +3197,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#application-layout" class="md-nav__link">
+  <a href="#timers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Application Layout
+        Timers
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Application Layout">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#signals-and-slots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signals and slots
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Signals and slots">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-central-pyqt-application" class="md-nav__link">
+  <a href="#timelapse-timelapsepy209-214" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Central PyQt Application
+        TimeLapse (timelapse.py:209-214)
       
     </span>
   </a>
@@ -3254,10 +3231,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-raspberry-pi-camera" class="md-nav__link">
+  <a href="#powermanager-powermanagerpy105-108" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Raspberry Pi Camera
+        PowerManager (powermanager.py:105-108)
       
     </span>
   </a>
@@ -3265,32 +3242,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-web-ui" class="md-nav__link">
+  <a href="#cross-object-call-matrix-maintainer-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Web UI
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-grbl-based-plant-scanner" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. GRBL-based Plant Scanner
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-remote-plantdb-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Remote PlantDB REST API
+        Cross-object call matrix (maintainer reference)
       
     </span>
   </a>
@@ -3303,10 +3258,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#communication-diagram" class="md-nav__link">
+  <a href="#configuration-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Communication Diagram
+        Configuration reference
       
     </span>
   </a>
@@ -3314,10 +3269,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#conclusion" class="md-nav__link">
+  <a href="#persistence-and-recovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Conclusion
+        Persistence and recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
       
     </span>
   </a>
@@ -3344,251 +3310,504 @@
   
 
 
-<h1 id="system-architecture">System Architecture<a class="headerlink" href="#system-architecture" title="Permanent link">Link</a></h1>
-<p>This document describes the architecture of the Plant-Imager3 system, including the communication between components and the overall application layout.</p>
+<h1 id="timelapse-powermanager">Timelapse &amp; PowerManager<a class="headerlink" href="#timelapse-powermanager" title="Permanent link">Link</a></h1>
+<p>Keywords: <code>TimeLapse</code>, <code>PowerManager</code>, <code>TimeLapseState</code>, <code>PowerManagerMode</code>, <code>arm_for_scan</code>, <code>cnc_ready</code>, <code>QTimer</code>, signals/slots, <code>Scanner</code>, <code>TimelapseStore</code>, <code>TimelapsePanel.qml</code></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">Link</a></h2>
-<p>The Plant-Imager3 system consists of several components that work together to provide a complete plant imaging solution:</p>
+<p><code>TimeLapse</code> (<code>src/controller/plantimager/controller/scanner/timelapse.py:183</code>) schedules and runs a sequence of scans at computed UTC times. <code>PowerManager</code> (<code>src/controller/plantimager/controller/scanner/powermanager.py:102</code>) owns all power policy: it decides whether the rig stays powered or drops to idle between scans, and it owns the CNC connection lifecycle.</p>
+<p>The coupling direction is fixed:</p>
+<ul>
+<li><code>TimeLapse</code> <strong>drives</strong> <code>PowerManager</code> via plain method calls (<code>arm_for_scan</code>, <code>get_cnc</code>, <code>try_set_mode</code>, <code>mode</code> reads).</li>
+<li><code>PowerManager</code> <strong>notifies</strong> <code>TimeLapse</code> via a single Qt signal/slot (<code>cnc_ready</code> → <code>TimeLapse.cnc_ready</code>).</li>
+</ul>
+<p>Neither class uses <code>QStateMachine</code>. Both are enum-plus-property state holders (<code>TimeLapseState</code>, <code>PowerManagerMode</code>) with <code>QTimer</code>-driven transitions and Qt signals for QML/RPC propagation. Entry point is <code>Scanner</code> (<code>src/controller/plantimager/controller/scanner/scanner.py:552</code>), which constructs, wires, and forwards signals to QML (<code>TimelapsePanel.qml</code>) and RPC (<code>rpc_controller.py:216</code>).</p>
+<p>PlantDB context (brief): a multi-scan job also creates a PlantDB timelapse container holding per-scan metadata (<code>timelapse.json</code> marker, <code>metadata.timelapse={id,index,scheduled}</code>). That storage layout is documented elsewhere; see <code>See Also</code> below. This page covers the controller-side scheduler and power policy only.</p>
+<h2 id="class-diagram">Class diagram<a class="headerlink" href="#class-diagram" title="Permanent link">Link</a></h2>
+<pre class="mermaid"><code>---
+title: Timelapse and PowerManager
+---
+classDiagram
+    class TimeLapse {
+        +str id
+        +TimeLapseMode mode
+        +list schedule_times
+        +int next_idx
+        +int current_idx
+        +int warmup_sec
+        +int standby_threshold_sec
+        +int grace_period
+        +str on_scan_failed
+        +int scan_retries
+        +PowerManager power_manager
+        +compute_schedule(config)$
+        +arm()
+        +scan(index)
+        +cancel()
+        +recompute_schedule_for_start()
+    }
+    class TimeLapseState {
+        &lt;&lt;enumeration&gt;&gt;
+        CONFIGURED
+        SCHEDULED
+        RUNNING
+        COMPLETED
+        FAILED
+        CANCELLED
+    }
+    class TimeLapseMode {
+        &lt;&lt;enumeration&gt;&gt;
+        one_shot
+        interval
+        fixed_times
+    }
+    class PowerManager {
+        +AbstractCNC cnc
+        +float warmup_period
+        +int standby_threshold_sec
+        +mode()
+        +try_set_mode(mode)
+        +arm_for_scan(next_scan_at, standby_threshold_sec)
+        +get_cnc()
+    }
+    class PowerManagerMode {
+        &lt;&lt;enumeration&gt;&gt;
+        SCAN
+        AUTO
+        MANUAL
+        STARTING
+        FINALIZING
+    }
+    class Scanner {
+        +TimeLapse timelapse
+        +PowerManager power_manager
+        +config_timelapse(config)
+        +start_timelapse(config)
+        +cancel_timelapse()
+        +preview_timelapse(config)
+        +get_active_timelapse()
+        -_wire_timelapse(tl)
+    }
+    class TimelapseStore {
+        +str timelapse_id
+        +str state
+        +list schedule_times
+        +int next_idx
+        +from_timelapse(tl)$
+        +save()
+        +new_store_from_last()$
+    }
+    class ScanRecord {
+        +str scan_id
+        +str status
+    }
+    class Scan {
+        +str scan_id
+        +scan()
+    }
+    TimeLapse --&gt; TimeLapseState : _state
+    TimeLapse --&gt; TimeLapseMode : mode
+    TimeLapse --&gt; PowerManager : power_manager
+    TimeLapse --&gt; Scan : _build_slot_scan
+    TimelapseStore *-- ScanRecord : scans
+    Scanner *-- TimeLapse : timelapse
+    Scanner *-- PowerManager : power_manager
+    TimeLapse ..&gt; TimelapseStore : _persist_state on every mutation
+    Scanner ..&gt; TimelapseStore : serialise via get_active_timelapse</code></pre>
+<p><code>ControllerDevice</code> (<code>src/commons</code>) exposes <code>config/start/get_active/cancel/preview_timelapse</code> over RPC; <code>RPCControllerServer</code> (<code>rpc_controller.py:216-251</code>) delegates each call straight to <code>Scanner</code>. QML never touches <code>TimeLapse</code> directly: <code>TimelapsePanel.qml:102-109</code> connects to the <code>Scanner</code> bridge signals and polls <code>scanner.get_active_timelapse()</code> for the schedule table.</p>
+<h2 id="timelapse-state-machine">TimeLapse state machine<a class="headerlink" href="#timelapse-state-machine" title="Permanent link">Link</a></h2>
+<p>States (<code>timelapse.py:175-181</code>): <code>CONFIGURED</code> (in-memory draft, never persisted as armed, never arms power), <code>SCHEDULED</code> (waiting for next slot), <code>RUNNING</code> (a <code>Scan.scan()</code> is executing), <code>COMPLETED</code> / <code>FAILED</code> / <code>CANCELLED</code> (terminal). There is no persisted <code>IDLE</code>: absence of a <code>TimelapseStore</code> file means no job. <code>CONFIGURED</code> is intentionally not persisted as runnable state; <code>cancel()</code> on a draft discards it without emitting <code>CANCELLED</code> (<code>scanner.py:654-671</code>).</p>
+<pre class="mermaid"><code>---
+title: TimeLapse states
+---
+stateDiagram-v2
+    [*] --&gt; CONFIGURED : config_timelapse(auto_start=False)
+    CONFIGURED --&gt; SCHEDULED : arm() / start_timelapse
+    SCHEDULED --&gt; RUNNING : _trigger_next_scan → scan()
+    RUNNING --&gt; SCHEDULED : slot ok
+    RUNNING --&gt; SCHEDULED : slot failed + skip_scan
+    RUNNING --&gt; FAILED : slot failed + fail_timelapse
+    RUNNING --&gt; FAILED : CNC not ready (slot &amp;gt 0)
+    SCHEDULED --&gt; SCHEDULED : slot missed (delta &amp;lt -grace) → skip
+    SCHEDULED --&gt; COMPLETED : next_idx exhausted
+    SCHEDULED --&gt; CANCELLED : cancel()
+    RUNNING --&gt; CANCELLED : cancel()
+    CONFIGURED --&gt; [*] : cancel() discards draft
+    COMPLETED --&gt; [*]
+    FAILED --&gt; [*]
+    CANCELLED --&gt; [*]</code></pre>
+<p>Schedule computation (<code>compute_schedule</code>, <code>timelapse.py:269-359</code>, pure static, also used by <code>preview_timelapse</code> without constructing anything):</p>
+<table>
+<thead>
+<tr>
+<th><code>mode</code></th>
+<th>Schedule</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>one_shot</code></td>
+<td><code>[now + warmup_sec]</code> (or <code>[now]</code> for GRBL)</td>
+<td>Single bare scan; no PlantDB container (<code>plantdb_timelapse_id = None</code>, <code>timelapse.py:399-402</code>).</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td><code>[start + k*interval for k in n_shots]</code>, <code>interval</code> is seconds or <code>"2d-3h-1m-0s"</code> via <code>parse_duration</code></td>
+<td><code>start = now + warmup_sec</code> (skipped for GRBL). Recomputed at arm time for drafts (<code>recompute_schedule_for_start</code>, <code>timelapse.py:408</code>).</td>
+</tr>
+<tr>
+<td><code>fixed_times</code></td>
+<td>Sorted parsed ISO datetimes, naive values read as host-local then converted to UTC</td>
+<td>Absolute; never recomputed on arm.</td>
+</tr>
+</tbody>
+</table>
+<p>Guards applied in <code>_setup_timelapse_settings</code> (<code>timelapse.py:361-402</code>): <code>warmup_sec &gt;= MIN_WARMUP_SEC</code> (default floor 45 s), <code>standby_threshold_sec &gt;= STANDBY_WARMUP_FACTOR * warmup_sec</code> (default factor 2), <code>grace_period</code> default 120 s, <code>on_scan_failed ∈ {skip_scan, fail_timelapse}</code>, <code>scan_retries &gt;= 0</code>.</p>
+<p>Slot execution (<code>scan(index)</code>, <code>timelapse.py:431-514</code>):</p>
 <ol>
-<li>A central PyQt application that serves as the main controller</li>
-<li>A Raspberry Pi camera module that captures images</li>
-<li>A web UI for configuring and running scans</li>
-<li>A GRBL-based plant scanner that moves the camera</li>
-<li>A remote PlantDB REST API that serves as a central database repository</li>
+<li><code>delta = scheduled - now(UTC)</code>. <code>delta &gt; grace_period</code> → re-arm, return (never sleeps). <code>delta &lt;= -grace_period</code> → late skip, persist, return.</li>
+<li>Slot 0 with CNC not ready → defer to scheduler without consuming a retry (<code>timelapse.py:476-482</code>). Any later slot with CNC not ready → <code>_fail_terminal</code> immediately (standby/warmup budget was insufficient or the link is broken).</li>
+<li>Otherwise up to <code>scan_retries + 1</code> immediate attempts via <code>_build_slot_scan</code> (fresh <code>Scan</code> per attempt, <code>scan_id = {plantdb_timelapse_id}_{index}</code> for multi-scan jobs, bare <code>id</code> otherwise). A retry is abandoned early when the next slot falls inside its grace window (<code>_slot_retry_allowed</code>, <code>timelapse.py:540</code>).</li>
+<li>Exhaustion → <code>_apply_failure_policy</code> (<code>timelapse.py:550</code>): append a <code>ScanRecord(status="failed")</code>, then either <code>FAILED</code> + <code>errorOccurred</code> + <code>scanFinished</code> (<code>fail_timelapse</code>) or back to <code>SCHEDULED</code> + <code>errorOccurred</code> (<code>skip_scan</code>).</li>
 </ol>
-<p>These components communicate with each other using various protocols, primarily ZeroMQ (ZMQ) for RPC communications and HTTP for REST API interactions.</p>
-<h2 id="zmq-based-rpc-communications">ZMQ-based RPC Communications<a class="headerlink" href="#zmq-based-rpc-communications" title="Permanent link">Link</a></h2>
-<p>The Plant-Imager3 system uses ZeroMQ (ZMQ) for Remote Procedure Call (RPC) communications between components.
-This allows different parts of the system to call methods on other parts as if they were local, even though they may be running on different devices or in different processes.</p>
-<h3 id="rpc-framework">RPC Framework<a class="headerlink" href="#rpc-framework" title="Permanent link">Link</a></h3>
-<p>The RPC framework is implemented in the <code>plantimager.commons.RPC</code> module and consists of several key classes:</p>
-<h4 id="rpcclient">RPCClient<a class="headerlink" href="#rpcclient" title="Permanent link">Link</a></h4>
-<p>The <code>RPCClient</code> class provides a client-side interface for making remote procedure calls.
-It connects to an <code>RPCServer</code> and allows calling methods on the server as if they were local methods.
-It also handles property access and signal connections.</p>
-<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.commons.RPC</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> RPCClient
-<span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.commons.cameradevice</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Camera
-
-<span style="color: #A2F">@RPCClient</span><span style="color: #666">.</span>register_interface(Camera)
-<span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">PiCameraProxy</span>(Camera, RPCClient):
-    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
-        Camera<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>)
-        RPCClient<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context, url)
-</code></pre></div>
-<h4 id="rpcserver">RPCServer<a class="headerlink" href="#rpcserver" title="Permanent link">Link</a></h4>
-<p>The <code>RPCServer</code> class provides a server-side interface for exposing methods to remote clients.
-It listens for requests from <code>RPCClient</code> instances and executes the requested methods.</p>
-<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.commons.RPC</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> RPCServer
-<span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.commons.cameradevice</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Camera
-
-<span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">PiCameraServer</span>(Camera, RPCServer):
-    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>):
-        Camera<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>)
-        RPCServer<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context, url)
-</code></pre></div>
-<h4 id="rpcsignal">RPCSignal<a class="headerlink" href="#rpcsignal" title="Permanent link">Link</a></h4>
-<p>The <code>RPCSignal</code> class provides a way to emit signals from the server to the client.
-This is useful for notifying clients of events or changes in the server's state.</p>
-<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.commons.RPC</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> RPCSignal
-
-<span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">Camera</span>:
-    modeChanged <span style="color: #666">=</span> RPCSignal(<span style="color: #008000">str</span>)
-    videoUrlChanged <span style="color: #666">=</span> RPCSignal(<span style="color: #008000">str</span>)
-    rotationChanged <span style="color: #666">=</span> RPCSignal(<span style="color: #008000">int</span>)
-</code></pre></div>
-<h4 id="rpcproperty">RPCProperty<a class="headerlink" href="#rpcproperty" title="Permanent link">Link</a></h4>
-<p>The <code>RPCProperty</code> class provides a way to expose properties from the server to the client.
-This allows clients to get and set properties on the server as if they were local properties.</p>
-<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.commons.RPC</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> RPCProperty, RPCSignal
-
-<span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">Camera</span>:
-    modeChanged <span style="color: #666">=</span> RPCSignal(<span style="color: #008000">str</span>)
-
-    <span style="color: #A2F">@RPCProperty</span>(notify<span style="color: #666">=</span>modeChanged)
-    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">mode</span>(<span style="color: #008000">self</span>):
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_mode
-
-    <span style="color: #A2F">@mode</span><span style="color: #666">.</span>setter
-    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">mode</span>(<span style="color: #008000">self</span>, value):
-        <span style="color: #008000">self</span><span style="color: #666">.</span>_mode <span style="color: #666">=</span> value
-        <span style="color: #008000">self</span><span style="color: #666">.</span>modeChanged<span style="color: #666">.</span>emit(value)
-</code></pre></div>
-<h3 id="communication-flow">Communication Flow<a class="headerlink" href="#communication-flow" title="Permanent link">Link</a></h3>
-<p>The RPC communication flow typically follows these steps:</p>
-<ol>
-<li>The server registers itself with a device registry, making it discoverable by clients</li>
-<li>The client connects to the server using a URL provided by the device registry</li>
-<li>The client calls methods on the server as if they were local methods</li>
-<li>The server executes the methods and returns the results to the client</li>
-<li>The server can emit signals that are received by the client</li>
-<li>The client can get and set properties on the server</li>
-</ol>
-<h2 id="application-layout">Application Layout<a class="headerlink" href="#application-layout" title="Permanent link">Link</a></h2>
-<h3 id="1-central-pyqt-application">1. Central PyQt Application<a class="headerlink" href="#1-central-pyqt-application" title="Permanent link">Link</a></h3>
-<p>The central PyQt application (<code>src/controller/plantimager/controller/main.py</code>) serves as the main controller for the Plant-Imager3 system.
-It provides a touchscreen interface for controlling the scanner and viewing images.</p>
-<p>Key features:</p>
+<p><code>_trigger_next_scan</code> (<code>timelapse.py:571</code>) wraps <code>scan()</code>, ignores its exceptions (skips do not raise), advances <code>next_idx</code>, persists, and either completes (<code>COMPLETED</code> + <code>scanFinished</code>) or re-arms. A <code>FAILED</code> state short-circuits before and after the call so a stray timer firing cannot overwrite the terminal state. Every state/<code>next_idx</code> mutation calls <code>_persist_state</code> → <code>TimelapseStore.from_timelapse(self).save()</code> (atomic <code>mkstemp</code> + <code>fsync</code> + <code>replace</code> under <code>~/.local/share/plant-imager3-app/</code>, <code>timelapse_store.py:115</code>).</p>
+<h2 id="powermanager-state-machine">PowerManager state machine<a class="headerlink" href="#powermanager-state-machine" title="Permanent link">Link</a></h2>
+<p>Modes (<code>powermanager.py:95-100</code>): <code>SCAN</code> (rig powered, work lights on), <code>AUTO</code> (idle, growth lights on, CNC rail unpowered), <code>MANUAL</code> (operator hold, 5-minute lease), plus transients <code>STARTING</code> (rail powered, CNC connecting) and <code>FINALIZING</code> (parking + rail power-down). <code>mode</code> is a read-only Qt property (<code>@Property(str, notify=modeChanged)</code>, <code>powermanager.py:198</code>); all transitions go through <code>try_set_mode</code> → <code>_set_mode</code>.</p>
+<pre class="mermaid"><code>---
+title: PowerManager modes
+---
+stateDiagram-v2
+    [*] --&gt; AUTO : __init__
+    AUTO --&gt; STARTING : try_set_mode(SCAN/MANUAL), cnc is None
+    AUTO --&gt; SCAN : try_set_mode(SCAN), cnc connected
+    AUTO --&gt; MANUAL : try_set_mode(MANUAL), cnc connected
+    STARTING --&gt; SCAN : _on_cnc_connect_result ok
+    STARTING --&gt; MANUAL : _on_cnc_connect_result ok + lease
+    STARTING --&gt; AUTO : abort to AUTO / connect failed
+    SCAN --&gt; FINALIZING : try_set_mode(AUTO), cnc connected
+    SCAN --&gt; SCAN : arm_for_scan within threshold
+    MANUAL --&gt; AUTO : _manual_mode_timeout, next scan far
+    MANUAL --&gt; SCAN : _manual_mode_timeout, next scan soon
+    FINALIZING --&gt; AUTO : _on_powerdown_done
+    SCAN --&gt; AUTO : arm_for_scan beyond threshold
+    AUTO --&gt; SCAN : _on_warmup_timer</code></pre>
+<p>Transition rules (<code>_set_mode</code>, <code>powermanager.py:206-243</code>): <code>MANUAL</code> is rejected from <code>SCAN</code>/<code>STARTING</code>; <code>STARTING</code> accepts only abort-to-<code>AUTO</code>; <code>FINALIZING</code> accepts nothing. Power-up (<code>_start_connecting</code>, <code>powermanager.py:250</code>) powers the rail, applies scan lights, and kicks <code>_dispatch_cnc_connect</code>. Power-down (<code>_start_powerdown</code>, <code>powermanager.py:306</code>) applies idle lights immediately but cuts rail power only after the blocking park finishes (<code>_do_powerdown_blocking</code> → <code>_powerdown_done</code> → <code>_on_powerdown_done</code>, which clears <code>cnc</code> and settles <code>AUTO</code>).</p>
+<p>The single power-policy decision is <code>arm_for_scan(next_scan_at, standby_threshold_sec)</code> (<code>powermanager.py:385</code>), called by <code>TimeLapse</code> on every re-arm:</p>
 <ul>
-<li>QML-based user interface</li>
-<li>Integration with the camera and scanner components</li>
-<li>Image processing and display</li>
-<li>Scan configuration and execution</li>
+<li><code>delta &gt; standby_threshold_sec</code> → drop to <code>AUTO</code>, arm the internal <code>warmup_timer</code> for <code>next_scan_at - warmup_period</code>.</li>
+<li><code>delta &lt;= standby_threshold_sec</code> → stay/enter <code>SCAN</code>.</li>
 </ul>
-<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
-    app <span style="color: #666">=</span> QGuiApplication(sys<span style="color: #666">.</span>argv)
-    font <span style="color: #666">=</span> QFont(<span style="color: #BA2121">"Nunito Sans"</span>)
-    app<span style="color: #666">.</span>setFont(font)
-    QQuickStyle<span style="color: #666">.</span>setStyle(<span style="color: #BA2121">"Material"</span>)
-    engine <span style="color: #666">=</span> QQmlApplicationEngine()
-    engine<span style="color: #666">.</span>addImageProvider(<span style="color: #BA2121">"provider"</span>, imageProvider)
-    engine<span style="color: #666">.</span>addImportPath(dirname(<span style="color: #19177C">__file__</span>))
-    engine<span style="color: #666">.</span>loadFromModule(<span style="color: #BA2121">"PlantImagerApp"</span>, <span style="color: #BA2121">"Main"</span>)
-
-    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> engine<span style="color: #666">.</span>rootObjects():
-        sys<span style="color: #666">.</span>exit(<span style="color: #666">-1</span>)
-
-    ex <span style="color: #666">=</span> app<span style="color: #666">.</span>exec()
-    sys<span style="color: #666">.</span>exit(ex)
-</code></pre></div>
-<h3 id="2-raspberry-pi-camera">2. Raspberry Pi Camera<a class="headerlink" href="#2-raspberry-pi-camera" title="Permanent link">Link</a></h3>
-<p>The Raspberry Pi camera module (<code>src/picamera/plantimager/picamera</code>) captures images and provides video streaming.
-It runs on a Raspberry Pi Zero W and communicates with the central controller using ZMQ-based RPC.</p>
-<p>Key features:</p>
+<p>At policy level: far-apart scans idle the rig (growth lights, rail off) and warm it up just in time; dense scans keep it powered. Timing floors are <code>MIN_WARMUP_SEC</code> (default 45 s) and <code>STANDBY_WARMUP_FACTOR</code> (default 2×), overridable via <code>PI3_MIN_WARMUP_SEC</code> / <code>PI3_STANDBY_WARMUP_FACTOR</code> (<code>powermanager.py:58-69</code>). GPIO pins themselves are deployment detail (<code>GPIO_CNC_PIN</code> 17, <code>GPIO_LIGHTS_PIN</code> 27, <code>GPIO_GROWTH_LIGHTS_PIN</code> 22, overridable via env) and intentionally not expanded here.</p>
+<h2 id="sequence-diagrams">Sequence diagrams<a class="headerlink" href="#sequence-diagrams" title="Permanent link">Link</a></h2>
+<h3 id="steady-state-cycle">Steady-state cycle<a class="headerlink" href="#steady-state-cycle" title="Permanent link">Link</a></h3>
+<pre class="mermaid"><code>---
+title: Arm to scan, TimeLapse driving PowerManager
+---
+sequenceDiagram
+    participant op as Operator / QML
+    participant sc as Scanner
+    participant tl as TimeLapse
+    participant pm as PowerManager
+    participant cnc as CNC
+    op-&gt;&gt;sc: config_timelapse(config)
+    sc-&gt;&gt;tl: TimeLapse(auto_start=False)
+    op-&gt;&gt;sc: start_timelapse()
+    sc-&gt;&gt;tl: arm()
+    tl-&gt;&gt;tl: recompute_schedule_for_start()
+    tl-&gt;&gt;tl: _setup_next_scan_timer()
+    tl-&gt;&gt;pm: arm_for_scan(next, standby_threshold)
+    alt far scan
+        pm-&gt;&gt;pm: try_set_mode(AUTO) + arm warmup_timer
+        pm-&gt;&gt;pm: _on_warmup_timer → try_set_mode(SCAN)
+    else near scan
+        pm-&gt;&gt;pm: try_set_mode(SCAN)
+    end
+    pm-&gt;&gt;pm: _start_connecting → _dispatch_cnc_connect (thread)
+    pm-&gt;&gt;tl: cnc_ready(cnc)
+    tl-&gt;&gt;tl: _setup_next_scan_timer()
+    tl-&gt;&gt;tl: _trigger_next_scan() → scan(next_idx)
+    tl-&gt;&gt;pm: get_cnc() + mode check
+    tl-&gt;&gt;cnc: Scan(cnc, ...).scan()
+    tl-&gt;&gt;tl: next_idx++ + _persist_state()
+    tl-&gt;&gt;tl: _setup_next_scan_timer()
+    tl-&gt;&gt;pm: arm_for_scan(next, standby_threshold)</code></pre>
+<p><code>cnc_ready</code> re-arms unconditionally when non-terminal (<code>timelapse.py:603-608</code>): a late CNC connect simply recomputes the next firing. Note the <code>_next_scan_timer</code> here is the <code>TimeLapse</code>-owned single-shot; the <code>warmup_timer</code> is <code>PowerManager</code>-owned — the two timers are often confused, they are separate objects with separate owners.</p>
+<h3 id="failure-retry-and-cancel">Failure, retry, and cancel<a class="headerlink" href="#failure-retry-and-cancel" title="Permanent link">Link</a></h3>
+<pre class="mermaid"><code>---
+title: Failure policy and cancel paths
+---
+sequenceDiagram
+    participant t as _trigger_next_scan
+    participant s as scan(index)
+    participant pol as _apply_failure_policy
+    participant qml as QML / RPC
+    t-&gt;&gt;s: scan(next_idx)
+    alt attempt ok
+        s--&gt;&gt;t: SCHEDULED + persist
+    else attempts exhausted, skip_scan
+        s-&gt;&gt;pol: record ScanRecord(failed)
+        pol--&gt;&gt;qml: state SCHEDULED + errorOccurred
+    else attempts exhausted, fail_timelapse
+        s-&gt;&gt;pol: record ScanRecord(failed)
+        pol--&gt;&gt;qml: state FAILED + errorOccurred + scanFinished
+    else CNC not ready, slot &amp;gt 0
+        s--&gt;&gt;qml: _fail_terminal → FAILED + errorOccurred + scanFinished
+    end
+    t-&gt;&gt;t: next_idx++ + persist
+    alt slots remain
+        t-&gt;&gt;t: _setup_next_scan_timer()
+    else none remain
+        t--&gt;&gt;qml: COMPLETED + scanFinished + persist
+    end
+    qml-&gt;&gt;s: cancel_timelapse()
+    alt CONFIGURED draft
+        s--&gt;&gt;qml: discard to IDLE (no CANCELLED)
+    else armed
+        s--&gt;&gt;qml: CANCELLED + persist + scanFinished
+    end</code></pre>
+<p>Signal emission order (<code>TimeLapse</code> state changes vs <code>PowerManager</code> mode changes) is pinned by <code>test/unit/controller/test_timelapse.py:679</code> (<code>test_signal_emission_order_timelapse_vs_power</code>).</p>
+<h2 id="timers">Timers<a class="headerlink" href="#timers" title="Permanent link">Link</a></h2>
+<table>
+<thead>
+<tr>
+<th>Owner</th>
+<th>Timer</th>
+<th>Kind</th>
+<th>Fires</th>
+<th>Handler</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TimeLapse</code> (<code>timelapse.py:260</code>)</td>
+<td><code>_next_scan_timer</code></td>
+<td><code>QTimer(singleShot=True)</code>, parented to <code>TimeLapse</code></td>
+<td>At <code>schedule_times[next_idx]</code>, or <code>0 ms</code> when inside grace, or <code>warmup_sec</code> for deferred slot 0</td>
+<td><code>_trigger_next_scan</code> → <code>scan(next_idx)</code> → advance + re-arm. Stopped on <code>cancel()</code> / terminal states. Torn down via <code>destroyed</code> + <code>weakref.finalize</code>.</td>
+</tr>
+<tr>
+<td><code>PowerManager</code> (<code>powermanager.py:170</code>)</td>
+<td><code>manual_mode_timer</code></td>
+<td><code>QTimer(singleShot=True, 5 min)</code></td>
+<td>5 min after entering <code>MANUAL</code> (re-armed on CNC activity via <code>activity_monitor</code>)</td>
+<td><code>_manual_mode_timeout</code> → <code>AUTO</code> (scan far) or <code>SCAN</code> (scan soon).</td>
+</tr>
+<tr>
+<td><code>PowerManager</code> (<code>powermanager.py:172</code>)</td>
+<td><code>warmup_timer</code></td>
+<td><code>QTimer(singleShot=True)</code></td>
+<td>At <code>next_scan_at - warmup_period</code>, armed by <code>arm_for_scan</code></td>
+<td><code>_on_warmup_timer</code> → <code>try_set_mode(SCAN)</code>. Stopped and re-armed on every <code>arm_for_scan</code>.</td>
+</tr>
+<tr>
+<td><code>PowerManager</code> (<code>powermanager.py:174</code>)</td>
+<td><code>cnc_connect_timer</code></td>
+<td><code>QTimer(singleShot=False, 1200 ms)</code>, started in <code>__init__</code></td>
+<td>Every 1.2 s while <code>STARTING</code></td>
+<td><code>_dispatch_cnc_connect</code> → worker thread → <code>_cnc_result_signal</code> → <code>_on_cnc_connect_result</code>. Skipped unless <code>STARTING</code>, guarded against concurrent attempts.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="signals-and-slots">Signals and slots<a class="headerlink" href="#signals-and-slots" title="Permanent link">Link</a></h2>
+<h3 id="timelapse-timelapsepy209-214"><code>TimeLapse</code> (<code>timelapse.py:209-214</code>)<a class="headerlink" href="#timelapse-timelapsepy209-214" title="Permanent link">Link</a></h3>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Emitted when</th>
+<th>Bridged to (via <code>Scanner._wire_timelapse</code>, <code>scanner.py:631-637</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stateChanged(str)</code></td>
+<td>Every <code>state</code> setter change (<code>timelapse.py:764-770</code>)</td>
+<td><code>Scanner.timelapseStateChanged</code> → QML <code>onTimelapseStateChanged</code> → <code>refreshTl()</code></td>
+</tr>
+<tr>
+<td><code>progressChanged(int, int)</code></td>
+<td><code>current_idx</code> / path length (<code>scan</code>, <code>__init__</code>)</td>
+<td><code>Scanner._on_timelapse_progress</code> → <code>timelapseProgressChanged</code> → QML progress bar</td>
+</tr>
+<tr>
+<td><code>errorOccurred(str)</code></td>
+<td>Exhausted slot, terminal failure (<code>_apply_failure_policy</code>, <code>_fail_terminal</code>)</td>
+<td><code>Scanner.timelapseErrorOccurred</code> → QML <code>onTimelapseErrorOccurred</code></td>
+</tr>
+<tr>
+<td><code>scanFinished()</code></td>
+<td><code>COMPLETED</code>, <code>FAILED</code>, <code>CANCELLED</code></td>
+<td><code>Scanner._on_timelapse_finished</code> → QML <code>onTimelapseFinished</code></td>
+</tr>
+<tr>
+<td><code>scanCreated(object)</code></td>
+<td>Each fresh per-attempt <code>Scan</code> (<code>scan</code>, <code>timelapse.py:502</code>)</td>
+<td><code>Scanner._bridge_scan_signals</code> — fans the inner scan's progress into the UI</td>
+</tr>
+<tr>
+<td><code>pathInfoChanged(str)</code></td>
+<td>Path constructed (<code>__init__</code>)</td>
+<td>QML path label via <code>path_info</code> property</td>
+</tr>
+</tbody>
+</table>
+<p><code>state</code> and <code>path_info</code>/<code>progress</code>/<code>max_progress</code> are Qt properties (<code>@Property(..., notify=...)</code>, <code>timelapse.py:727-778</code>) so QML binds to them directly.</p>
+<h3 id="powermanager-powermanagerpy105-108"><code>PowerManager</code> (<code>powermanager.py:105-108</code>)<a class="headerlink" href="#powermanager-powermanagerpy105-108" title="Permanent link">Link</a></h3>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Emitted when</th>
+<th>Connected to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cnc_ready(object)</code></td>
+<td>CNC connected, stable mode committed (<code>_on_cnc_connect_result</code>, <code>powermanager.py:303</code>)</td>
+<td><code>TimeLapse.cnc_ready</code> (<code>@Slot(object)</code>, <code>timelapse.py:603</code>) — re-arms schedule. Connect this in the owner (<code>Scanner</code> or test harness), not inside either class.</td>
+</tr>
+<tr>
+<td><code>modeChanged(str)</code></td>
+<td>Every <code>_set_stable</code> / <code>STARTING</code> / <code>FINALIZING</code> entry</td>
+<td>QML badge (<code>Scanner.qml</code> shows power mode alongside timelapse state), RPC observers</td>
+</tr>
+<tr>
+<td><code>_cnc_result_signal(object)</code></td>
+<td>Worker thread → main thread bridge (<code>_do_cnc_connect_blocking</code>)</td>
+<td><code>_on_cnc_connect_result</code> (same object) — never connect externally</td>
+</tr>
+<tr>
+<td><code>_powerdown_done()</code></td>
+<td>Blocking park finished (<code>_do_powerdown_blocking</code>)</td>
+<td><code>_on_powerdown_done</code> (same object) — never connect externally</td>
+</tr>
+</tbody>
+</table>
+<p>Stale-connect guard (<code>powermanager.py:286-295</code>): a result arriving after abort-to-<code>AUTO</code> frees its own serial port via <code>cnc.stop()</code> and never touches the shared GPIO rail pin — rail power is owned solely by the mode transitions.</p>
+<h3 id="cross-object-call-matrix-maintainer-reference">Cross-object call matrix (maintainer reference)<a class="headerlink" href="#cross-object-call-matrix-maintainer-reference" title="Permanent link">Link</a></h3>
+<table>
+<thead>
+<tr>
+<th>Caller</th>
+<th>Callee</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TimeLapse._setup_next_scan_timer</code></td>
+<td><code>PowerManager.arm_for_scan</code></td>
+<td><code>timelapse.py:703</code> — the only direct power-policy call</td>
+</tr>
+<tr>
+<td><code>TimeLapse.__init__ / _setup_timelapse_settings / recompute_schedule_for_start / _build_slot_scan / _cnc_ready / scan</code></td>
+<td><code>PowerManager.get_cnc</code></td>
+<td>Read-only handle fetch for <code>Scan</code> construction and readiness checks</td>
+</tr>
+<tr>
+<td><code>TimeLapse</code> (slot-0 defer path)</td>
+<td><code>PowerManager.arm_for_scan</code></td>
+<td><code>timelapse.py:688</code> — wake-at <code>now + warmup_sec</code></td>
+</tr>
+<tr>
+<td><code>TimeLapse</code> guards</td>
+<td><code>PowerManager.mode</code></td>
+<td><code>_cnc_ready</code> requires <code>SCAN</code>/<code>MANUAL</code> (<code>timelapse.py:610-614</code>)</td>
+</tr>
+<tr>
+<td><code>PowerManager</code></td>
+<td><code>TimeLapse</code></td>
+<td>None — reverse path is the <code>cnc_ready</code> signal only</td>
+</tr>
+<tr>
+<td><code>Scanner</code></td>
+<td>both</td>
+<td>Constructs with shared <code>power_manager</code> (<code>scanner.py:535-544</code>, <code>607-615</code>); <code>_wire_timelapse</code> connects the five fan-out signals (<code>scanner.py:631-637</code>); <code>preview_timelapse</code> calls <code>compute_schedule</code> without constructing (<code>scanner.py:673-683</code>)</td>
+</tr>
+<tr>
+<td><code>RPCControllerServer</code></td>
+<td><code>Scanner</code></td>
+<td><code>config/start/get_active/cancel/preview_timelapse</code> (<code>rpc_controller.py:216-251</code>)</td>
+</tr>
+<tr>
+<td>QML</td>
+<td><code>Scanner</code></td>
+<td><code>get_active_timelapse()</code> snapshot + bridge signals (<code>TimelapsePanel.qml:80-109</code>); panel is poll-on-signal, not bound to live objects</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-reference">Configuration reference<a class="headerlink" href="#configuration-reference" title="Permanent link">Link</a></h2>
+<p><code>config["timelapse"]</code> keys (<code>_setup_timelapse_settings</code>, <code>timelapse.py:361-390</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>required</td>
+<td><code>one_shot</code> / <code>interval</code> / <code>fixed_times</code></td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>required for <code>interval</code></td>
+<td>Seconds (<code>int</code>) or duration string (<code>"1h30m"</code>, <code>parse_duration</code>)</td>
+</tr>
+<tr>
+<td><code>n_shots</code></td>
+<td>required for <code>interval</code></td>
+<td>Slot count</td>
+</tr>
+<tr>
+<td><code>dates</code></td>
+<td>required for <code>fixed_times</code></td>
+<td>ISO-8601 list, sorted; naive read as host-local → UTC</td>
+</tr>
+<tr>
+<td><code>warmup_period</code></td>
+<td><code>30</code> (floored to <code>MIN_WARMUP_SEC</code>)</td>
+<td>Seconds before first scan; ignored for <code>fixed_times</code> and GRBL</td>
+</tr>
+<tr>
+<td><code>standby_threshold_sec</code></td>
+<td><code>600</code> (floored to <code>STANDBY_WARMUP_FACTOR × warmup_sec</code>)</td>
+<td>Stay-powered cutoff passed to <code>arm_for_scan</code></td>
+</tr>
+<tr>
+<td><code>grace_period</code></td>
+<td><code>120</code></td>
+<td>Late-start acceptance window (s); also the immediate-dispatch threshold</td>
+</tr>
+<tr>
+<td><code>light_policy</code></td>
+<td><code>{}</code></td>
+<td>Stored on the job; light actuation itself follows the mode (policy level)</td>
+</tr>
+<tr>
+<td><code>on_scan_failed</code></td>
+<td><code>skip_scan</code></td>
+<td><code>skip_scan</code> records and continues; <code>fail_timelapse</code> ends <code>FAILED</code></td>
+</tr>
+<tr>
+<td><code>scan_retries</code></td>
+<td><code>0</code></td>
+<td>Per-slot immediate re-attempts, abandoned when the next slot is inside grace</td>
+</tr>
+</tbody>
+</table>
+<h2 id="persistence-and-recovery">Persistence and recovery<a class="headerlink" href="#persistence-and-recovery" title="Permanent link">Link</a></h2>
+<p><code>TimelapseStore</code> (<code>timelapse_store.py:73-261</code>) persists <code>timelapse_id/mode/state/schedule_times/next_idx/current_idx</code>, the four timing/policy fields, and thin <code>ScanRecord</code>s (never whole <code>Scan</code> objects) to <code>~/.local/share/plant-imager3-app/timelapse_storage.json</code> (override <code>PI3_TIMELAPSE_FILE_NAME</code>). Saves are atomic (<code>mkstemp</code> in the same directory + <code>fsync</code> + <code>replace</code>). <code>get_active_timelapse</code> serialises the same shape for QML/RPC (<code>scanner.py:639-652</code>). Resume path: <code>new_store_from_last()</code> → <code>to_timelapse_kwargs()</code> with best-effort version tolerance.</p>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">Link</a></h2>
 <ul>
-<li>Image capture</li>
-<li>Video streaming</li>
-<li>Remote control via RPC</li>
-<li>Integration with the central controller</li>
+<li><code>RPC.md</code> — RPC signal/property bridging used by <code>timelapseChanged</code>-style fan-out</li>
+<li><code>architecture.md</code> — controller component layout</li>
+<li>PlantDB timelapse storage (<code>timelapse.json</code> container, <code>metadata.timelapse</code>) — server-side docs</li>
+<li>Sources: <code>timelapse.py:1-67</code> (module call-graph header), <code>powermanager.py:1-69</code> (timing floors), <code>scanner.py:516-689</code>, <code>timelapse_store.py</code>, <code>TimelapsePanel.qml:1-120</code>, <code>test/unit/controller/test_timelapse.py</code>, <code>test/unit/controller/test_powermanager.py</code>, <code>test/integration/test_timelapse_integration.py</code></li>
 </ul>
-<p>The camera component exposes its functionality through the <code>Camera</code> interface:</p>
-<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">PiCameraComm</span>(QObject):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
-<span style="color: #BA2121; font-style: italic">    Object that will handle communication with the picamera. Meant to live in a separate thread.</span>
-<span style="color: #BA2121; font-style: italic">    """</span>
-
-    imageReady <span style="color: #666">=</span> Signal(<span style="color: #008000">memoryview</span>, <span style="color: #008000">dict</span>)
-    modeChanged <span style="color: #666">=</span> Signal(<span style="color: #008000">str</span>)
-    videoUrlChanged <span style="color: #666">=</span> Signal(<span style="color: #008000">str</span>)
-    rotationChanged <span style="color: #666">=</span> Signal(<span style="color: #008000">int</span>)
-
-    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, context: zmq<span style="color: #666">.</span>Context, url: <span style="color: #008000">str</span>, parent: QObject <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>):
-        QObject<span style="color: #666">.</span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, parent)
-        <span style="color: #008000">self</span><span style="color: #666">.</span>camera <span style="color: #666">=</span> PiCameraProxy(context, url)
-        <span style="color: #3D7B7B; font-style: italic"># ...</span>
-</code></pre></div>
-<h3 id="3-web-ui">3. Web UI<a class="headerlink" href="#3-web-ui" title="Permanent link">Link</a></h3>
-<p>The Web UI (<code>src/webui/plantimager/webui</code>) provides a web-based interface for configuring and running scans.
-It communicates with the central controller using ZMQ-based RPC and with the PlantDB REST API for data storage and retrieval.</p>
-<p>Key features:</p>
-<ul>
-<li>Dash-based web application</li>
-<li>Bootstrap styling</li>
-<li>Scan configuration and execution</li>
-<li>Integration with the PlantDB REST API</li>
-<li>User authentication and account management</li>
-</ul>
-<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
-    <span style="color: #3D7B7B; font-style: italic"># - Parse the input arguments to variables:</span>
-    parser <span style="color: #666">=</span> parsing()
-    args <span style="color: #666">=</span> parser<span style="color: #666">.</span>parse_args()
-
-    <span style="color: #3D7B7B; font-style: italic"># - Create connexion with controller</span>
-    context <span style="color: #666">=</span> zmq<span style="color: #666">.</span>Context()
-    controller_thread <span style="color: #666">=</span> Thread(target<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">lambda</span> ctx: RPCController(ctx, <span style="color: #BA2121">"tcp://localhost:14567"</span>), args<span style="color: #666">=</span>(context,))
-    controller_thread<span style="color: #666">.</span>daemon <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">True</span>
-    controller_thread<span style="color: #666">.</span>start()
-
-    <span style="color: #3D7B7B; font-style: italic"># - Start the Dash app:</span>
-    app <span style="color: #666">=</span> setup_web_app(args<span style="color: #666">.</span>host, args<span style="color: #666">.</span>port)
-    app<span style="color: #666">.</span>run(debug<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, port<span style="color: #666">=8000</span>)
-</code></pre></div>
-<h3 id="4-grbl-based-plant-scanner">4. GRBL-based Plant Scanner<a class="headerlink" href="#4-grbl-based-plant-scanner" title="Permanent link">Link</a></h3>
-<p>The GRBL-based plant scanner (<code>src/controller/plantimager/controller/scanner/grbl.py</code>) controls the movement of the camera during scanning.
-It communicates with the central controller and provides precise positioning of the camera.</p>
-<p>Key features:</p>
-<ul>
-<li>Serial communication with GRBL controller</li>
-<li>3-axis (X, Y, Z) movement control</li>
-<li>Position tracking</li>
-<li>Homing and calibration</li>
-<li>Safety features</li>
-</ul>
-<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">CNC</span>(AbstractCNC):
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""A concrete implementation of CNC machine control using GRBL firmware.</span>
-
-<span style="color: #BA2121; font-style: italic">    This class provides functionality to control a CNC machine running GRBL firmware</span>
-<span style="color: #BA2121; font-style: italic">    over a serial connection. It supports movement along X, Y, and Z axes, homing,</span>
-<span style="color: #BA2121; font-style: italic">    position queries, and both synchronous and asynchronous operations.</span>
-<span style="color: #BA2121; font-style: italic">    """</span>
-
-    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">__init__</span>(<span style="color: #008000">self</span>, port: <span style="color: #008000">str</span><span style="color: #666">=</span><span style="color: #BA2121">"/dev/ttyUSB0"</span>, baud_rate: <span style="color: #008000">int</span><span style="color: #666">=115200</span>):
-        <span style="color: #3D7B7B; font-style: italic"># ...</span>
-
-    <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">moveto</span>(<span style="color: #008000">self</span>, x: length_mm, y: length_mm, z: deg):
-<span style="color: #BBB">        </span><span style="color: #BA2121; font-style: italic">"""Move the CNC machine to specified coordinates and wait until the target position is reached."""</span>
-        <span style="color: #3D7B7B; font-style: italic"># ...</span>
-</code></pre></div>
-<h3 id="5-remote-plantdb-rest-api">5. Remote PlantDB REST API<a class="headerlink" href="#5-remote-plantdb-rest-api" title="Permanent link">Link</a></h3>
-<p>The PlantDB REST API serves as a central database repository for the Plant-Imager3 system.
-It stores scan data, metadata, and images, and provides a RESTful interface for accessing this data.</p>
-<p>Key features:</p>
-<ul>
-<li>RESTful API for data access</li>
-<li>Storage of scan data and metadata</li>
-<li>User authentication and authorization</li>
-<li>Integration with the Web UI and central controller</li>
-</ul>
-<p>The Web UI communicates with the PlantDB REST API to store and retrieve scan data:</p>
-<div class="language-python highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_dataset_list</span>(host: <span style="color: #008000">str</span>, port: <span style="color: #008000">int</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Returns the dataset dictionary for the PlantDB REST API at given host url and port."""</span>
-    <span style="color: #008000; font-weight: bold">try</span>:
-        response <span style="color: #666">=</span> requests<span style="color: #666">.</span>get(<span style="color: #BA2121">f"http://</span><span style="color: #A45A77; font-weight: bold">{</span>host<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>port<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">/scans"</span>)
-        <span style="color: #008000; font-weight: bold">if</span> response<span style="color: #666">.</span>status_code <span style="color: #666">==</span> <span style="color: #666">200</span>:
-            <span style="color: #008000; font-weight: bold">return</span> response<span style="color: #666">.</span>json()
-        <span style="color: #008000; font-weight: bold">else</span>:
-            <span style="color: #008000; font-weight: bold">return</span> []
-    <span style="color: #008000; font-weight: bold">except</span> requests<span style="color: #666">.</span>exceptions<span style="color: #666">.</span>RequestException:
-        <span style="color: #008000; font-weight: bold">return</span> []
-</code></pre></div>
-<h2 id="communication-diagram">Communication Diagram<a class="headerlink" href="#communication-diagram" title="Permanent link">Link</a></h2>
-<p>The following diagram illustrates the communication between the different components of the Plant-Imager3 system:</p>
-<div class="language-text highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>                                       +----------------+
-                                       |                |
-                                       |  GRBL-based    |
-                                       | Plant Scanner  |
-                                       |                |
-                                       +----------------+
-                                               ^
-                                               |
-                                               | Serial
-                                               |
-                                               v
-                                      +----------------+                     +----------------+
-                     HTTP             |                |       ZMQ RPC       |                |
-         ----------------------------&gt;|  Central PyQt  |&lt;-------------------&gt;|  Raspberry Pi  |
-         |                            |  Application   |                     |    Camera      |
-         |                            |                |                     |                |
-         |                            +----------------+                     +----------------+
-         |                                    ^
-         |                                    |
-         |                                    | ZMQ RPC
-         |                                    |
-         v                                    v
-+----------------+                     +----------------+
-|                |       HTTP          |                |
-|  PlantDB REST  |&lt;-------------------&gt;|     Web UI     |
-|      API       |                     |                |
-|                |                     |                |
-+----------------+                     +----------------+
-</code></pre></div>
-<p>In this diagram:</p>
-<ul>
-<li>The central PyQt application communicates with the Raspberry Pi camera and the GRBL-based plant scanner using ZMQ RPC</li>
-<li>The Web UI communicates with the central PyQt application using ZMQ RPC</li>
-<li>The Web UI and the central PyQt application communicate with the PlantDB REST API using HTTP</li>
-</ul>
-<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">Link</a></h2>
-<p>The Plant-Imager3 system uses a distributed architecture with multiple components that communicate using ZMQ-based RPC and HTTP.
-This architecture provides flexibility, scalability, and modularity, allowing the system to be deployed on different devices and adapted to different use cases.</p>
 
 
 

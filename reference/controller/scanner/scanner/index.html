@@ -3166,6 +3166,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../developer/timelapse_powermanager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timelapse &amp; PowerManager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../developer/full_stack_dev_setup/" class="md-nav__link">
         
   
@@ -4226,14 +4254,7 @@ active timelapse.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">654</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">655</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">656</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">657</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">658</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">659</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">660</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">661</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">661</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">662</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">663</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">664</span>
@@ -4243,7 +4264,14 @@ active timelapse.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">668</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">669</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">670</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">671</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">671</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">672</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">673</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">674</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">675</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">676</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">677</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">678</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">cancel_timelapse</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Cancel the active timelapse; CONFIGURED discards to IDLE (no CANCELLED).</span>
 
@@ -4441,7 +4469,8 @@ active timelapse.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">547</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">548</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">549</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">550</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #BA2121">"QVariant"</span>, result<span style="color: #666">=</span><span style="color: #BA2121">"QVariant"</span>)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">550</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">551</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #BA2121">"QVariant"</span>, result<span style="color: #666">=</span><span style="color: #BA2121">"QVariant"</span>)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">config_timelapse</span>(<span style="color: #008000">self</span>, config: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create a CONFIGURED draft (no arm/persist) and return its snapshot.</span>
 
@@ -4469,6 +4498,7 @@ active timelapse.</p>
     )
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>db_client <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
         tl<span style="color: #666">.</span>db_client <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>db_client
+    tl<span style="color: #666">.</span>api_token <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_api_token
     <span style="color: #008000">self</span><span style="color: #666">.</span>_wire_timelapse(tl)
     <span style="color: #008000">self</span><span style="color: #666">.</span>timelapse <span style="color: #666">=</span> tl
     <span style="color: #008000">self</span><span style="color: #666">.</span>timelapseChanged<span style="color: #666">.</span>emit(tl)
@@ -4669,9 +4699,7 @@ active timelapse.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">639</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">640</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">641</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">641</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">642</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">643</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">644</span>
@@ -4682,7 +4710,14 @@ active timelapse.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">649</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">650</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">651</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">652</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(result<span style="color: #666">=</span><span style="color: #BA2121">"QVariant"</span>)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">652</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">653</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">654</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">655</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">656</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">657</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">658</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">659</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(result<span style="color: #666">=</span><span style="color: #BA2121">"QVariant"</span>)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_active_timelapse</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return a serialisable snapshot of the active timelapse, or None.</span>
 
@@ -4692,7 +4727,12 @@ active timelapse.</p>
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>
     <span style="color: #008000; font-weight: bold">try</span>:
         store <span style="color: #666">=</span> TimelapseStore<span style="color: #666">.</span>from_timelapse(<span style="color: #008000">self</span><span style="color: #666">.</span>timelapse)
-        <span style="color: #008000; font-weight: bold">return</span> store<span style="color: #666">.</span>_as_serialisable_dict()
+        data <span style="color: #666">=</span> store<span style="color: #666">.</span>_as_serialisable_dict()
+        <span style="color: #3D7B7B; font-style: italic"># Never expose the persisted API token to QML/RPC readers.</span>
+        extra <span style="color: #666">=</span> data<span style="color: #666">.</span>get(<span style="color: #BA2121">"extra"</span>)
+        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(extra, <span style="color: #008000">dict</span>):
+            extra<span style="color: #666">.</span>pop(<span style="color: #BA2121">"api_token"</span>, <span style="color: #008000; font-weight: bold">None</span>)
+        <span style="color: #008000; font-weight: bold">return</span> data
     <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span> <span style="color: #008000; font-weight: bold">as</span> exc:
         logger<span style="color: #666">.</span>error(<span style="color: #BA2121">f"Failed to serialise active timelapse: </span><span style="color: #A45A77; font-weight: bold">{</span>exc<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>
@@ -4720,14 +4760,14 @@ active timelapse.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">722</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">723</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">724</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">725</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">726</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">727</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">728</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">729</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_position</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> Pose:
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">729</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">730</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">731</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">732</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">733</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">734</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">735</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">736</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_position</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> Pose:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Get the current position of the scanner as a 5D pose — read-only, not gated."""</span>
     cnc <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>power_manager<span style="color: #666">.</span>get_cnc()
     <span style="color: #008000; font-weight: bold">if</span> cnc <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
@@ -4759,16 +4799,16 @@ active timelapse.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">743</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">744</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">745</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">746</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">747</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">748</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">749</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">750</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">750</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">751</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">752</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_target_pose</span>(<span style="color: #008000">self</span>, x) <span style="color: #666">-&gt;</span> Pose:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">752</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">753</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">754</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">755</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">756</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">757</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">758</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">759</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">get_target_pose</span>(<span style="color: #008000">self</span>, x) <span style="color: #666">-&gt;</span> Pose:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Calculate the target pose from a path element."""</span>
     pos <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>get_position()
     target_pose <span style="color: #666">=</span> Pose()
@@ -4833,11 +4873,11 @@ active timelapse.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">754</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">755</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">756</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">757</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">758</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">float</span>, <span style="color: #008000">float</span>, <span style="color: #008000">float</span>)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">761</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">762</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">763</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">764</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">765</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">float</span>, <span style="color: #008000">float</span>, <span style="color: #008000">float</span>)
 <span style="color: #A2F">@require_manual</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">move_arm</span>(<span style="color: #008000">self</span>, x: <span style="color: #008000">float</span>, y: <span style="color: #008000">float</span>, z: <span style="color: #008000">float</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Move the arm to the specified position (gated)."""</span>
@@ -4866,14 +4906,7 @@ active timelapse.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">760</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">761</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">762</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">763</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">764</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">765</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">766</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">767</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">767</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">768</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">769</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">770</span>
@@ -4881,7 +4914,14 @@ active timelapse.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">772</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">773</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">774</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">775</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">775</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">776</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">777</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">778</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">779</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">780</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">781</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">782</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>()
 <span style="color: #A2F">@require_manual</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">move_to_center</span>(<span style="color: #008000">self</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Move the arm to the center (gated)."""</span>
@@ -4921,14 +4961,14 @@ active timelapse.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">777</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">778</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">779</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">780</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">781</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">782</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">783</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">784</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">int</span>)
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">784</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">785</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">786</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">787</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">788</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">789</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">790</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">791</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Slot</span>(<span style="color: #008000">int</span>)
 <span style="color: #A2F">@require_manual</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">move_to_position_in_path</span>(<span style="color: #008000">self</span>, i: <span style="color: #008000">int</span>):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Move the arm to the i-th position of the scan path (gated)."""</span>
@@ -4960,16 +5000,16 @@ active timelapse.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">786</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">787</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">788</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">789</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">790</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">791</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">792</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">793</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">793</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">794</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">795</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Property</span>(<span style="color: #008000">str</span>, notify<span style="color: #666">=</span>pathInfoChanged)
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">795</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">796</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">797</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">798</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">799</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">800</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">801</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">802</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@Property</span>(<span style="color: #008000">str</span>, notify<span style="color: #666">=</span>pathInfoChanged)
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">path_info</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Get information about the scan path."""</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scan_path:
@@ -5003,17 +5043,17 @@ active timelapse.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">673</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">674</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">675</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">676</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">677</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">678</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">679</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">680</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">680</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">681</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">682</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">683</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">preview_timelapse</span>(<span style="color: #008000">self</span>, config: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">683</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">684</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">685</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">686</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">687</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">688</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">689</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">690</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">preview_timelapse</span>(<span style="color: #008000">self</span>, config: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return the computed schedule for a config, without starting it."""</span>
     <span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.controller.scanner.powermanager</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> _is_grbl_cnc
     <span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">plantimager.controller.scanner.timelapse</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> TimeLapse <span style="color: #008000; font-weight: bold">as</span> _TL
@@ -5738,17 +5778,17 @@ runs it synchronously on the calling thread.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">731</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">732</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">733</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">734</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">735</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">736</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">737</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">738</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">738</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">739</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">740</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">741</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@require_manual</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">741</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">742</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">743</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">744</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">745</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">746</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">747</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">748</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@require_manual</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">set_position</span>(<span style="color: #008000">self</span>, pose: Pose) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Set the position of the scanner from a 5D Pose (gated to MANUAL)."""</span>
     cnc <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>power_manager<span style="color: #666">.</span>get_cnc()
@@ -5871,8 +5911,7 @@ or no draft exists when <code>config</code> is None.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/scanner.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">552</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">553</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">553</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">554</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">555</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">556</span>
@@ -5948,7 +5987,9 @@ or no draft exists when <code>config</code> is None.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">626</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">627</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">628</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">629</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">start_timelapse</span>(<span style="color: #008000">self</span>, config: <span style="color: #008000">dict</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">629</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">630</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">631</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">start_timelapse</span>(<span style="color: #008000">self</span>, config: <span style="color: #008000">dict</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create and start a new :class:`TimeLapse` and return its id.</span>
 
 <span style="color: #BA2121; font-style: italic">    Two flows: ``config_timelapse(config)`` → ``start_timelapse()``</span>
@@ -6015,6 +6056,7 @@ or no draft exists when <code>config</code> is None.</p>
     <span style="color: #3D7B7B; font-style: italic"># Reuse the single database connection instead of re-deriving it.</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">self</span><span style="color: #666">.</span>db_client <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
         tl<span style="color: #666">.</span>db_client <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>db_client
+    tl<span style="color: #666">.</span>api_token <span style="color: #666">=</span> <span style="color: #008000">self</span><span style="color: #666">.</span>_api_token
     <span style="color: #3D7B7B; font-style: italic"># Create PlantDB timelapse container if this is a multi-scan timelapse</span>
     <span style="color: #008000; font-weight: bold">if</span> tl<span style="color: #666">.</span>plantdb_timelapse_id <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #A2F; font-weight: bold">and</span> tl<span style="color: #666">.</span>db_client <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
         metadata <span style="color: #666">=</span> <span style="color: #008000">dict</span>(config<span style="color: #666">.</span>get(<span style="color: #BA2121">"Metadata"</span>, {}))
