@@ -9,7 +9,8 @@ ZeroMQ RPC, acting as a stand-in for a physical camera during development.
 - Provides a `DummyCamera` implementing the `Camera` RPC interface.
 - Serves JPEG or PNG images from a directory (the test dataset by default).
 - Exposes camera controls (encoding, config, mode, rotation, resolution)
-  as remote properties.
+  as remote properties, plus static sensor identification
+  via the `get_sensor_info` remote method.
 """
 import io
 import os
@@ -131,6 +132,8 @@ class DummyCamera(Camera, RPCServer):
     resolution : tuple of int
         Fixed resolution ``(640, 480)`` reported by the dummy camera.
     """
+
+    _sensor_info = {"model": "DummyCamera", "sensor": "simulated"}
 
     def __init__(self, context: zmq.Context, url: str) -> None:
         """Initialize the dummy camera and its RPC server.
@@ -343,6 +346,17 @@ class DummyCamera(Camera, RPCServer):
             Requested resolution; ignored.
         """
         pass
+
+    @RPCServer.register_method_json(timeout=5000)
+    def get_sensor_info(self) -> dict:
+        """Return static sensor identification.
+
+        Returns
+        -------
+        dict
+            ``{"model": "DummyCamera", "sensor": "simulated"}``.
+        """
+        return dict(self._sensor_info)
 
 
 if __name__ == "__main__":

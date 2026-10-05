@@ -10,7 +10,7 @@ import PlantImagerApp as P
 ItemDelegate {
     id: _self
 
-    property QtObject bridge: P.AppBridge.getCameraBridgeAtIndex(index)
+    property QtObject bridge: P.AppBridge ? P.AppBridge.getCameraBridgeAtIndex(index) : null
 
     height: P.Style.cameraDelegateHeight
     width: ListView.view.width
@@ -37,7 +37,7 @@ ItemDelegate {
         verticalAlignment: Text.AlignVCenter
         leftPadding: P.Style.smallMargin
 
-        text: bridge.name
+        text: bridge ? bridge.name : ""
         font: P.Style.fonts.header
     }
     P.Icon {
@@ -58,7 +58,7 @@ ItemDelegate {
         anchors.leftMargin: P.Style.smallMargin
 
         verticalAlignment: Text.AlignVCenter
-        text: bridge.status
+        text: bridge ? bridge.status : ""
         font: P.Style.fonts.label
         color: getStatusColor()
     }
@@ -79,6 +79,7 @@ ItemDelegate {
 
 
     function getStatusIcon() {
+        if(!bridge) return P.Icons.icons["panorama-fisheye"]
         if(bridge.statusClass === "ok") {
             return P.Icons.icons["check-circle"]
         } else if(bridge.statusClass === "error") {
@@ -91,6 +92,7 @@ ItemDelegate {
     }
 
     function  getStatusColor() {
+        if(!bridge) return P.Style.colors.neutralColor
         if(bridge.statusClass === "ok") {
             return P.Style.colors.okColor
         } else if(bridge.statusClass === "error") {

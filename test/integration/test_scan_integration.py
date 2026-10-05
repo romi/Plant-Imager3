@@ -134,7 +134,7 @@ class TestScanIntegration(unittest.TestCase):
         )
         rpc_controller.set_api_token(api_token)
         rpc_controller.set_db_url(self.db_url)
-        rpc_controller.set_dataset_name("test_dataset")
+        rpc_controller.set_base_name("test_dataset")
         rpc_controller.set_config(conf)
 
         # 6. Run Scan

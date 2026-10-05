@@ -71,3 +71,15 @@ scale = "m"
 [Metadata.object.biologicalMaterial.organism]
 species = "Arabidopsis"
 genus = "thaliana"
+
+[timelapse]
+mode = "interval"  # interval | fixed_times | one_shot
+interval = "30s"  # duration string or int seconds (interval mode)
+n_shots = 5
+warmup_period = 10
+grace_period = 120
+standby_threshold_sec = 600
+on_scan_failed = "skip_scan"  # skip_scan | fail_timelapse
+scan_retries = 0  # per-slot re-attempts before on_scan_failed applies
+# fixed_times example: mode="fixed_times", dates=["2026-09-23T10:00:00","2026-09-23T14:00:00"]
+# one_shot example: mode="one_shot", n_shots omitted

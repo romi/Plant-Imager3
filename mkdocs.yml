@@ -17,6 +17,7 @@ nav:
     - developer/guidelines.md
     - developer/architecture.md
     - developer/RPC.md
+    - developer/timelapse_powermanager.md
     - 'Full-Stack Dev Setup': developer/full_stack_dev_setup.md
     - developer/NTP_server.md
     - 'WebUI Syntax Highlighting': developer/webui_syntax_highlighting.md

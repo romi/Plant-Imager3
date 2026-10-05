@@ -26,6 +26,7 @@ python -m plantimager.controller.main
 ```
 """
 
+import os
 import signal
 import sys
 from os.path import dirname
@@ -81,6 +82,16 @@ def main() -> None:
     Exits with a non-zero code if the QML module fails to load.
     """
     logger.info("Starting Plant-Imager3 controller")
+    if "--allow-dummy-cnc" in sys.argv:
+        os.environ["PI3_ALLOW_DUMMY_CNC"] = "1"
+    if "--cnc" in sys.argv:
+        try:
+            idx = sys.argv.index("--cnc")
+            val = sys.argv[idx + 1].lower()
+            if val in ("dummy", "real"):
+                os.environ["PI3_CNC_MODE"] = val
+        except Exception:
+            pass
     app = QGuiApplication(sys.argv)
 
     font = QFont("Nunito Sans")
@@ -94,9 +105,27 @@ def main() -> None:
     logger.debug("Loading QML module PlantImagerApp")
     engine.loadFromModule("PlantImagerApp", "Loader")
 
+    try:
+        from plantimager.controller.AppBridge import _last_init_error
+
+        if _last_init_error is not None:
+            import traceback
+
+            print("\n--- AppBridge init failed ---", file=sys.stderr)
+            traceback.print_exception(
+                type(_last_init_error),
+                _last_init_error,
+                _last_init_error.__traceback__,
+            )
+            sys.exit(1)
+    except SystemExit:
+        raise
+    except Exception:
+        pass
+
     if not engine.rootObjects():
         logger.error("Failed to load QML module PlantImagerApp, no root objects created")
-        sys.exit(-1)  # A load error is fatal: there is no UI to show
+        sys.exit(1)  # A load error is fatal: there is no UI to show
     logger.info("QML module loaded successfully")
 
     # Keep the interpreter running so Python receives unix signals (SIGINT) between Qt's event loop iterations

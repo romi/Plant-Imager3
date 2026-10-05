@@ -27,6 +27,15 @@ class Camera(ABC):
     def get_image(self, lores=False) -> tuple[memoryview, dict]:
         pass
 
+    @abstractmethod
+    def get_sensor_info(self) -> dict:
+        """Return static sensor identification as JSON-serializable dict.
+
+        Keys: ``model`` (camera board/module model),
+        ``sensor`` (image sensor chip name).
+        """
+        pass
+
     @RPCProperty(notify=modeChanged)
     @abstractmethod
     def mode(self) -> Literal[CameraMode.VIDEO, CameraMode.STILL]:
