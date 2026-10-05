@@ -2998,6 +2998,9 @@
 <p>Formerly the <code>[Metadata.hardware]</code> section of <code>config_scan.toml</code> (removed
 from the config in the MIAPPE-schema update — rig hardware is a constant, not
 a per-scan operator input).</p>
+<p>Sensor identification is NOT part of this constant: it is fetched live from
+each camera via <code>Camera.get_sensor_info()</code> at scan start and stored under
+<code>config[camera.name]["metadata"]</code>.</p>
 <p>Do not mutate: consumers must take a per-instance copy
 (<code>dict(HARDWARE_METADATA)</code>) before any per-run adjustment.</p>
 
