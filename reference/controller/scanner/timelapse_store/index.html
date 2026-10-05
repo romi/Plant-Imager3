@@ -1614,6 +1614,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../hardware_metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hardware_metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../path/" class="md-nav__link">
         
   
@@ -3292,7 +3320,7 @@
   </span>
 
 <a href="#plantimager.controller.scanner.timelapse_store.TimelapseStore" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>TimelapseStore(_file_name<span style="color: #666">=</span><a class="autorefs autorefs-external" title="os.getenv" href="https://docs.python.org/3/library/os.html#os.getenv">getenv</a>(<span style="color: #BA2121">'PI3_TIMELAPSE_FILE_NAME'</span>, <span title="plantimager.controller.scanner.timelapse_store.TIMELAPSE_STORAGE_JSON">TIMELAPSE_STORAGE_JSON</span>), version<span style="color: #666">=1</span>, timelapse_id<span style="color: #666">=</span><span style="color: #BA2121">''</span>, mode<span style="color: #666">=</span><span style="color: #BA2121">''</span>, state<span style="color: #666">=</span><span style="color: #BA2121">''</span>, schedule_times<span style="color: #666">=</span><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#list">list</a>(), next_idx<span style="color: #666">=0</span>, current_idx<span style="color: #666">=0</span>, warmup_sec<span style="color: #666">=0</span>, standby_threshold_sec<span style="color: #666">=0</span>, grace_period<span style="color: #666">=0</span>, start_at<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, scans<span style="color: #666">=</span><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#list">list</a>(), extra<span style="color: #666">=</span><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#dict">dict</a>())
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>TimelapseStore(_file_name<span style="color: #666">=</span><a class="autorefs autorefs-external" title="os.getenv" href="https://docs.python.org/3/library/os.html#os.getenv">getenv</a>(<span style="color: #BA2121">'PI3_TIMELAPSE_FILE_NAME'</span>, <span title="plantimager.controller.scanner.timelapse_store.TIMELAPSE_STORAGE_JSON">TIMELAPSE_STORAGE_JSON</span>), version<span style="color: #666">=1</span>, timelapse_id<span style="color: #666">=</span><span style="color: #BA2121">''</span>, mode<span style="color: #666">=</span><span style="color: #BA2121">''</span>, state<span style="color: #666">=</span><span style="color: #BA2121">''</span>, schedule_times<span style="color: #666">=</span><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#list">list</a>(), next_idx<span style="color: #666">=0</span>, current_idx<span style="color: #666">=0</span>, warmup_sec<span style="color: #666">=0</span>, standby_threshold_sec<span style="color: #666">=0</span>, grace_period<span style="color: #666">=0</span>, on_scan_failed<span style="color: #666">=</span><span style="color: #BA2121">'skip_scan'</span>, scan_retries<span style="color: #666">=0</span>, start_at<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>, scans<span style="color: #666">=</span><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#list">list</a>(), extra<span style="color: #666">=</span><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#dict">dict</a>())
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3345,13 +3373,7 @@ Only the fields that are required for a restart are persisted.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/timelapse_store.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">223</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">224</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">226</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">227</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">228</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">229</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">229</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">230</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">231</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">232</span>
@@ -3371,7 +3393,19 @@ Only the fields that are required for a restart are persisted.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">246</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">248</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">253</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">254</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">255</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">256</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">257</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">258</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">259</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">260</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@staticmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">from_timelapse</span>(tl_obj: Any) <span style="color: #666">-&gt;</span> <span style="color: #BA2121">"TimelapseStore"</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Create a store instance from a *live* TimeLapse object.</span>
@@ -3382,7 +3416,11 @@ Only the fields that are required for a restart are persisted.</p>
 
     <span style="color: #3D7B7B; font-style: italic"># Build thin ScanRecord objects – we avoid persisting the whole Scan</span>
     <span style="color: #3D7B7B; font-style: italic"># to keep the JSON small and independent of heavy objects.</span>
-    scan_records <span style="color: #666">=</span> [asdict(ScanRecord<span style="color: #666">.</span>from_scan(s)) <span style="color: #008000; font-weight: bold">for</span> s <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">getattr</span>(tl_obj, <span style="color: #BA2121">"scans"</span>, [])]
+    <span style="color: #3D7B7B; font-style: italic"># Exhausted failures are already ScanRecords — pass them through.</span>
+    scan_records <span style="color: #666">=</span> [
+        asdict(s) <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(s, ScanRecord) <span style="color: #008000; font-weight: bold">else</span> asdict(ScanRecord<span style="color: #666">.</span>from_scan(s))
+        <span style="color: #008000; font-weight: bold">for</span> s <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">getattr</span>(tl_obj, <span style="color: #BA2121">"scans"</span>, [])
+    ]
 
     <span style="color: #008000; font-weight: bold">return</span> TimelapseStore(
         timelapse_id<span style="color: #666">=</span>tl_obj<span style="color: #666">.</span>id,
@@ -3394,6 +3432,8 @@ Only the fields that are required for a restart are persisted.</p>
         warmup_sec<span style="color: #666">=</span>tl_obj<span style="color: #666">.</span>warmup_sec,
         standby_threshold_sec<span style="color: #666">=</span>tl_obj<span style="color: #666">.</span>standby_threshold_sec,
         grace_period<span style="color: #666">=</span>tl_obj<span style="color: #666">.</span>grace_period,
+        on_scan_failed<span style="color: #666">=</span><span style="color: #008000">getattr</span>(tl_obj, <span style="color: #BA2121">"on_scan_failed"</span>, <span style="color: #BA2121">"skip_scan"</span>),
+        scan_retries<span style="color: #666">=</span><span style="color: #008000">getattr</span>(tl_obj, <span style="color: #BA2121">"scan_retries"</span>, <span style="color: #666">0</span>),
         start_at<span style="color: #666">=</span>_dt_to_iso(tl_obj<span style="color: #666">.</span>start_at),
         scans<span style="color: #666">=</span>scan_records,
         extra<span style="color: #666">=</span>{},
@@ -3472,9 +3512,7 @@ If the environment variable is not set, it defaults to <code>"timelapse_storage.
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/timelapse_store.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">133</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">134</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">135</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">135</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">136</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">137</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">138</span>
@@ -3533,7 +3571,11 @@ If the environment variable is not set, it defaults to <code>"timelapse_storage.
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">191</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">192</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@classmethod</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@classmethod</span>
 <span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">new_store_from_last</span>(<span style="color: #008000">cls</span>) <span style="color: #666">-&gt;</span> Optional[<span style="color: #BA2121">"TimelapseStore"</span>]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Load a `TimelapseStore` instance from a stored JSON file in the storage directory.</span>
@@ -3585,6 +3627,8 @@ If the environment variable is not set, it defaults to <code>"timelapse_storage.
             warmup_sec<span style="color: #666">=</span>raw<span style="color: #666">.</span>get(<span style="color: #BA2121">"warmup_sec"</span>, <span style="color: #666">0</span>),
             standby_threshold_sec<span style="color: #666">=</span>raw<span style="color: #666">.</span>get(<span style="color: #BA2121">"standby_threshold_sec"</span>, <span style="color: #666">0</span>),
             grace_period<span style="color: #666">=</span>raw<span style="color: #666">.</span>get(<span style="color: #BA2121">"grace_period"</span>, <span style="color: #666">0</span>),
+            on_scan_failed<span style="color: #666">=</span>raw<span style="color: #666">.</span>get(<span style="color: #BA2121">"on_scan_failed"</span>, <span style="color: #BA2121">"skip_scan"</span>),
+            scan_retries<span style="color: #666">=</span>raw<span style="color: #666">.</span>get(<span style="color: #BA2121">"scan_retries"</span>, <span style="color: #666">0</span>),
             start_at<span style="color: #666">=</span>raw<span style="color: #666">.</span>get(<span style="color: #BA2121">"start_at"</span>),
             scans<span style="color: #666">=</span>raw<span style="color: #666">.</span>get(<span style="color: #BA2121">"scans"</span>, []),
             extra<span style="color: #666">=</span>raw<span style="color: #666">.</span>get(<span style="color: #BA2121">"extra"</span>, {}),
@@ -3619,9 +3663,7 @@ If the environment variable is not set, it defaults to <code>"timelapse_storage.
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/timelapse_store.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">116</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
@@ -3637,7 +3679,9 @@ If the environment variable is not set, it defaults to <code>"timelapse_storage.
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">128</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">129</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">130</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">131</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">save</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">131</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">132</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">133</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">save</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Write the current state to disk atomically."""</span>
     <span style="color: #008000; font-weight: bold">try</span>:
         get_storage_dir()<span style="color: #666">.</span>mkdir(parents<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, exist_ok<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
@@ -3681,11 +3725,7 @@ If the environment variable is not set, it defaults to <code>"timelapse_storage.
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/controller/scanner/timelapse_store.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span>
@@ -3703,7 +3743,13 @@ If the environment variable is not set, it defaults to <code>"timelapse_storage.
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">218</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">219</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">220</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">221</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">to_timelapse_kwargs</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> Dict[<span style="color: #008000">str</span>, Any]:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">221</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">222</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">223</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">224</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">225</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">226</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">227</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">to_timelapse_kwargs</span>(<span style="color: #008000">self</span>) <span style="color: #666">-&gt;</span> Dict[<span style="color: #008000">str</span>, Any]:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""</span>
 <span style="color: #BA2121; font-style: italic">    Convert the stored JSON into a dict that can be fed to a new</span>
 <span style="color: #BA2121; font-style: italic">    `TimeLapse` instance for a quick “resume” path.</span>
@@ -3722,6 +3768,8 @@ If the environment variable is not set, it defaults to <code>"timelapse_storage.
         <span style="color: #BA2121">"warmup_sec"</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>warmup_sec,
         <span style="color: #BA2121">"standby_threshold_sec"</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>standby_threshold_sec,
         <span style="color: #BA2121">"grace_period"</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>grace_period,
+        <span style="color: #BA2121">"on_scan_failed"</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>on_scan_failed,
+        <span style="color: #BA2121">"scan_retries"</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>scan_retries,
         <span style="color: #BA2121">"start_at"</span>: start,
         <span style="color: #BA2121">"scans"</span>: [ScanRecord(<span style="color: #666">**</span>s) <span style="color: #008000; font-weight: bold">for</span> s <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">self</span><span style="color: #666">.</span>scans],
         <span style="color: #BA2121">"extra"</span>: <span style="color: #008000">self</span><span style="color: #666">.</span>extra,
