@@ -388,6 +388,38 @@ class Scan(QObject):
 
         return data
 
+    def _refresh_camera_info(self) -> None:
+        """Fetch live sensor info and resolution from each camera.
+
+        Merges ``get_sensor_info()`` into ``config[camera.name]["metadata"]``;
+        user-configured keys take precedence over RPC values. Refreshes
+        ``res_x``/``res_y`` from the live resolution. Best-effort per camera:
+        failures leave the configured values untouched and never abort the scan.
+        """
+        for camera in self.cameras:
+            name = camera.name
+            if name not in self.config:
+                continue
+            section = self.config[name]
+            try:
+                rpc_info = camera.get_sensor_info()
+            except Exception as e:
+                logger.warning(f"Could not fetch sensor info from camera {name}: {e}")
+                rpc_info = None
+            if isinstance(rpc_info, dict):
+                user_meta = section.get("metadata", {})
+                if not isinstance(user_meta, dict):
+                    user_meta = {}
+                section["metadata"] = {**rpc_info, **user_meta}
+            try:
+                live_res = camera.resolution
+            except Exception as e:
+                logger.warning(f"Could not read resolution from camera {name}: {e}")
+                continue
+            if (isinstance(live_res, (tuple, list)) and len(live_res) == 2
+                    and all(isinstance(v, int) and v >= 0 for v in live_res)):
+                section["res_x"], section["res_y"] = live_res
+
     def scan(self) -> None:
         """Execute the complete scanning process.
 
@@ -424,6 +456,8 @@ class Scan(QObject):
         # Update metadata if using dummy CNC
         if isinstance(self.cnc, DummyCNC):
             self.hw_metadata["name"] = "DummyCNC"
+
+        self._refresh_camera_info()
 
         self._start_time = time.time()
         time_info = {

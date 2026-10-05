@@ -260,3 +260,13 @@ class PiCameraComm(QObject):
     @config.setter
     def config(self, value: tuple[int, int]):
         self._set_attr_async("config", value)
+
+    def get_sensor_info(self) -> dict | None:
+        try:
+            with self.camera() as camera:
+                if camera is None:
+                    return None
+                info = camera.get_sensor_info()
+        except Exception:
+            return None
+        return info if isinstance(info, dict) else None

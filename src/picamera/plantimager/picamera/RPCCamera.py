@@ -33,6 +33,11 @@ class RPCCamera(Camera, RPCServer):
     def __init__(self, context: zmq.Context, url: str):
         RPCServer.__init__(self, context, url)
         self.picam = Picamera2()
+        self._sensor_info = {
+            "model": str(self.picam.camera_properties.get("Model", "unknown")),
+            "sensor": str(self.picam.camera_properties.get("SensorName",
+                self.picam.camera_properties.get("SensorModel", "unknown"))),
+        }
         max_res = self.picam.camera_properties["PixelArraySize"]
         print(self.picam.camera_properties)
         self.video_config = self.picam.create_video_configuration(
@@ -115,6 +120,10 @@ class RPCCamera(Camera, RPCServer):
                 buffer = encode_jpeg(image, quality=95, colorsubsampling="444", fastdct=True)
                 fmt = "jpeg"
         return memoryview(buffer), {"format": fmt, "rotation": self._rotation, "size": image.shape, "channel": "rgb"}
+
+    @RPCServer.register_method_json(timeout=5000)
+    def get_sensor_info(self) -> dict:
+        return dict(self._sensor_info)
 
     @RPCProperty(notify=Camera.encodingChanged)
     def encoding(self) -> str:

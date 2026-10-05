@@ -247,9 +247,49 @@ class TestScanUnit(unittest.TestCase):
             config=config,
         )
         self.assertEqual(scan.hw_metadata, HARDWARE_METADATA)
+        self.assertNotIn("sensor_1", HARDWARE_METADATA)
+        self.assertNotIn("sensor_2", HARDWARE_METADATA)
 
     def test_hw_metadata_constant_not_mutated(self):
         from plantimager.controller.scanner.hardware_metadata import HARDWARE_METADATA
         self.assertIsNot(self.scan.hw_metadata, HARDWARE_METADATA)
         self.scan.hw_metadata["name"] = "DummyCNC"
         self.assertNotEqual(HARDWARE_METADATA["name"], "DummyCNC")
+
+    # ------------------------------------------------------------------
+    def test_refresh_camera_info_merges_rpc_and_user_metadata(self):
+        self.mock_camera.get_sensor_info.return_value = {"model": "imx477", "sensor": "sony"}
+        self.mock_camera.resolution = (4056, 3040)
+        self.config["cam1"]["metadata"] = {"lens": "6mm"}
+        self.scan._refresh_camera_info()
+        self.assertEqual(
+            self.config["cam1"]["metadata"],
+            {"model": "imx477", "sensor": "sony", "lens": "6mm"},
+        )
+        self.assertEqual(self.config["cam1"]["res_x"], 4056)
+        self.assertEqual(self.config["cam1"]["res_y"], 3040)
+
+    def test_refresh_camera_info_user_overrides_rpc(self):
+        self.mock_camera.get_sensor_info.return_value = {"model": "imx477", "sensor": "sony"}
+        self.mock_camera.resolution = (640, 480)
+        self.config["cam1"]["metadata"] = {"model": "custom", "lens": "12mm"}
+        self.scan._refresh_camera_info()
+        self.assertEqual(
+            self.config["cam1"]["metadata"],
+            {"model": "custom", "sensor": "sony", "lens": "12mm"},
+        )
+
+    def test_refresh_camera_info_unreachable_camera(self):
+        self.mock_camera.get_sensor_info.return_value = None
+        self.mock_camera.resolution = (-1, -1)
+        self.scan._refresh_camera_info()
+        self.assertNotIn("metadata", self.config["cam1"])
+        self.assertNotIn("res_x", self.config["cam1"])
+        self.assertNotIn("res_y", self.config["cam1"])
+
+    def test_refresh_camera_info_skips_cameras_not_in_config(self):
+        self.mock_camera.name = "ghost"
+        self.mock_camera.get_sensor_info.return_value = {"model": "imx477", "sensor": "sony"}
+        self.scan._refresh_camera_info()
+        self.assertNotIn("ghost", self.config)
+        self.assertNotIn("metadata", self.config["cam1"])
