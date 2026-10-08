@@ -221,6 +221,47 @@ def test_rpc_timelapse_methods_delegate_to_scanner():
     fake.preview_timelapse.assert_called_once_with({"timelapse": {}})
 
 
+def test_rpc_active_timelapse_property_delegates_to_scanner():
+    fake = MagicMock()
+    fake.get_active_timelapse.return_value = {"timelapse_id": "tl_123", "state": "SCHEDULED"}
+
+    server = _rpc_server_with(fake)
+    assert server.active_timelapse == {"timelapse_id": "tl_123", "state": "SCHEDULED"}
+
+    fake.get_active_timelapse.return_value = None
+    assert server.active_timelapse is None
+
+
+def test_rpc_get_active_timelapse_shim_matches_property():
+    fake = MagicMock()
+    fake.get_active_timelapse.return_value = {"timelapse_id": "tl_123", "state": "SCHEDULED"}
+
+    server = _rpc_server_with(fake)
+    assert server.get_active_timelapse() == server.active_timelapse
+
+
+def test_rpc_timelapse_changed_forwarded_on_config(scanner):
+    from plantimager.controller.scanner.rpc_controller import RPCControllerServer
+
+    server = _rpc_server_with(scanner)
+    server._connect_timelapse_signals()
+    fired = []
+
+    def _record():
+        fired.append(True)
+
+    server.timelapseChanged.connect(_record)
+    try:
+        scanner.set_base_name("propExp")
+        scanner.db_client = MagicMock()
+        scanner.config_timelapse(minimal_timelapse_config())
+        assert fired, "timelapseChanged not forwarded on config_timelapse"
+        assert server.active_timelapse is not None
+        assert server.active_timelapse["state"] == "configured"
+    finally:
+        server.timelapseChanged.disconnect(_record)
+
+
 # ----------------------------------------------------------------------
 # CONFIGURED draft lifecycle — Scanner bridge
 # ----------------------------------------------------------------------

@@ -15,6 +15,7 @@ class ControllerDevice(ABC):
     maxProgressChanged = RPCSignal(int)
     readyToScanChanged = RPCSignal(bool)
     cameraNamesChanged = RPCSignal(list[str])
+    timelapseChanged = RPCSignal()
 
     def __init__(self):
         pass
@@ -56,7 +57,10 @@ class ControllerDevice(ABC):
 
     @abstractmethod
     def get_active_timelapse(self) -> dict | None:
-        """Return a serialisable snapshot of the active timelapse, or None."""
+        """Return a serialisable snapshot of the active timelapse, or None.
+
+        Compat shim over the ``active_timelapse`` property.
+        """
         pass
 
     @abstractmethod
@@ -67,6 +71,12 @@ class ControllerDevice(ABC):
     @abstractmethod
     def preview_timelapse(self, config: dict) -> dict:
         """Return the schedule computed for a config, without starting it."""
+        pass
+
+    @RPCProperty(notify=timelapseChanged)
+    @abstractmethod
+    def active_timelapse(self) -> dict | None:
+        """Return a serialisable snapshot of the active timelapse, or None."""
         pass
 
     @RPCProperty(notify=progressChanged)

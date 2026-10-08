@@ -143,6 +143,20 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         self.scanner.maxProgressChanged.connect(self.maxProgressChanged.emit)
         self.scanner.readyToScanChanged.connect(self.readyToScanChanged.emit)
         self.scanner.cameraNamesChanged.connect(self.cameraNamesChanged.emit)
+        self._connect_timelapse_signals()
+
+    def _connect_timelapse_signals(self):
+        """Forward Scanner timelapse signals to the ``timelapseChanged`` notifier.
+
+        Payloads are swallowed on purpose: ``timelapseChanged`` is a unit
+        signal meaning "re-read ``active_timelapse``", since the Qt payloads
+        (e.g. ``QObject``) are not JSON-serialisable.
+        """
+        self.scanner.timelapseChanged.connect(lambda *_args: self.timelapseChanged.emit())
+        self.scanner.timelapseStateChanged.connect(lambda *_args: self.timelapseChanged.emit())
+        self.scanner.timelapseProgressChanged.connect(lambda *_args: self.timelapseChanged.emit())
+        self.scanner.timelapseErrorOccurred.connect(lambda *_args: self.timelapseChanged.emit())
+        self.scanner.timelapseFinished.connect(lambda: self.timelapseChanged.emit())
 
     def _invoke_on_main_thread(self, call):
         """Run ``call`` on the Qt main thread and return its result.
@@ -225,6 +239,14 @@ class RPCControllerServer(ControllerDevice, RPCServer):
 
     @RPCServer.register_method_json()
     def get_active_timelapse(self):
+        """Return a serialisable snapshot of the active timelapse, or None.
+
+        Compat shim over the ``active_timelapse`` property.
+        """
+        return self.active_timelapse
+
+    @RPCProperty(notify=ControllerDevice.timelapseChanged)
+    def active_timelapse(self) -> dict | None:
         """Return a serialisable snapshot of the active timelapse, or None."""
         return self.scanner.get_active_timelapse()
 
@@ -305,7 +327,9 @@ class RPCControllerServer(ControllerDevice, RPCServer):
             self.scanner.maxProgressChanged.connect(self.maxProgressChanged.emit)
             self.scanner.readyToScanChanged.connect(self.readyToScanChanged.emit)
             self.scanner.cameraNamesChanged.connect(self.cameraNamesChanged.emit)
+            self._connect_timelapse_signals()
             self.progressChanged.emit(self.scanner.progress)
             self.maxProgressChanged.emit(self.scanner.max_progress)
             self.readyToScanChanged.emit(self.scanner.ready_to_scan)
             self.cameraNamesChanged.emit(self.scanner.camera_names)
+            self.timelapseChanged.emit()
