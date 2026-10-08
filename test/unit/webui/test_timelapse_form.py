@@ -13,6 +13,7 @@ from plantimager.webui.scan import (
     _load_cfg,
     _local_preview_line,
     _render_preview,
+    _render_timelapse_status,
     _tl_body_style,
     _tl_num,
     _toggle_scan_buttons,
@@ -20,6 +21,7 @@ from plantimager.webui.scan import (
     cancel_scan,
     populate_timelapse,
     rebuild_timelapse,
+    update_timelapse_snapshot,
 )
 
 
@@ -151,14 +153,16 @@ class TestScanButtons(unittest.TestCase):
         return "".join(c for c in children if isinstance(c, str))
 
     def test_labels_follow_switch(self):
-        start, cancel, dataset = _toggle_scan_buttons(True)
+        start, cancel, dataset, config = _toggle_scan_buttons(True)
         self.assertIn("Start Timelapse", self._text(start))
         self.assertIn("Cancel Timelapse", self._text(cancel))
         self.assertIn("timelapse", dataset)
-        start, cancel, dataset = _toggle_scan_buttons(False)
+        self.assertIn("Configure Timelapse", self._text(config))
+        start, cancel, dataset, config = _toggle_scan_buttons(False)
         self.assertIn("Start Scanning", self._text(start))
         self.assertIn("Cancel Scan", self._text(cancel))
         self.assertIn("dataset", dataset)
+        self.assertIn("Configure Scanner", self._text(config))
 
     def test_cancel_legacy_needs_no_controller(self):
         self.assertEqual(cancel_scan(None, False), "Cancelling scan...")
@@ -180,6 +184,38 @@ class TestPreviewRender(unittest.TestCase):
     def test_local_line_falls_back(self):
         self.assertEqual(_local_preview_line("not-a-date"), "not-a-date")
         self.assertRegex(_local_preview_line("2026-10-09T10:00:00+00:00"), r"\d{2}/\d{2} \d{2}:\d{2}")
+
+
+class TestStatusRender(unittest.TestCase):
+    def test_empty(self):
+        self.assertEqual(_render_timelapse_status(None)[0], "No timelapse")
+
+    def test_running_multi(self):
+        badge, color, text = _render_timelapse_status({
+            "timelapse_id": "exp", "mode": "interval", "state": "SCHEDULED",
+            "plantdb_timelapse_id": "exp", "next_idx": 1,
+            "schedule_times": ["2026-10-09T10:00:00+00:00", "2026-10-09T11:00:00+00:00"],
+        })
+        self.assertEqual(badge, "SCHEDULED")
+        self.assertEqual(color, "warning")
+        self.assertIn("1/2", text)
+
+    def test_bare_single_row(self):
+        badge, color, text = _render_timelapse_status({
+            "timelapse_id": "exp", "mode": "one_shot", "state": "SCHEDULED",
+            "plantdb_timelapse_id": None, "next_idx": 0,
+            "schedule_times": ["2026-10-09T10:00:00+00:00"],
+        })
+        self.assertIn("Single scan", text)
+
+    def test_failed_color(self):
+        self.assertEqual(_render_timelapse_status({"state": "FAILED"})[1], "danger")
+
+    def test_snapshot_mirror(self):
+        update_timelapse_snapshot({"state": "x"})
+        import plantimager.webui.scan as scan_mod
+        self.assertEqual(scan_mod.latest_timelapse, {"state": "x"})
+        update_timelapse_snapshot(None)
 
 
 if __name__ == "__main__":

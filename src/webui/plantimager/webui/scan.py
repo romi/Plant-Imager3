@@ -477,6 +477,28 @@ camera_card = [
     )
 ]
 
+# Card showing the active timelapse state (badge + progress), polled every 4s.
+timelapse_status_card = [
+    dbc.Card(
+        id="timelapse-status-card",
+        children=[
+            dbc.CardHeader(children=[html.I(className="bi bi-clock-history me-2"), "Timelapse"]),
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(dbc.Badge("No timelapse", color="secondary", id="tl-status-badge"),
+                            width="auto"),
+                    dbc.Col(html.Div(id="tl-status-text", className="text-muted"),
+                            className="align-self-center"),
+                ], className="g-2 align-items-center"),
+                dbc.Button([html.I(className="bi bi-table me-2"), "View schedule"],
+                           id="tl-view-schedule-btn", color="secondary", outline=True, size="sm",
+                           class_name="mt-2"),
+            ]),
+        ]
+    )
+]
+
+
 # Card containing scan controls and status information
 scan_card = [
     dbc.Card(
@@ -566,7 +588,8 @@ scan_layout = html.Div(
         dcc.Interval(id='main-interval', disabled=False, interval=4000),
         dbc.Row([
             dbc.Col(configuration_card, md=6),
-            dbc.Col(dataset_name_card + [html.Br()] + camera_card + [html.Br()] + scan_card, md=6)
+            dbc.Col(dataset_name_card + [html.Br()] + camera_card + [html.Br()] + scan_card
+                    + [html.Br()] + timelapse_status_card, md=6)
         ]),
         # Modal showing the current TOML configuration (read-only).
         dbc.Modal(id="view-cfg-modal", is_open=False, size="lg", scrollable=True,
@@ -954,17 +977,21 @@ def preview_timelapse_schedule(_, toml_text):
     Output('start-scan-button', 'children'),
     Output('cancel-scan-button', 'children'),
     Output('dataset-name-label', 'children'),
+    Output('config-scan-button', 'children'),
     Input('tl-enabled', 'value'),
 )
 def _toggle_scan_buttons(enabled):
-    """Single Start/Cancel pair whose labels follow the timelapse switch."""
+    """Single Start/Cancel/Configure set whose labels follow the timelapse switch."""
+    gear = [html.I(className="bi bi-gear-fill me-2")]
     if enabled:
         return ([html.I(className="bi bi-play-fill me-2"), "Start Timelapse"],
                 [html.I(className="bi bi-x-circle-fill me-2"), "Cancel Timelapse"],
-                "Name of the timelapse to create:")
+                "Name of the timelapse to create:",
+                gear + ["Configure Timelapse"])
     return ([html.I(className="bi bi-play-fill me-2"), "Start Scanning"],
             [html.I(className="bi bi-x-circle-fill me-2"), "Cancel Scan"],
-            "Name of the dataset to create:")
+            "Name of the dataset to create:",
+            gear + ["Configure Scanner"])
 
 
 available_cameras = []
@@ -1007,6 +1034,60 @@ def update_interval(n_intervals, *current):
         else:
             names.append(no_update)
     return markdown, *names
+
+
+#: Badge colors mirroring the controller QML status mapping.
+_TL_BADGE = {"CONFIGURED": "success", "SCHEDULED": "warning", "RUNNING": "warning",
+             "COMPLETED": "success", "FAILED": "danger", "CANCELLED": "secondary"}
+
+#: Latest timelapse snapshot pushed via ``timelapseChanged`` (see ``update_timelapse_status``).
+latest_timelapse = None
+
+
+def update_timelapse_snapshot(val):
+    """Cache a pushed timelapse snapshot for the status sampler."""
+    global latest_timelapse
+    latest_timelapse = val
+
+
+def _render_timelapse_status(snap: dict | None) -> tuple[str, str, str]:
+    """Render an ``active_timelapse`` snapshot as (badge text, badge color, detail)."""
+    if snap is None:
+        return "No timelapse", "secondary", "Configure or start a timelapse."
+    state = str(snap.get("state") or "").upper()
+    color = _TL_BADGE.get(state, "secondary")
+    times = snap.get("schedule_times") or []
+    total = len(times)
+    next_idx = snap.get("next_idx", 0) or 0
+    local = _local_preview_line(times[next_idx]) if next_idx < total else "—"
+    if snap.get("plantdb_timelapse_id") is None or total <= 1:
+        return state or "Timelapse", color, f"Single scan · {local}"
+    tid = snap.get("timelapse_id", "")
+    mode = snap.get("mode", "")
+    return (state or "Timelapse", color,
+            f"{tid} · {mode} · {next_idx}/{total} · next {local}")
+
+
+@callback(
+    Output('tl-status-badge', 'children'),
+    Output('tl-status-badge', 'color'),
+    Output('tl-status-text', 'children'),
+    Input('main-interval', 'n_intervals'),
+    prevent_initial_call=True)
+def update_timelapse_status(_):
+    """Poll the ``active_timelapse`` property and render the status card."""
+    try:
+        controller = RPCController.instance()
+    except RuntimeError:
+        return "No controller", "secondary", ""
+    if update_timelapse_snapshot not in controller.timelapseChanged.connections:
+        controller.timelapseChanged.connect(update_timelapse_snapshot)
+    snap = controller.active_timelapse
+    if isinstance(snap, NoResult):
+        snap = latest_timelapse
+    else:
+        update_timelapse_snapshot(snap)
+    return _render_timelapse_status(snap)
 
 
 @callback(
@@ -1543,9 +1624,11 @@ def cancel_scan(_, tl_enabled):
     State('plantdb-ssl', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
+    State('tl-enabled', 'value'),
     prevent_initial_call=True,
 )
-def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, dataset_name: str):
+def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, dataset_name: str,
+                tl_enabled: bool):
     """Configure a plant scan with the specified configuration.
 
     Parameters
@@ -1595,5 +1678,14 @@ def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, datase
     res: None | NoResult = controller.set_config(config_dict)
     if isinstance(res, NoResult):
         return "Failed to configure scan", res.traceback
+
+    if tl_enabled:
+        res = controller.config_timelapse(config_dict)
+        if isinstance(res, NoResult):
+            return "Failed to configure timelapse", res.traceback
+        n = len((res or {}).get("schedule_times") or [])
+        state = str((res or {}).get("state") or "")
+        return ("Timelapse configured (draft)",
+                f"Draft '{(res or {}).get('timelapse_id', dataset_name)}' {state} — {n} scan(s) scheduled.")
 
     return "Scan configured", "Scan configured, ready to start"
