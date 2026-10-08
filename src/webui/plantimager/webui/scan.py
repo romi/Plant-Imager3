@@ -249,7 +249,7 @@ def _bio_form() -> dbc.Accordion:
 #: Timelapse modes (mirror ``TimeLapseMode`` values).
 TIMELAPSE_MODES = ("interval", "fixed_times", "one_shot")
 
-#: Defaults for a fresh ``[timelapse]`` section (match ``assets/config_scan.toml``).
+#: Defaults for a fresh ``[timelapse]`` section.
 TIMELAPSE_DEFAULTS = {
     "mode": "interval", "interval": "30s", "n_shots": 5,
     "warmup_period": 45, "grace_period": 60, "standby_threshold_sec": 600,
@@ -964,6 +964,51 @@ def _render_preview(result: dict) -> str:
     return "\n".join(lines)
 
 
+def _validate_timelapse(cfg: dict) -> list:
+    """Check a config's ``[timelapse]`` section for hard errors.
+
+    Only what the client can know for sure: presence per mode, whole
+    positive counts, parseable dates. Durations and clamped bounds
+    (warmup/standby/grace) are the server's truth — never rejected here.
+    """
+    tl = cfg.get("timelapse") or {}
+    mode = tl.get("mode", "interval")
+    if mode not in TIMELAPSE_MODES:
+        return [f"Unknown mode {mode!r}, expected one of {', '.join(TIMELAPSE_MODES)}."]
+    issues = []
+    if mode == "interval":
+        if tl.get("interval") in (None, ""):
+            issues.append("Interval mode needs an interval.")
+        if tl.get("n_shots") in (None, ""):
+            issues.append("Interval mode needs N (number of scans).")
+        else:
+            try:
+                n = float(tl["n_shots"])
+            except (TypeError, ValueError):
+                issues.append(f"N must be a number, got {tl['n_shots']!r}.")
+            else:
+                if n < 1:
+                    issues.append("N must be at least 1.")
+                elif not n.is_integer():
+                    issues.append("N must be a whole number.")
+    if mode == "fixed_times":
+        dates = tl.get("dates") or []
+        if not dates:
+            issues.append("Fixed-times mode needs at least one date.")
+        for i, v in enumerate(dates):
+            try:
+                datetime.datetime.fromisoformat(str(v))
+            except (ValueError, TypeError):
+                issues.append(f"Date line {i + 1} is not an ISO datetime: {v!r}.")
+    retries = tl.get("scan_retries", 0)
+    try:
+        if float(retries) < 0:
+            issues.append("Retries must be 0 or more.")
+    except (TypeError, ValueError):
+        issues.append(f"Retries must be a number, got {retries!r}.")
+    return issues
+
+
 @callback(
     Output('tl-preview-output', 'children'),
     Input('tl-preview-btn', 'n_clicks'),
@@ -973,15 +1018,18 @@ def _render_preview(result: dict) -> str:
 def preview_timelapse_schedule(_, toml_text):
     """Show the computed schedule without starting anything (stateless)."""
     try:
-        controller = RPCController.instance()
-    except RuntimeError as e:
-        return f"**Controller not connected**: {e}"
-    try:
         cfg = tomllib.loads(toml_text) if toml_text else {}
     except tomllib.TOMLDecodeError:
         return "**Invalid TOML configuration** — fix the form first."
     if "timelapse" not in cfg:
         return "_Timelapse is disabled — enable it to preview._"
+    issues = _validate_timelapse(cfg)
+    if issues:
+        return "**Fix the form first:**\n" + "\n".join(f"- {v}" for v in issues)
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return f"**Controller not connected**: {e}"
     res = controller.preview_timelapse(cfg)
     if isinstance(res, NoResult):
         return f"**Preview failed**:\n```\n{res.traceback}\n```"

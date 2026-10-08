@@ -21,12 +21,12 @@ from plantimager.webui.scan import (
     _tl_row_status,
     _toggle_scan_buttons,
     _toggle_timelapse_rows,
+    _validate_timelapse,
     cancel_scan,
     populate_timelapse,
     rebuild_timelapse,
     update_timelapse_snapshot,
 )
-
 
 BASE_TOML = """\
 [ScanPath]
@@ -270,6 +270,57 @@ class TestScheduleTable(unittest.TestCase):
         self.assertEqual(len(body.children), 3)
         first = body.children[0].children
         self.assertEqual(first[0].children, "#0")
+
+
+class TestValidateTimelapse(unittest.TestCase):
+    def test_valid_interval(self):
+        self.assertEqual(_validate_timelapse(
+            {"timelapse": {"mode": "interval", "interval": "30s", "n_shots": 5}}), [])
+
+    def test_unknown_mode(self):
+        self.assertEqual(len(_validate_timelapse({"timelapse": {"mode": "bogus"}})), 1)
+
+    def test_interval_missing_fields(self):
+        issues = _validate_timelapse({"timelapse": {"mode": "interval"}})
+        self.assertEqual(len(issues), 2)
+
+    def test_n_bounds(self):
+        base = {"mode": "interval", "interval": "30s"}
+        self.assertTrue(_validate_timelapse({"timelapse": {**base, "n_shots": 0}}))
+        self.assertTrue(_validate_timelapse({"timelapse": {**base, "n_shots": 2.5}}))
+        self.assertTrue(_validate_timelapse({"timelapse": {**base, "n_shots": "many"}}))
+        self.assertEqual(_validate_timelapse({"timelapse": {**base, "n_shots": 3}}), [])
+
+    def test_fixed_times(self):
+        self.assertTrue(_validate_timelapse({"timelapse": {"mode": "fixed_times"}}))
+        self.assertTrue(_validate_timelapse(
+            {"timelapse": {"mode": "fixed_times", "dates": ["yesterday"]}}))
+        self.assertEqual(_validate_timelapse(
+            {"timelapse": {"mode": "fixed_times",
+                           "dates": ["2026-10-09T10:00:00"]}}), [])
+
+    def test_retries(self):
+        self.assertTrue(_validate_timelapse(
+            {"timelapse": {"mode": "one_shot", "scan_retries": -1}}))
+        self.assertEqual(_validate_timelapse({"timelapse": {"mode": "one_shot"}}), [])
+
+    def test_clamped_bounds_never_rejected(self):
+        self.assertEqual(_validate_timelapse(
+            {"timelapse": {"mode": "interval", "interval": "30s", "n_shots": 2,
+                           "warmup_period": 1, "standby_threshold_sec": 1}}), [])
+
+    def test_upload_round_trip(self):
+        toml = (BASE_TOML + '\n[picamera]\nres_x = 2000\n'
+                '\n[timelapse]\nmode = "interval"\ninterval = "1h"\nn_shots = 4\n'
+                'warmup_period = 45\non_scan_failed = "fail_timelapse"\n')
+        out = populate_timelapse(toml, True)
+        self.assertEqual(out[1:4], ("interval", "1h", "4"))
+        self.assertEqual(out[8], "fail_timelapse")
+        rebuilt = rebuild_timelapse(True, "interval", "1h", "4", "", "45", "", "",
+                                    "fail_timelapse", "", toml)
+        cfg = _load_cfg(rebuilt)
+        self.assertEqual(cfg["timelapse"]["n_shots"], 4)
+        self.assertEqual(cfg["picamera"]["res_x"], 2000)
 
 
 if __name__ == "__main__":
