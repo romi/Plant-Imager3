@@ -14,6 +14,7 @@ Key Features
 - Configuration file upload functionality
 - Comprehensive error handling and user feedback
 """
+import datetime
 import os
 import re
 import tomllib
@@ -314,6 +315,10 @@ def _timelapse_form() -> html.Div:
                 dbc.Textarea(id="tl-dates", placeholder="2026-10-09T10:00:00",
                              style={"font-family": "monospace"}),
             ], id="tl-dates-row", style={"display": "none"}, className="mb-1"),
+            dbc.Button([html.I(className="bi bi-eye me-2"), "Preview schedule"],
+                       id="tl-preview-btn", color="secondary", outline=True, size="sm",
+                       class_name="mt-1 mb-1"),
+            dcc.Markdown(id="tl-preview-output", className="mb-1"),
             dbc.Label("Advanced", className="mt-2 mb-1"),
             num_row("Warmup (s)",
                     "Seconds before the first scan. Ignored for fixed times; the controller enforces a minimum.",
@@ -438,7 +443,7 @@ dataset_name_card = [
             dbc.CardHeader(children=[html.I(className="bi bi-tag me-2"), "Dataset"]),
             dbc.CardBody(children=[
                 html.Div([
-                    dbc.Label("Name of the dataset to create:"),
+                    dbc.Label("Name of the dataset to create:", id="dataset-name-label"),
                     dbc.Input(id="dataset-input-name", placeholder="Dataset name",
                               class_name="mb-3", invalid=True, persistence=True,
                                   style={"minWidth": "125px", "maxWidth": "250px"}),
@@ -904,6 +909,64 @@ def _toggle_timelapse_body(enabled):
     return _tl_body_style(bool(enabled))
 
 
+def _local_preview_line(iso: str) -> str:
+    """Render a UTC ISO schedule entry in controller-local short form."""
+    try:
+        local = datetime.datetime.fromisoformat(iso).astimezone()
+        return local.strftime("%d/%m %H:%M")
+    except (ValueError, TypeError):
+        return iso
+
+
+def _render_preview(result: dict) -> str:
+    """Render a ``preview_timelapse`` result dict as markdown."""
+    lines = [f"**{result.get('mode', '?')}** — {result.get('n_scans', 0)} scan(s)"]
+    for i, iso in enumerate(result.get("schedule_times") or []):
+        lines.append(f"- #{i} · {_local_preview_line(iso)}")
+    return "\n".join(lines)
+
+
+@callback(
+    Output('tl-preview-output', 'children'),
+    Input('tl-preview-btn', 'n_clicks'),
+    State('scan-cfg-toml', 'value'),
+    prevent_initial_call=True,
+)
+def preview_timelapse_schedule(_, toml_text):
+    """Show the computed schedule without starting anything (stateless)."""
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return f"**Controller not connected**: {e}"
+    try:
+        cfg = tomllib.loads(toml_text) if toml_text else {}
+    except tomllib.TOMLDecodeError:
+        return "**Invalid TOML configuration** — fix the form first."
+    if "timelapse" not in cfg:
+        return "_Timelapse is disabled — enable it to preview._"
+    res = controller.preview_timelapse(cfg)
+    if isinstance(res, NoResult):
+        return f"**Preview failed**:\n```\n{res.traceback}\n```"
+    return _render_preview(res)
+
+
+@callback(
+    Output('start-scan-button', 'children'),
+    Output('cancel-scan-button', 'children'),
+    Output('dataset-name-label', 'children'),
+    Input('tl-enabled', 'value'),
+)
+def _toggle_scan_buttons(enabled):
+    """Single Start/Cancel pair whose labels follow the timelapse switch."""
+    if enabled:
+        return ([html.I(className="bi bi-play-fill me-2"), "Start Timelapse"],
+                [html.I(className="bi bi-x-circle-fill me-2"), "Cancel Timelapse"],
+                "Name of the timelapse to create:")
+    return ([html.I(className="bi bi-play-fill me-2"), "Start Scanning"],
+            [html.I(className="bi bi-x-circle-fill me-2"), "Cancel Scan"],
+            "Name of the dataset to create:")
+
+
 available_cameras = []
 
 
@@ -1215,10 +1278,13 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     State('logged-username', 'data'),
     State('dataset-input-name', 'value'),
     State('scan-job-id', 'data'),
+    State('tl-enabled', 'value'),
+    State('scan-cfg-toml', 'value'),
     prevent_initial_call=True,
 )
 def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: str, refresh_token: str,
-                 username: str, dataset_name: str, scan_job_id: int):
+                 username: str, dataset_name: str, scan_job_id: int,
+                 tl_enabled: bool, cfg: str):
     """Authenticate and create a scoped per-scan API token.
 
     This runs in the main web UI process only. It makes the user token
@@ -1295,8 +1361,57 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
                 "Failed to create the API token for plantdb.",
                 "Unable to create the scoped API token used by the scanner.")
 
+    if tl_enabled:
+        return _start_timelapse_now(url, port, prefix, ssl, access_token, refresh_token,
+                                    api_token, cfg, dataset_name, scan_job_id)
+
     return (access_token, refresh_token, api_token, (scan_job_id or 0) + 1,
             "Scan ready to start", "API token created, starting scanner...")
+
+
+def _start_timelapse_now(url: str, port: str, prefix: str, ssl: bool,
+                         access_token: str, refresh_token: str, api_token: str,
+                         cfg: str, dataset_name: str, scan_job_id: int):
+    """Arm a timelapse directly (single ``start_timelapse(config)`` call).
+
+    Unlike the legacy scan this needs no background job: arming only computes
+    the schedule and persists it, so it runs in the main web UI process and
+    the job id is left unchanged.
+    """
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return (access_token, refresh_token, api_token, scan_job_id,
+                "Error: Raspberry Pi Controller not initialized!", str(e))
+
+    res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
+    if isinstance(res, NoResult):
+        return (access_token, refresh_token, api_token, scan_job_id,
+                f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}",
+                res.traceback)
+    res: None | NoResult = controller.set_api_token(api_token)
+    if isinstance(res, NoResult):
+        return (access_token, refresh_token, api_token, scan_job_id,
+                "Failed to set access token.", res.traceback)
+    res: None | NoResult = controller.set_base_name(dataset_name)
+    if isinstance(res, NoResult):
+        return (access_token, refresh_token, api_token, scan_job_id,
+                f"Failed to set dataset {dataset_name}", res.traceback)
+    try:
+        config_dict = tomllib.loads(cfg) if cfg else {}
+    except tomllib.TOMLDecodeError:
+        return (access_token, refresh_token, api_token, scan_job_id,
+                "Failed to parse config file", traceback.format_exc(limit=1))
+    res: None | NoResult = controller.set_config(config_dict)
+    if isinstance(res, NoResult):
+        return (access_token, refresh_token, api_token, scan_job_id,
+                "Failed to configure scan", res.traceback)
+    res = controller.start_timelapse(config_dict)
+    if isinstance(res, NoResult):
+        return (access_token, refresh_token, api_token, scan_job_id,
+                "Failed to start timelapse", res.traceback)
+    return (access_token, refresh_token, api_token, scan_job_id,
+            "Timelapse started", f"Timelapse '{res}' scheduled.")
 
 
 @callback(
@@ -1401,12 +1516,21 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
 @callback(
     Output('scan-response', 'children', allow_duplicate=True),
     Input('cancel-scan-button', 'n_clicks'),
+    State('tl-enabled', 'value'),
     prevent_initial_call=True,
 )
-def cancel_scan(_):
-    """Placeholder callback for the Cancel Scan button."""
-    # TODO: implement actual cancellation logic
-    return "Cancelling scan..."
+def cancel_scan(_, tl_enabled):
+    """Cancel the running job: timelapse via RPC, legacy scan is a placeholder."""
+    if not tl_enabled:
+        return "Cancelling scan..."
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return f"Error: Raspberry Pi Controller not initialized! {e}"
+    res = controller.cancel_timelapse()
+    if isinstance(res, NoResult):
+        return f"Cancelling timelapse failed: {res.traceback}"
+    return "Timelapse cancelled."
 
 
 @callback(

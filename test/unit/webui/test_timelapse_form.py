@@ -11,9 +11,13 @@ from dash import no_update
 from plantimager.webui.scan import (
     _dump,
     _load_cfg,
+    _local_preview_line,
+    _render_preview,
     _tl_body_style,
     _tl_num,
+    _toggle_scan_buttons,
     _toggle_timelapse_rows,
+    cancel_scan,
     populate_timelapse,
     rebuild_timelapse,
 )
@@ -140,6 +144,42 @@ class TestTimelapseTitle(unittest.TestCase):
     def test_switch_overlays_header(self):
         from plantimager.webui.scan import _timelapse_item
         self.assertIn("tl-enabled", self._ids(_timelapse_item()))
+
+
+class TestScanButtons(unittest.TestCase):
+    def _text(self, children):
+        return "".join(c for c in children if isinstance(c, str))
+
+    def test_labels_follow_switch(self):
+        start, cancel, dataset = _toggle_scan_buttons(True)
+        self.assertIn("Start Timelapse", self._text(start))
+        self.assertIn("Cancel Timelapse", self._text(cancel))
+        self.assertIn("timelapse", dataset)
+        start, cancel, dataset = _toggle_scan_buttons(False)
+        self.assertIn("Start Scanning", self._text(start))
+        self.assertIn("Cancel Scan", self._text(cancel))
+        self.assertIn("dataset", dataset)
+
+    def test_cancel_legacy_needs_no_controller(self):
+        self.assertEqual(cancel_scan(None, False), "Cancelling scan...")
+
+    def test_cancel_timelapse_without_controller_errors(self):
+        self.assertIn("not initialized", cancel_scan(None, True))
+
+
+class TestPreviewRender(unittest.TestCase):
+    def test_schedule_lines(self):
+        md = _render_preview({
+            "mode": "interval", "n_scans": 2,
+            "schedule_times": ["2026-10-09T10:00:00+00:00", "2026-10-09T11:00:00+00:00"],
+        })
+        self.assertIn("interval", md)
+        self.assertIn("#0", md)
+        self.assertIn("#1", md)
+
+    def test_local_line_falls_back(self):
+        self.assertEqual(_local_preview_line("not-a-date"), "not-a-date")
+        self.assertRegex(_local_preview_line("2026-10-09T10:00:00+00:00"), r"\d{2}/\d{2} \d{2}:\d{2}")
 
 
 if __name__ == "__main__":
