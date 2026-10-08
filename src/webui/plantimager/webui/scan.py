@@ -625,6 +625,21 @@ scan_layout = html.Div(
                            color="primary"),
             ]),
         ]),
+        # Modal showing the timelapse schedule (mirrors the controller TimelapsePanel list).
+        dbc.Modal(id="view-schedule-modal", is_open=False, size="lg", scrollable=True,
+                  children=[
+                      dbc.ModalHeader(
+                          dbc.ModalTitle(
+                              children=[html.I(className="bi bi-table me-2"), "Timelapse schedule"])
+                      ),
+                      dbc.ModalBody([
+                          html.Div(id="tl-schedule-body"),
+                      ]),
+                      dbc.ModalFooter([
+                          dbc.Button("Close", id="view-schedule-close", color="secondary",
+                                     className="ms-auto"),
+                      ]),
+                  ]),
     ], id="scan-page-layout"
 )
 
@@ -1050,6 +1065,21 @@ def update_timelapse_snapshot(val):
     latest_timelapse = val
 
 
+def _current_snapshot():
+    """Return the freshest timelapse snapshot: property poll, mirror fallback."""
+    try:
+        controller = RPCController.instance()
+    except RuntimeError:
+        return latest_timelapse
+    if update_timelapse_snapshot not in controller.timelapseChanged.connections:
+        controller.timelapseChanged.connect(update_timelapse_snapshot)
+    snap = controller.active_timelapse
+    if isinstance(snap, NoResult):
+        return latest_timelapse
+    update_timelapse_snapshot(snap)
+    return snap
+
+
 def _render_timelapse_status(snap: dict | None) -> tuple[str, str, str]:
     """Render an ``active_timelapse`` snapshot as (badge text, badge color, detail)."""
     if snap is None:
@@ -1072,22 +1102,89 @@ def _render_timelapse_status(snap: dict | None) -> tuple[str, str, str]:
     Output('tl-status-badge', 'children'),
     Output('tl-status-badge', 'color'),
     Output('tl-status-text', 'children'),
+    Output('tl-view-schedule-btn', 'disabled'),
     Input('main-interval', 'n_intervals'),
     prevent_initial_call=True)
 def update_timelapse_status(_):
     """Poll the ``active_timelapse`` property and render the status card."""
     try:
-        controller = RPCController.instance()
+        RPCController.instance()
     except RuntimeError:
-        return "No controller", "secondary", ""
-    if update_timelapse_snapshot not in controller.timelapseChanged.connections:
-        controller.timelapseChanged.connect(update_timelapse_snapshot)
-    snap = controller.active_timelapse
-    if isinstance(snap, NoResult):
-        snap = latest_timelapse
+        return "No controller", "secondary", "", True
+    return (*_render_timelapse_status(_current_snapshot()), False)
+
+
+#: Row colors for the schedule table (mirrors the QML rowColor mapping).
+_TL_ROW_COLOR = {"done": "success", "failed": "danger", "next": "warning",
+                "running": "warning", "skipped": "warning", "pending": "secondary"}
+
+
+def _tl_row_status(idx: int, snap: dict) -> str:
+    """Per-slot status for the schedule table (ports QML ``rowStatus``)."""
+    for rec in snap.get("scans") or []:
+        sid = rec.get("scan_id", "")
+        if sid.endswith(f"_{idx}") or (idx == 0 and sid == snap.get("timelapse_id")):
+            st = rec.get("status", "")
+            if st in ("succeeded", "completed", "COMPLETED"):
+                return "done"
+            if st in ("failed", "FAILED"):
+                return "failed"
+            if st == "skipped":
+                return "skipped"
+            return st
+    next_idx = snap.get("next_idx", 0) or 0
+    state = str(snap.get("state") or "").upper()
+    if idx < next_idx:
+        return "skipped"
+    if idx == next_idx and state == "RUNNING":
+        return "running"
+    if idx == next_idx and state == "SCHEDULED":
+        return "next"
+    return "pending"
+
+
+def _schedule_table(snap: dict | None):
+    """Render a snapshot's schedule as a table (shared by modal and preview)."""
+    if snap is None:
+        return html.Div("No timelapse", className="text-center text-muted")
+    rows = []
+    for i, iso in enumerate(snap.get("schedule_times") or []):
+        st = _tl_row_status(i, snap)
+        rows.append(html.Tr([
+            html.Td(f"#{i}"),
+            html.Td(_local_preview_line(iso)),
+            html.Td(dbc.Badge(st, color=_TL_ROW_COLOR.get(st, "secondary"))),
+        ]))
+    if not rows:
+        return html.Div("Empty schedule", className="text-center text-muted")
+    return dbc.Table([
+        html.Thead(html.Tr([html.Th("#"), html.Th("Local time"), html.Th("Status")])),
+        html.Tbody(rows),
+    ], bordered=True, size="sm", responsive=True)
+
+
+@callback(
+    Output('view-schedule-modal', 'is_open'),
+    Output('tl-schedule-body', 'children'),
+    Input('tl-view-schedule-btn', 'n_clicks'),
+    Input('view-schedule-close', 'n_clicks'),
+    Input('main-interval', 'n_intervals'),
+    State('view-schedule-modal', 'is_open'),
+    prevent_initial_call=True,
+)
+def toggle_schedule_modal(_open, _close, _tick, is_open):
+    """Open/close the schedule modal; refresh its table while open."""
+    if ctx.triggered_id == "view-schedule-close":
+        return False, no_update
+    if ctx.triggered_id == "main-interval" and not is_open:
+        raise PreventUpdate
+    try:
+        RPCController.instance()
+    except RuntimeError:
+        table = html.Div("No controller", className="text-center text-muted")
     else:
-        update_timelapse_snapshot(snap)
-    return _render_timelapse_status(snap)
+        table = _schedule_table(_current_snapshot())
+    return True, table
 
 
 @callback(

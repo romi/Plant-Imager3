@@ -9,13 +9,16 @@ import unittest
 from dash import no_update
 
 from plantimager.webui.scan import (
+    _current_snapshot,
     _dump,
     _load_cfg,
     _local_preview_line,
     _render_preview,
     _render_timelapse_status,
+    _schedule_table,
     _tl_body_style,
     _tl_num,
+    _tl_row_status,
     _toggle_scan_buttons,
     _toggle_timelapse_rows,
     cancel_scan,
@@ -216,6 +219,57 @@ class TestStatusRender(unittest.TestCase):
         import plantimager.webui.scan as scan_mod
         self.assertEqual(scan_mod.latest_timelapse, {"state": "x"})
         update_timelapse_snapshot(None)
+
+    def test_current_snapshot_falls_back_to_mirror(self):
+        update_timelapse_snapshot({"state": "SCHEDULED"})
+        try:
+            self.assertEqual(_current_snapshot(), {"state": "SCHEDULED"})
+        finally:
+            update_timelapse_snapshot(None)
+
+
+class TestScheduleTable(unittest.TestCase):
+    def _snap(self, **over):
+        snap = {"timelapse_id": "exp", "mode": "interval", "state": "SCHEDULED",
+                "plantdb_timelapse_id": "exp", "next_idx": 1,
+                "schedule_times": ["2026-10-09T10:00:00+00:00",
+                                   "2026-10-09T11:00:00+00:00",
+                                   "2026-10-09T12:00:00+00:00"],
+                "scans": [{"scan_id": "exp_0", "status": "succeeded"}]}
+        snap.update(over)
+        return snap
+
+    def test_row_status_from_records(self):
+        snap = self._snap()
+        self.assertEqual(_tl_row_status(0, snap), "done")
+        self.assertEqual(_tl_row_status(1, snap), "next")
+        self.assertEqual(_tl_row_status(2, snap), "pending")
+
+    def test_row_status_failed_and_running(self):
+        snap = self._snap(scans=[{"scan_id": "exp_1", "status": "failed"}],
+                          state="RUNNING")
+        self.assertEqual(_tl_row_status(1, snap), "failed")
+        self.assertEqual(_tl_row_status(2, snap), "pending")
+        snap = self._snap(scans=[], state="RUNNING", next_idx=0)
+        self.assertEqual(_tl_row_status(0, snap), "running")
+        self.assertEqual(_tl_row_status(1, snap), "pending")
+
+    def test_row_status_bare_id_match(self):
+        snap = self._snap(scans=[{"scan_id": "exp", "status": "succeeded"}])
+        self.assertEqual(_tl_row_status(0, snap), "done")
+
+    def test_row_status_skipped(self):
+        snap = self._snap(scans=[{"scan_id": "exp_0", "status": "skipped"}])
+        self.assertEqual(_tl_row_status(0, snap), "skipped")
+        snap = self._snap(scans=[], next_idx=2)
+        self.assertEqual(_tl_row_status(0, snap), "skipped")
+
+    def test_table_shape(self):
+        table = _schedule_table(self._snap())
+        body = table.children[1]
+        self.assertEqual(len(body.children), 3)
+        first = body.children[0].children
+        self.assertEqual(first[0].children, "#0")
 
 
 if __name__ == "__main__":
