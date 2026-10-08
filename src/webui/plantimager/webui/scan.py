@@ -245,6 +245,128 @@ def _bio_form() -> dbc.Accordion:
     return section_accordion
 
 
+#: Timelapse modes (mirror ``TimeLapseMode`` values).
+TIMELAPSE_MODES = ("interval", "fixed_times", "one_shot")
+
+#: Defaults for a fresh ``[timelapse]`` section (match ``assets/config_scan.toml``).
+TIMELAPSE_DEFAULTS = {
+    "mode": "interval", "interval": "30s", "n_shots": 5,
+    "warmup_period": 45, "grace_period": 60, "standby_threshold_sec": 600,
+    "on_scan_failed": "skip_scan", "scan_retries": 0,
+}
+
+
+def _tl_num(value):
+    """Coerce a timelapse form value, keeping whole numbers as ints for clean TOML."""
+    n = _num(value)
+    if isinstance(n, float) and n.is_integer():
+        return int(n)
+    return n
+
+
+def _tl_body_style(enabled):
+    """Grey out the timelapse body when the switch is off (legacy single scan)."""
+    if enabled:
+        return {}
+    return {"opacity": "0.4", "pointerEvents": "none"}
+
+
+def _timelapse_form() -> html.Div:
+    """Build the timelapse form: mode radio + schedule + advanced (switch lives in the title)."""
+    d = TIMELAPSE_DEFAULTS
+
+    def hint(text):
+        return dbc.InputGroupText(
+            html.I(className="bi bi-question-circle", title=text),
+            className="align-self-center")
+
+    def num_row(label, tip, cid, placeholder=None):
+        return html.Div([
+            dbc.InputGroup([
+                dbc.InputGroupText(label),
+                dbc.Input(id=cid, type="number", debounce=True, placeholder=placeholder),
+                hint(tip),
+            ]),
+        ], id=f"{cid}-row", className="mb-1")
+    return html.Div([
+        html.Div([
+            dbc.Label(["Mode ", html.I(className="bi bi-question-circle",
+                                       title="interval: a scan every N; fixed_times: scans at the dates below; one_shot: a single scan after warmup.")],
+                      className="mb-1"),
+            dbc.RadioItems(id="tl-mode", inline=True,
+                           options=[{"label": m, "value": m} for m in TIMELAPSE_MODES],
+                           value=d["mode"], className="mb-2"),
+            html.Div([
+                dbc.InputGroup([
+                    dbc.InputGroupText("Interval"),
+                    dbc.Input(id="tl-interval", type="text", debounce=True,
+                              placeholder="30s or 3600"),
+                    hint("Delay between scans: seconds or a duration string like 30s or 1h30m. Interval mode only."),
+                ]),
+            ], id="tl-interval-row", className="mb-1"),
+            num_row("N",
+                    "Number of scans to run. Interval mode only.",
+                    "tl-n-shots", d["n_shots"]),
+            html.Div([
+                dbc.Label(["Dates (local time) ", html.I(className="bi bi-question-circle",
+                    title="One ISO datetime per line, in the controller's local time. Converted to UTC and sorted. Fixed-times mode only.")],
+                    className="mb-1"),
+                dbc.Textarea(id="tl-dates", placeholder="2026-10-09T10:00:00",
+                             style={"font-family": "monospace"}),
+            ], id="tl-dates-row", style={"display": "none"}, className="mb-1"),
+            dbc.Label("Advanced", className="mt-2 mb-1"),
+            num_row("Warmup (s)",
+                    "Seconds before the first scan. Ignored for fixed times; the controller enforces a minimum.",
+                    "tl-warmup", d["warmup_period"]),
+            num_row("Grace (s)",
+                    "Overdue slots within this window still run; older slots are skipped.",
+                    "tl-grace", d["grace_period"]),
+            num_row("Standby Threshold (s)",
+                    "Idles longer than this power the CNC down; shorter idles hold position. Minimum is 2x warmup.",
+                    "tl-standby", d["standby_threshold_sec"]),
+            html.Div([
+                dbc.InputGroup([
+                    dbc.InputGroupText("On Failure"),
+                    dbc.Select(id="tl-policy",
+                               options=[{"label": p, "value": p}
+                                        for p in ("skip_scan", "fail_timelapse")],
+                               value=d["on_scan_failed"]),
+                    hint("skip_scan continues the timelapse after a failed slot; fail_timelapse aborts it."),
+                ]),
+            ], className="mb-1"),
+            num_row("Retries",
+                    "Re-attempts per slot before the failure policy applies.",
+                    "tl-retries", d["scan_retries"]),
+        ], id="tl-form-body"),
+    ])
+
+
+def _timelapse_title() -> html.Div:
+    """Accordion title text (the switch floats over the header as a sibling overlay)."""
+    return html.Div([
+        html.Span("Timelapse", className="me-3"),
+        dbc.FormText("Off = legacy single scan", color="muted"),
+    ], className="d-flex align-items-center", style={"paddingRight": "120px"})
+
+
+def _timelapse_item() -> html.Div:
+    """Timelapse accordion item with the enable switch overlaid on its header.
+
+    The switch is a *sibling* of the header button (not a child), so toggling
+    it never triggers the accordion collapse — no JS event hacks needed.
+    It is anchored to the header's fixed single-line height.
+    """
+    return html.Div([
+        dbc.AccordionItem(_timelapse_form(), title=_timelapse_title(), item_id="timelapse"),
+        html.Div([
+            dbc.Switch(id="tl-enabled", value=True),
+        ], id="tl-title-switch", style={
+            "position": "absolute", "top": "26px", "transform": "translateY(-50%)",
+            "right": "44px", "zIndex": 5,
+        }),
+    ], style={"position": "relative"})
+
+
 # Card for scan configuration settings (path / camera / biological metadata accordion)
 configuration_card = [
     dbc.Card(
@@ -271,6 +393,7 @@ configuration_card = [
                         dcc.Store(id="cam-active", data=[]),
                     ], title="Camera configuration", item_id="camera"),
                     dbc.AccordionItem(_bio_form(), title="Biological metadata configuration", item_id="bio"),
+                    _timelapse_item(),
                 ], start_collapsed=True, always_open=True),
                 # Hidden single source of truth, consumed by `run_scan`/`config_scan`.
                 dbc.Textarea(id="scan-cfg-toml", style={"display": "none"}),
@@ -671,6 +794,114 @@ def rebuild_bio(*args):
     metadata = cfg.setdefault("Metadata", {})
     metadata["object"] = unflatten(flat)
     return _dump(cfg)
+
+
+# --- Timelapse configuration --------------------------------------------------
+@callback(
+    Output('tl-enabled', 'value'),
+    Output('tl-mode', 'value'),
+    Output('tl-interval', 'value'),
+    Output('tl-n-shots', 'value'),
+    Output('tl-dates', 'value'),
+    Output('tl-warmup', 'value'),
+    Output('tl-grace', 'value'),
+    Output('tl-standby', 'value'),
+    Output('tl-policy', 'value'),
+    Output('tl-retries', 'value'),
+    Output('tl-form-body', 'style'),
+    Input('scan-cfg-toml', 'value'),
+    State('tl-enabled', 'value'),
+)
+def populate_timelapse(toml_text, enabled):
+    """Fill the timelapse form from the hidden config.
+
+    An absent ``[timelapse]`` section leaves the switch (and fields) untouched,
+    so toggling the switch off stays off instead of bouncing back on.
+    """
+    tl = _load_cfg(toml_text).get("timelapse")
+    if tl is None:
+        on = bool(enabled) if enabled is not None else True
+        return (on, *[no_update] * 9, _tl_body_style(on))
+    dates = tl.get("dates") or []
+    return (
+        True,
+        tl.get("mode", TIMELAPSE_DEFAULTS["mode"]),
+        "" if tl.get("interval") is None else str(tl["interval"]),
+        "" if tl.get("n_shots") is None else str(tl["n_shots"]),
+        "\n".join(str(v) for v in dates),
+        "" if tl.get("warmup_period") is None else str(tl["warmup_period"]),
+        "" if tl.get("grace_period") is None else str(tl["grace_period"]),
+        "" if tl.get("standby_threshold_sec") is None else str(tl["standby_threshold_sec"]),
+        tl.get("on_scan_failed", TIMELAPSE_DEFAULTS["on_scan_failed"]),
+        "" if tl.get("scan_retries") is None else str(tl["scan_retries"]),
+        _tl_body_style(True),
+    )
+
+
+@callback(
+    Output('scan-cfg-toml', 'value', allow_duplicate=True),
+    Input('tl-enabled', 'value'),
+    Input('tl-mode', 'value'),
+    Input('tl-interval', 'value'),
+    Input('tl-n-shots', 'value'),
+    Input('tl-dates', 'value'),
+    Input('tl-warmup', 'value'),
+    Input('tl-grace', 'value'),
+    Input('tl-standby', 'value'),
+    Input('tl-policy', 'value'),
+    Input('tl-retries', 'value'),
+    State('scan-cfg-toml', 'value'),
+    prevent_initial_call=True,
+)
+def rebuild_timelapse(enabled, mode, interval, n_shots, dates,
+                      warmup, grace, standby, policy, retries, toml_text):
+    """Rebuild the ``[timelapse]`` section; switch off strips it (legacy scan)."""
+    cfg = _load_cfg(toml_text)
+    if not enabled:
+        cfg.pop("timelapse", None)
+        return _dump(cfg)
+    tl = {"mode": mode or TIMELAPSE_DEFAULTS["mode"]}
+    if tl["mode"] == "interval":
+        if interval not in (None, ""):
+            tl["interval"] = _tl_num(interval)
+        if n_shots not in (None, ""):
+            tl["n_shots"] = _tl_num(n_shots)
+    elif tl["mode"] == "fixed_times":
+        tl["dates"] = [v.strip() for v in (dates or "").splitlines() if v.strip()]
+    for key, val in (("warmup_period", warmup), ("grace_period", grace),
+                     ("standby_threshold_sec", standby), ("scan_retries", retries)):
+        if val not in (None, ""):
+            tl[key] = _tl_num(val)
+    if policy:
+        tl["on_scan_failed"] = policy
+    cfg["timelapse"] = tl
+    return _dump(cfg)
+
+
+@callback(
+    Output('tl-interval-row', 'style'),
+    Output('tl-n-shots-row', 'style'),
+    Output('tl-dates-row', 'style'),
+    Input('tl-mode', 'value'),
+)
+def _toggle_timelapse_rows(mode):
+    """Show only the schedule inputs relevant to the selected mode."""
+    show, hide = {"display": "block"}, {"display": "none"}
+    if mode == "fixed_times":
+        return hide, hide, show
+    if mode == "one_shot":
+        return hide, hide, hide
+    return show, show, hide
+
+
+@callback(
+    Output('tl-form-body', 'style', allow_duplicate=True),
+    Input('tl-enabled', 'value'),
+    prevent_initial_call=True,
+)
+def _toggle_timelapse_body(enabled):
+    """Grey out the timelapse body when the switch is off."""
+    return _tl_body_style(bool(enabled))
 
 
 available_cameras = []
