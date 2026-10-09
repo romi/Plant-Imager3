@@ -1167,6 +1167,7 @@ def _render_timelapse_status(snap: dict | None) -> tuple[str, str, str]:
     Output('tl-status-badge', 'color'),
     Output('tl-status-text', 'children'),
     Output('tl-view-schedule-btn', 'disabled'),
+    Output('cancel-scan-button', 'disabled', allow_duplicate=True),
     Input('main-interval', 'n_intervals'),
     prevent_initial_call=True)
 def update_timelapse_status(_):
@@ -1174,8 +1175,11 @@ def update_timelapse_status(_):
     try:
         RPCController.instance()
     except RuntimeError:
-        return "No controller", "secondary", "", True
-    return (*_render_timelapse_status(_current_snapshot()), False)
+        return "No controller", "secondary", "", True, True
+    snap = _current_snapshot()
+    state = str((snap or {}).get("state") or "").upper()
+    return (*_render_timelapse_status(snap), False,
+            state not in ("CONFIGURED", "SCHEDULED", "RUNNING"))
 
 
 #: Row colors for the schedule table (mirrors the QML rowColor mapping).

@@ -5,6 +5,7 @@ directly without a Dash app context — same pattern as ``test_scan_helpers``.
 """
 
 import unittest
+from unittest import mock
 
 from dash import no_update
 
@@ -25,6 +26,7 @@ from plantimager.webui.scan import (
     populate_timelapse,
     rebuild_timelapse,
     update_timelapse_snapshot,
+    update_timelapse_status,
 )
 
 BASE_TOML = """\
@@ -244,6 +246,26 @@ class TestStatusRender(unittest.TestCase):
             self.assertEqual(_current_snapshot(), {"state": "SCHEDULED"})
         finally:
             update_timelapse_snapshot(None)
+
+    def test_status_enables_cancel_while_active(self):
+        import plantimager.webui.scan as scan_mod
+        snap = {"timelapse_id": "exp", "mode": "interval", "state": "RUNNING",
+                "next_idx": 1,
+                "schedule_times": ["2026-10-09T10:00:00+00:00",
+                                   "2026-10-09T11:00:00+00:00"]}
+        with mock.patch.object(scan_mod.RPCController, "instance", return_value=object()), \
+                mock.patch.object(scan_mod, "_current_snapshot", return_value=snap):
+            *_, cancel_disabled = update_timelapse_status(None)
+        self.assertFalse(cancel_disabled)
+
+    def test_status_disables_cancel_when_idle(self):
+        import plantimager.webui.scan as scan_mod
+        for snap in (None, {"state": "COMPLETED", "schedule_times": [],
+                            "next_idx": 0}):
+            with mock.patch.object(scan_mod.RPCController, "instance", return_value=object()), \
+                    mock.patch.object(scan_mod, "_current_snapshot", return_value=snap):
+                *_, cancel_disabled = update_timelapse_status(None)
+            self.assertTrue(cancel_disabled)
 
 
 class TestScheduleTable(unittest.TestCase):
