@@ -17,7 +17,6 @@ from plantimager.webui.scan import (
     _render_timelapse_status,
     _schedule_table,
     _tl_body_style,
-    _tl_num,
     _tl_row_status,
     _toggle_scan_buttons,
     _toggle_timelapse_rows,
@@ -114,11 +113,12 @@ class TestRebuildTimelapse(unittest.TestCase):
 
 
 class TestTimelapseHelpers(unittest.TestCase):
-    def test_tl_num_keeps_ints(self):
-        self.assertEqual(_tl_num("5"), 5)
-        self.assertIsInstance(_tl_num("5"), int)
-        self.assertEqual(_tl_num("1.5"), 1.5)
-        self.assertEqual(_tl_num("30s"), "30s")
+    def test_num_keeps_ints(self):
+        from plantimager.webui.scan import _num
+        self.assertEqual(_num("5"), 5)
+        self.assertIsInstance(_num("5"), int)
+        self.assertEqual(_num("1.5"), 1.5)
+        self.assertEqual(_num("30s"), "30s")
 
     def test_body_style(self):
         self.assertEqual(_tl_body_style(True), {})
@@ -206,19 +206,37 @@ class TestStatusRender(unittest.TestCase):
     def test_bare_single_row(self):
         badge, color, text = _render_timelapse_status({
             "timelapse_id": "exp", "mode": "one_shot", "state": "SCHEDULED",
-            "plantdb_timelapse_id": None, "next_idx": 0,
+            "next_idx": 0,
             "schedule_times": ["2026-10-09T10:00:00+00:00"],
         })
         self.assertIn("Single scan", text)
+
+    def test_multi_draft_without_container(self):
+        # plantdb_timelapse_id only exists after arming; counts must show anyway.
+        badge, color, text = _render_timelapse_status({
+            "timelapse_id": "exp", "mode": "interval", "state": "CONFIGURED",
+            "next_idx": 0,
+            "schedule_times": ["2026-10-09T10:00:00+00:00",
+                               "2026-10-09T11:00:00+00:00"],
+        })
+        self.assertIn("0/2", text)
 
     def test_failed_color(self):
         self.assertEqual(_render_timelapse_status({"state": "FAILED"})[1], "danger")
 
     def test_snapshot_mirror(self):
-        update_timelapse_snapshot({"state": "x"})
         import plantimager.webui.scan as scan_mod
+        update_timelapse_snapshot({"state": "x"})
         self.assertEqual(scan_mod.latest_timelapse, {"state": "x"})
-        update_timelapse_snapshot(None)
+        scan_mod.latest_timelapse = None
+
+    def test_unit_signal_rereads_without_controller(self):
+        # Bare emit (no payload) with no controller leaves the mirror alone.
+        import plantimager.webui.scan as scan_mod
+        update_timelapse_snapshot({"state": "x"})
+        update_timelapse_snapshot()
+        self.assertEqual(scan_mod.latest_timelapse, {"state": "x"})
+        scan_mod.latest_timelapse = None
 
     def test_current_snapshot_falls_back_to_mirror(self):
         update_timelapse_snapshot({"state": "SCHEDULED"})

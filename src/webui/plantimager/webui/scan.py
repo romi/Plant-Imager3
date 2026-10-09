@@ -98,9 +98,13 @@ NON_CAMERA_SECTIONS = ("ScanPath", "Metadata", "timelapse")
 
 
 def _num(value):
-    """Coerce a form value to ``float``, keeping it as-is if not numeric."""
+    """Coerce a form value to ``int`` (or ``float``), keeping it as-is if not numeric."""
     if value is None or value == "":
         return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        pass
     try:
         return float(value)
     except (TypeError, ValueError):
@@ -255,14 +259,6 @@ TIMELAPSE_DEFAULTS = {
     "warmup_period": 45, "grace_period": 60, "standby_threshold_sec": 600,
     "on_scan_failed": "skip_scan", "scan_retries": 0,
 }
-
-
-def _tl_num(value):
-    """Coerce a timelapse form value, keeping whole numbers as ints for clean TOML."""
-    n = _num(value)
-    if isinstance(n, float) and n.is_integer():
-        return int(n)
-    return n
 
 
 def _tl_body_style(enabled):
@@ -906,15 +902,15 @@ def rebuild_timelapse(enabled, mode, interval, n_shots, dates,
     tl = {"mode": mode or TIMELAPSE_DEFAULTS["mode"]}
     if tl["mode"] == "interval":
         if interval not in (None, ""):
-            tl["interval"] = _tl_num(interval)
+            tl["interval"] = _num(interval)
         if n_shots not in (None, ""):
-            tl["n_shots"] = _tl_num(n_shots)
+            tl["n_shots"] = _num(n_shots)
     elif tl["mode"] == "fixed_times":
         tl["dates"] = [v.strip() for v in (dates or "").splitlines() if v.strip()]
     for key, val in (("warmup_period", warmup), ("grace_period", grace),
                      ("standby_threshold_sec", standby), ("scan_retries", retries)):
         if val not in (None, ""):
-            tl[key] = _tl_num(val)
+            tl[key] = _num(val)
     if policy:
         tl["on_scan_failed"] = policy
     cfg["timelapse"] = tl
@@ -1106,25 +1102,45 @@ _TL_BADGE = {"CONFIGURED": "success", "SCHEDULED": "warning", "RUNNING": "warnin
 #: Latest timelapse snapshot pushed via ``timelapseChanged`` (see ``update_timelapse_status``).
 latest_timelapse = None
 
+#: Sentinel for a failed snapshot read (distinct from ``None`` = IDLE).
+_TIMELAPSE_READ_FAILED = object()
 
-def update_timelapse_snapshot(val):
-    """Cache a pushed timelapse snapshot for the status sampler."""
+
+def update_timelapse_snapshot(val=None):
+    """Cache a pushed timelapse snapshot for the status sampler.
+
+    The ``timelapseChanged`` notifier carries no payload (unit signal), so a
+    bare emit re-reads the property instead of caching ``None``.
+    """
     global latest_timelapse
+    if val is None:
+        val = _read_timelapse_property()
+        if val is _TIMELAPSE_READ_FAILED:
+            return
     latest_timelapse = val
 
 
-def _current_snapshot():
-    """Return the freshest timelapse snapshot: property poll, mirror fallback."""
+def _read_timelapse_property():
+    """Best-effort ``active_timelapse`` property read (``_TIMELAPSE_READ_FAILED`` on error)."""
     try:
         controller = RPCController.instance()
     except RuntimeError:
-        return latest_timelapse
+        return _TIMELAPSE_READ_FAILED
     if update_timelapse_snapshot not in controller.timelapseChanged.connections:
         controller.timelapseChanged.connect(update_timelapse_snapshot)
     snap = controller.active_timelapse
     if isinstance(snap, NoResult):
+        return _TIMELAPSE_READ_FAILED
+    return snap
+
+
+def _current_snapshot():
+    """Return the freshest timelapse snapshot: property poll, mirror fallback."""
+    global latest_timelapse
+    snap = _read_timelapse_property()
+    if snap is _TIMELAPSE_READ_FAILED:
         return latest_timelapse
-    update_timelapse_snapshot(snap)
+    latest_timelapse = snap
     return snap
 
 
@@ -1138,7 +1154,7 @@ def _render_timelapse_status(snap: dict | None) -> tuple[str, str, str]:
     total = len(times)
     next_idx = snap.get("next_idx", 0) or 0
     local = _local_preview_line(times[next_idx]) if next_idx < total else "—"
-    if snap.get("plantdb_timelapse_id") is None or total <= 1:
+    if total <= 1:
         return state or "Timelapse", color, f"Single scan · {local}"
     tid = snap.get("timelapse_id", "")
     mode = snap.get("mode", "")
@@ -1571,7 +1587,7 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
 
     try:
         datasets = {
-            dataset_name: (
+            f"{dataset_name}*": (
                 Permission.WRITE.value,
                 Permission.CREATE.value,
                 Permission.READ.value,
@@ -1700,8 +1716,8 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
     -------
     Tuple[str, str]
         A tuple containing two status messages:
-        - First message: Short status for the alert component
-        - Second message: Detailed status for the output component
+    - First message: Short status for the alert component
+    - Second message: Detailed status for the output component
     """
     if not api_token:
         return "Failed to authenticate with plantdb.", "No API token available, please log in and retry."
