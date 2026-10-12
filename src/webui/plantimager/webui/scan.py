@@ -14,6 +14,7 @@ Key Features
 - Configuration file upload functionality
 - Comprehensive error handling and user feedback
 """
+import datetime
 import os
 import re
 import tomllib
@@ -90,11 +91,20 @@ PATH_SPEC = {
 #: Camera offset axes (matches ``Pose``/``scanner`` offset contract).
 CAMERA_AXES = ["x", "y", "z", "pan", "tilt"]
 
+#: Top-level TOML sections that are not camera configurations.
+#: ``timelapse`` holds the TimeLapse schedule (see scanner/timelapse.py) and must
+#: survive camera add/remove edits untouched — never render it as a camera card.
+NON_CAMERA_SECTIONS = ("ScanPath", "Metadata", "timelapse")
+
 
 def _num(value):
-    """Coerce a form value to ``float``, keeping it as-is if not numeric."""
+    """Coerce a form value to ``int`` (or ``float``), keeping it as-is if not numeric."""
     if value is None or value == "":
         return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        pass
     try:
         return float(value)
     except (TypeError, ValueError):
@@ -240,6 +250,124 @@ def _bio_form() -> dbc.Accordion:
     return section_accordion
 
 
+#: Timelapse modes (mirror ``TimeLapseMode`` values).
+TIMELAPSE_MODES = ("interval", "fixed_times", "one_shot")
+
+#: Defaults for a fresh ``[timelapse]`` section.
+TIMELAPSE_DEFAULTS = {
+    "mode": "interval", "interval": "30s", "n_shots": 5,
+    "warmup_period": 45, "grace_period": 60, "standby_threshold_sec": 600,
+    "on_scan_failed": "skip_scan", "scan_retries": 0,
+}
+
+
+def _tl_body_style(enabled):
+    """Grey out the timelapse body when the switch is off (legacy single scan)."""
+    if enabled:
+        return {}
+    return {"opacity": "0.4", "pointerEvents": "none"}
+
+
+def _timelapse_form() -> html.Div:
+    """Build the timelapse form: mode radio + schedule + advanced (switch lives in the title)."""
+    d = TIMELAPSE_DEFAULTS
+
+    def hint(text):
+        return dbc.InputGroupText(
+            html.I(className="bi bi-question-circle", title=text),
+            className="align-self-center")
+
+    def num_row(label, tip, cid, placeholder=None):
+        return html.Div([
+            dbc.InputGroup([
+                dbc.InputGroupText(label),
+                dbc.Input(id=cid, type="number", debounce=True, placeholder=placeholder),
+                hint(tip),
+            ]),
+        ], id=f"{cid}-row", className="mb-1")
+    return html.Div([
+        html.Div([
+            dbc.Label(["Mode ", html.I(className="bi bi-question-circle",
+                                       title="interval: a scan every N; fixed_times: scans at the dates below; one_shot: a single scan after warmup.")],
+                      className="mb-1"),
+            dbc.RadioItems(id="tl-mode", inline=True,
+                           options=[{"label": m, "value": m} for m in TIMELAPSE_MODES],
+                           value=d["mode"], className="mb-2"),
+            html.Div([
+                dbc.InputGroup([
+                    dbc.InputGroupText("Interval"),
+                    dbc.Input(id="tl-interval", type="text", debounce=True,
+                              placeholder="30s or 3600"),
+                    hint("Delay between scans: seconds or a duration string like 30s or 1h30m. Interval mode only."),
+                ]),
+            ], id="tl-interval-row", className="mb-1"),
+            num_row("N",
+                    "Number of scans to run. Interval mode only.",
+                    "tl-n-shots", d["n_shots"]),
+            html.Div([
+                dbc.Label(["Dates (local time) ", html.I(className="bi bi-question-circle",
+                    title="One ISO datetime per line, in the controller's local time. Converted to UTC and sorted. Fixed-times mode only.")],
+                    className="mb-1"),
+                dbc.Textarea(id="tl-dates", placeholder="2026-10-09T10:00:00",
+                             style={"font-family": "monospace"}),
+            ], id="tl-dates-row", style={"display": "none"}, className="mb-1"),
+            dbc.Button([html.I(className="bi bi-eye me-2"), "Preview schedule"],
+                       id="tl-preview-btn", color="secondary", outline=True, size="sm",
+                       class_name="mt-1 mb-1"),
+            dcc.Markdown(id="tl-preview-output", className="mb-1"),
+            dbc.Label("Advanced", className="mt-2 mb-1"),
+            num_row("Warmup (s)",
+                    "Seconds before the first scan. Ignored for fixed times; the controller enforces a minimum.",
+                    "tl-warmup", d["warmup_period"]),
+            num_row("Grace (s)",
+                    "Overdue slots within this window still run; older slots are skipped.",
+                    "tl-grace", d["grace_period"]),
+            num_row("Standby Threshold (s)",
+                    "Idles longer than this power the CNC down; shorter idles hold position. Minimum is 2x warmup.",
+                    "tl-standby", d["standby_threshold_sec"]),
+            html.Div([
+                dbc.InputGroup([
+                    dbc.InputGroupText("On Failure"),
+                    dbc.Select(id="tl-policy",
+                               options=[{"label": p, "value": p}
+                                        for p in ("skip_scan", "fail_timelapse")],
+                               value=d["on_scan_failed"]),
+                    hint("skip_scan continues the timelapse after a failed slot; fail_timelapse aborts it."),
+                ]),
+            ], className="mb-1"),
+            num_row("Retries",
+                    "Re-attempts per slot before the failure policy applies.",
+                    "tl-retries", d["scan_retries"]),
+        ], id="tl-form-body"),
+    ])
+
+
+def _timelapse_title() -> html.Div:
+    """Accordion title text (the switch floats over the header as a sibling overlay)."""
+    return html.Div([
+        html.Span("Timelapse", className="me-3"),
+        dbc.FormText("Off = legacy single scan", color="muted"),
+    ], className="d-flex align-items-center", style={"paddingRight": "120px"})
+
+
+def _timelapse_item() -> html.Div:
+    """Timelapse accordion item with the enable switch overlaid on its header.
+
+    The switch is a *sibling* of the header button (not a child), so toggling
+    it never triggers the accordion collapse — no JS event hacks needed.
+    It is anchored to the header's fixed single-line height.
+    """
+    return html.Div([
+        dbc.AccordionItem(_timelapse_form(), title=_timelapse_title(), item_id="timelapse"),
+        html.Div([
+            dbc.Switch(id="tl-enabled", value=True),
+        ], id="tl-title-switch", style={
+            "position": "absolute", "top": "26px", "transform": "translateY(-50%)",
+            "right": "44px", "zIndex": 5,
+        }),
+    ], style={"position": "relative"})
+
+
 # Card for scan configuration settings (path / camera / biological metadata accordion)
 configuration_card = [
     dbc.Card(
@@ -266,6 +394,7 @@ configuration_card = [
                         dcc.Store(id="cam-active", data=[]),
                     ], title="Camera configuration", item_id="camera"),
                     dbc.AccordionItem(_bio_form(), title="Biological metadata configuration", item_id="bio"),
+                    _timelapse_item(),
                 ], start_collapsed=True, always_open=True),
                 # Hidden single source of truth, consumed by `run_scan`/`config_scan`.
                 dbc.Textarea(id="scan-cfg-toml", style={"display": "none"}),
@@ -310,7 +439,7 @@ dataset_name_card = [
             dbc.CardHeader(children=[html.I(className="bi bi-tag me-2"), "Dataset"]),
             dbc.CardBody(children=[
                 html.Div([
-                    dbc.Label("Name of the dataset to create:"),
+                    dbc.Label("Name of the dataset to create:", id="dataset-name-label"),
                     dbc.Input(id="dataset-input-name", placeholder="Dataset name",
                               class_name="mb-3", invalid=True, persistence=True,
                                   style={"minWidth": "125px", "maxWidth": "250px"}),
@@ -343,6 +472,28 @@ camera_card = [
         ]
     )
 ]
+
+# Card showing the active timelapse state (badge + progress), polled every 4s.
+timelapse_status_card = [
+    dbc.Card(
+        id="timelapse-status-card",
+        children=[
+            dbc.CardHeader(children=[html.I(className="bi bi-clock-history me-2"), "Timelapse"]),
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col(dbc.Badge("No timelapse", color="secondary", id="tl-status-badge"),
+                            width="auto"),
+                    dbc.Col(html.Div(id="tl-status-text", className="text-muted"),
+                            className="align-self-center"),
+                ], className="g-2 align-items-center"),
+                dbc.Button([html.I(className="bi bi-table me-2"), "View schedule"],
+                           id="tl-view-schedule-btn", color="secondary", outline=True, size="sm",
+                           class_name="mt-2"),
+            ]),
+        ]
+    )
+]
+
 
 # Card containing scan controls and status information
 scan_card = [
@@ -433,7 +584,8 @@ scan_layout = html.Div(
         dcc.Interval(id='main-interval', disabled=False, interval=4000),
         dbc.Row([
             dbc.Col(configuration_card, md=6),
-            dbc.Col(dataset_name_card + [html.Br()] + camera_card + [html.Br()] + scan_card, md=6)
+            dbc.Col(dataset_name_card + [html.Br()] + camera_card + [html.Br()] + scan_card
+                    + [html.Br()] + timelapse_status_card, md=6)
         ]),
         # Modal showing the current TOML configuration (read-only).
         dbc.Modal(id="view-cfg-modal", is_open=False, size="lg", scrollable=True,
@@ -469,6 +621,21 @@ scan_layout = html.Div(
                            color="primary"),
             ]),
         ]),
+        # Modal showing the timelapse schedule (mirrors the controller TimelapsePanel list).
+        dbc.Modal(id="view-schedule-modal", is_open=False, size="lg", scrollable=True,
+                  children=[
+                      dbc.ModalHeader(
+                          dbc.ModalTitle(
+                              children=[html.I(className="bi bi-table me-2"), "Timelapse schedule"])
+                      ),
+                      dbc.ModalBody([
+                          html.Div(id="tl-schedule-body"),
+                      ]),
+                      dbc.ModalFooter([
+                          dbc.Button("Close", id="view-schedule-close", color="secondary",
+                                     className="ms-auto"),
+                      ]),
+                  ]),
     ], id="scan-page-layout"
 )
 
@@ -550,7 +717,7 @@ def rebuild_path(cls, center_x, center_y, radius, n_points, n_circles, x_0, y_0,
 def populate_cameras(toml_text):
     """Fill the camera cards and active-slot list from the hidden config."""
     cfg = _load_cfg(toml_text)
-    cameras = [(k, v) for k, v in cfg.items() if k not in ("ScanPath", "Metadata")]
+    cameras = [(k, v) for k, v in cfg.items() if k not in NON_CAMERA_SECTIONS]
     active = list(range(len(cameras)))
     out = [active]
     for i in range(MAX_CAMERAS):
@@ -608,7 +775,7 @@ def rebuild_cameras(*args):
             active.remove(i)
 
     # Pick a default name for a newly added camera that does not collide with existing ones.
-    used_names = set(cfg.keys()) - {"ScanPath", "Metadata"}
+    used_names = set(cfg.keys()) - set(NON_CAMERA_SECTIONS)
     new_name = _free_camera_name(used_names)
 
     cameras = {}
@@ -632,7 +799,7 @@ def rebuild_cameras(*args):
                    "encoding": d['encoding'] or "jpeg", "offset": offset, "config": config}
         cameras[name] = cam
 
-    for k in [k for k in cfg if k not in ("ScanPath", "Metadata")]:
+    for k in [k for k in cfg if k not in NON_CAMERA_SECTIONS]:
         cfg.pop(k)
     cfg.update(cameras)
     return _dump(cfg), active
@@ -666,6 +833,224 @@ def rebuild_bio(*args):
     metadata = cfg.setdefault("Metadata", {})
     metadata["object"] = unflatten(flat)
     return _dump(cfg)
+
+
+# --- Timelapse configuration --------------------------------------------------
+@callback(
+    Output('tl-enabled', 'value'),
+    Output('tl-mode', 'value'),
+    Output('tl-interval', 'value'),
+    Output('tl-n-shots', 'value'),
+    Output('tl-dates', 'value'),
+    Output('tl-warmup', 'value'),
+    Output('tl-grace', 'value'),
+    Output('tl-standby', 'value'),
+    Output('tl-policy', 'value'),
+    Output('tl-retries', 'value'),
+    Output('tl-form-body', 'style'),
+    Input('scan-cfg-toml', 'value'),
+    State('tl-enabled', 'value'),
+)
+def populate_timelapse(toml_text, enabled):
+    """Fill the timelapse form from the hidden config.
+
+    An absent ``[timelapse]`` section leaves the switch (and fields) untouched,
+    so toggling the switch off stays off instead of bouncing back on.
+    """
+    tl = _load_cfg(toml_text).get("timelapse")
+    if tl is None:
+        on = bool(enabled) if enabled is not None else True
+        return (on, *[no_update] * 9, _tl_body_style(on))
+    dates = tl.get("dates") or []
+    return (
+        True,
+        tl.get("mode", TIMELAPSE_DEFAULTS["mode"]),
+        "" if tl.get("interval") is None else str(tl["interval"]),
+        "" if tl.get("n_shots") is None else str(tl["n_shots"]),
+        "\n".join(str(v) for v in dates),
+        "" if tl.get("warmup_period") is None else str(tl["warmup_period"]),
+        "" if tl.get("grace_period") is None else str(tl["grace_period"]),
+        "" if tl.get("standby_threshold_sec") is None else str(tl["standby_threshold_sec"]),
+        tl.get("on_scan_failed", TIMELAPSE_DEFAULTS["on_scan_failed"]),
+        "" if tl.get("scan_retries") is None else str(tl["scan_retries"]),
+        _tl_body_style(True),
+    )
+
+
+@callback(
+    Output('scan-cfg-toml', 'value', allow_duplicate=True),
+    Input('tl-enabled', 'value'),
+    Input('tl-mode', 'value'),
+    Input('tl-interval', 'value'),
+    Input('tl-n-shots', 'value'),
+    Input('tl-dates', 'value'),
+    Input('tl-warmup', 'value'),
+    Input('tl-grace', 'value'),
+    Input('tl-standby', 'value'),
+    Input('tl-policy', 'value'),
+    Input('tl-retries', 'value'),
+    State('scan-cfg-toml', 'value'),
+    prevent_initial_call=True,
+)
+def rebuild_timelapse(enabled, mode, interval, n_shots, dates,
+                      warmup, grace, standby, policy, retries, toml_text):
+    """Rebuild the ``[timelapse]`` section; switch off strips it (legacy scan)."""
+    cfg = _load_cfg(toml_text)
+    if not enabled:
+        cfg.pop("timelapse", None)
+        return _dump(cfg)
+    tl = {"mode": mode or TIMELAPSE_DEFAULTS["mode"]}
+    if tl["mode"] == "interval":
+        if interval not in (None, ""):
+            tl["interval"] = _num(interval)
+        if n_shots not in (None, ""):
+            tl["n_shots"] = _num(n_shots)
+    elif tl["mode"] == "fixed_times":
+        tl["dates"] = [v.strip() for v in (dates or "").splitlines() if v.strip()]
+    for key, val in (("warmup_period", warmup), ("grace_period", grace),
+                     ("standby_threshold_sec", standby), ("scan_retries", retries)):
+        if val not in (None, ""):
+            tl[key] = _num(val)
+    if policy:
+        tl["on_scan_failed"] = policy
+    cfg["timelapse"] = tl
+    return _dump(cfg)
+
+
+@callback(
+    Output('tl-interval-row', 'style'),
+    Output('tl-n-shots-row', 'style'),
+    Output('tl-dates-row', 'style'),
+    Input('tl-mode', 'value'),
+)
+def _toggle_timelapse_rows(mode):
+    """Show only the schedule inputs relevant to the selected mode."""
+    show, hide = {"display": "block"}, {"display": "none"}
+    if mode == "fixed_times":
+        return hide, hide, show
+    if mode == "one_shot":
+        return hide, hide, hide
+    return show, show, hide
+
+
+@callback(
+    Output('tl-form-body', 'style', allow_duplicate=True),
+    Input('tl-enabled', 'value'),
+    prevent_initial_call=True,
+)
+def _toggle_timelapse_body(enabled):
+    """Grey out the timelapse body when the switch is off."""
+    return _tl_body_style(bool(enabled))
+
+
+def _local_preview_line(iso: str) -> str:
+    """Render a UTC ISO schedule entry in controller-local short form."""
+    try:
+        local = datetime.datetime.fromisoformat(iso).astimezone()
+        return local.strftime("%d/%m %H:%M")
+    except (ValueError, TypeError):
+        return iso
+
+
+def _render_preview(result: dict) -> str:
+    """Render a ``preview_timelapse`` result dict as markdown."""
+    lines = [f"**{result.get('mode', '?')}** — {result.get('n_scans', 0)} scan(s)"]
+    for i, iso in enumerate(result.get("schedule_times") or []):
+        lines.append(f"- #{i} · {_local_preview_line(iso)}")
+    return "\n".join(lines)
+
+
+def _validate_timelapse(cfg: dict) -> list:
+    """Check a config's ``[timelapse]`` section for hard errors.
+
+    Only what the client can know for sure: presence per mode, whole
+    positive counts, parseable dates. Durations and clamped bounds
+    (warmup/standby/grace) are the server's truth — never rejected here.
+    """
+    tl = cfg.get("timelapse") or {}
+    mode = tl.get("mode", "interval")
+    if mode not in TIMELAPSE_MODES:
+        return [f"Unknown mode {mode!r}, expected one of {', '.join(TIMELAPSE_MODES)}."]
+    issues = []
+    if mode == "interval":
+        if tl.get("interval") in (None, ""):
+            issues.append("Interval mode needs an interval.")
+        if tl.get("n_shots") in (None, ""):
+            issues.append("Interval mode needs N (number of scans).")
+        else:
+            try:
+                n = float(tl["n_shots"])
+            except (TypeError, ValueError):
+                issues.append(f"N must be a number, got {tl['n_shots']!r}.")
+            else:
+                if n < 1:
+                    issues.append("N must be at least 1.")
+                elif not n.is_integer():
+                    issues.append("N must be a whole number.")
+    if mode == "fixed_times":
+        dates = tl.get("dates") or []
+        if not dates:
+            issues.append("Fixed-times mode needs at least one date.")
+        for i, v in enumerate(dates):
+            try:
+                datetime.datetime.fromisoformat(str(v))
+            except (ValueError, TypeError):
+                issues.append(f"Date line {i + 1} is not an ISO datetime: {v!r}.")
+    retries = tl.get("scan_retries", 0)
+    try:
+        if float(retries) < 0:
+            issues.append("Retries must be 0 or more.")
+    except (TypeError, ValueError):
+        issues.append(f"Retries must be a number, got {retries!r}.")
+    return issues
+
+
+@callback(
+    Output('tl-preview-output', 'children'),
+    Input('tl-preview-btn', 'n_clicks'),
+    State('scan-cfg-toml', 'value'),
+    prevent_initial_call=True,
+)
+def preview_timelapse_schedule(_, toml_text):
+    """Show the computed schedule without starting anything (stateless)."""
+    try:
+        cfg = tomllib.loads(toml_text) if toml_text else {}
+    except tomllib.TOMLDecodeError:
+        return "**Invalid TOML configuration** — fix the form first."
+    if "timelapse" not in cfg:
+        return "_Timelapse is disabled — enable it to preview._"
+    issues = _validate_timelapse(cfg)
+    if issues:
+        return "**Fix the form first:**\n" + "\n".join(f"- {v}" for v in issues)
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return f"**Controller not connected**: {e}"
+    res = controller.preview_timelapse(cfg)
+    if isinstance(res, NoResult):
+        return f"**Preview failed**:\n```\n{res.traceback}\n```"
+    return _render_preview(res)
+
+
+@callback(
+    Output('start-scan-button', 'children'),
+    Output('cancel-scan-button', 'children'),
+    Output('dataset-name-label', 'children'),
+    Output('config-scan-button', 'children'),
+    Input('tl-enabled', 'value'),
+)
+def _toggle_scan_buttons(enabled):
+    """Single Start/Cancel/Configure set whose labels follow the timelapse switch."""
+    gear = [html.I(className="bi bi-gear-fill me-2")]
+    if enabled:
+        return ([html.I(className="bi bi-play-fill me-2"), "Start Timelapse"],
+                [html.I(className="bi bi-x-circle-fill me-2"), "Cancel Timelapse"],
+                "Name of the timelapse to create:",
+                gear + ["Configure Timelapse"])
+    return ([html.I(className="bi bi-play-fill me-2"), "Start Scanning"],
+            [html.I(className="bi bi-x-circle-fill me-2"), "Cancel Scan"],
+            "Name of the dataset to create:",
+            gear + ["Configure Scanner"])
 
 
 available_cameras = []
@@ -708,6 +1093,166 @@ def update_interval(n_intervals, *current):
         else:
             names.append(no_update)
     return markdown, *names
+
+
+#: Badge colors mirroring the controller QML status mapping.
+_TL_BADGE = {"CONFIGURED": "success", "SCHEDULED": "warning", "RUNNING": "warning",
+             "COMPLETED": "success", "FAILED": "danger", "CANCELLED": "secondary"}
+
+#: Latest timelapse snapshot pushed via ``timelapseChanged`` (see ``update_timelapse_status``).
+latest_timelapse = None
+
+#: Sentinel for a failed snapshot read (distinct from ``None`` = IDLE).
+_TIMELAPSE_READ_FAILED = object()
+
+
+def update_timelapse_snapshot(val=None):
+    """Cache a pushed timelapse snapshot for the status sampler.
+
+    The ``timelapseChanged`` notifier carries no payload (unit signal), so a
+    bare emit re-reads the property instead of caching ``None``.
+    """
+    global latest_timelapse
+    if val is None:
+        val = _read_timelapse_property()
+        if val is _TIMELAPSE_READ_FAILED:
+            return
+    latest_timelapse = val
+
+
+def _read_timelapse_property():
+    """Best-effort ``active_timelapse`` property read (``_TIMELAPSE_READ_FAILED`` on error)."""
+    try:
+        controller = RPCController.instance()
+    except RuntimeError:
+        return _TIMELAPSE_READ_FAILED
+    if update_timelapse_snapshot not in controller.timelapseChanged.connections:
+        controller.timelapseChanged.connect(update_timelapse_snapshot)
+    snap = controller.active_timelapse
+    if isinstance(snap, NoResult):
+        return _TIMELAPSE_READ_FAILED
+    return snap
+
+
+def _current_snapshot():
+    """Return the freshest timelapse snapshot: property poll, mirror fallback."""
+    global latest_timelapse
+    snap = _read_timelapse_property()
+    if snap is _TIMELAPSE_READ_FAILED:
+        return latest_timelapse
+    latest_timelapse = snap
+    return snap
+
+
+def _render_timelapse_status(snap: dict | None) -> tuple[str, str, str]:
+    """Render an ``active_timelapse`` snapshot as (badge text, badge color, detail)."""
+    if snap is None:
+        return "No timelapse", "secondary", "Configure or start a timelapse."
+    state = str(snap.get("state") or "").upper()
+    color = _TL_BADGE.get(state, "secondary")
+    times = snap.get("schedule_times") or []
+    total = len(times)
+    next_idx = snap.get("next_idx", 0) or 0
+    local = _local_preview_line(times[next_idx]) if next_idx < total else "—"
+    if total <= 1:
+        return state or "Timelapse", color, f"Single scan · {local}"
+    tid = snap.get("timelapse_id", "")
+    mode = snap.get("mode", "")
+    return (state or "Timelapse", color,
+            f"{tid} · {mode} · {next_idx}/{total} · next {local}")
+
+
+@callback(
+    Output('tl-status-badge', 'children'),
+    Output('tl-status-badge', 'color'),
+    Output('tl-status-text', 'children'),
+    Output('tl-view-schedule-btn', 'disabled'),
+    Output('cancel-scan-button', 'disabled', allow_duplicate=True),
+    Input('main-interval', 'n_intervals'),
+    prevent_initial_call=True)
+def update_timelapse_status(_):
+    """Poll the ``active_timelapse`` property and render the status card."""
+    try:
+        RPCController.instance()
+    except RuntimeError:
+        return "No controller", "secondary", "", True, True
+    snap = _current_snapshot()
+    state = str((snap or {}).get("state") or "").upper()
+    return (*_render_timelapse_status(snap), False,
+            state not in ("CONFIGURED", "SCHEDULED", "RUNNING"))
+
+
+#: Row colors for the schedule table (mirrors the QML rowColor mapping).
+_TL_ROW_COLOR = {"done": "success", "failed": "danger", "next": "warning",
+                "running": "warning", "skipped": "warning", "pending": "secondary"}
+
+
+def _tl_row_status(idx: int, snap: dict) -> str:
+    """Per-slot status for the schedule table (ports QML ``rowStatus``)."""
+    for rec in snap.get("scans") or []:
+        sid = rec.get("scan_id", "")
+        if sid.endswith(f"_{idx}") or (idx == 0 and sid == snap.get("timelapse_id")):
+            st = rec.get("status", "")
+            if st in ("succeeded", "completed", "COMPLETED"):
+                return "done"
+            if st in ("failed", "FAILED"):
+                return "failed"
+            if st == "skipped":
+                return "skipped"
+            return st
+    next_idx = snap.get("next_idx", 0) or 0
+    state = str(snap.get("state") or "").upper()
+    if idx < next_idx:
+        return "skipped"
+    if idx == next_idx and state == "RUNNING":
+        return "running"
+    if idx == next_idx and state == "SCHEDULED":
+        return "next"
+    return "pending"
+
+
+def _schedule_table(snap: dict | None):
+    """Render a snapshot's schedule as a table (shared by modal and preview)."""
+    if snap is None:
+        return html.Div("No timelapse", className="text-center text-muted")
+    rows = []
+    for i, iso in enumerate(snap.get("schedule_times") or []):
+        st = _tl_row_status(i, snap)
+        rows.append(html.Tr([
+            html.Td(f"#{i}"),
+            html.Td(_local_preview_line(iso)),
+            html.Td(dbc.Badge(st, color=_TL_ROW_COLOR.get(st, "secondary"))),
+        ]))
+    if not rows:
+        return html.Div("Empty schedule", className="text-center text-muted")
+    return dbc.Table([
+        html.Thead(html.Tr([html.Th("#"), html.Th("Local time"), html.Th("Status")])),
+        html.Tbody(rows),
+    ], bordered=True, size="sm", responsive=True)
+
+
+@callback(
+    Output('view-schedule-modal', 'is_open'),
+    Output('tl-schedule-body', 'children'),
+    Input('tl-view-schedule-btn', 'n_clicks'),
+    Input('view-schedule-close', 'n_clicks'),
+    Input('main-interval', 'n_intervals'),
+    State('view-schedule-modal', 'is_open'),
+    prevent_initial_call=True,
+)
+def toggle_schedule_modal(_open, _close, _tick, is_open):
+    """Open/close the schedule modal; refresh its table while open."""
+    if ctx.triggered_id == "view-schedule-close":
+        return False, no_update
+    if ctx.triggered_id == "main-interval" and not is_open:
+        raise PreventUpdate
+    try:
+        RPCController.instance()
+    except RuntimeError:
+        table = html.Div("No controller", className="text-center text-muted")
+    else:
+        table = _schedule_table(_current_snapshot())
+    return True, table
 
 
 @callback(
@@ -979,10 +1524,13 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     State('logged-username', 'data'),
     State('dataset-input-name', 'value'),
     State('scan-job-id', 'data'),
+    State('tl-enabled', 'value'),
+    State('scan-cfg-toml', 'value'),
     prevent_initial_call=True,
 )
 def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: str, refresh_token: str,
-                 username: str, dataset_name: str, scan_job_id: int):
+                 username: str, dataset_name: str, scan_job_id: int,
+                 tl_enabled: bool, cfg: str):
     """Authenticate and create a scoped per-scan API token.
 
     This runs in the main web UI process only. It makes the user token
@@ -1043,7 +1591,7 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
 
     try:
         datasets = {
-            dataset_name: (
+            f"{dataset_name}*": (
                 Permission.WRITE.value,
                 Permission.CREATE.value,
                 Permission.READ.value,
@@ -1059,8 +1607,57 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
                 "Failed to create the API token for plantdb.",
                 "Unable to create the scoped API token used by the scanner.")
 
+    if tl_enabled:
+        return _start_timelapse_now(url, port, prefix, ssl, access_token, refresh_token,
+                                    api_token, cfg, dataset_name, scan_job_id)
+
     return (access_token, refresh_token, api_token, (scan_job_id or 0) + 1,
             "Scan ready to start", "API token created, starting scanner...")
+
+
+def _start_timelapse_now(url: str, port: str, prefix: str, ssl: bool,
+                         access_token: str, refresh_token: str, api_token: str,
+                         cfg: str, dataset_name: str, scan_job_id: int):
+    """Arm a timelapse directly (single ``start_timelapse(config)`` call).
+
+    Unlike the legacy scan this needs no background job: arming only computes
+    the schedule and persists it, so it runs in the main web UI process and
+    the job id is left unchanged.
+    """
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return (access_token, refresh_token, api_token, scan_job_id,
+                "Error: Raspberry Pi Controller not initialized!", str(e))
+
+    res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
+    if isinstance(res, NoResult):
+        return (access_token, refresh_token, api_token, scan_job_id,
+                f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}",
+                res.traceback)
+    res: None | NoResult = controller.set_api_token(api_token)
+    if isinstance(res, NoResult):
+        return (access_token, refresh_token, api_token, scan_job_id,
+                "Failed to set access token.", res.traceback)
+    res: None | NoResult = controller.set_base_name(dataset_name)
+    if isinstance(res, NoResult):
+        return (access_token, refresh_token, api_token, scan_job_id,
+                f"Failed to set dataset {dataset_name}", res.traceback)
+    try:
+        config_dict = tomllib.loads(cfg) if cfg else {}
+    except tomllib.TOMLDecodeError:
+        return (access_token, refresh_token, api_token, scan_job_id,
+                "Failed to parse config file", traceback.format_exc(limit=1))
+    res: None | NoResult = controller.set_config(config_dict)
+    if isinstance(res, NoResult):
+        return (access_token, refresh_token, api_token, scan_job_id,
+                "Failed to configure scan", res.traceback)
+    res = controller.start_timelapse(config_dict)
+    if isinstance(res, NoResult):
+        return (access_token, refresh_token, api_token, scan_job_id,
+                "Failed to start timelapse", res.traceback)
+    return (access_token, refresh_token, api_token, scan_job_id,
+            "Timelapse started", f"Timelapse '{res}' scheduled.")
 
 
 @callback(
@@ -1123,8 +1720,8 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
     -------
     Tuple[str, str]
         A tuple containing two status messages:
-        - First message: Short status for the alert component
-        - Second message: Detailed status for the output component
+    - First message: Short status for the alert component
+    - Second message: Detailed status for the output component
     """
     if not api_token:
         return "Failed to authenticate with plantdb.", "No API token available, please log in and retry."
@@ -1141,7 +1738,7 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
     res: None | NoResult = controller.set_api_token(api_token)
     if isinstance(res, NoResult):
         return "Failed to connect to set access token.", res.traceback
-    res: None | NoResult = controller.set_dataset_name(dataset_name)
+    res: None | NoResult = controller.set_base_name(dataset_name)
     if isinstance(res, NoResult):
         return f"Failed to set dataset {dataset_name}", res.traceback
     res: None | NoResult = controller.set_config(tomllib.loads(cfg))
@@ -1165,12 +1762,21 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
 @callback(
     Output('scan-response', 'children', allow_duplicate=True),
     Input('cancel-scan-button', 'n_clicks'),
+    State('tl-enabled', 'value'),
     prevent_initial_call=True,
 )
-def cancel_scan(_):
-    """Placeholder callback for the Cancel Scan button."""
-    # TODO: implement actual cancellation logic
-    return "Cancelling scan..."
+def cancel_scan(_, tl_enabled):
+    """Cancel the running job: timelapse via RPC, legacy scan is a placeholder."""
+    if not tl_enabled:
+        return "Cancelling scan..."
+    try:
+        controller = RPCController.instance()
+    except RuntimeError as e:
+        return f"Error: Raspberry Pi Controller not initialized! {e}"
+    res = controller.cancel_timelapse()
+    if isinstance(res, NoResult):
+        return f"Cancelling timelapse failed: {res.traceback}"
+    return "Timelapse cancelled."
 
 
 @callback(
@@ -1183,9 +1789,11 @@ def cancel_scan(_):
     State('plantdb-ssl', 'data'),
     State('scan-cfg-toml', 'value'),
     State('dataset-input-name', 'value'),
+    State('tl-enabled', 'value'),
     prevent_initial_call=True,
 )
-def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, dataset_name: str):
+def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, dataset_name: str,
+                tl_enabled: bool):
     """Configure a plant scan with the specified configuration.
 
     Parameters
@@ -1225,7 +1833,7 @@ def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, datase
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):
         return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
-    res: None | NoResult = controller.set_dataset_name(dataset_name)
+    res: None | NoResult = controller.set_base_name(dataset_name)
     if isinstance(res, NoResult):
         return f"Failed to set dataset {dataset_name}", res.traceback
     try:
@@ -1235,5 +1843,14 @@ def config_scan(_, url: str, port: str, prefix: str, ssl: bool, cfg: str, datase
     res: None | NoResult = controller.set_config(config_dict)
     if isinstance(res, NoResult):
         return "Failed to configure scan", res.traceback
+
+    if tl_enabled:
+        res = controller.config_timelapse(config_dict)
+        if isinstance(res, NoResult):
+            return "Failed to configure timelapse", res.traceback
+        n = len((res or {}).get("schedule_times") or [])
+        state = str((res or {}).get("state") or "")
+        return ("Timelapse configured (draft)",
+                f"Draft '{(res or {}).get('timelapse_id', dataset_name)}' {state} — {n} scan(s) scheduled.")
 
     return "Scan configured", "Scan configured, ready to start"

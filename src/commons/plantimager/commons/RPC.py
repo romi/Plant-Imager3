@@ -22,6 +22,7 @@ import copy
 import inspect
 import json
 import logging
+import os
 import re
 import sys
 import time
@@ -634,6 +635,7 @@ class RPCClient:
         super().__init__()
         self.context: zmq.Context = context
         self.url: str = url
+        self._closed = False
         self.socket: zmq.Socket = context.socket(zmq.REQ)
         self.socket.setsockopt(zmq.LINGER, 0)
         self.socket.connect(self.url)
@@ -698,7 +700,7 @@ class RPCClient:
             if receiver:
                 receiver.stop()
                 receiver.join(2)
-            logger.debug("Client finalized")
+            if os.getenv("PI_LOG_FINALIZE") : logger.info("RPCClient finalized")
 
         finalize(self, _finalizer, self.socket, self._signal_receiver)
 
@@ -775,6 +777,7 @@ class RPCClient:
         print("<------------", file=sys.stderr)
 
     def _property_getter_proxy(self, property_name: str) -> Any:
+        self._ensure_open()
         """Fetch a property value from the remote server.
 
         Notes
@@ -806,6 +809,7 @@ class RPCClient:
             return NoResult(err, traceback_)
 
     def _property_setter_proxy(self, value: Any, property_name: str) -> None:
+        self._ensure_open()
         """Set a property value on the remote server.
 
         Notes
@@ -854,6 +858,8 @@ class RPCClient:
         ------
         TimeoutError
             If the server does not respond within the configured timeout.
+        RuntimeError
+            If this client was closed with :meth:`close`.
 
         Notes
         -----
@@ -863,6 +869,7 @@ class RPCClient:
         interleaving corrupts the socket state machine and surfaces as a
         `POLLOUT`/`POLLIN` timeout even when the server is healthy.
         """
+        self._ensure_open()
         package = {
             "event": RPCEvents.METHOD_CALL,
             "method": method_name,
@@ -919,6 +926,32 @@ class RPCClient:
         except Exception as e:
             logger.error(f"Failed to reset socket: {e}")
 
+    def close(self):
+        """
+        Close local resources held by this client: the REQ socket and the
+        signal receiver thread, if any.
+
+        Idempotent: safe to call multiple times and after garbage collection
+        (the finalizer performs the same steps as a backstop).
+        """
+        self._closed = True
+        try:
+            self.socket.close(linger=0)
+        except Exception:
+            try:
+                self.socket.close()
+            except Exception:
+                pass
+        receiver, self._signal_receiver = self._signal_receiver, None
+        if receiver:
+            receiver.stop()
+            receiver.join(2)
+
+    def _ensure_open(self):
+        """Raise a clear error if this client was closed with :meth:`close`."""
+        if self._closed:
+            raise RuntimeError(f"RPCClient to {self.url} is closed")
+
     def stop_server(self):
         """
         Request the connected RPC server to shut down.
@@ -932,6 +965,7 @@ class RPCClient:
         :meth:`execute`: it touches the shared REQ socket and must not
         interleave with concurrent requests from other threads.
         """
+        self._ensure_open()
         logger.info(f"Stopping server {self.url}")
         with self._lock:
             if self.socket.poll(timeout=1000, flags=zmq.POLLOUT) == 0:
@@ -1110,7 +1144,7 @@ class RPCServer:
             state["socket"].close()
             if state["signal_socket"]:
                 state["signal_socket"].close()
-            logger.info("Server deleted")
+            if os.getenv("PI_LOG_FINALIZE"): logger.info("RPCServer finalized")
 
         finalize(self, _server_finalizer, self._cleanup_state, self._signals)
 
@@ -1148,13 +1182,13 @@ class RPCServer:
         )
         if not self.name:
             logger.warning(f"Failed to register device {name} of type {type_} as {registry_url}")
+        else:
+            logger.info(f"Successfully registered device {name} of type {type_} to {registry_url}")
         self.registry_addr = registry_url if self.name else ""
 
         # Update cleanup state so finalizer knows what to unregister
         self._cleanup_state["uuid"] = self.uuid
         self._cleanup_state["registry_addr"] = self.registry_addr
-
-        logger.info(f"Successfully registered device {name} of type {type_} to {registry_url}")
 
         return self.name
 

@@ -1,6 +1,6 @@
 """Unit tests for the DataUploader.
 
-These tests exercise :class:`plantimager.controller.scanner.scanner.DataUploader`,
+These tests exercise :class:`plantimager.controller.scanner.scan.DataUploader`,
 which asynchronously uploads captured images to a PlantDB backend. The design
 mocks ``PlantDBClient`` for the fast, deterministic cases (upload call
 arguments, filename formatting, queue blocking, exception handling, worker
@@ -22,7 +22,7 @@ class TestDataUploader(unittest.TestCase):
         # Mock PlantDBClient
         self.mock_db = mock.MagicMock()
         self.mock_db.create_file.return_value = {"id": "file123"}
-        from plantimager.controller.scanner.scanner import DataUploader
+        from plantimager.controller.scanner.scan import DataUploader
         self.DataUploader = DataUploader
         self.uploader = DataUploader(self.mock_db, queue_size=2)
 
@@ -149,7 +149,7 @@ class TestDataUploader(unittest.TestCase):
                 client.create_fileset("images", "test_scan")
             except Exception:
                 pass
-            from plantimager.controller.scanner.scanner import DataUploader
+            from plantimager.controller.scanner.scan import DataUploader
             uploader = DataUploader(client, queue_size=2)
             di = DataItem(0, b"fakeimg", "jpeg", {"camera_name": "cam", "shot_id": 0, "format": "jpeg"})
             uploader.upload("test_scan", "images", di)

@@ -180,6 +180,7 @@ class CNC(AbstractCNC):
         self._max_angle = 360*3
         self._start()
         finalize(self, self.stop)
+        self._ready, self._standby = True, True
 
     def _start(self) -> None:
         """Initialize the serial connection with Arduino and configure the GRBL-based CNC machine.
@@ -223,12 +224,14 @@ class CNC(AbstractCNC):
         # Clear input buffer
         self.serial_port.flushInput()
 
-        # Apply all GRBL configuration settings from a predefined dictionary
-        for code, (_, _, value) in GRBL_SETTINGS.items():
-            self.send_cmd(f"{code}={value}", wait=True, timeout=1)
-
         # Get current GRBL settings
         self.grbl_settings = self.get_grbl_settings()
+
+        # Apply all GRBL configuration settings from a predefined dictionary
+        for code, (_, _, value) in GRBL_SETTINGS.items():
+            if self.grbl_settings[code] != value:
+                self.send_cmd(f"{code}={value}", wait=True, timeout=1)
+
 
         # Parse direction port invert mask (setting $3) to determine axis inversions
         invert_mask = self.grbl_settings["$3"]
@@ -498,6 +501,8 @@ class CNC(AbstractCNC):
         - GRBL Homing Cycle: https://github.com/gnea/grbl/wiki/Grbl-v1.1-Commands#h---run-homing-cycle
         - ``G92`` Reference: http://linuxcnc.org/docs/html/gcode/g-code.html#gcode:g92
         """
+        prior_ready_state = self.ready
+        self._standby = False
         # Execute GRBL homing cycle to find machine zero
         self.send_cmd("$H", wait=True, timeout=60)
 
@@ -520,6 +525,7 @@ class CNC(AbstractCNC):
         z_init = sign_z * (z_max - pulloff) if pulloff_mask & 4 else sign_z * pulloff
         self.send_cmd(f"g92 x{x_init} y{y_init} z{z_init}", wait=True, timeout=10)
         self._min_angle = -z_init
+        self._standby = prior_ready_state
 
     def _check_move(self, x: float, y: float, z: float) -> None:
         """Validate that the requested movement coordinates are within the machine's axis limits.
@@ -572,6 +578,7 @@ class CNC(AbstractCNC):
         - Units are in millimeters (``G21`` mode)
         - The method will block until the movement is complete
         """
+        self._standby = False
         z = angle_min_travel(self.z, z)
 
         # check for bounds for angles, if too much go the other way
@@ -591,6 +598,7 @@ class CNC(AbstractCNC):
         if time.time() - t0 < travel_time:
             time.sleep(travel_time - (time.time() - t0))
         self.wait_until_immobile(30)
+        self._standby = True
 
     def _move(self, x, y, z, timeout=10, wait=True):
         """

@@ -335,6 +335,57 @@ class TestRPCProtocol(BaseRPCTest):
             self.assertIn("not implemented", reply["error"])
 
 
+class TestClientClose(BaseRPCTest):
+    """Use-after-close fails fast instead of raising obscure ZMQ errors."""
+
+    def setUp(self):
+        super().setUp()
+        self.server_port = 9001
+        self.server_url = f"tcp://127.0.0.1:{self.server_port}"
+
+        self.server = TestDevice(self.context, self.server_url)
+        self.server_thread = threading.Thread(target=self.server.serve_forever)
+        self.server_thread.daemon = True
+        self.server_thread.start()
+        time.sleep(0.2)
+
+    def tearDown(self):
+        self.server.stop_server()
+        self.server_thread.join()
+        del self.server
+        super().tearDown()
+
+    def test_close_then_method_raises(self):
+        """Calling a remote method after close() raises RuntimeError."""
+        client = TestClientProxy(self.context, self.server_url)
+        self.assertEqual(client.echo("hi"), "Echo: hi")
+        client.close()
+        with self.assertRaises(RuntimeError):
+            client.echo("hi")
+
+    def test_close_then_property_raises(self):
+        """Accessing a property after close() raises RuntimeError."""
+        client = TestClientProxy(self.context, self.server_url)
+        self.assertEqual(client.test_prop, 0)
+        client.close()
+        with self.assertRaises(RuntimeError):
+            _ = client.test_prop
+
+    def test_close_then_stop_server_raises(self):
+        """stop_server() after close() raises RuntimeError."""
+        client = TestClientProxy(self.context, self.server_url)
+        client.close()
+        with self.assertRaises(RuntimeError):
+            client.stop_server()
+
+    def test_close_idempotent(self):
+        """Closing twice is a no-op."""
+        client = TestClientProxy(self.context, self.server_url)
+        client.close()
+        client.close()
+        del client
+
+
 # --- Section 2: Robustness Tests (Expected Failures) ---
 
 class TestRobustness(BaseRPCTest):
