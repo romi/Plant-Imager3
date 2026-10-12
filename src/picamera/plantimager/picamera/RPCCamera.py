@@ -156,7 +156,16 @@ class RPCCamera(Camera, RPCServer):
             else:
                 buffer = encode_jpeg(image, quality=95, colorsubsampling="444", fastdct=True)
                 fmt = "jpeg"
-        return memoryview(buffer), {"format": fmt, "rotation": self._rotation, "size": image.shape, "channel": "rgb"}
+        info = {"format": fmt, "rotation": self._rotation, "size": image.shape, "channel": "rgb"}
+        try:
+            meta = self.picam.capture_metadata()
+        except Exception:
+            meta = {}
+        for key in ("ExposureTime", "AnalogueGain", "ColourGains",
+                    "FrameDuration", "Lux", "ColourTemperature"):
+            if key in meta:
+                info[key] = meta[key]
+        return memoryview(buffer), info
 
     @RPCProperty(notify=Camera.encodingChanged)
     def encoding(self) -> str:
@@ -306,6 +315,43 @@ https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/d
             saved = self._read_defaults_file()
             self.config = saved if saved is not None else dict(self.DEFAULT_CONTROLS)
         return dict(self._config)
+
+    @RPCServer.register_method_json
+    def get_camera_controls(self) -> dict:
+        """JSON-safe snapshot of the advertised libcamera controls and ranges."""
+        controls = self.picam.camera_controls
+        if not isinstance(controls, dict):
+            return {}
+        out = {}
+        for key, entry in controls.items():
+            if key == "FrameRate":
+                continue
+            lo, hi = self._bounds(entry)
+            if isinstance(entry, (tuple, list)) and len(entry) >= 3:
+                default = entry[2]
+            else:
+                default = getattr(entry, "default", None)
+            out[key] = self._control_schema(key, lo, hi, default)
+        return out
+
+    @classmethod
+    def _control_schema(cls, key, lo, hi, default):
+        def js(value):
+            return list(value) if isinstance(value, tuple) else value
+        length = cls._TUPLE_LEN.get(key)
+        if length is None and isinstance(default, (tuple, list)):
+            length = len(default)
+        if length is None and isinstance(lo, (tuple, list)):
+            length = len(lo)
+        if length is not None:
+            return {"type": "tuple", "length": length,
+                    "min": js(lo), "max": js(hi), "default": js(default)}
+        if isinstance(lo, bool) and isinstance(hi, bool):
+            return {"type": "bool", "default": default}
+        if isinstance(lo, int) and isinstance(hi, int) and 0 <= hi - lo <= 16:
+            return {"type": "enum", "min": lo, "max": hi, "default": default,
+                    "allowed_values": list(range(lo, hi + 1))}
+        return {"type": "scalar", "min": lo, "max": hi, "default": default}
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self):
