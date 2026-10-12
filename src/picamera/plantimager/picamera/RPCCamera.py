@@ -30,6 +30,41 @@ class PyavOutput_nobuffer(PyavOutput):
 
 
 class RPCCamera(Camera, RPCServer):
+    DEFAULT_CONTROLS = {
+        "AeEnable": False,
+        "ExposureTime": 250000,
+        "AnalogueGain": 7.0,
+        "AwbEnable": False,
+        "AwbMode": 5,  # daylight in libcamera's AwbMode enum
+        "ColourGains": (3.215, 1.433),
+        "AeMeteringMode": 1,  # Spot
+        "Brightness": 0.0,
+        "Contrast": 1.0,
+        "Saturation": 1.0,
+        "Sharpness": 1.0,
+    }
+    # (min, max) fallback when camera_controls is unavailable; live values win.
+    _FALLBACK_RANGES = {
+        "AeEnable": (False, True),
+        "AwbEnable": (False, True),
+        "ExposureTime": (74, 694422939),
+        "AnalogueGain": (1.0, 22.26),
+        "AwbMode": (0, 7),
+        "AeMeteringMode": (0, 3),
+        "ColourGains": (0.0, 32.0),
+        "Brightness": (-1.0, 1.0),
+        "Contrast": (0.0, 32.0),
+        "Saturation": (0.0, 32.0),
+        "Sharpness": (0.0, 16.0),
+    }
+    _TUPLE_LEN = {
+        "ColourGains": 2,
+        "FrameDurationLimits": 2,
+        "ScalerCrop": 4,
+        "ColourCorrectionMatrix": 9,
+    }
+    _ZERO_IS_AUTO = frozenset({"ExposureTime", "AnalogueGain"})
+
     def __init__(self, context: zmq.Context, url: str):
         RPCServer.__init__(self, context, url)
         self.picam = Picamera2()
@@ -49,6 +84,7 @@ class RPCCamera(Camera, RPCServer):
         self._config = {}  # camera parameters from Appendix C in the picamera2 doc.
         self.picam.configure(self.still_config)
         self.picam.start()
+        self.config = dict(self.DEFAULT_CONTROLS)
 
         # video stuff
         self.encoder: H264Encoder | None = None
@@ -133,6 +169,10 @@ class RPCCamera(Camera, RPCServer):
         """
         Sets camera controls/parameters from Picamera2 Appendix C.
 
+        Replace-wholesale: the given dict becomes the full control set.
+        Every key is validated before anything is applied: an invalid
+        dict raises and leaves the previous controls untouched.
+
         Parameters
         ----------
         value : dict
@@ -142,11 +182,78 @@ class RPCCamera(Camera, RPCServer):
         --------
         Picamera2 Manual Appendix C:
 https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf?disposition=inline#%5B%7B%22num%22%3A10333%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70.86614%2C781.0236%2C0%5D
-       """
-        self._config.update(value)
+        """
+        validated = self._validate_config(value)
+        self._config = validated
         # Apply controls to the running camera
         self.picam.set_controls(self._config)
         self.configChanged.emit(self._config)
+
+    def _validate_config(self, value: dict) -> dict:
+        if not isinstance(value, dict):
+            raise TypeError(f"config must be a dict, got {type(value).__name__}")
+        controls = self.picam.camera_controls
+        live = controls if isinstance(controls, dict) else {}
+        validated = {}
+        for key, val in value.items():
+            if key == "FrameRate":
+                if isinstance(val, bool) or not isinstance(val, (int, float)) or val <= 0:
+                    raise ValueError(f"Control FrameRate must be a positive number, got {val!r}")
+                validated[key] = val
+                continue
+            entry = live.get(key) if isinstance(live, dict) else None
+            bounds = self._bounds(entry) if entry is not None else self._FALLBACK_RANGES.get(key)
+            if bounds is None:
+                raise ValueError(f"Control {key} is not advertised by libcamera")
+            lo, hi = bounds
+            want_len = self._TUPLE_LEN.get(key)
+            if want_len is None and isinstance(entry, (tuple, list)) and len(entry) >= 3:
+                default = entry[2]
+                if isinstance(default, (tuple, list)):
+                    want_len = len(default)
+            if want_len is not None:
+                seq = tuple(val) if isinstance(val, list) else val
+                if not isinstance(seq, tuple) or len(seq) != want_len:
+                    raise ValueError(f"Control {key} must be a {want_len}-tuple, got {val!r}")
+                for pos, item in enumerate(seq):
+                    if isinstance(item, bool) or not isinstance(item, (int, float)):
+                        raise ValueError(f"Control {key} must hold numbers, got {val!r}")
+                    if not self._in_bounds(item, lo, hi, pos):
+                        raise ValueError(f"Control {key} value {val!r} out of range")
+                if key == "ColourGains" and all(item == 0 for item in seq):
+                    raise ValueError("Control ColourGains (0, 0) is not allowed")
+                validated[key] = seq
+                continue
+            if isinstance(lo, bool) and isinstance(hi, bool):
+                if not isinstance(val, bool):
+                    raise ValueError(f"Control {key} must be a bool, got {val!r}")
+                validated[key] = val
+                continue
+            if isinstance(val, bool) or not isinstance(val, (int, float)):
+                raise ValueError(f"Control {key} must be a number, got {val!r}")
+            if val == 0 and key in self._ZERO_IS_AUTO:
+                validated[key] = val
+                continue
+            if isinstance(lo, int) and isinstance(hi, int) and not isinstance(val, int):
+                raise ValueError(f"Control {key} must be an int, got {val!r}")
+            if (lo is not None and val < lo) or (hi is not None and val > hi):
+                raise ValueError(f"Control {key} value {val!r} out of range [{lo}, {hi}]")
+            validated[key] = val
+        return validated
+
+    @staticmethod
+    def _bounds(entry):
+        if isinstance(entry, (tuple, list)) and len(entry) >= 2:
+            return entry[0], entry[1]
+        return getattr(entry, "min", None), getattr(entry, "max", None)
+
+    @staticmethod
+    def _in_bounds(item, lo, hi, pos):
+        if isinstance(lo, (tuple, list)) and isinstance(hi, (tuple, list)):
+            if pos >= len(lo) or pos >= len(hi):
+                return False
+            return lo[pos] <= item <= hi[pos]
+        return (lo is None or lo <= item) and (hi is None or item <= hi)
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self):
