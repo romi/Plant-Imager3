@@ -1,4 +1,5 @@
 import io
+import json
 import os
 import subprocess
 import sys
@@ -84,7 +85,12 @@ class RPCCamera(Camera, RPCServer):
         self._config = {}  # camera parameters from Appendix C in the picamera2 doc.
         self.picam.configure(self.still_config)
         self.picam.start()
-        self.config = dict(self.DEFAULT_CONTROLS)
+        saved = self._read_defaults_file()
+        if saved is None:
+            if os.path.exists(self._defaults_path()):
+                print(f"warning: ignoring unreadable {self._defaults_path()}, using factory defaults")
+            saved = dict(self.DEFAULT_CONTROLS)
+        self.config = saved
 
         # video stuff
         self.encoder: H264Encoder | None = None
@@ -254,6 +260,52 @@ https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/d
                 return False
             return lo[pos] <= item <= hi[pos]
         return (lo is None or lo <= item) and (hi is None or item <= hi)
+
+    @staticmethod
+    def _defaults_path():
+        override = os.environ.get("CAMERA_PARAMS_FILE")
+        if override:
+            return override
+        base = os.environ.get("XDG_CONFIG_HOME")
+        if not base:
+            base = os.path.join(os.path.expanduser("~"), ".config")
+        return os.path.join(base, "camera_parameters.json")
+
+    def _read_defaults_file(self):
+        try:
+            with open(self._defaults_path(), encoding="utf-8") as fh:
+                return self._validate_config(json.load(fh))
+        except (OSError, ValueError, TypeError):
+            return None
+
+    def _write_defaults_file(self):
+        path = self._defaults_path()
+        parent = os.path.dirname(path)
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+        tmp = path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as fh:
+            json.dump(self._config, fh, indent=2)
+            fh.write("\n")
+        os.replace(tmp, path)
+
+    @RPCServer.register_method_json
+    def set_default_controls(self, value: dict) -> dict:
+        """Validate, apply and persist new camera defaults."""
+        self.config = value
+        self._write_defaults_file()
+        return dict(self._config)
+
+    @RPCServer.register_method_json
+    def reset_controls(self, factory: bool = False) -> dict:
+        """Reset live controls to the persisted defaults (factory=True: factory defaults)."""
+        if factory:
+            self.config = dict(self.DEFAULT_CONTROLS)
+            self._write_defaults_file()
+        else:
+            saved = self._read_defaults_file()
+            self.config = saved if saved is not None else dict(self.DEFAULT_CONTROLS)
+        return dict(self._config)
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self):
