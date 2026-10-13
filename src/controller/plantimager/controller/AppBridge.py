@@ -17,6 +17,7 @@ from plantimager.commons.logging import create_logger
 from plantimager.commons.systemd import is_systemd_process
 from plantimager.controller.camera.CameraBridge import CameraBridge
 from plantimager.controller.camera.CameraBridge import DummyCameraBridge
+from plantimager.controller.mqtt_bridge import MqttBridge
 from plantimager.controller.scanner.rpc_controller import RPCControllerServer
 from plantimager.controller.scanner.scanner import Scanner
 
@@ -79,10 +80,14 @@ class AppBridge(QObject):
         self._controller_thread.daemon = True
         self._controller_thread.start()
 
+        self._mqtt = MqttBridge(self)
+        self._mqtt.start()
+
         self.registry.start()
 
-        def finalizer(registry, controller_server, controller_thread, context):
+        def finalizer(registry, controller_server, controller_thread, context, mqtt):
             logger.debug("finalizing AppBridge")
+            mqtt.stop()
             registry.stop()
             registry.join()
             controller_server.stop_server()
@@ -91,7 +96,7 @@ class AppBridge(QObject):
             context.term()
             logger.debug("AppBridge finalized")
 
-        finalize(self, finalizer, self.registry, self._controller_server, self._controller_thread, self.context)
+        finalize(self, finalizer, self.registry, self._controller_server, self._controller_thread, self.context, self._mqtt)
 
     @Property(QObject, notify=currentCameraChanged)
     def currentCamera(self) -> CameraBridge:
@@ -106,6 +111,20 @@ class AppBridge(QObject):
     @Property(QObject, notify=scannerChanged)
     def scanner(self) -> Scanner:
         return self._scanner
+
+    @Property(QObject, constant=True)
+    def mqtt(self) -> MqttBridge:
+        return self._mqtt
+
+    @Slot(str, str, result=bool)
+    def sendCameraCommand(self, name: str, action: str) -> bool:
+        """Publishes a lifecycle command to one picamera over MQTT."""
+        return self._mqtt.publishCommand(name, action)
+
+    @Slot(str, result=bool)
+    def sendFleetCommand(self, action: str) -> bool:
+        """Publishes a lifecycle command to every picamera over MQTT."""
+        return self._mqtt.publishAll(action)
 
     @Slot(int, result=CameraBridge)
     def getCameraBridgeAtIndex(self, index: int) -> CameraBridge:

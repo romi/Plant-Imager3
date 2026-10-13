@@ -15,6 +15,7 @@ from plantimager.commons.mqtt_utils import (
     encode_command,
     fleet_topic,
     is_one_way,
+    split_broker_url,
     topic_for,
 )
 
@@ -40,6 +41,10 @@ class TestMqttBrokerUrl(unittest.TestCase):
         with mock.patch.dict("os.environ",
                              {"MQTT_BROKER": "tcp://127.0.0.1:1883"}):
             self.assertEqual(broker_url(), "tcp://127.0.0.1:1883")
+
+    def test_split_broker_url(self):
+        self.assertEqual(split_broker_url("tcp://10.10.11.1:1883"),
+                         ("10.10.11.1", 1883))
 
 
 class TestMqttCommands(unittest.TestCase):

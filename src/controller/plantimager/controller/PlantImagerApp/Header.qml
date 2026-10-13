@@ -28,6 +28,17 @@ Control {
         color: P.Style.colors.lightText
     }
 
+    Rectangle {
+        id: _mqtt_dot
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: _shutdown_menu_button.left
+        anchors.rightMargin: P.Style.smallMargin
+        width: P.Style.iconSmall
+        height: P.Style.iconSmall
+        radius: width / 2
+        color: P.AppBridge.mqtt.connected ? P.Style.colors.okColor : P.Style.colors.alertColor
+    }
+
     P.IconButton {
         id: _shutdown_menu_button
         anchors.top: parent.top

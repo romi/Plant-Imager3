@@ -18,6 +18,7 @@ if os.path.isdir(_SRC_PICAMERA) and _SRC_PICAMERA not in sys.path:
     sys.path.insert(0, _SRC_PICAMERA)
 
 from plantimager.picamera import mqtt_agent
+from plantimager.commons.mqtt_utils import split_broker_url
 
 
 class TestCommandArgv(unittest.TestCase):
@@ -60,7 +61,7 @@ class TestApplyCommand(unittest.TestCase):
 
 class TestSplitBroker(unittest.TestCase):
     def test_tcp_url_splits_host_port(self):
-        self.assertEqual(mqtt_agent.split_broker("tcp://10.10.11.1:1883"),
+        self.assertEqual(split_broker_url("tcp://10.10.11.1:1883"),
                          ("10.10.11.1", 1883))
 
 
