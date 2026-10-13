@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "plantimager.picamera"
 version = "0.0.1"
 dependencies = [
+    "paho-mqtt>=2.0",
     "picamera2"
 ]
 description = "A PiCamera package, transfering video and images to the main controller of the ROMI Plant Imager."
@@ -48,6 +49,7 @@ issues = "https://github.com/romi/Plant-Imager3/issues"
 
 [project.scripts]
 picamera-server = "plantimager.picamera.RPCCamera:main"
+picamera-mqtt-agent = "plantimager.picamera.mqtt_agent:main"
 
 [tool.setuptools.packages.find]
 include = ["plantimager*"]

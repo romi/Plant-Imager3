@@ -13,6 +13,7 @@ dependencies = [
     "scipy",
     "scikit-image",
     "numpy",
+    "paho-mqtt>=2.0",
     "plantimager.commons",
     "plantdb.client>=0.16",
 ]
