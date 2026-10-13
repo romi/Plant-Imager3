@@ -31,19 +31,6 @@ class PyavOutput_nobuffer(PyavOutput):
 
 
 class RPCCamera(Camera, RPCServer):
-    DEFAULT_CONTROLS = {
-        "AeEnable": False,
-        "ExposureTime": 250000,
-        "AnalogueGain": 7.0,
-        "AwbEnable": False,
-        "AwbMode": 5,  # daylight in libcamera's AwbMode enum
-        "ColourGains": (3.215, 1.433),
-        "AeMeteringMode": 1,  # Spot
-        "Brightness": 0.0,
-        "Contrast": 1.0,
-        "Saturation": 1.0,
-        "Sharpness": 1.0,
-    }
     # (min, max) fallback when camera_controls is unavailable; live values win.
     _FALLBACK_RANGES = {
         "AeEnable": (False, True),
@@ -381,10 +368,10 @@ https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/d
 
     @RPCProperty(notify=Camera.resolutionChanged)
     def resolution(self) -> tuple[int, int]:
-        return self.still_config.get("size")
+        return self.still_config["main"]["size"]
     @resolution.setter
     def resolution(self, value: tuple[int, int]):
-        if value != self.still_config.get("size"):
+        if value != self.still_config["main"]["size"]:
             x_max, y_max = self.picam.camera_properties["PixelArraySize"]
             self.still_config["main"]["size"] = max(60, min(value[0], x_max)), max(60, min(value[1], y_max))
             if self._mode == CameraMode.STILL:

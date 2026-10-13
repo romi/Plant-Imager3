@@ -12,6 +12,20 @@ class Camera(ABC):
     """
     Abstract class for camera devices.
     """
+    # Factory-validated fixed defaults (IMX477, daylight rig).
+    DEFAULT_CONTROLS = {
+        "AeEnable": False,
+        "ExposureTime": 250000,
+        "AnalogueGain": 7.0,
+        "AwbEnable": False,
+        "AwbMode": 5,  # daylight in libcamera's AwbMode enum
+        "ColourGains": (3.215, 1.433),
+        "AeMeteringMode": 1,  # Spot
+        "Brightness": 0.0,
+        "Contrast": 1.0,
+        "Saturation": 1.0,
+        "Sharpness": 1.0,
+    }
     modeChanged = RPCSignal(str)
     videoUrlChanged = RPCSignal(str)
     rotationChanged = RPCSignal(int)

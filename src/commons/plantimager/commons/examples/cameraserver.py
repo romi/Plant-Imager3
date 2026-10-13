@@ -150,6 +150,7 @@ class DummyCamera(Camera, RPCServer):
         self._rotation = 0
         self._encoding = "jpeg"
         self._config = {}
+        self.config = dict(self.DEFAULT_CONTROLS)
         self._image_provider = image_provider()
 
     @RPCServer.register_method_buffer(timeout=10000)
@@ -232,7 +233,9 @@ class DummyCamera(Camera, RPCServer):
     def config(self, value: dict) -> None:
         """Set camera controls/parameters from Picamera2 Appendix C.
 
-        Updates the stored configuration and emits the config-changed signal.
+        Replace-wholesale, mirroring :class:`RPCCamera`: the given dict
+        becomes the full control set. Range validation lives hardware-side;
+        the dummy accepts any keys.
 
         Parameters
         ----------
@@ -243,7 +246,7 @@ class DummyCamera(Camera, RPCServer):
         -----
         Control names and values follow the Picamera2 Manual Appendix C.
         """
-        self._config.update(value)
+        self._config = dict(value)
         # Apply controls to the running camera
         self.configChanged.emit(self._config)
 
