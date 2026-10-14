@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Dialogs
 
 import PlantImagerApp.Controls as P
 import PlantImagerApp.Style as P
@@ -80,15 +79,13 @@ Control {
                 onClicked: {
                     restart_host_dialog.open()
                 }
-                MessageDialog {
+                P.ConfirmDialog {
                     id: restart_host_dialog
-                    flags: Qt.FramelessWindowHint
-                    text: "Are you sure you want to restart the host?"
-                    buttons: MessageDialog.Yes | MessageDialog.Cancel
-
-                    onAccepted: {
-                        P.AppBridge.reboot_host()
-                    }
+                    title: "Restart host?"
+                    message: "Are you sure you want to restart the host?"
+                    confirmText: "Restart"
+                    dangerous: true
+                    onConfirmed: P.AppBridge.reboot_host()
                 }
             }
             Button {
@@ -98,15 +95,13 @@ Control {
                 onClicked: {
                     shutdown_host_dialog.open()
                 }
-                MessageDialog {
+                P.ConfirmDialog {
                     id: shutdown_host_dialog
-                    flags: Qt.FramelessWindowHint
-                    text: "Are you sure you want to shutdown the host?"
-                    buttons: MessageDialog.Yes | MessageDialog.Cancel
-
-                    onAccepted: {
-                        P.AppBridge.shutdown_host()
-                    }
+                    title: "Shutdown host?"
+                    message: "Are you sure you want to shutdown the host?"
+                    confirmText: "Shutdown"
+                    dangerous: true
+                    onConfirmed: P.AppBridge.shutdown_host()
                 }
             }
             Button {

@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Dialogs
 
 import PlantImagerApp.Controls as P
 import PlantImagerApp.Style as P
@@ -296,20 +295,22 @@ Flickable {
         }
     }
 
-    MessageDialog {
+    P.ConfirmDialog {
         id: _reboot_dialog
-        flags: Qt.FramelessWindowHint
-        text: "Reboot this camera? It will disappear until it comes back."
-        buttons: MessageDialog.Yes | MessageDialog.Cancel
-        onAccepted: PI.AppBridge.sendCameraCommand(bridge.name, "reboot")
+        title: "Reboot camera?"
+        message: "Reboot this camera? It will disappear until it comes back."
+        confirmText: "Reboot"
+        dangerous: true
+        onConfirmed: PI.AppBridge.sendCameraCommand(bridge.name, "reboot")
     }
 
-    MessageDialog {
+    P.ConfirmDialog {
         id: _poweroff_dialog
-        flags: Qt.FramelessWindowHint
-        text: "Power off this camera? It needs a manual restart afterwards."
-        buttons: MessageDialog.Yes | MessageDialog.Cancel
-        onAccepted: PI.AppBridge.sendCameraCommand(bridge.name, "poweroff")
+        title: "Power off camera?"
+        message: "Power off this camera? It needs a manual restart afterwards."
+        confirmText: "Power off"
+        dangerous: true
+        onConfirmed: PI.AppBridge.sendCameraCommand(bridge.name, "poweroff")
     }
 
     P.NumericKeyboardPopup {

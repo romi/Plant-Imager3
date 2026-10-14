@@ -3,6 +3,7 @@ module PlantImagerApp.Controls
 Icon                 1.0 Icon.qml
 IconButton           1.0 IconButton.qml
 CameraControlView  1.0 CameraControlView.qml
+ConfirmDialog        1.0 ConfirmDialog.qml
 CameraDelegate       1.0 CameraDelegate.qml
 CameraView           1.0 CameraView.qml
 Scanner              1.0 Scanner.qml
