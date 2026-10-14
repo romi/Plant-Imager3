@@ -23,6 +23,9 @@ Control {
                 image_button.checked = false
                 video_button.checked = true
             }
+            if(controlMode) {
+                control_panel.refreshFromBridge()
+            }
         }
         //focus_highlight_button.text = bridge.displayMode ? bridge.displayMode : " "
     }

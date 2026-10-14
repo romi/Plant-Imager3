@@ -105,7 +105,12 @@ class PiCameraComm(QObject):
             self._set_state(CameraStates.DISCONNECTED)
             self._attempt_connection()
         else:
-            self._set_state(current_state)
+            # Only restore the entry state if nothing moved on meanwhile:
+            # a capture finishing mid-read flips us back to CONNECTED, and
+            # restoring the stale entry state would wedge us in WAITING
+            # forever with an idle worker and no error logged.
+            if self.state == CameraStates.WAITING:
+                self._set_state(current_state)
 
     def _set_attr_async(self, attr_name: str, value: Any) -> None:
         def callback(ft_: Future):
