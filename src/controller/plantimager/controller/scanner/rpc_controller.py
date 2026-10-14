@@ -183,6 +183,66 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         """Return the list of camera names."""
         return self.scanner.camera_names
 
+    def _find_camera(self, name: str):
+        """Return the scanner's comm object for ``name`` or raise."""
+        for camera in self.scanner.cameras:
+            if camera.name == name:
+                return camera
+        raise ValueError(f"unknown camera {name!r}")
+
+    @RPCServer.register_method_buffer(timeout=30000)
+    def get_camera_image(self, name: str, lores: bool = True):
+        """Capture one lores image from a camera (JPEG bytes + info)."""
+        camera = self._find_camera(name)
+        future = camera.getImage(lores=lores)
+        if future is None:
+            raise ValueError(f"camera {name!r} is offline")
+        try:
+            buffer, info = future.result(timeout=30)
+        except TimeoutError:
+            raise TimeoutError(f"camera {name!r} did not return an image")
+        return bytes(buffer), dict(info)
+
+    @RPCServer.register_method_json
+    def get_camera_config(self, name: str) -> dict:
+        """Return the live control dict of one camera."""
+        return dict(self._find_camera(name).config)
+
+    @RPCServer.register_method_json
+    def set_camera_config(self, name: str, config: dict) -> dict:
+        """Apply a control dict to one camera, return effective config."""
+        camera = self._find_camera(name)
+        with camera.camera() as proxy:
+            if proxy is None:
+                raise ValueError(f"camera {name!r} is offline")
+            proxy.config = dict(config)
+            return dict(proxy.config)
+
+    @RPCServer.register_method_json
+    def get_camera_controls_schema(self, name: str) -> dict:
+        """Return the advertised libcamera controls schema of one camera."""
+        return self._find_camera(name).getCameraControls()
+
+    @RPCServer.register_method_json
+    def set_camera_default_controls(self, name: str, config: dict) -> dict:
+        """Validate, apply and persist new defaults for one camera."""
+        camera = self._find_camera(name)
+        with camera.camera() as proxy:
+            if proxy is None:
+                raise ValueError(f"camera {name!r} is offline")
+            proxy.set_default_controls(dict(config))
+            return dict(proxy.config)
+
+    @RPCServer.register_method_json
+    def reset_camera_controls(self, name: str, factory: bool = False) -> dict:
+        """Reset one camera to persisted (or factory) defaults."""
+        camera = self._find_camera(name)
+        with camera.camera() as proxy:
+            if proxy is None:
+                raise ValueError(f"camera {name!r} is offline")
+            proxy.reset_controls(factory)
+            return dict(proxy.config)
+
     def handle_scanner_changed(self, scanner):
         """Update the controlled scanner and synchronize progress values.
 
