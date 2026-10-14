@@ -250,6 +250,23 @@ class DummyCamera(Camera, RPCServer):
         # Apply controls to the running camera
         self.configChanged.emit(self._config)
 
+    @RPCServer.register_method_json
+    def get_camera_controls(self) -> dict:
+        """Advertised control schema; the dummy has no libcamera ranges."""
+        return {}
+
+    @RPCServer.register_method_json
+    def set_default_controls(self, value: dict) -> dict:
+        """Validate, apply and persist new camera defaults (in-memory)."""
+        self.config = dict(value)
+        return dict(self._config)
+
+    @RPCServer.register_method_json
+    def reset_controls(self, factory: bool = False) -> dict:
+        """Reset live controls to the factory defaults (no file on dummy)."""
+        self.config = dict(self.DEFAULT_CONTROLS)
+        return dict(self._config)
+
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self) -> Literal[CameraMode.VIDEO, CameraMode.STILL]:
         """Return the current capture mode.

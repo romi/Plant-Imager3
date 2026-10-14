@@ -36,7 +36,7 @@ Control {
         width: P.Style.iconSmall
         height: P.Style.iconSmall
         radius: width / 2
-        color: P.AppBridge.mqtt.connected ? P.Style.colors.okColor : P.Style.colors.alertColor
+        color: P.AppBridge.mqtt.connected ? P.Style.colors.lightText : P.Style.colors.alertColor
     }
 
     P.IconButton {

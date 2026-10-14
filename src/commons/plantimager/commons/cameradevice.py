@@ -86,3 +86,20 @@ class Camera(ABC):
     @abstractmethod
     def config(self, value: dict) -> None:
         pass
+
+    def get_camera_controls(self) -> dict:
+        """Advertised libcamera controls and ranges (JSON-safe schema).
+
+        Concrete servers override this; the default only documents the
+        contract so ``register_interface`` proxies it to Qt/WebUI
+        clients even where a server never implemented it.
+        """
+        raise NotImplementedError
+
+    def set_default_controls(self, value: dict) -> dict:
+        """Validate, apply and persist new camera defaults; see above."""
+        raise NotImplementedError
+
+    def reset_controls(self, factory: bool = False) -> dict:
+        """Reset live controls to persisted (or factory) defaults."""
+        raise NotImplementedError
