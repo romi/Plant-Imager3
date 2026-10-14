@@ -211,9 +211,18 @@ class TestRPCCameraControls(unittest.TestCase):
         self.assertEqual(self.camera._config["ExposureTime"], 250000)
         self.assertEqual(self.picam.set_controls.call_count, calls)
 
+    def test_config_rounds_float_to_int(self):
+        self.camera.config = {"ExposureTime": 250000.0, "AwbMode": 5.0}
+        self.assertEqual(self.camera._config["ExposureTime"], 250000)
+        self.assertIsInstance(self.camera._config["ExposureTime"], int)
+        self.assertEqual(self.camera._config["AwbMode"], 5)
+        self.assertIsInstance(self.camera._config["AwbMode"], int)
+        self.camera.config = {"AwbMode": 2.6}
+        self.assertEqual(self.camera._config["AwbMode"], 3)
+
     def test_config_gotchas_rejected(self):
         bad = [{"ColourGains": (0, 0)}, {"ColourGains": (1.8,)},
-               {"ColourGains": ("a", 1.4)}, {"AwbMode": 1.5},
+               {"ColourGains": ("a", 1.4)},
                {"AeEnable": 1}, {"FrameRate": -5}, {"FrameRate": True}]
         for value in bad:
             with self.subTest(value=value), self.assertRaises(ValueError):

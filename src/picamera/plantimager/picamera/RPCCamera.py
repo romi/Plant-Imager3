@@ -236,8 +236,8 @@ https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/d
             if val == 0 and key in self._ZERO_IS_AUTO:
                 validated[key] = val
                 continue
-            if isinstance(lo, int) and isinstance(hi, int) and not isinstance(val, int):
-                raise ValueError(f"Control {key} must be an int, got {val!r}")
+            if isinstance(lo, int) and isinstance(hi, int) and isinstance(val, float):
+                val = round(val)
             if (lo is not None and val < lo) or (hi is not None and val > hi):
                 raise ValueError(f"Control {key} value {val!r} out of range [{lo}, {hi}]")
             validated[key] = val
