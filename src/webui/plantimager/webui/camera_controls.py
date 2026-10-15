@@ -11,11 +11,14 @@ come from :mod:`plantimager.commons.camera_controls` — the same table
 the Qt panel reads — so the WebUI can never drift from it.
 """
 
+import io
+
 import toml
 import tomllib
 
 import dash_bootstrap_components as dbc
 from dash import html
+from PIL import Image
 
 from plantimager.commons.camera_controls import AWB_MODES
 
@@ -164,3 +167,19 @@ def parse_toml_snippet(text: str) -> dict:
     if all(not isinstance(value, dict) for value in doc.values()):
         return dict(doc)
     raise ValueError("expected a [name.config] snippet or bare key = value lines")
+
+
+def oriented_jpeg(buffer, info) -> bytes:
+    """Return JPEG bytes rotated per the capture ``rotation`` metadata.
+
+    The sensor buffer is unoriented; ``rotation`` (clockwise degrees, same
+    convention as the controller ``ImageProvider``) tells how to display
+    it. PIL rotates counter-clockwise, hence the negation.
+    """
+    rotation = (info.get("rotation") or 0) % 360
+    if not rotation:
+        return bytes(buffer)
+    with Image.open(io.BytesIO(bytes(buffer))) as img:
+        out = io.BytesIO()
+        img.rotate(-rotation, expand=True).save(out, format="JPEG")
+        return out.getvalue()

@@ -27,6 +27,7 @@ from plantimager.commons.RPC import NoResult
 from plantimager.webui.camera_controls import build_toml_snippet
 from plantimager.webui.camera_controls import camera_control_form
 from plantimager.webui.camera_controls import merge_config
+from plantimager.webui.camera_controls import oriented_jpeg
 from plantimager.webui.camera_controls import parse_number
 from plantimager.webui.controller_proxy import RPCController
 
@@ -47,7 +48,10 @@ layout = html.Div([
     ], className="mb-3 g-2 align-items-center"),
     dbc.Row([
         dbc.Col([
-            html.Img(id="cam-preview", style={"width": "100%"}),
+            html.Div(
+                html.Img(id="cam-preview", style={"width": "100%"}),
+                id="cam-preview-wrap", style={"cursor": "zoom-in"},
+            ),
             html.Div(id="cam-meta", className="mt-2"),
         ], width=6),
         dbc.Col([
@@ -66,6 +70,13 @@ layout = html.Div([
     dcc.Store(id="cam-full-config", data={}),
     dcc.Store(id="cam-toml-store", data="", storage_type="session"),
     dcc.Interval(id="cam-list-refresh", interval=10_000),
+    dbc.Modal([
+        dbc.ModalHeader(dbc.ModalTitle("Camera capture")),
+        dbc.ModalBody(html.Img(id="cam-modal-img", style={"width": "100%"})),
+        dbc.ModalFooter(
+            dbc.Button("Close", id="cam-modal-close", color="secondary",
+                       className="ms-auto")),
+    ], id="cam-modal", fullscreen=True, is_open=False),
 ], style={"margin": 20})
 
 
@@ -170,7 +181,8 @@ def take_picture(_, name):
     if isinstance(res, NoResult):
         return None, "", f"Failed to capture from {name}", "danger", True
     buffer, info = res
-    src = "data:image/jpeg;base64," + base64.b64encode(bytes(buffer)).decode("ascii")
+    src = ("data:image/jpeg;base64:"
+           + base64.b64encode(oriented_jpeg(buffer, info)).decode("ascii"))
     return src, _meta_rows(dict(info)), f"Captured from {name}", "success", True
 
 
@@ -248,6 +260,23 @@ def copy_toml(_, name, full):
         raise PreventUpdate
     snippet = build_toml_snippet(name, full)
     return snippet, snippet, "Snippet ready — paste it into the scan config", "info", True
+
+
+@callback(
+    Output("cam-modal", "is_open"),
+    Output("cam-modal-img", "src"),
+    Input("cam-preview-wrap", "n_clicks"),
+    Input("cam-modal-close", "n_clicks"),
+    State("cam-modal", "is_open"),
+    State("cam-preview", "src"),
+    prevent_initial_call=True,
+)
+def toggle_viewer(_, __, is_open, src):
+    """Open the enlarged viewer on the current preview, close on demand."""
+    triggered = [t["prop_id"] for t in callback_context.triggered]
+    if any(t.startswith("cam-preview-wrap") for t in triggered):
+        return True, src
+    return False, no_update
 
 
 @callback(

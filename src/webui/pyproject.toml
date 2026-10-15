@@ -21,6 +21,7 @@ dependencies = [
     "pandas",
     "plotly>= 5.21.0",
     "pybase64",
+    "Pillow",
 ]
 description = "A Dash-based web interface, served by the Raspberry PI 4/5 main controller, to setup and run acquisitions with the ROMI Plant Imager."
 readme = "README.md"

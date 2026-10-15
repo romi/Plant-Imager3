@@ -1,7 +1,10 @@
 """Unit tests for the shared WebUI camera-control helpers."""
 
+import io
 import tomllib
 import unittest
+
+from PIL import Image
 
 from plantimager.commons.camera_controls import AWB_MODES
 from plantimager.webui.camera_controls import AWB_OPTIONS
@@ -9,6 +12,7 @@ from plantimager.webui.camera_controls import build_toml_snippet
 from plantimager.webui.camera_controls import camera_control_form
 from plantimager.webui.camera_controls import field_ids
 from plantimager.webui.camera_controls import merge_config
+from plantimager.webui.camera_controls import oriented_jpeg
 from plantimager.webui.camera_controls import parse_number
 from plantimager.webui.camera_controls import parse_toml_snippet
 
@@ -76,6 +80,29 @@ class TestTomlSnippet(unittest.TestCase):
             parse_toml_snippet("ExposureTime = [1,2\n")
         with self.assertRaises(ValueError):
             parse_toml_snippet("[a]\nx = 1\n[b]\ny = 2\n")
+
+
+class TestOrientedJpeg(unittest.TestCase):
+    @staticmethod
+    def _raw(width=40, height=20):
+        buf = io.BytesIO()
+        Image.new("RGB", (width, height), "red").save(buf, format="JPEG")
+        return buf.getvalue()
+
+    @staticmethod
+    def _size(raw):
+        return Image.open(io.BytesIO(raw)).size
+
+    def test_no_rotation_passes_through(self):
+        raw = self._raw()
+        self.assertEqual(oriented_jpeg(raw, {}), raw)
+        self.assertEqual(oriented_jpeg(raw, {"rotation": 0}), raw)
+
+    def test_quarter_turns_swap_dimensions(self):
+        raw = self._raw()
+        self.assertEqual(self._size(oriented_jpeg(raw, {"rotation": 90})), (20, 40))
+        self.assertEqual(self._size(oriented_jpeg(raw, {"rotation": 270})), (20, 40))
+        self.assertEqual(self._size(oriented_jpeg(raw, {"rotation": 180})), (40, 20))
 
 
 if __name__ == "__main__":

@@ -92,13 +92,19 @@ CAMERA_AXES = ["x", "y", "z", "pan", "tilt"]
 
 
 def _num(value):
-    """Coerce a form value to ``float``, keeping it as-is if not numeric."""
+    """Coerce a form value to ``int`` when integral else ``float``.
+
+    Integral input (``n_points``, resolutions, offsets) must stay ``int``:
+    the controller validates integer fields by type. Genuinely fractional
+    values keep their decimals.
+    """
     if value is None or value == "":
         return None
     try:
-        return float(value)
+        number = float(value)
     except (TypeError, ValueError):
         return value
+    return int(number) if number.is_integer() else number
 
 
 def _load_cfg(toml_text: str | None) -> dict:
@@ -431,6 +437,10 @@ scan_card = [
 scan_layout = html.Div(
     children=[
         dcc.Interval(id='main-interval', disabled=False, interval=4000),
+        # Arm token for the background scan. Memory-only on purpose: F5
+        # clears it while the session-persisted scan-job-id survives, so a
+        # stale job id alone can never launch a scan (see run_scan).
+        dcc.Store(id='scan-armed', data=''),
         dbc.Row([
             dbc.Col(configuration_card, md=6),
             dbc.Col(dataset_name_card + [html.Br()] + camera_card + [html.Br()] + scan_card, md=6)
@@ -923,11 +933,12 @@ def check_dataset_name_uniqueness(dataset_name: str, existing_datasets: list[str
 
 
 @callback(
-    Output('start-scan-button', 'disabled'),
-    Output('config-scan-button', 'disabled'),
+    Output('start-scan-button', 'disabled', allow_duplicate=True),
+    Output('config-scan-button', 'disabled', allow_duplicate=True),
     Input('dataset-input-name', 'valid'),
     Input('main-interval', 'n_intervals'),
-    State('start-scan-button', 'disabled')
+    State('start-scan-button', 'disabled'),
+    prevent_initial_call=True,
 )
 def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> tuple[bool, bool]:
     """Disables the 'Start scanning' button based on dataset validation status and if scanner is connected.
@@ -967,6 +978,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     Output('refresh-token', 'data', allow_duplicate=True),
     Output('scan-api-token', 'data'),
     Output('scan-job-id', 'data'),
+    Output('scan-armed', 'data', allow_duplicate=True),
     Output('scan-response', 'children', allow_duplicate=True),
     Output('scan-output', 'children', allow_duplicate=True),
     Input('start-scan-button', 'n_clicks'),
@@ -1016,28 +1028,29 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
     Returns
     -------
     tuple
-        ``(access_token, refresh_token, api_token, scan_job_id, response_msg, output_msg)``.
+        ``(access_token, refresh_token, api_token, scan_job_id, armed, response_msg, output_msg)``.
         On success the first two are the fresh token pair, the API token is the
-        scoped token for the scan and the job id is incremented to trigger the
-        background scan, followed by a success status message. On failure the
-        tokens are unmodified, the API token ``None``, the job id unchanged and
-        the status messages describe what went wrong.
+        scoped token for the scan, the job id is incremented and ``armed`` is
+        set to its string form to trigger the background scan, followed by a
+        success status message. On failure the tokens are unmodified, the API
+        token ``None``, the job id unchanged, ``armed`` cleared and the status
+        messages describe what went wrong.
     """
     if not username:
-        return (access_token, refresh_token, None, scan_job_id,
+        return (access_token, refresh_token, None, scan_job_id, "",
                 "Not authenticated with plantdb.",
                 "Please log in before starting a scan.")
 
     tokens = ensure_valid_token(url, port, prefix, ssl,
                                 access_token, refresh_token, username)
     if tokens[0] is None or tokens[1] is None:
-        return (access_token, refresh_token, None, scan_job_id,
+        return (access_token, refresh_token, None, scan_job_id, "",
                 "Failed to authenticate with plantdb.",
                 "The session tokens are invalid or expired. Please log out and log in again.")
     access_token, refresh_token = tokens
 
     if not dataset_name:
-        return (access_token, refresh_token, None, scan_job_id,
+        return (access_token, refresh_token, None, scan_job_id, "",
                 "No dataset name provided.",
                 "Please enter and validate a dataset name before starting a scan.")
 
@@ -1055,18 +1068,21 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
     except requests.exceptions.RequestException:
         api_token = None
     if not api_token:
-        return (access_token, refresh_token, None, scan_job_id,
+        return (access_token, refresh_token, None, scan_job_id, "",
                 "Failed to create the API token for plantdb.",
                 "Unable to create the scoped API token used by the scanner.")
 
-    return (access_token, refresh_token, api_token, (scan_job_id or 0) + 1,
+    job_id = (scan_job_id or 0) + 1
+    return (access_token, refresh_token, api_token, job_id, str(job_id),
             "Scan ready to start", "API token created, starting scanner...")
 
 
 @callback(
     Output('scan-response', 'children'),
     Output('scan-output', 'children', allow_duplicate=True),
+    Output('scan-armed', 'data', allow_duplicate=True),
     Input('scan-job-id', 'data'),
+    State('scan-armed', 'data'),
     State('plantdb-host', 'data'),
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
@@ -1079,9 +1095,9 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
     prevent_initial_call=True,
     running=[
         (Output('start-scan-button', 'disabled', allow_duplicate=True), True, False),
-        (Output('config-scan-button', 'disabled'), True, False),
-        (Output('scan-response', 'children'), 'Scan in progress', ""),
-        (Output('scan-output', 'children'), 'Scan in progress', ""),
+        (Output('config-scan-button', 'disabled', allow_duplicate=True), True, False),
+        (Output('scan-response', 'children', allow_duplicate=True), 'Scan in progress', ""),
+        (Output('scan-output', 'children', allow_duplicate=True), 'Scan in progress', ""),
         (Output('cancel-scan-button', 'disabled', allow_duplicate=True), False, True),
     ],
     progress=[
@@ -1090,13 +1106,20 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
         Output('scan-progress', 'label'),
     ]
 )
-def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, ssl: bool,
+def run_scan(set_progress, scan_job_id: int, armed: str, url: str, port: str, prefix: str, ssl: bool,
              api_token: str, cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
 
     This runs in a separate background process and therefore never touches the
     user's access/refresh tokens: it only uses the scoped API token prepared by
     :func:`prepare_scan`.
+
+    The ``armed`` token must match the triggering job id, otherwise the call
+    is a stale session-store replay (page load, F5) and is refused without
+    touching hardware. ``armed`` lives in a memory-only store so F5 clears
+    it while the session-persisted job id survives — that asymmetry is the
+    whole guard. A refused trigger leaves ``armed`` untouched (a superseded
+    job must not disarm its successor); any real attempt disarms on return.
 
     Parameters
     ----------
@@ -1121,13 +1144,19 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
 
     Returns
     -------
-    Tuple[str, str]
-        A tuple containing two status messages:
-        - First message: Short status for the alert component
-        - Second message: Detailed status for the output component
+    Tuple[str, str, str]
+        ``(response, output, armed)``: short status, detailed status, and the
+        disarmed token (``""`` after any real attempt, ``no_update`` on a
+        refused stale trigger).
     """
+    if str(scan_job_id or 0) != (armed or ""):
+        return ("Scan not started.",
+                "Stale trigger ignored — press Start Scanning to arm a scan.",
+                no_update)
+
     if not api_token:
-        return "Failed to authenticate with plantdb.", "No API token available, please log in and retry."
+        return ("Failed to authenticate with plantdb.",
+                "No API token available, please log in and retry.", "")
 
     # Background callbacks run in a new process. We must re-init the ZMQ context and Controller proxy.
     ctx = zmq.Context()
@@ -1136,17 +1165,18 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
 
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):
-        return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
+        return (f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}",
+                res.traceback, "")
 
     res: None | NoResult = controller.set_api_token(api_token)
     if isinstance(res, NoResult):
-        return "Failed to connect to set access token.", res.traceback
+        return "Failed to connect to set access token.", res.traceback, ""
     res: None | NoResult = controller.set_dataset_name(dataset_name)
     if isinstance(res, NoResult):
-        return f"Failed to set dataset {dataset_name}", res.traceback
+        return f"Failed to set dataset {dataset_name}", res.traceback, ""
     res: None | NoResult = controller.set_config(tomllib.loads(cfg))
     if isinstance(res, NoResult):
-        return "Failed to configure scann", res.traceback
+        return "Failed to configure scann", res.traceback, ""
 
     m_prog = controller.max_progress
 
@@ -1157,9 +1187,9 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
 
     res: None | NoResult = controller.run_scan()
     if isinstance(res, NoResult):
-        return "Scan Failed", res.traceback
+        return "Scan Failed", res.traceback, ""
 
-    return "Scan finished", "Scan complete"
+    return "Scan finished", "Scan complete", ""
 
 
 @callback(

@@ -7,6 +7,7 @@ CI, so no mock dance needed.
 import base64
 import unittest
 
+from dash import no_update
 from dash.exceptions import PreventUpdate
 
 from plantimager.webui.scan import (
@@ -21,6 +22,8 @@ from plantimager.webui.scan import (
     handle_config_upload,
     is_valid_dataset_name,
     populate_path,
+    prepare_scan,
+    run_scan,
     validate_toml_textarea,
 )
 
@@ -140,6 +143,50 @@ class TestNewScanHelpers(unittest.TestCase):
         out = populate_path(cfg_text)
         self.assertEqual(len(out), 1 + 10 + 10)
         self.assertEqual(out[0], "Circle")
+
+
+class TestNumCasting(unittest.TestCase):
+    """Integral form values stay int, fractional stay float."""
+
+    def test_integers(self):
+        for value in ("36", "36.0", 36, 36.0):
+            result = _num(value)
+            self.assertEqual(result, 36)
+            self.assertIsInstance(result, int)
+
+    def test_fractions(self):
+        self.assertEqual(_num("375.5"), 375.5)
+        self.assertEqual(_num(0.5), 0.5)
+
+    def test_empty_and_garbage(self):
+        self.assertIsNone(_num(None))
+        self.assertIsNone(_num(""))
+        self.assertEqual(_num("abc"), "abc")
+
+
+class TestScanArmGate(unittest.TestCase):
+    """A stale job id without a matching arm token must not scan."""
+
+    def test_stale_trigger_refused_without_touching_hardware(self):
+        response, output, armed = run_scan(
+            None, 5, "", "host", "1", "", False, "token", "a = 1", "ds")
+        self.assertEqual(response, "Scan not started.")
+        self.assertIn("Stale trigger", output)
+        self.assertIs(armed, no_update)
+
+    def test_fresh_load_refused(self):
+        response, _, armed = run_scan(
+            None, 0, "", "host", "1", "", False, "token", "a = 1", "ds")
+        self.assertEqual(response, "Scan not started.")
+        self.assertIs(armed, no_update)
+
+    def test_failed_prepare_leaves_disarmed_seven_tuple(self):
+        result = prepare_scan(
+            None, "host", "1", "", False, "access", "refresh", "", "ds", 3)
+        self.assertEqual(len(result), 7)
+        self.assertEqual(result[3], 3)
+        self.assertEqual(result[4], "")
+        self.assertIn("Not authenticated", result[5])
 
 
 if __name__ == "__main__":
