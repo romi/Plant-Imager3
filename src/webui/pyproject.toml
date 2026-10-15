@@ -61,6 +61,7 @@ issues = "https://github.com/romi/Plant-Imager3/issues"
 
 [project.scripts]
 plant-imager-webui = "plantimager.webui.app:main"
+plant-imager-webui-setup = "plantimager.webui.install:main"
 
 [tool.setuptools.packages.find]
 include = ["plantimager*"]
@@ -71,4 +72,7 @@ include = ["plantimager*"]
     "assets/*.js",
     "assets/*.svg",
     "assets/*.png",
+]
+"plantimager.webui.services" = [
+    "*.service",
 ]

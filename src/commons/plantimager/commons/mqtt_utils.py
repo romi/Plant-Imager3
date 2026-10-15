@@ -46,7 +46,7 @@ import uuid
 
 BROKER_ENV_VAR = "MQTT_BROKER"
 BROKER_DEFAULT_HOST = "10.10.11.1"
-BROKER_DEFAULT_PORT = 1883
+BROKER_DEFAULT_PORT = 26400
 
 TOPIC_ROOT = "plantimager/picamera"
 FLEET_HOSTNAME = "all"
@@ -67,7 +67,7 @@ def broker_url():
     -------
     str
         The value of the ``MQTT_BROKER`` environment variable when set,
-        else ``tcp://10.10.11.1:1883`` (the controller on the USB bridge).
+        else ``tcp://10.10.11.1:26400`` (the controller on the USB bridge).
     """
     return os.environ.get(BROKER_ENV_VAR,
                           f"tcp://{BROKER_DEFAULT_HOST}:{BROKER_DEFAULT_PORT}")

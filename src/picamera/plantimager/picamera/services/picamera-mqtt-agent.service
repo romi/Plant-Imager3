@@ -12,7 +12,7 @@ Type=simple
 WorkingDirectory=/home/romi
 
 # Broker on the controller Pi over the isolated USB network (see mosquitto.conf).
-Environment=MQTT_BROKER=tcp://10.10.11.1:1883
+Environment=MQTT_BROKER=tcp://10.10.11.1:26400
 ExecStart=/home/romi/picamera-env/bin/picamera-mqtt-agent
 
 KillSignal=SIGTERM

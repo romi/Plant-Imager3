@@ -50,6 +50,12 @@ issues = "https://github.com/romi/Plant-Imager3/issues"
 [project.scripts]
 picamera-server = "plantimager.picamera.RPCCamera:main"
 picamera-mqtt-agent = "plantimager.picamera.mqtt_agent:main"
+picamera-install = "plantimager.picamera.install:main"
 
 [tool.setuptools.packages.find]
 include = ["plantimager*"]
+
+[tool.setuptools.package-data]
+"plantimager.picamera.services" = [
+    "*.service",
+]

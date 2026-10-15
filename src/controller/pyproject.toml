@@ -58,6 +58,9 @@ issues = "https://github.com/romi/Plant-Imager3/issues"
 [project.gui-scripts]
 plant-imager-controller-app = "plantimager.controller.main:main"
 
+[project.scripts]
+plant-imager-controller-setup = "plantimager.controller.install:main"
+
 [tool.setuptools]
 include-package-data = true
 

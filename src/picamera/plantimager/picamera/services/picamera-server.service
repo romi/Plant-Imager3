@@ -27,8 +27,8 @@ Type=notify
 WorkingDirectory=/home/romi
 
 # Environment variables (alternatively use EnvironmentFile)
-Environment=PI_REGISTRY=tcp://10.10.10.1:5555
-Environment=IP_ADDR=10.10.10.2
+Environment=PI_REGISTRY=tcp://10.10.11.1:5555
+Environment=IP_ADDR=10.10.11.2
 # Command with arguments to invoke when the unit is activated.
 ExecStart=/home/romi/picamera-env/bin/picamera-server
 # Command with arguments to invoke when the unit is deactivated.
