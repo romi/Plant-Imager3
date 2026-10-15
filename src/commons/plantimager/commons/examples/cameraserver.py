@@ -245,8 +245,13 @@ class DummyCamera(Camera, RPCServer):
         Notes
         -----
         Control names and values follow the Picamera2 Manual Appendix C.
+        Mirrors the RPCCamera AWB precedence: ``ColourGains`` is dropped
+        when ``AwbEnable`` is true.
         """
-        self._config = dict(value)
+        value = dict(value)
+        if value.get("AwbEnable"):
+            value.pop("ColourGains", None)
+        self._config = value
         # Apply controls to the running camera
         self.configChanged.emit(self._config)
 

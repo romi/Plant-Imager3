@@ -175,6 +175,11 @@ class RPCCamera(Camera, RPCServer):
         Every key is validated before anything is applied: an invalid
         dict raises and leaves the previous controls untouched.
 
+        AWB precedence: when ``AwbEnable`` is true, ``ColourGains`` is
+        inert (libcamera computes gains itself) and is dropped before
+        validation, so stale manual gains can never shadow the
+        auto white balance. The echoed config reflects what is applied.
+
         Parameters
         ----------
         value : dict
@@ -185,6 +190,9 @@ class RPCCamera(Camera, RPCServer):
         Picamera2 Manual Appendix C:
 https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf?disposition=inline#%5B%7B%22num%22%3A10333%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70.86614%2C781.0236%2C0%5D
         """
+        value = dict(value)
+        if value.get("AwbEnable"):
+            value.pop("ColourGains", None)
         validated = self._validate_config(value)
         self._config = validated
         # Apply controls to the running camera

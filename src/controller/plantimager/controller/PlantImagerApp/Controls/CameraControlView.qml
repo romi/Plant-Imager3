@@ -45,13 +45,17 @@ Flickable {
     }
 
     function mergedConfig() {
-        return Object.assign({}, fullConfig, {
+        var merged = Object.assign({}, fullConfig, {
             "ExposureTime": Math.round(exposureTime),
             "AnalogueGain": analogueGain,
             "AwbEnable": awbEnable,
             "AwbMode": awbMode,
             "ColourGains": [gainsR, gainsB]
         })
+        if (awbEnable) {
+            delete merged.ColourGains
+        }
+        return merged
     }
 
     function openNumpad(target, value) {

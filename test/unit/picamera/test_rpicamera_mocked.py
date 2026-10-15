@@ -220,6 +220,19 @@ class TestRPCCameraControls(unittest.TestCase):
         self.camera.config = {"AwbMode": 2.6}
         self.assertEqual(self.camera._config["AwbMode"], 3)
 
+    def test_config_awb_drops_colour_gains(self):
+        self.camera.config = {"AwbEnable": True, "AwbMode": 5,
+                              "ColourGains": (3.2, 1.4)}
+        self.assertNotIn("ColourGains", self.camera._config)
+        self.assertTrue(self.camera._config["AwbEnable"])
+        applied = self.picam.set_controls.call_args[0][0]
+        self.assertNotIn("ColourGains", applied)
+
+    def test_config_gains_kept_without_awb(self):
+        self.camera.config = {"AwbEnable": False,
+                              "ColourGains": (3.2, 1.4)}
+        self.assertEqual(self.camera._config["ColourGains"], (3.2, 1.4))
+
     def test_config_gotchas_rejected(self):
         bad = [{"ColourGains": (0, 0)}, {"ColourGains": (1.8,)},
                {"ColourGains": ("a", 1.4)},

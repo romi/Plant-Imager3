@@ -226,16 +226,18 @@ def write_controls(apply, set_default, reset, name, exposure, gain,
         "AwbMode": parse_number(awb_mode),
         "ColourGains": gains if all(g is not None for g in gains) else None,
     }
+    merged = merge_config(full, edits)
+    if awb_enable:
+        merged.pop("ColourGains", None)
     triggered = [t["prop_id"] for t in callback_context.triggered]
     if any(t.startswith("cam-reset") for t in triggered):
         effective = controller.reset_camera_controls(name)
         what = "reset"
     elif any(t.startswith("cam-set-default") for t in triggered):
-        effective = controller.set_camera_default_controls(
-            name, merge_config(full, edits))
+        effective = controller.set_camera_default_controls(name, merged)
         what = "persisted as defaults"
     else:
-        effective = controller.set_camera_config(name, merge_config(full, edits))
+        effective = controller.set_camera_config(name, merged)
         what = "applied"
     if isinstance(effective, NoResult):
         return (None,) * 6 + (full or {},) + (f"Failed to write {name}", "danger", True)
