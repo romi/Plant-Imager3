@@ -9,9 +9,12 @@ Power model
 -----------
 Two action classes share one topic per camera:
 
-- Recoverable: ``start_service`` / ``stop_service`` only stop the
-  ``picamera-server`` user service. The agent itself keeps running, so a
-  later ``start_service`` always brings the camera back.
+- Recoverable: ``restart_service`` restarts the ``picamera-server``
+  service — including from the stopped state, so it recovers from any
+  state without rebooting. The agent itself is never managed, so it
+  keeps listening. There is deliberately no bare stop: a stopped
+  camera disappears from the controller GUI, leaving only a fleet
+  restart able to bring it back.
 - One-way: ``reboot`` / ``poweroff`` take the whole Pi down. Nothing
   listens afterwards, so recovery is a manual power-cycle (wake-on-LAN is
   a separate, later plan). Use :func:`is_one_way` to tell them apart
@@ -51,12 +54,11 @@ BROKER_DEFAULT_PORT = 26400
 TOPIC_ROOT = "plantimager/picamera"
 FLEET_HOSTNAME = "all"
 
-START_SERVICE = "start_service"
-STOP_SERVICE = "stop_service"
+RESTART_SERVICE = "restart_service"
 REBOOT = "reboot"
 POWEROFF = "poweroff"
 
-ACTIONS = (START_SERVICE, STOP_SERVICE, REBOOT, POWEROFF)
+ACTIONS = (RESTART_SERVICE, REBOOT, POWEROFF)
 ONE_WAY_ACTIONS = (REBOOT, POWEROFF)
 
 

@@ -32,18 +32,18 @@ class TestMqttBridge(unittest.TestCase):
         self.bridge = MqttBridge(client=FakeClient())
 
     def test_offline_publish_drops_and_returns_false(self):
-        self.assertFalse(self.bridge.publishCommand("picamera1", "stop_service"))
+        self.assertFalse(self.bridge.publishCommand("picamera1", "restart_service"))
         self.assertEqual(self.bridge._client.published, [])
 
     def test_publish_command_targets_own_topic_with_valid_payload(self):
         self.bridge._on_connect(None, None, None, 0)
         self.assertTrue(self.bridge.connected)
-        self.assertTrue(self.bridge.publishCommand("picamera1", "stop_service"))
+        self.assertTrue(self.bridge.publishCommand("picamera1", "restart_service"))
         [(topic, payload, qos)] = self.bridge._client.published
         self.assertEqual(topic, "plantimager/picamera/picamera1/command")
         self.assertEqual(qos, 1)
         command = json.loads(payload)
-        self.assertEqual(command["action"], "stop_service")
+        self.assertEqual(command["action"], "restart_service")
         self.assertTrue(command["request_id"])
 
     def test_publish_all_targets_fleet_topic(self):
@@ -63,7 +63,7 @@ class TestMqttBridge(unittest.TestCase):
         self.bridge._on_connect(None, None, None, 0)
         self.bridge._on_disconnect(None, None, None, 1)
         self.assertFalse(self.bridge.connected)
-        self.assertFalse(self.bridge.publishCommand("picamera1", "stop_service"))
+        self.assertFalse(self.bridge.publishCommand("picamera1", "restart_service"))
 
     def test_refused_connection_stays_offline(self):
         self.bridge._on_connect(None, None, None, 5)

@@ -248,23 +248,12 @@ Flickable {
                 Layout.fillWidth: true
             }
             P.IconButton {
-                iconName: P.Icons.icons["play"]
+                iconName: P.Icons.icons["refresh"]
                 size: P.Style.iconMedium
                 enabled: bridge ? bridge.status === "connected" : false
-                ToolTip.text: "Start camera service"
+                ToolTip.text: "Restart camera service"
                 ToolTip.visible: containsMouse
-                onClicked: PI.AppBridge.sendCameraCommand(bridge.name, "start_service")
-            }
-            Item {
-                Layout.fillWidth: true
-            }
-            P.IconButton {
-                iconName: P.Icons.icons["stop"]
-                size: P.Style.iconMedium
-                enabled: bridge ? bridge.status === "connected" : false
-                ToolTip.text: "Stop camera service"
-                ToolTip.visible: containsMouse
-                onClicked: PI.AppBridge.sendCameraCommand(bridge.name, "stop_service")
+                onClicked: PI.AppBridge.sendCameraCommand(bridge.name, "restart_service")
             }
             Item {
                 Layout.fillWidth: true

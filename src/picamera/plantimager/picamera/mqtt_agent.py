@@ -4,13 +4,13 @@ The agent is a small always-on process (see
 ``services/picamera-mqtt-agent.service``) that subscribes to its own
 command topic plus the fleet topic and translates incoming commands into
 ``systemctl`` calls. It deliberately manages only the
-``picamera-server`` user service plus whole-Pi reboot/poweroff — never
-itself — so ``stop_service`` stays recoverable: the agent keeps
-listening and a later ``start_service`` brings the camera back.
+``picamera-server`` service plus whole-Pi reboot/poweroff — never
+itself — so the agent keeps listening across restarts (``restart``
+starts an inactive unit, so it recovers the camera from any state).
 
 Privilege notes
 ---------------
-``start``/``stop`` act on a ``--user`` service and need nothing beyond
+``restart`` acts on a ``--user`` service and needs nothing beyond
 an active user session (``loginctl enable-linger`` at install time).
 ``reboot``/``poweroff`` go through logind and assume the Pi runs no
 other active sessions, which holds on a dedicated camera Pi.
@@ -26,8 +26,7 @@ import subprocess
 from plantimager.commons.mqtt_utils import (
     POWEROFF,
     REBOOT,
-    START_SERVICE,
-    STOP_SERVICE,
+    RESTART_SERVICE,
     broker_url,
     decode_command,
     fleet_topic,
@@ -44,8 +43,7 @@ def command_argv(action):
     Parameters
     ----------
     action : str
-        One of ``start_service``, ``stop_service``, ``reboot``,
-        ``poweroff``.
+        One of ``restart_service``, ``reboot``, ``poweroff``.
 
     Returns
     -------
@@ -62,10 +60,8 @@ def command_argv(action):
         :func:`~plantimager.commons.mqtt_utils.decode_command` first;
         this is the last line of defence before a shell-out.
     """
-    if action == START_SERVICE:
-        return ["systemctl", "--user", "start", CAMERA_SERVICE]
-    if action == STOP_SERVICE:
-        return ["systemctl", "--user", "stop", CAMERA_SERVICE]
+    if action == RESTART_SERVICE:
+        return ["systemctl", "--user", "restart", CAMERA_SERVICE]
     if action == REBOOT:
         return ["systemctl", "reboot"]
     if action == POWEROFF:

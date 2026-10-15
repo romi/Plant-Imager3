@@ -22,12 +22,9 @@ from plantimager.commons.mqtt_utils import split_broker_url
 
 
 class TestCommandArgv(unittest.TestCase):
-    def test_start_stop_drive_user_camera_service(self):
-        self.assertEqual(mqtt_agent.command_argv("start_service"),
-                         ["systemctl", "--user", "start",
-                          "picamera-server.service"])
-        self.assertEqual(mqtt_agent.command_argv("stop_service"),
-                         ["systemctl", "--user", "stop",
+    def test_restart_drives_user_camera_service(self):
+        self.assertEqual(mqtt_agent.command_argv("restart_service"),
+                         ["systemctl", "--user", "restart",
                           "picamera-server.service"])
 
     def test_reboot_and_poweroff_are_system_commands(self):
@@ -43,13 +40,13 @@ class TestCommandArgv(unittest.TestCase):
 
 class TestApplyCommand(unittest.TestCase):
     def test_valid_payload_runs_mapped_command(self):
-        payload = json.dumps({"action": "stop_service",
+        payload = json.dumps({"action": "restart_service",
                               "request_id": "abc",
                               "issued_by": "controller"})
         with mock.patch.object(mqtt_agent.subprocess, "check_call") as call:
             mqtt_agent.apply_command(mqtt_agent.decode_command(payload))
         call.assert_called_once_with(
-            ["systemctl", "--user", "stop", "picamera-server.service"])
+            ["systemctl", "--user", "restart", "picamera-server.service"])
 
     def test_invalid_payload_runs_nothing(self):
         with mock.patch.object(mqtt_agent.subprocess, "check_call") as call:
@@ -90,7 +87,7 @@ class TestRunLoop(unittest.TestCase):
 
             def loop_forever(self):
                 self.on_connect(self, None, None, 0)
-                payload = json.dumps({"action": "start_service",
+                payload = json.dumps({"action": "restart_service",
                                       "request_id": "loop1",
                                       "issued_by": "test"}).encode()
                 with mock.patch.object(mqtt_agent.subprocess,
@@ -99,7 +96,7 @@ class TestRunLoop(unittest.TestCase):
                                     FakeMessage("plantimager/picamera/all/command",
                                                 payload))
                 call.assert_called_once_with(
-                    ["systemctl", "--user", "start",
+                    ["systemctl", "--user", "restart",
                      "picamera-server.service"])
 
         fake_paho = mock.MagicMock()

@@ -171,7 +171,7 @@ class MqttBridge(QObject):
         hostname : str
             Camera Pi hostname (the same name it registers with).
         action : str
-            One of ``start_service``, ``stop_service``, ``reboot``,
+            One of ``restart_service``, ``reboot``,
             ``poweroff``. Unknown actions are refused without
             publishing anything.
 

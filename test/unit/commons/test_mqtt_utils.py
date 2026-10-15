@@ -49,7 +49,7 @@ class TestMqttBrokerUrl(unittest.TestCase):
 
 class TestMqttCommands(unittest.TestCase):
     def test_all_planned_actions_accepted(self):
-        for action in ("start_service", "stop_service", "reboot", "poweroff"):
+        for action in ("restart_service", "reboot", "poweroff"):
             command = build_command(action)
             self.assertEqual(command["action"], action)
             self.assertTrue(command["request_id"])
@@ -59,9 +59,17 @@ class TestMqttCommands(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_command("self_destruct")
 
+    def test_removed_actions_stay_rejected(self):
+        for action in ("start_service", "stop_service"):
+            with self.assertRaises(ValueError, msg=action):
+                build_command(action)
+            with self.assertRaises(ValueError, msg=action):
+                decode_command(json.dumps({"action": action,
+                                           "request_id": "x"}))
+
     def test_encode_decode_round_trip(self):
-        command = decode_command(encode_command("stop_service"))
-        self.assertEqual(command["action"], "stop_service")
+        command = decode_command(encode_command("restart_service"))
+        self.assertEqual(command["action"], "restart_service")
 
     def test_decode_rejects_unknown_action(self):
         with self.assertRaises(ValueError):
