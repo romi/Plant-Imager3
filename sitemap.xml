@@ -81,6 +81,10 @@
          <lastmod>2026-10-15</lastmod>
     </url>
     <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/commons/systemd_install/</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
          <loc>https://github.com/romi/Plant-Imager3/reference/commons/utils/</loc>
          <lastmod>2026-10-15</lastmod>
     </url>
@@ -106,6 +110,10 @@
     </url>
     <url>
          <loc>https://github.com/romi/Plant-Imager3/reference/controller/ImageProvider/</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/controller/install/</loc>
          <lastmod>2026-10-15</lastmod>
     </url>
     <url>
@@ -193,6 +201,10 @@
          <lastmod>2026-10-15</lastmod>
     </url>
     <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/controller/services/</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
          <loc>https://github.com/romi/Plant-Imager3/reference/webui/</loc>
          <lastmod>2026-10-15</lastmod>
     </url>
@@ -218,6 +230,10 @@
     </url>
     <url>
          <loc>https://github.com/romi/Plant-Imager3/reference/webui/controller_proxy/</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/webui/install/</loc>
          <lastmod>2026-10-15</lastmod>
     </url>
     <url>
@@ -262,6 +278,10 @@
     </url>
     <url>
          <loc>https://github.com/romi/Plant-Imager3/reference/webui/pages/table/</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/romi/Plant-Imager3/reference/webui/services/</loc>
          <lastmod>2026-10-15</lastmod>
     </url>
     <url>
