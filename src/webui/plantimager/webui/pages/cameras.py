@@ -9,8 +9,6 @@ controls as a TOML snippet for the scan config. Everything here is RPC;
 power control stays on the controller touchscreen by design.
 """
 
-import base64
-
 import dash_bootstrap_components as dbc
 from dash import Input
 from dash import Output
@@ -26,8 +24,8 @@ from dash.exceptions import PreventUpdate
 from plantimager.commons.RPC import NoResult
 from plantimager.webui.camera_controls import build_toml_snippet
 from plantimager.webui.camera_controls import camera_control_form
+from plantimager.webui.camera_controls import image_src
 from plantimager.webui.camera_controls import merge_config
-from plantimager.webui.camera_controls import oriented_jpeg
 from plantimager.webui.camera_controls import parse_number
 from plantimager.webui.controller_proxy import RPCController
 
@@ -69,7 +67,7 @@ layout = html.Div([
     dbc.Alert(id="cam-status", is_open=False, duration=8000),
     dcc.Store(id="cam-full-config", data={}),
     dcc.Store(id="cam-toml-store", data="", storage_type="session"),
-    dcc.Interval(id="cam-list-refresh", interval=10_000),
+    dcc.Interval(id="cam-list-refresh", interval=5_000),
     dbc.Modal([
         dbc.ModalHeader(dbc.ModalTitle("Camera capture")),
         dbc.ModalBody(html.Img(id="cam-modal-img", style={"width": "100%"})),
@@ -112,24 +110,29 @@ def _meta_rows(info):
     Input("cam-list-refresh", "n_intervals"),
     Input("cam-refresh", "n_clicks"),
     State("cam-select", "value"),
+    State("cam-select", "options"),
 )
-def refresh_camera_list(_, __, current):
+def refresh_camera_list(_, __, current, options):
     """Refresh the camera selector, keeping the selection when possible.
 
     The value output stays untouched while the selection is still valid:
     re-emitting it would re-fire the loader every interval tick and wipe
-    in-progress edits.
+    in-progress edits. Transient RPC failures keep the last-known list
+    instead of blanking the selector (the touchscreen list is
+    signal-driven and never flickers; the poll must not either).
     """
     controller, failed = _controller_or_status()
     if failed is not None:
-        return [], None
+        return no_update, no_update
     names = controller.camera_names
     if isinstance(names, NoResult):
-        return [], None
-    options = [{"label": name, "value": name} for name in names]
+        return no_update, no_update
+    new_options = [{"label": name, "value": name} for name in names]
+    if new_options == (options or []):
+        return no_update, no_update
     if current in names:
-        return options, no_update
-    return options, names[0] if names else None
+        return new_options, no_update
+    return new_options, names[0] if names else no_update
 
 
 @callback(
@@ -152,10 +155,10 @@ def load_camera(name):
         raise PreventUpdate
     controller, failed = _controller_or_status()
     if failed is not None:
-        return (None,) * 6 + ({},) + failed + (True,)
+        return (no_update,) * 7 + failed + (True,)
     config = controller.get_camera_config(name)
     if isinstance(config, NoResult):
-        return (None,) * 6 + ({},) + (f"Failed to read {name}", "danger", True)
+        return (no_update,) * 7 + (f"Failed to read {name}", "danger", True)
     config = dict(config)
     return _form_values(config) + (config, f"Loaded {name}", "success", True)
 
@@ -181,8 +184,7 @@ def take_picture(_, name):
     if isinstance(res, NoResult):
         return None, "", f"Failed to capture from {name}", "danger", True
     buffer, info = res
-    src = ("data:image/jpeg;base64:"
-           + base64.b64encode(oriented_jpeg(buffer, info)).decode("ascii"))
+    src = image_src(buffer, info)
     return src, _meta_rows(dict(info)), f"Captured from {name}", "success", True
 
 
@@ -217,7 +219,7 @@ def write_controls(apply, set_default, reset, name, exposure, gain,
         raise PreventUpdate
     controller, failed = _controller_or_status()
     if failed is not None:
-        return (None,) * 6 + ({},) + failed + (True,)
+        return (no_update,) * 7 + failed + (True,)
     gains = [parse_number(gains_r), parse_number(gains_b)]
     edits = {
         "ExposureTime": parse_number(exposure),
@@ -240,7 +242,7 @@ def write_controls(apply, set_default, reset, name, exposure, gain,
         effective = controller.set_camera_config(name, merged)
         what = "applied"
     if isinstance(effective, NoResult):
-        return (None,) * 6 + (full or {},) + (f"Failed to write {name}", "danger", True)
+        return (no_update,) * 7 + (f"Failed to write {name}", "danger", True)
     effective = dict(effective)
     return _form_values(effective) + (effective, f"{name} {what}", "success", True)
 

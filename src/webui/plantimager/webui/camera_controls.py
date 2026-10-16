@@ -11,6 +11,7 @@ come from :mod:`plantimager.commons.camera_controls` — the same table
 the Qt panel reads — so the WebUI can never drift from it.
 """
 
+import base64
 import io
 
 import toml
@@ -169,17 +170,33 @@ def parse_toml_snippet(text: str) -> dict:
     raise ValueError("expected a [name.config] snippet or bare key = value lines")
 
 
-def oriented_jpeg(buffer, info) -> bytes:
-    """Return JPEG bytes rotated per the capture ``rotation`` metadata.
+#: MIME type per capture ``format`` metadata (see RPCCamera.get_image).
+MIME_TYPES = {"jpeg": "image/jpeg", "png": "image/png"}
+
+
+def oriented_image(buffer, info) -> tuple:
+    """Return ``(bytes, format)`` rotated per the capture metadata.
 
     The sensor buffer is unoriented; ``rotation`` (clockwise degrees, same
     convention as the controller ``ImageProvider``) tells how to display
-    it. PIL rotates counter-clockwise, hence the negation.
+    it. PIL rotates counter-clockwise, hence the negation. The capture
+    ``format`` (``jpeg`` or ``png``) is preserved end to end, including
+    the no-rotation passthrough.
     """
+    raw = bytes(buffer)
+    fmt = (info.get("format") or "jpeg").lower()
     rotation = (info.get("rotation") or 0) % 360
     if not rotation:
-        return bytes(buffer)
-    with Image.open(io.BytesIO(bytes(buffer))) as img:
+        return raw, fmt
+    with Image.open(io.BytesIO(raw)) as img:
         out = io.BytesIO()
-        img.rotate(-rotation, expand=True).save(out, format="JPEG")
-        return out.getvalue()
+        img.rotate(-rotation, expand=True).save(
+            out, format="PNG" if fmt == "png" else "JPEG")
+        return out.getvalue(), fmt
+
+
+def image_src(buffer, info) -> str:
+    """Build a ``data:`` URL for a capture, oriented per its metadata."""
+    data, fmt = oriented_image(buffer, info)
+    mime = MIME_TYPES.get(fmt, "image/jpeg")
+    return f"data:{mime};base64," + base64.b64encode(data).decode("ascii")

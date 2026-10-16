@@ -11,8 +11,9 @@ from plantimager.webui.camera_controls import AWB_OPTIONS
 from plantimager.webui.camera_controls import build_toml_snippet
 from plantimager.webui.camera_controls import camera_control_form
 from plantimager.webui.camera_controls import field_ids
+from plantimager.webui.camera_controls import image_src
 from plantimager.webui.camera_controls import merge_config
-from plantimager.webui.camera_controls import oriented_jpeg
+from plantimager.webui.camera_controls import oriented_image
 from plantimager.webui.camera_controls import parse_number
 from plantimager.webui.camera_controls import parse_toml_snippet
 
@@ -82,27 +83,46 @@ class TestTomlSnippet(unittest.TestCase):
             parse_toml_snippet("[a]\nx = 1\n[b]\ny = 2\n")
 
 
-class TestOrientedJpeg(unittest.TestCase):
+class TestOrientedImage(unittest.TestCase):
     @staticmethod
-    def _raw(width=40, height=20):
+    def _raw(width=40, height=20, fmt="JPEG"):
         buf = io.BytesIO()
-        Image.new("RGB", (width, height), "red").save(buf, format="JPEG")
+        Image.new("RGB", (width, height), "red").save(buf, format=fmt)
         return buf.getvalue()
 
     @staticmethod
     def _size(raw):
         return Image.open(io.BytesIO(raw)).size
 
-    def test_no_rotation_passes_through(self):
+    def test_no_rotation_passes_through_with_format(self):
         raw = self._raw()
-        self.assertEqual(oriented_jpeg(raw, {}), raw)
-        self.assertEqual(oriented_jpeg(raw, {"rotation": 0}), raw)
+        self.assertEqual(oriented_image(raw, {}), (raw, "jpeg"))
+        self.assertEqual(oriented_image(raw, {"rotation": 0}), (raw, "jpeg"))
 
     def test_quarter_turns_swap_dimensions(self):
         raw = self._raw()
-        self.assertEqual(self._size(oriented_jpeg(raw, {"rotation": 90})), (20, 40))
-        self.assertEqual(self._size(oriented_jpeg(raw, {"rotation": 270})), (20, 40))
-        self.assertEqual(self._size(oriented_jpeg(raw, {"rotation": 180})), (40, 20))
+        data, fmt = oriented_image(raw, {"rotation": 90})
+        self.assertEqual(fmt, "jpeg")
+        self.assertEqual(self._size(data), (20, 40))
+        data, _ = oriented_image(raw, {"rotation": 270})
+        self.assertEqual(self._size(data), (20, 40))
+        data, _ = oriented_image(raw, {"rotation": 180})
+        self.assertEqual(self._size(data), (40, 20))
+
+    def test_png_stays_png(self):
+        raw = self._raw(fmt="PNG")
+        data, fmt = oriented_image(raw, {"format": "png", "rotation": 90})
+        self.assertEqual(fmt, "png")
+        self.assertEqual(self._size(data), (20, 40))
+        self.assertTrue(data.startswith(b"\x89PNG"))
+        data, fmt = oriented_image(raw, {"format": "png"})
+        self.assertEqual((data, fmt), (raw, "png"))
+
+    def test_src_mime_matches_format(self):
+        jpeg_src = image_src(self._raw(), {"format": "jpeg"})
+        self.assertTrue(jpeg_src.startswith("data:image/jpeg;base64,"))
+        png_src = image_src(self._raw(fmt="PNG"), {"format": "png"})
+        self.assertTrue(png_src.startswith("data:image/png;base64,"))
 
 
 if __name__ == "__main__":

@@ -127,10 +127,6 @@ def _free_camera_name(used: set[str]) -> str:
     return name
 
 
-#: Matches auto-generated default camera names (``picamera``, ``picameraN``).
-AUTO_NAME = re.compile(r"picamera\d*")
-
-
 def _bio_field_id(path: str) -> str:
     """Return a Dash-safe component id for a MIAPPE field path."""
     return "bio-" + path.replace(".", "__")
@@ -712,8 +708,11 @@ def update_interval(n_intervals, *current):
         else "No camera connected"
     names = []
     for i in range(MAX_CAMERAS):
-        # Only fill empty / auto-generated slots, keep manual names.
-        if i < len(available_cameras) and (not current[i] or AUTO_NAME.match(current[i])):
+        # Only fill truly empty slots. Never overwrite a present name:
+        # every default rig name matches AUTO_NAME, so positional
+        # overwrite renames real sections and rebuild_cameras then
+        # deletes the orphaned config.
+        if i < len(available_cameras) and not current[i]:
             names.append(available_cameras[i])
         else:
             names.append(no_update)
