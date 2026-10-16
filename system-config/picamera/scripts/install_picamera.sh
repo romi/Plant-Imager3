@@ -70,8 +70,11 @@ fi
 # Change to user's home directory
 cd "/home/$user" || exit 1
 
-# Stop existing service if it's running
+# Stop existing services if running (user units from pre-step-13 installs
+# as well as the current system units).
 systemctl --user is-active --quiet picamera-server.service && systemctl --user stop picamera-server.service
+systemctl is-active --quiet picamera-server.service && sudo systemctl stop picamera-server.service
+systemctl is-active --quiet picamera-mqtt-agent.service && sudo systemctl stop picamera-mqtt-agent.service
 
 echo "installing dependencies"
 # Update apt and install required system packages
@@ -106,8 +109,9 @@ picamera-env/bin/pip install Plant-Imager3/src/commons || exit 1
 picamera-env/bin/pip install Plant-Imager3/src/picamera || exit 1
 
 echo "installing picamera systemd services"
-# Unit files, lingering, daemon-reload, enable and start are handled by
+# System unit files, daemon-reload, enable and start are handled by
 # the picamera-install entry point (templates live in the package).
-picamera-env/bin/picamera-install --user "$user" --registry "$registry_address" --ip "$self_ip" --start || exit 1
+# It writes to /etc/systemd/system, so it needs sudo.
+sudo picamera-env/bin/picamera-install --user "$user" --registry "$registry_address" --ip "$self_ip" --start || exit 1
 
 

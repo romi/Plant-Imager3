@@ -10,8 +10,11 @@ starts an inactive unit, so it recovers the camera from any state).
 
 Privilege notes
 ---------------
-``restart`` acts on a ``--user`` service and needs nothing beyond
-an active user session (``loginctl enable-linger`` at install time).
+The agent runs as root (system unit): ``restart`` addresses the
+system camera service, and ``reboot``/``poweroff`` take the whole Pi
+down. The camera server itself keeps the login user's permissions
+via its ``User=`` directive.
+
 ``reboot``/``poweroff`` go through logind and assume the Pi runs no
 other active sessions, which holds on a dedicated camera Pi.
 
@@ -49,7 +52,7 @@ def command_argv(action):
     -------
     list[str]
         Argument vector for :func:`subprocess.check_call`. Service
-        actions target the ``--user`` camera service; ``reboot`` and
+        actions target the system camera service; ``reboot`` and
         ``poweroff`` address the whole machine (one-way actions, see
         :mod:`plantimager.commons.mqtt_utils`).
 
@@ -61,7 +64,7 @@ def command_argv(action):
         this is the last line of defence before a shell-out.
     """
     if action == RESTART_SERVICE:
-        return ["systemctl", "--user", "restart", CAMERA_SERVICE]
+        return ["systemctl", "restart", CAMERA_SERVICE]
     if action == REBOOT:
         return ["systemctl", "reboot"]
     if action == POWEROFF:

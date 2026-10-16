@@ -9,6 +9,11 @@ StartLimitIntervalSec=60
 [Service]
 Type=simple
 
+# System unit by design: only root can reboot/poweroff the Pi on MQTT
+# command (see step 13). The camera server itself still runs as the
+# login user via its own User= directive.
+User=root
+
 WorkingDirectory=/home/romi
 
 # Broker on the controller Pi over the isolated USB network (see mosquitto.conf).
@@ -21,4 +26,4 @@ Restart=always
 RestartSec=5
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

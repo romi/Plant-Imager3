@@ -22,9 +22,9 @@ from plantimager.commons.mqtt_utils import split_broker_url
 
 
 class TestCommandArgv(unittest.TestCase):
-    def test_restart_drives_user_camera_service(self):
+    def test_restart_drives_system_camera_service(self):
         self.assertEqual(mqtt_agent.command_argv("restart_service"),
-                         ["systemctl", "--user", "restart",
+                         ["systemctl", "restart",
                           "picamera-server.service"])
 
     def test_reboot_and_poweroff_are_system_commands(self):
@@ -46,7 +46,7 @@ class TestApplyCommand(unittest.TestCase):
         with mock.patch.object(mqtt_agent.subprocess, "check_call") as call:
             mqtt_agent.apply_command(mqtt_agent.decode_command(payload))
         call.assert_called_once_with(
-            ["systemctl", "--user", "restart", "picamera-server.service"])
+            ["systemctl", "restart", "picamera-server.service"])
 
     def test_invalid_payload_runs_nothing(self):
         with mock.patch.object(mqtt_agent.subprocess, "check_call") as call:
@@ -96,7 +96,7 @@ class TestRunLoop(unittest.TestCase):
                                     FakeMessage("plantimager/picamera/all/command",
                                                 payload))
                 call.assert_called_once_with(
-                    ["systemctl", "--user", "restart",
+                    ["systemctl", "restart",
                      "picamera-server.service"])
 
         fake_paho = mock.MagicMock()
