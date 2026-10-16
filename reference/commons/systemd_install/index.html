@@ -941,6 +941,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.commons.systemd_install.enable_system_units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;enable_system_units
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.commons.systemd_install.enable_user_units" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3150,6 +3161,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#plantimager.commons.systemd_install.enable_system_units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;enable_system_units
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.commons.systemd_install.enable_user_units" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3233,9 +3255,13 @@
     <div class="doc doc-contents first">
 
         <p>Shared helpers for the per-package systemd installers.</p>
-<p>Both <code>picamera-install</code> and <code>plant-imager-controller-setup</code> install
+<p><code>plant-imager-controller-setup</code> (and the webui setup) install
 <code>--user</code> units from packaged templates: same directories, same
-linger/reload/enable dance, only the unit contents differ.</p>
+linger/reload/enable dance, only the unit contents differ.
+<code>picamera-install</code> instead installs system units into
+<code>/etc/systemd/system</code> (the agent runs as root so it can
+reboot/poweroff the Pi): same reload/enable pattern, no linger,
+sudo required.</p>
 
 
 
@@ -3260,6 +3286,45 @@ linger/reload/enable dance, only the unit contents differ.</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="plantimager.commons.systemd_install.enable_system_units" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">enable_system_units</span>
+
+
+<a href="#plantimager.commons.systemd_install.enable_system_units" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>enable_system_units(names, start, dry_run<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Reload and enable (optionally start) system units (run as root).</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>plantimager/commons/systemd_install.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">54</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">55</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">56</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">57</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">58</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">59</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">enable_system_units</span>(names: <span style="color: #008000">list</span>, start: <span style="color: #008000">bool</span>,
+                        dry_run: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Reload and enable (optionally start) system units (run as root)."""</span>
+    run([<span style="color: #BA2121">"systemctl"</span>, <span style="color: #BA2121">"daemon-reload"</span>], dry_run)
+    <span style="color: #008000; font-weight: bold">for</span> name <span style="color: #A2F; font-weight: bold">in</span> names:
+        run([<span style="color: #BA2121">"systemctl"</span>, <span style="color: #BA2121">"enable"</span>, name], dry_run)
+        <span style="color: #008000; font-weight: bold">if</span> start:
+            run([<span style="color: #BA2121">"systemctl"</span>, <span style="color: #BA2121">"start"</span>, name], dry_run)
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="plantimager.commons.systemd_install.enable_user_units" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">enable_user_units</span>
 
@@ -3275,15 +3340,15 @@ linger/reload/enable dance, only the unit contents differ.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/systemd_install.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">34</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">35</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">36</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">37</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">38</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">38</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">39</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">40</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">enable_user_units</span>(names: <span style="color: #008000">list</span>, user: <span style="color: #008000">str</span>, start: <span style="color: #008000">bool</span>,
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">44</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">45</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">enable_user_units</span>(names: <span style="color: #008000">list</span>, user: <span style="color: #008000">str</span>, start: <span style="color: #008000">bool</span>,
                       dry_run: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Linger, reload and enable (optionally start) user units."""</span>
     run([<span style="color: #BA2121">"loginctl"</span>, <span style="color: #BA2121">"enable-linger"</span>, user], dry_run)
@@ -3316,12 +3381,12 @@ linger/reload/enable dance, only the unit contents differ.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/systemd_install.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">26</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">27</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">28</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">29</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">30</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">31</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">replace_line</span>(text: <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>, replacement: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">30</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">31</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">32</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">33</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">34</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">35</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">replace_line</span>(text: <span style="color: #008000">str</span>, prefix: <span style="color: #008000">str</span>, replacement: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Replace whole lines starting with ``prefix`` by ``replacement``."""</span>
     <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">"</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">"</span><span style="color: #666">.</span>join(
         replacement <span style="color: #008000; font-weight: bold">if</span> line<span style="color: #666">.</span>startswith(prefix) <span style="color: #008000; font-weight: bold">else</span> line
@@ -3351,11 +3416,11 @@ linger/reload/enable dance, only the unit contents differ.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/systemd_install.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">14</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">15</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">16</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">17</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">18</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">run</span>(cmd: <span style="color: #008000">list</span>, dry_run: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">18</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">19</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">20</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">run</span>(cmd: <span style="color: #008000">list</span>, dry_run: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Echo then run a command (echo only on dry run)."""</span>
     <span style="color: #008000">print</span>(<span style="color: #BA2121">f"+ </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #BA2121">' '</span><span style="color: #666">.</span>join(cmd)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>)
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> dry_run:
@@ -3384,9 +3449,9 @@ linger/reload/enable dance, only the unit contents differ.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/commons/systemd_install.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">21</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">22</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">23</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">user_unit_dir</span>(user: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">25</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">26</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">27</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">user_unit_dir</span>(user: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Systemd user directory for ``user`` (created on install)."""</span>
     <span style="color: #008000; font-weight: bold">return</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>join(<span style="color: #BA2121">"/home"</span>, user, USER_SYSTEMD_DIR)
 </code></pre></div></td></tr></table></div>
