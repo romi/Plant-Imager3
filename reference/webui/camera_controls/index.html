@@ -2180,6 +2180,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#plantimager.webui.camera_controls.image_src" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;image_src
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.webui.camera_controls.merge_config" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2191,10 +2202,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plantimager.webui.camera_controls.oriented_jpeg" class="md-nav__link">
+  <a href="#plantimager.webui.camera_controls.oriented_image" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;oriented_jpeg
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;oriented_image
       
     </span>
   </a>
@@ -3216,6 +3227,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#plantimager.webui.camera_controls.image_src" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;image_src
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plantimager.webui.camera_controls.merge_config" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3227,10 +3249,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plantimager.webui.camera_controls.oriented_jpeg" class="md-nav__link">
+  <a href="#plantimager.webui.camera_controls.oriented_image" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;oriented_jpeg
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;oriented_image
       
     </span>
   </a>
@@ -3347,14 +3369,14 @@ a scan config.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/camera_controls.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">136</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">137</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">137</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">138</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">139</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">141</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">142</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">143</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">build_toml_snippet</span>(name: <span style="color: #008000">str</span>, config: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">143</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">144</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">build_toml_snippet</span>(name: <span style="color: #008000">str</span>, config: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Render a copy/paste TOML snippet for one camera's controls.</span>
 
 <span style="color: #BA2121; font-style: italic">    The ``[&lt;name&gt;.config]`` shape matches the scan file convention</span>
@@ -3442,8 +3464,7 @@ wiring the enable/disable + Apply merging is the caller's job.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/camera_controls.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">49</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">50</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">51</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">52</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">53</span>
@@ -3484,7 +3505,8 @@ wiring the enable/disable + Apply merging is the caller's job.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">88</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">89</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">90</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">91</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">camera_control_form</span>(prefix: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">91</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">92</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">camera_control_form</span>(prefix: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Build the five-field camera control form.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -3606,8 +3628,7 @@ scan card slot <code>i</code>), keeping Dash ids unique across pages.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/camera_controls.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">32</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">33</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">33</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">34</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">35</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">36</span>
@@ -3620,7 +3641,8 @@ scan card slot <code>i</code>), keeping Dash ids unique across pages.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">44</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">45</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">field_ids</span>(prefix: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">46</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">47</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">field_ids</span>(prefix: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Component ids for one camera form instance.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -3635,6 +3657,39 @@ scan card slot <code>i</code>), keeping Dash ids unique across pages.</p>
 <span style="color: #BA2121; font-style: italic">        Mapping of field suffix (see :data:`FIELDS`) to component id.</span>
 <span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">return</span> {field: <span style="color: #BA2121">f"</span><span style="color: #A45A77; font-weight: bold">{</span>prefix<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">-</span><span style="color: #A45A77; font-weight: bold">{</span>field<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span> <span style="color: #008000; font-weight: bold">for</span> field <span style="color: #A2F; font-weight: bold">in</span> FIELDS}
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="plantimager.webui.camera_controls.image_src" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">image_src</span>
+
+
+<a href="#plantimager.webui.camera_controls.image_src" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>image_src(buffer, info)
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Build a <code>data:</code> URL for a capture, oriented per its metadata.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>plantimager/webui/camera_controls.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">image_src</span>(buffer, info) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Build a ``data:`` URL for a capture, oriented per its metadata."""</span>
+    data, fmt <span style="color: #666">=</span> oriented_image(buffer, info)
+    mime <span style="color: #666">=</span> MIME_TYPES<span style="color: #666">.</span>get(fmt, <span style="color: #BA2121">"image/jpeg"</span>)
+    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">f"data:</span><span style="color: #A45A77; font-weight: bold">{</span>mime<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">;base64,"</span> <span style="color: #666">+</span> base64<span style="color: #666">.</span>b64encode(data)<span style="color: #666">.</span>decode(<span style="color: #BA2121">"ascii"</span>)
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3662,8 +3717,7 @@ five alone, which would drop every other control.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/camera_controls.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">125</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">125</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">126</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">127</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">128</span>
@@ -3671,7 +3725,8 @@ five alone, which would drop every other control.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">130</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">131</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">132</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">133</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">merge_config</span>(full: <span style="color: #008000">dict</span>, edits: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">133</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">134</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">merge_config</span>(full: <span style="color: #008000">dict</span>, edits: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Merge edited fields over a full snapshot (replace-wholesale safe).</span>
 
 <span style="color: #BA2121; font-style: italic">    The server setter replaces the whole dict, so callers must send the</span>
@@ -3690,30 +3745,27 @@ five alone, which would drop every other control.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="plantimager.webui.camera_controls.oriented_jpeg" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">oriented_jpeg</span>
+<h3 id="plantimager.webui.camera_controls.oriented_image" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">oriented_image</span>
 
 
-<a href="#plantimager.webui.camera_controls.oriented_jpeg" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>oriented_jpeg(buffer, info)
+<a href="#plantimager.webui.camera_controls.oriented_image" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>oriented_image(buffer, info)
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Return JPEG bytes rotated per the capture <code>rotation</code> metadata.</p>
+        <p>Return <code>(bytes, format)</code> rotated per the capture metadata.</p>
 <p>The sensor buffer is unoriented; <code>rotation</code> (clockwise degrees, same
 convention as the controller <code>ImageProvider</code>) tells how to display
-it. PIL rotates counter-clockwise, hence the negation.</p>
+it. PIL rotates counter-clockwise, hence the negation. The capture
+<code>format</code> (<code>jpeg</code> or <code>png</code>) is preserved end to end, including
+the no-rotation passthrough.</p>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/camera_controls.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">172</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">173</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">174</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">175</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">176</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">177</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">177</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">178</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">179</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">180</span>
@@ -3721,20 +3773,35 @@ it. PIL rotates counter-clockwise, hence the negation.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">182</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">183</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">184</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">oriented_jpeg</span>(buffer, info) <span style="color: #666">-&gt;</span> <span style="color: #008000">bytes</span>:
-<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return JPEG bytes rotated per the capture ``rotation`` metadata.</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">186</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">187</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">188</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">189</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">190</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">191</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">192</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">195</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">oriented_image</span>(buffer, info) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Return ``(bytes, format)`` rotated per the capture metadata.</span>
 
 <span style="color: #BA2121; font-style: italic">    The sensor buffer is unoriented; ``rotation`` (clockwise degrees, same</span>
 <span style="color: #BA2121; font-style: italic">    convention as the controller ``ImageProvider``) tells how to display</span>
-<span style="color: #BA2121; font-style: italic">    it. PIL rotates counter-clockwise, hence the negation.</span>
+<span style="color: #BA2121; font-style: italic">    it. PIL rotates counter-clockwise, hence the negation. The capture</span>
+<span style="color: #BA2121; font-style: italic">    ``format`` (``jpeg`` or ``png``) is preserved end to end, including</span>
+<span style="color: #BA2121; font-style: italic">    the no-rotation passthrough.</span>
 <span style="color: #BA2121; font-style: italic">    """</span>
+    raw <span style="color: #666">=</span> <span style="color: #008000">bytes</span>(buffer)
+    fmt <span style="color: #666">=</span> (info<span style="color: #666">.</span>get(<span style="color: #BA2121">"format"</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #BA2121">"jpeg"</span>)<span style="color: #666">.</span>lower()
     rotation <span style="color: #666">=</span> (info<span style="color: #666">.</span>get(<span style="color: #BA2121">"rotation"</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #666">0</span>) <span style="color: #666">%</span> <span style="color: #666">360</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> rotation:
-        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">bytes</span>(buffer)
-    <span style="color: #008000; font-weight: bold">with</span> Image<span style="color: #666">.</span>open(io<span style="color: #666">.</span>BytesIO(<span style="color: #008000">bytes</span>(buffer))) <span style="color: #008000; font-weight: bold">as</span> img:
+        <span style="color: #008000; font-weight: bold">return</span> raw, fmt
+    <span style="color: #008000; font-weight: bold">with</span> Image<span style="color: #666">.</span>open(io<span style="color: #666">.</span>BytesIO(raw)) <span style="color: #008000; font-weight: bold">as</span> img:
         out <span style="color: #666">=</span> io<span style="color: #666">.</span>BytesIO()
-        img<span style="color: #666">.</span>rotate(<span style="color: #666">-</span>rotation, expand<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)<span style="color: #666">.</span>save(out, <span style="color: #008000">format</span><span style="color: #666">=</span><span style="color: #BA2121">"JPEG"</span>)
-        <span style="color: #008000; font-weight: bold">return</span> out<span style="color: #666">.</span>getvalue()
+        img<span style="color: #666">.</span>rotate(<span style="color: #666">-</span>rotation, expand<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)<span style="color: #666">.</span>save(
+            out, <span style="color: #008000">format</span><span style="color: #666">=</span><span style="color: #BA2121">"PNG"</span> <span style="color: #008000; font-weight: bold">if</span> fmt <span style="color: #666">==</span> <span style="color: #BA2121">"png"</span> <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">"JPEG"</span>)
+        <span style="color: #008000; font-weight: bold">return</span> out<span style="color: #666">.</span>getvalue(), fmt
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3814,8 +3881,7 @@ so callers can keep the previous value.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/camera_controls.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 94</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 95</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 95</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 96</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 97</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 98</span>
@@ -3841,7 +3907,8 @@ so callers can keep the previous value.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parse_number</span>(value):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parse_number</span>(value):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Coerce a form value to a number, ``None`` when empty or garbage.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -3918,8 +3985,7 @@ so callers can keep the previous value.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/camera_controls.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">146</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">147</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">147</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">148</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">149</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
@@ -3941,7 +4007,8 @@ so callers can keep the previous value.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parse_toml_snippet</span>(text: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">170</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parse_toml_snippet</span>(text: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Parse a pasted snippet back to a control dict.</span>
 
 <span style="color: #BA2121; font-style: italic">    Accepts the full ``[&lt;name&gt;.config]`` snippet from</span>

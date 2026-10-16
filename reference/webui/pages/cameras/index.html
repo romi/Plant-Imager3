@@ -3344,9 +3344,7 @@ power control stays on the controller touchscreen by design.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/pages/cameras.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">248</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">253</span>
@@ -3360,7 +3358,9 @@ power control stays on the controller touchscreen by design.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">261</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">262</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">263</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">264</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">265</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">266</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">"cam-toml"</span>, <span style="color: #BA2121">"value"</span>),
     Output(<span style="color: #BA2121">"cam-toml-store"</span>, <span style="color: #BA2121">"data"</span>),
     Output(<span style="color: #BA2121">"cam-status"</span>, <span style="color: #BA2121">"children"</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
@@ -3401,16 +3401,16 @@ power control stays on the controller touchscreen by design.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/pages/cameras.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">284</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">285</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">286</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">286</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">287</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">288</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">289</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">290</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">291</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">292</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">294</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">295</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">"cam-gains-r"</span>, <span style="color: #BA2121">"disabled"</span>),
     Output(<span style="color: #BA2121">"cam-gains-b"</span>, <span style="color: #BA2121">"disabled"</span>),
     Output(<span style="color: #BA2121">"cam-gains-hint"</span>, <span style="color: #BA2121">"style"</span>),
@@ -3444,10 +3444,7 @@ power control stays on the controller touchscreen by design.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/pages/cameras.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">135</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">136</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">137</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">138</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">138</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">139</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">140</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">141</span>
@@ -3469,7 +3466,10 @@ power control stays on the controller touchscreen by design.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">157</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">158</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">159</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">160</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">161</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">162</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">163</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">"cam-exposure"</span>, <span style="color: #BA2121">"value"</span>),
     Output(<span style="color: #BA2121">"cam-gain"</span>, <span style="color: #BA2121">"value"</span>),
     Output(<span style="color: #BA2121">"cam-awb-enable"</span>, <span style="color: #BA2121">"value"</span>),
@@ -3489,10 +3489,10 @@ power control stays on the controller touchscreen by design.</p>
         <span style="color: #008000; font-weight: bold">raise</span> PreventUpdate
     controller, failed <span style="color: #666">=</span> _controller_or_status()
     <span style="color: #008000; font-weight: bold">if</span> failed <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
-        <span style="color: #008000; font-weight: bold">return</span> (<span style="color: #008000; font-weight: bold">None</span>,) <span style="color: #666">*</span> <span style="color: #666">6</span> <span style="color: #666">+</span> ({},) <span style="color: #666">+</span> failed <span style="color: #666">+</span> (<span style="color: #008000; font-weight: bold">True</span>,)
+        <span style="color: #008000; font-weight: bold">return</span> (no_update,) <span style="color: #666">*</span> <span style="color: #666">7</span> <span style="color: #666">+</span> failed <span style="color: #666">+</span> (<span style="color: #008000; font-weight: bold">True</span>,)
     config <span style="color: #666">=</span> controller<span style="color: #666">.</span>get_camera_config(name)
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(config, NoResult):
-        <span style="color: #008000; font-weight: bold">return</span> (<span style="color: #008000; font-weight: bold">None</span>,) <span style="color: #666">*</span> <span style="color: #666">6</span> <span style="color: #666">+</span> ({},) <span style="color: #666">+</span> (<span style="color: #BA2121">f"Failed to read </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, <span style="color: #BA2121">"danger"</span>, <span style="color: #008000; font-weight: bold">True</span>)
+        <span style="color: #008000; font-weight: bold">return</span> (no_update,) <span style="color: #666">*</span> <span style="color: #666">7</span> <span style="color: #666">+</span> (<span style="color: #BA2121">f"Failed to read </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, <span style="color: #BA2121">"danger"</span>, <span style="color: #008000; font-weight: bold">True</span>)
     config <span style="color: #666">=</span> <span style="color: #008000">dict</span>(config)
     <span style="color: #008000; font-weight: bold">return</span> _form_values(config) <span style="color: #666">+</span> (config, <span style="color: #BA2121">f"Loaded </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, <span style="color: #BA2121">"success"</span>, <span style="color: #008000; font-weight: bold">True</span>)
 </code></pre></div></td></tr></table></div>
@@ -3509,7 +3509,7 @@ power control stays on the controller touchscreen by design.</p>
 
 
 <a href="#plantimager.webui.pages.cameras.refresh_camera_list" class="headerlink" title="Permanent link">Link</a></h3>
-<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>refresh_camera_list(_, __, current)
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>refresh_camera_list(_, __, current, options)
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3517,12 +3517,16 @@ power control stays on the controller touchscreen by design.</p>
         <p>Refresh the camera selector, keeping the selection when possible.</p>
 <p>The value output stays untouched while the selection is still valid:
 re-emitting it would re-fire the loader every interval tick and wipe
-in-progress edits.</p>
+in-progress edits. Transient RPC failures keep the last-known list
+instead of blanking the selector (the touchscreen list is
+signal-driven and never flickers; the poll must not either).</p>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/pages/cameras.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
@@ -3545,30 +3549,38 @@ in-progress edits.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">129</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">130</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">131</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">132</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">132</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">133</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">134</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">135</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">"cam-select"</span>, <span style="color: #BA2121">"options"</span>),
     Output(<span style="color: #BA2121">"cam-select"</span>, <span style="color: #BA2121">"value"</span>),
     Input(<span style="color: #BA2121">"cam-list-refresh"</span>, <span style="color: #BA2121">"n_intervals"</span>),
     Input(<span style="color: #BA2121">"cam-refresh"</span>, <span style="color: #BA2121">"n_clicks"</span>),
     State(<span style="color: #BA2121">"cam-select"</span>, <span style="color: #BA2121">"value"</span>),
+    State(<span style="color: #BA2121">"cam-select"</span>, <span style="color: #BA2121">"options"</span>),
 )
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">refresh_camera_list</span>(_, __, current):
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">refresh_camera_list</span>(_, __, current, options):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Refresh the camera selector, keeping the selection when possible.</span>
 
 <span style="color: #BA2121; font-style: italic">    The value output stays untouched while the selection is still valid:</span>
 <span style="color: #BA2121; font-style: italic">    re-emitting it would re-fire the loader every interval tick and wipe</span>
-<span style="color: #BA2121; font-style: italic">    in-progress edits.</span>
+<span style="color: #BA2121; font-style: italic">    in-progress edits. Transient RPC failures keep the last-known list</span>
+<span style="color: #BA2121; font-style: italic">    instead of blanking the selector (the touchscreen list is</span>
+<span style="color: #BA2121; font-style: italic">    signal-driven and never flickers; the poll must not either).</span>
 <span style="color: #BA2121; font-style: italic">    """</span>
     controller, failed <span style="color: #666">=</span> _controller_or_status()
     <span style="color: #008000; font-weight: bold">if</span> failed <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
-        <span style="color: #008000; font-weight: bold">return</span> [], <span style="color: #008000; font-weight: bold">None</span>
+        <span style="color: #008000; font-weight: bold">return</span> no_update, no_update
     names <span style="color: #666">=</span> controller<span style="color: #666">.</span>camera_names
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(names, NoResult):
-        <span style="color: #008000; font-weight: bold">return</span> [], <span style="color: #008000; font-weight: bold">None</span>
-    options <span style="color: #666">=</span> [{<span style="color: #BA2121">"label"</span>: name, <span style="color: #BA2121">"value"</span>: name} <span style="color: #008000; font-weight: bold">for</span> name <span style="color: #A2F; font-weight: bold">in</span> names]
+        <span style="color: #008000; font-weight: bold">return</span> no_update, no_update
+    new_options <span style="color: #666">=</span> [{<span style="color: #BA2121">"label"</span>: name, <span style="color: #BA2121">"value"</span>: name} <span style="color: #008000; font-weight: bold">for</span> name <span style="color: #A2F; font-weight: bold">in</span> names]
+    <span style="color: #008000; font-weight: bold">if</span> new_options <span style="color: #666">==</span> (options <span style="color: #A2F; font-weight: bold">or</span> []):
+        <span style="color: #008000; font-weight: bold">return</span> no_update, no_update
     <span style="color: #008000; font-weight: bold">if</span> current <span style="color: #A2F; font-weight: bold">in</span> names:
-        <span style="color: #008000; font-weight: bold">return</span> options, no_update
-    <span style="color: #008000; font-weight: bold">return</span> options, names[<span style="color: #666">0</span>] <span style="color: #008000; font-weight: bold">if</span> names <span style="color: #008000; font-weight: bold">else</span> <span style="color: #008000; font-weight: bold">None</span>
+        <span style="color: #008000; font-weight: bold">return</span> new_options, no_update
+    <span style="color: #008000; font-weight: bold">return</span> new_options, names[<span style="color: #666">0</span>] <span style="color: #008000; font-weight: bold">if</span> names <span style="color: #008000; font-weight: bold">else</span> no_update
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3593,10 +3605,7 @@ in-progress edits.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/pages/cameras.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">163</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">164</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">165</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">166</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">167</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">168</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">169</span>
@@ -3616,7 +3625,9 @@ in-progress edits.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">183</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">184</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">185</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">186</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">186</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">187</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">188</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">"cam-preview"</span>, <span style="color: #BA2121">"src"</span>),
     Output(<span style="color: #BA2121">"cam-meta"</span>, <span style="color: #BA2121">"children"</span>),
     Output(<span style="color: #BA2121">"cam-status"</span>, <span style="color: #BA2121">"children"</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
@@ -3637,8 +3648,7 @@ in-progress edits.</p>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(res, NoResult):
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>, <span style="color: #BA2121">""</span>, <span style="color: #BA2121">f"Failed to capture from </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, <span style="color: #BA2121">"danger"</span>, <span style="color: #008000; font-weight: bold">True</span>
     buffer, info <span style="color: #666">=</span> res
-    src <span style="color: #666">=</span> (<span style="color: #BA2121">"data:image/jpeg;base64:"</span>
-           <span style="color: #666">+</span> base64<span style="color: #666">.</span>b64encode(oriented_jpeg(buffer, info))<span style="color: #666">.</span>decode(<span style="color: #BA2121">"ascii"</span>))
+    src <span style="color: #666">=</span> image_src(buffer, info)
     <span style="color: #008000; font-weight: bold">return</span> src, _meta_rows(<span style="color: #008000">dict</span>(info)), <span style="color: #BA2121">f"Captured from </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, <span style="color: #BA2121">"success"</span>, <span style="color: #008000; font-weight: bold">True</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3664,9 +3674,7 @@ in-progress edits.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/pages/cameras.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">267</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">268</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">269</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">270</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">271</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">272</span>
@@ -3678,7 +3686,9 @@ in-progress edits.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">278</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">279</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">280</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">281</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">281</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">282</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">283</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">"cam-modal"</span>, <span style="color: #BA2121">"is_open"</span>),
     Output(<span style="color: #BA2121">"cam-modal-img"</span>, <span style="color: #BA2121">"src"</span>),
     Input(<span style="color: #BA2121">"cam-preview-wrap"</span>, <span style="color: #BA2121">"n_clicks"</span>),
@@ -3717,9 +3727,7 @@ in-progress edits.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/pages/cameras.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">189</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">190</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">191</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">191</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">192</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">193</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">194</span>
@@ -3773,7 +3781,9 @@ in-progress edits.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">242</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">243</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">244</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">245</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">245</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">246</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">247</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">"cam-exposure"</span>, <span style="color: #BA2121">"value"</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">"cam-gain"</span>, <span style="color: #BA2121">"value"</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">"cam-awb-enable"</span>, <span style="color: #BA2121">"value"</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
@@ -3804,7 +3814,7 @@ in-progress edits.</p>
         <span style="color: #008000; font-weight: bold">raise</span> PreventUpdate
     controller, failed <span style="color: #666">=</span> _controller_or_status()
     <span style="color: #008000; font-weight: bold">if</span> failed <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
-        <span style="color: #008000; font-weight: bold">return</span> (<span style="color: #008000; font-weight: bold">None</span>,) <span style="color: #666">*</span> <span style="color: #666">6</span> <span style="color: #666">+</span> ({},) <span style="color: #666">+</span> failed <span style="color: #666">+</span> (<span style="color: #008000; font-weight: bold">True</span>,)
+        <span style="color: #008000; font-weight: bold">return</span> (no_update,) <span style="color: #666">*</span> <span style="color: #666">7</span> <span style="color: #666">+</span> failed <span style="color: #666">+</span> (<span style="color: #008000; font-weight: bold">True</span>,)
     gains <span style="color: #666">=</span> [parse_number(gains_r), parse_number(gains_b)]
     edits <span style="color: #666">=</span> {
         <span style="color: #BA2121">"ExposureTime"</span>: parse_number(exposure),
@@ -3827,7 +3837,7 @@ in-progress edits.</p>
         effective <span style="color: #666">=</span> controller<span style="color: #666">.</span>set_camera_config(name, merged)
         what <span style="color: #666">=</span> <span style="color: #BA2121">"applied"</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(effective, NoResult):
-        <span style="color: #008000; font-weight: bold">return</span> (<span style="color: #008000; font-weight: bold">None</span>,) <span style="color: #666">*</span> <span style="color: #666">6</span> <span style="color: #666">+</span> (full <span style="color: #A2F; font-weight: bold">or</span> {},) <span style="color: #666">+</span> (<span style="color: #BA2121">f"Failed to write </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, <span style="color: #BA2121">"danger"</span>, <span style="color: #008000; font-weight: bold">True</span>)
+        <span style="color: #008000; font-weight: bold">return</span> (no_update,) <span style="color: #666">*</span> <span style="color: #666">7</span> <span style="color: #666">+</span> (<span style="color: #BA2121">f"Failed to write </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, <span style="color: #BA2121">"danger"</span>, <span style="color: #008000; font-weight: bold">True</span>)
     effective <span style="color: #666">=</span> <span style="color: #008000">dict</span>(effective)
     <span style="color: #008000; font-weight: bold">return</span> _form_values(effective) <span style="color: #666">+</span> (effective, <span style="color: #BA2121">f"</span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> </span><span style="color: #A45A77; font-weight: bold">{</span>what<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">"</span>, <span style="color: #BA2121">"success"</span>, <span style="color: #008000; font-weight: bold">True</span>)
 </code></pre></div></td></tr></table></div>
