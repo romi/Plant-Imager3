@@ -702,7 +702,9 @@ class Scanner(QObject):
         Raises
         ------
         RuntimeError
-            If any required component is missing
+            If any required component is missing, or if the scan or
+            fileset cannot be created (e.g. duplicate dataset name):
+            nothing moves and no image is captured in that case.
 
         Notes
         -----
@@ -742,19 +744,20 @@ class Scanner(QObject):
             # Combine dataset and hardware metadata
             self.db_client.create_scan(self.scan_id, metadata=self.config)
         except RequestException as e:
-            logger.error(f"{e}")
+            self._abort_scan(f"Could not create scan {self.scan_id}: {e}")
         except ValueError as e:
-            logger.error(f"{e}")
-            logger.error(f"Scan {self.scan_id} already exists in plantdb")
+            self._abort_scan(
+                f"Scan {self.scan_id} already exists in plantdb: {e}")
 
         # Create the image fileset on the remote database
         try:
             self.db_client.create_fileset(self.fileset, self.scan_id)
         except RequestException as e:
-            logger.error(f"{e}")
+            self._abort_scan(
+                f"Could not create fileset {self.fileset}: {e}")
         except ValueError as e:
-            logger.error(f"{e}")
-            logger.error(f"Fileset {self.fileset} already exists for scan {self.scan_id}")
+            self._abort_scan(
+                f"Fileset {self.fileset} already exists for scan {self.scan_id}: {e}")
 
         # Execute the scan using a thread pool for parallel image capture
         with ThreadPoolExecutor(max_workers=4) as executor:
@@ -810,6 +813,18 @@ class Scanner(QObject):
         self._scan_in_progress = False
         self.scanInProgressChanged.emit(self.scan_in_progress)
         logger.info("Scan completed")  # Log completion
+
+    def _abort_scan(self, message: str) -> None:
+        """Stop a scan before any motion, surfacing ``message`` to RPC.
+
+        Clears the in-progress flag (so the UI re-enables) and raises:
+        the RPC layer converts it to a ``NoResult`` whose traceback the
+        WebUI shows in ``scan-output``.
+        """
+        self._scan_in_progress = False
+        self.scanInProgressChanged.emit(self.scan_in_progress)
+        logger.error(message)
+        raise RuntimeError(message)
 
     @Slot(float, float, float)
     def move_arm(self, x: float, y: float, z: float):

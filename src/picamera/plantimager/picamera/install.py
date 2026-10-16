@@ -92,7 +92,7 @@ def install(args) -> int:
         run(["systemctl", "daemon-reload"], args.dry_run)
         return 0
     if not args.dry_run:
-        os.makedirs(unit_dir, exist_ok=True)
+        os.makedirs(SYSTEM_UNIT_DIR, exist_ok=True)
     registry = args.registry or REGISTRY_DEFAULT
     server_env = {"PI_REGISTRY": registry}
     if args.ip:
