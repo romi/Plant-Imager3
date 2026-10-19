@@ -1,3 +1,4 @@
+import logging
 import weakref
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
@@ -17,7 +18,7 @@ from plantimager.commons.RPC import RPCClient
 from plantimager.commons.cameradevice import Camera
 from plantimager.commons.logging import create_logger
 
-logger = create_logger(__name__)
+logger = create_logger(__name__, level=logging.DEBUG)
 
 
 class CameraStates(StrEnum):
@@ -218,14 +219,15 @@ class PiCameraComm(QObject):
     def resolution(self, value: tuple[int, int]):
         self._set_attr_async("resolution", value)
 
-    @Property(int, notify=encodingChanged)
+    @Property(str, notify=encodingChanged)
     def encoding(self):
         with self.camera() as camera:
             val = camera.encoding if camera else ""
         return val
 
     @encoding.setter
-    def encoding(self, value: tuple[int, int]):
+    def encoding(self, value: str):
+        logger.debug(f"Setting encoding to {value}")
         self._set_attr_async("encoding", value)
 
     @Property(int, notify=configChanged)

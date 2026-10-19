@@ -28,6 +28,7 @@ Usage Examples:
 """
 
 import importlib
+import logging
 import time
 import traceback
 from concurrent.futures import ALL_COMPLETED
@@ -65,7 +66,7 @@ from plantimager.controller.scanner.path import Pose
 QML_IMPORT_NAME = "PlantImagerApp.Scanner"
 QML_IMPORT_MAJOR_VERSION = 1
 
-logger = create_logger(__name__)
+logger = create_logger(__name__, level=logging.DEBUG)
 
 
 class DataUploader():
@@ -501,6 +502,7 @@ class Scanner(QObject):
 
     def _configure_cameras(self, cameras: list[PiCameraComm]):
         """Configure the cameras for scanning."""
+        logger.debug(f"Config cameras: {cameras}")
         for camera in cameras:
             if camera.name in self.config:
                 res = self.config[camera.name]["res_x"], self.config[camera.name]["res_y"]
