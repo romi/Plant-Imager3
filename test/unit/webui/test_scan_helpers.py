@@ -23,6 +23,7 @@ from plantimager.webui.scan import (
     is_valid_dataset_name,
     populate_path,
     prepare_scan,
+    toggle_path_rows,
     run_scan,
     validate_toml_textarea,
 )
@@ -141,8 +142,18 @@ class TestNewScanHelpers(unittest.TestCase):
         import toml as toml_lib
         cfg_text = toml_lib.dumps({"ScanPath": {"class_name": "Circle", "kwargs": {"radius": 100, "n_points": 4}}})
         out = populate_path(cfg_text)
-        self.assertEqual(len(out), 1 + 10 + 10)
+        self.assertEqual(len(out), 1 + 10)
         self.assertEqual(out[0], "Circle")
+
+    def test_toggle_path_rows(self):
+        from plantimager.webui.scan import PATH_FIELDS, PATH_ORDER
+        for cls in ("Circle", "Line"):
+            with self.subTest(cls=cls):
+                out = toggle_path_rows(cls)
+                self.assertEqual(len(out), len(PATH_ORDER))
+                shown = {f for f, style in zip(PATH_ORDER, out)
+                         if style["display"] == "block"}
+                self.assertEqual(shown, set(PATH_FIELDS[cls]))
 
 
 class TestNumCasting(unittest.TestCase):

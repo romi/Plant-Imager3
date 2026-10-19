@@ -271,6 +271,7 @@ configuration_card = [
                 ], start_collapsed=True, always_open=True),
                 # Hidden single source of truth, consumed by `run_scan`/`config_scan`.
                 dbc.Textarea(id="scan-cfg-toml", style={"display": "none"}),
+                dcc.Store(id="cfg-populate", data=None),
             ]),
             dbc.CardFooter([
                 dcc.Upload(
@@ -482,6 +483,7 @@ scan_layout = html.Div(
 # Callback to update the default configuration file once the app is running
 @callback(
     Output('scan-cfg-toml', 'value'),
+    Output('cfg-populate', 'data'),
     Input('url', 'pathname')
 )
 def load_default_toml_cfg(_):
@@ -490,7 +492,7 @@ def load_default_toml_cfg(_):
     # Load the default TOML configuration file into a string variable
     with open(default_toml_path, 'r') as f:
         default_toml = f.read()
-    return default_toml
+    return default_toml, default_toml
 
 
 CAM_FIELDS = ['name', 'res-x', 'res-y', 'encoding',
@@ -501,8 +503,7 @@ CAM_FIELDS = ['name', 'res-x', 'res-y', 'encoding',
 @callback(
     Output('path-class', 'value'),
     *[Output(f'path-kwarg-{f}', 'value') for f in PATH_ORDER],
-    *[Output(f'path-kwarg-{f}-row', 'style') for f in PATH_ORDER],
-    Input('scan-cfg-toml', 'value'),
+    Input('cfg-populate', 'data'),
 )
 def populate_path(toml_text):
     """Fill the path form from the hidden config (single source of truth)."""
@@ -517,16 +518,23 @@ def populate_path(toml_text):
     else:
         for f in PATH_FIELDS.get(cls, []):
             vals[f] = kwargs.get(f)
-    show = set(PATH_FIELDS.get(cls, []))
     out = [cls]
     for f in PATH_ORDER:
         v = vals[f]
         if v is None:
             v = PATH_SPEC.get(f, (1, None))[1]
         out.append("" if v is None else str(v))
-    for f in PATH_ORDER:
-        out.append({"display": "block"} if f in show else {"display": "none"})
     return out
+
+
+@callback(
+    *[Output(f'path-kwarg-{f}-row', 'style') for f in PATH_ORDER],
+    Input('path-class', 'value'),
+)
+def toggle_path_rows(cls):
+    """Show only the kwargs inputs used by the selected path class."""
+    show = set(PATH_FIELDS.get(cls, []))
+    return [{"display": "block"} if f in show else {"display": "none"} for f in PATH_ORDER]
 
 
 @callback(
@@ -551,7 +559,7 @@ def rebuild_path(cls, center_x, center_y, radius, n_points, n_circles, x_0, y_0,
     Output('cam-active', 'data'),
     *[Output(f'camera-card-{i}', 'style') for i in range(MAX_CAMERAS)],
     *[Output(f'cam-{i}-{f}', 'value') for i in range(MAX_CAMERAS) for f in CAM_FIELDS],
-    Input('scan-cfg-toml', 'value'),
+    Input('cfg-populate', 'data'),
 )
 def populate_cameras(toml_text):
     """Fill the camera cards and active-slot list from the hidden config."""
@@ -647,7 +655,7 @@ def rebuild_cameras(*args):
 # --- Biological metadata configuration ----------------------------------------
 @callback(
     *[Output(_bio_field_id(s['path']), 'value') for s in FIELD_SPECS],
-    Input('scan-cfg-toml', 'value'),
+    Input('cfg-populate', 'data'),
 )
 def populate_bio(toml_text):
     """Fill the MIAPPE biological form from ``Metadata.object``."""
@@ -767,6 +775,7 @@ def handle_config_upload(contents: str | None):
 
 @callback(
     Output('scan-cfg-toml', 'value', allow_duplicate=True),
+    Output('cfg-populate', 'data', allow_duplicate=True),
     Output('override-modal', 'is_open', allow_duplicate=True),
     Output('uploaded-cfg', 'data', allow_duplicate=True),
     Input('override-confirm', 'n_clicks'),
@@ -777,8 +786,8 @@ def handle_config_upload(contents: str | None):
 def apply_config_override(confirm_clicks, abort_clicks, uploaded: str | None):
     """On 'Override', replace the config with the uploaded TOML; on 'Abort', discard it."""
     if ctx.triggered_id == 'override-confirm' and uploaded:
-        return uploaded, False, None
-    return no_update, False, None
+        return uploaded, uploaded, False, None
+    return no_update, no_update, False, None
 
 
 @callback(
