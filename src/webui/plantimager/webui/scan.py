@@ -118,9 +118,9 @@ def _dump(cfg: dict) -> str:
 
 
 def _free_camera_name(used: set[str]) -> str:
-    """Return a default camera name (``picamera``, ``picameraN``) not in ``used``."""
-    name = "picamera"
-    i = 0
+    """Return a default camera name (``picamera1``, ``picameraN``) not in ``used``."""
+    i = 1
+    name = f"picamera{i}"
     while name in used:
         i += 1
         name = f"picamera{i}"
