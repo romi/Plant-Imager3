@@ -111,6 +111,29 @@ class TestScannerLogic(unittest.TestCase):
         self.assertEqual(self.scanner._max_progress, 4)
         self.assertEqual(self.scanner.dataset_metadata, {"species": "test"})
 
+    def test_configure_scan_applies_encoding(self):
+        """configure_scan propagates the per-camera encoding to the camera."""
+        config = {
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 100, "n_points": 4}},
+            "Metadata": {"object": {"species": "test"}, "hardware": {"version": "1"}},
+            "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "png", "config": {}},
+        }
+        self.scanner.add_camera(self.mock_camera)
+        self.scanner.configure_scan(config)
+        self.assertEqual(self.mock_camera.encoding, "png")
+        self.assertEqual(self.scanner.config["cam1"]["encoding"], "png")
+
+    def test_configure_scan_applies_jpeg(self):
+        """configure_scan propagates jpeg encoding (default) to the camera."""
+        config = {
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 100, "n_points": 4}},
+            "Metadata": {"object": {}, "hardware": {}},
+            "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "jpeg", "config": {}},
+        }
+        self.scanner.add_camera(self.mock_camera)
+        self.scanner.configure_scan(config)
+        self.assertEqual(self.mock_camera.encoding, "jpeg")
+
     def test_ready_to_scan_false_without_everything(self):
         """ready_to_scan is true once all required components are present."""
         self.assertFalse(self.scanner.ready_to_scan)
