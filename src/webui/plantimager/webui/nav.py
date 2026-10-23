@@ -52,6 +52,21 @@ scan_link: dbc.NavLink = dbc.NavLink(
     style={'color': "#f3f3f3"},
 )
 
+#: Link component pointing to the camera page
+camera_link: dbc.NavLink = dbc.NavLink(
+    children=html.I(className="bi bi-camera-fill fs-3"),
+    id="camera-link",
+    href="",  # Use get_relative_path to handle prefixes,
+    n_clicks=0,
+    style={'color': "#f3f3f3"},
+)
+
+#: Tooltip component providing help text for the camera link
+camera_tooltip: dbc.Tooltip = dbc.Tooltip(
+    children="Camera live view and controls",
+    target="camera-link",
+    placement="bottom",
+)
 #: Tooltip component providing help text for the tutorial link
 scan_tooltip: dbc.Tooltip = dbc.Tooltip(
     children="Dataset acquisition page",
@@ -92,6 +107,15 @@ def update_scan_link_href(_):
     return get_relative_path("/")
 
 
+# Then update the href of the camera page through a callback when the app starts
+@callback(
+    Output('camera-link', 'href'),
+    Input('url', 'pathname')
+)
+def update_camera_link_href(_):
+    return get_relative_path("/cameras")
+
+
 # Then update the href of the dataset table page through a callback when the app starts
 @callback(
     Output('dataset-table-link', 'href'),
@@ -106,6 +130,7 @@ nav_items: list = [
     dbc.NavItem(children=[login_avatar_button, login_avatar_button_tooltip]),
     dbc.NavItem(children=[tutorial_link, tutorial_tooltip]),
     dbc.NavItem(children=[scan_link, scan_tooltip]),
+    dbc.NavItem(children=[camera_link, camera_tooltip]),
     dbc.NavItem(children=[dataset_table_link, dataset_table_tooltip]),
     dbc.NavItem(children=[cfg_button, cfg_tooltip]),
 ]

@@ -23,12 +23,16 @@ StartLimitIntervalSec=30
 # Consult the documentantion for types (https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=) other options.
 Type=notify
 
+# System unit running as the login user: the root agent controls it
+# with plain systemctl, no --user session needed (see step 13).
+User=romi
+
 # Working diretory
 WorkingDirectory=/home/romi
 
 # Environment variables (alternatively use EnvironmentFile)
-Environment=PI_REGISTRY=tcp://10.10.10.1:5555
-Environment=IP_ADDR=10.10.10.2
+Environment=PI_REGISTRY=tcp://10.10.11.1:5555
+Environment=IP_ADDR=10.10.11.2
 # Command with arguments to invoke when the unit is activated.
 ExecStart=/home/romi/picamera-env/bin/picamera-server
 # Command with arguments to invoke when the unit is deactivated.
@@ -56,6 +60,6 @@ WatchdogSignal=SIGINT
 
 [Install]
 # A list of units who when activated will try and activate this unit
-WantedBy=default.target
+WantedBy=multi-user.target
 # A list of units to enable or disable when this unit is enabled or disabled (e.g., with systemctl enable)
 Also=

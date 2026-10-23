@@ -298,7 +298,7 @@ class CNC(AbstractCNC):
                 else:
                     logger.debug(f"Could not find GRBL device at {port.device}")
                     s.close()
-        logger.error(f"No GRBL device found in {[port.name for port in comports()]}")
+        #logger.error(f"No GRBL device found in {[port.name for port in comports()]}")
         raise IOError(f"No GRBL device found in {[port.name for port in comports()]}")
 
     def stop(self) -> None:

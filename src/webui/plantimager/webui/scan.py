@@ -92,13 +92,19 @@ CAMERA_AXES = ["x", "y", "z", "pan", "tilt"]
 
 
 def _num(value):
-    """Coerce a form value to ``float``, keeping it as-is if not numeric."""
+    """Coerce a form value to ``int`` when integral else ``float``.
+
+    Integral input (``n_points``, resolutions, offsets) must stay ``int``:
+    the controller validates integer fields by type. Genuinely fractional
+    values keep their decimals.
+    """
     if value is None or value == "":
         return None
     try:
-        return float(value)
+        number = float(value)
     except (TypeError, ValueError):
         return value
+    return int(number) if number.is_integer() else number
 
 
 def _load_cfg(toml_text: str | None) -> dict:
@@ -112,17 +118,13 @@ def _dump(cfg: dict) -> str:
 
 
 def _free_camera_name(used: set[str]) -> str:
-    """Return a default camera name (``picamera``, ``picameraN``) not in ``used``."""
-    name = "picamera"
-    i = 0
+    """Return a default camera name (``picamera1``, ``picameraN``) not in ``used``."""
+    i = 1
+    name = f"picamera{i}"
     while name in used:
         i += 1
         name = f"picamera{i}"
     return name
-
-
-#: Matches auto-generated default camera names (``picamera``, ``picameraN``).
-AUTO_NAME = re.compile(r"picamera\d*")
 
 
 def _bio_field_id(path: str) -> str:
@@ -269,6 +271,7 @@ configuration_card = [
                 ], start_collapsed=True, always_open=True),
                 # Hidden single source of truth, consumed by `run_scan`/`config_scan`.
                 dbc.Textarea(id="scan-cfg-toml", style={"display": "none"}),
+                dcc.Store(id="cfg-populate", data=None),
             ]),
             dbc.CardFooter([
                 dcc.Upload(
@@ -431,6 +434,10 @@ scan_card = [
 scan_layout = html.Div(
     children=[
         dcc.Interval(id='main-interval', disabled=False, interval=4000),
+        # Arm token for the background scan. Memory-only on purpose: F5
+        # clears it while the session-persisted scan-job-id survives, so a
+        # stale job id alone can never launch a scan (see run_scan).
+        dcc.Store(id='scan-armed', data=''),
         dbc.Row([
             dbc.Col(configuration_card, md=6),
             dbc.Col(dataset_name_card + [html.Br()] + camera_card + [html.Br()] + scan_card, md=6)
@@ -476,6 +483,7 @@ scan_layout = html.Div(
 # Callback to update the default configuration file once the app is running
 @callback(
     Output('scan-cfg-toml', 'value'),
+    Output('cfg-populate', 'data'),
     Input('url', 'pathname')
 )
 def load_default_toml_cfg(_):
@@ -484,7 +492,7 @@ def load_default_toml_cfg(_):
     # Load the default TOML configuration file into a string variable
     with open(default_toml_path, 'r') as f:
         default_toml = f.read()
-    return default_toml
+    return default_toml, default_toml
 
 
 CAM_FIELDS = ['name', 'res-x', 'res-y', 'encoding',
@@ -495,8 +503,7 @@ CAM_FIELDS = ['name', 'res-x', 'res-y', 'encoding',
 @callback(
     Output('path-class', 'value'),
     *[Output(f'path-kwarg-{f}', 'value') for f in PATH_ORDER],
-    *[Output(f'path-kwarg-{f}-row', 'style') for f in PATH_ORDER],
-    Input('scan-cfg-toml', 'value'),
+    Input('cfg-populate', 'data'),
 )
 def populate_path(toml_text):
     """Fill the path form from the hidden config (single source of truth)."""
@@ -511,16 +518,23 @@ def populate_path(toml_text):
     else:
         for f in PATH_FIELDS.get(cls, []):
             vals[f] = kwargs.get(f)
-    show = set(PATH_FIELDS.get(cls, []))
     out = [cls]
     for f in PATH_ORDER:
         v = vals[f]
         if v is None:
             v = PATH_SPEC.get(f, (1, None))[1]
         out.append("" if v is None else str(v))
-    for f in PATH_ORDER:
-        out.append({"display": "block"} if f in show else {"display": "none"})
     return out
+
+
+@callback(
+    *[Output(f'path-kwarg-{f}-row', 'style') for f in PATH_ORDER],
+    Input('path-class', 'value'),
+)
+def toggle_path_rows(cls):
+    """Show only the kwargs inputs used by the selected path class."""
+    show = set(PATH_FIELDS.get(cls, []))
+    return [{"display": "block"} if f in show else {"display": "none"} for f in PATH_ORDER]
 
 
 @callback(
@@ -545,7 +559,7 @@ def rebuild_path(cls, center_x, center_y, radius, n_points, n_circles, x_0, y_0,
     Output('cam-active', 'data'),
     *[Output(f'camera-card-{i}', 'style') for i in range(MAX_CAMERAS)],
     *[Output(f'cam-{i}-{f}', 'value') for i in range(MAX_CAMERAS) for f in CAM_FIELDS],
-    Input('scan-cfg-toml', 'value'),
+    Input('cfg-populate', 'data'),
 )
 def populate_cameras(toml_text):
     """Fill the camera cards and active-slot list from the hidden config."""
@@ -641,7 +655,7 @@ def rebuild_cameras(*args):
 # --- Biological metadata configuration ----------------------------------------
 @callback(
     *[Output(_bio_field_id(s['path']), 'value') for s in FIELD_SPECS],
-    Input('scan-cfg-toml', 'value'),
+    Input('cfg-populate', 'data'),
 )
 def populate_bio(toml_text):
     """Fill the MIAPPE biological form from ``Metadata.object``."""
@@ -702,8 +716,11 @@ def update_interval(n_intervals, *current):
         else "No camera connected"
     names = []
     for i in range(MAX_CAMERAS):
-        # Only fill empty / auto-generated slots, keep manual names.
-        if i < len(available_cameras) and (not current[i] or AUTO_NAME.match(current[i])):
+        # Only fill truly empty slots. Never overwrite a present name:
+        # every default rig name matches AUTO_NAME, so positional
+        # overwrite renames real sections and rebuild_cameras then
+        # deletes the orphaned config.
+        if i < len(available_cameras) and not current[i]:
             names.append(available_cameras[i])
         else:
             names.append(no_update)
@@ -758,6 +775,7 @@ def handle_config_upload(contents: str | None):
 
 @callback(
     Output('scan-cfg-toml', 'value', allow_duplicate=True),
+    Output('cfg-populate', 'data', allow_duplicate=True),
     Output('override-modal', 'is_open', allow_duplicate=True),
     Output('uploaded-cfg', 'data', allow_duplicate=True),
     Input('override-confirm', 'n_clicks'),
@@ -768,8 +786,8 @@ def handle_config_upload(contents: str | None):
 def apply_config_override(confirm_clicks, abort_clicks, uploaded: str | None):
     """On 'Override', replace the config with the uploaded TOML; on 'Abort', discard it."""
     if ctx.triggered_id == 'override-confirm' and uploaded:
-        return uploaded, False, None
-    return no_update, False, None
+        return uploaded, uploaded, False, None
+    return no_update, no_update, False, None
 
 
 @callback(
@@ -923,11 +941,12 @@ def check_dataset_name_uniqueness(dataset_name: str, existing_datasets: list[str
 
 
 @callback(
-    Output('start-scan-button', 'disabled'),
-    Output('config-scan-button', 'disabled'),
+    Output('start-scan-button', 'disabled', allow_duplicate=True),
+    Output('config-scan-button', 'disabled', allow_duplicate=True),
     Input('dataset-input-name', 'valid'),
     Input('main-interval', 'n_intervals'),
-    State('start-scan-button', 'disabled')
+    State('start-scan-button', 'disabled'),
+    prevent_initial_call=True,
 )
 def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> tuple[bool, bool]:
     """Disables the 'Start scanning' button based on dataset validation status and if scanner is connected.
@@ -967,6 +986,7 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
     Output('refresh-token', 'data', allow_duplicate=True),
     Output('scan-api-token', 'data'),
     Output('scan-job-id', 'data'),
+    Output('scan-armed', 'data', allow_duplicate=True),
     Output('scan-response', 'children', allow_duplicate=True),
     Output('scan-output', 'children', allow_duplicate=True),
     Input('start-scan-button', 'n_clicks'),
@@ -1016,28 +1036,29 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
     Returns
     -------
     tuple
-        ``(access_token, refresh_token, api_token, scan_job_id, response_msg, output_msg)``.
+        ``(access_token, refresh_token, api_token, scan_job_id, armed, response_msg, output_msg)``.
         On success the first two are the fresh token pair, the API token is the
-        scoped token for the scan and the job id is incremented to trigger the
-        background scan, followed by a success status message. On failure the
-        tokens are unmodified, the API token ``None``, the job id unchanged and
-        the status messages describe what went wrong.
+        scoped token for the scan, the job id is incremented and ``armed`` is
+        set to its string form to trigger the background scan, followed by a
+        success status message. On failure the tokens are unmodified, the API
+        token ``None``, the job id unchanged, ``armed`` cleared and the status
+        messages describe what went wrong.
     """
     if not username:
-        return (access_token, refresh_token, None, scan_job_id,
+        return (access_token, refresh_token, None, scan_job_id, "",
                 "Not authenticated with plantdb.",
                 "Please log in before starting a scan.")
 
     tokens = ensure_valid_token(url, port, prefix, ssl,
                                 access_token, refresh_token, username)
     if tokens[0] is None or tokens[1] is None:
-        return (access_token, refresh_token, None, scan_job_id,
+        return (access_token, refresh_token, None, scan_job_id, "",
                 "Failed to authenticate with plantdb.",
                 "The session tokens are invalid or expired. Please log out and log in again.")
     access_token, refresh_token = tokens
 
     if not dataset_name:
-        return (access_token, refresh_token, None, scan_job_id,
+        return (access_token, refresh_token, None, scan_job_id, "",
                 "No dataset name provided.",
                 "Please enter and validate a dataset name before starting a scan.")
 
@@ -1055,18 +1076,21 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
     except requests.exceptions.RequestException:
         api_token = None
     if not api_token:
-        return (access_token, refresh_token, None, scan_job_id,
+        return (access_token, refresh_token, None, scan_job_id, "",
                 "Failed to create the API token for plantdb.",
                 "Unable to create the scoped API token used by the scanner.")
 
-    return (access_token, refresh_token, api_token, (scan_job_id or 0) + 1,
+    job_id = (scan_job_id or 0) + 1
+    return (access_token, refresh_token, api_token, job_id, str(job_id),
             "Scan ready to start", "API token created, starting scanner...")
 
 
 @callback(
     Output('scan-response', 'children'),
     Output('scan-output', 'children', allow_duplicate=True),
+    Output('scan-armed', 'data', allow_duplicate=True),
     Input('scan-job-id', 'data'),
+    State('scan-armed', 'data'),
     State('plantdb-host', 'data'),
     State('plantdb-port', 'data'),
     State('plantdb-prefix', 'data'),
@@ -1079,9 +1103,9 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
     prevent_initial_call=True,
     running=[
         (Output('start-scan-button', 'disabled', allow_duplicate=True), True, False),
-        (Output('config-scan-button', 'disabled'), True, False),
-        (Output('scan-response', 'children'), 'Scan in progress', ""),
-        (Output('scan-output', 'children'), 'Scan in progress', ""),
+        (Output('config-scan-button', 'disabled', allow_duplicate=True), True, False),
+        (Output('scan-response', 'children', allow_duplicate=True), 'Scan in progress', ""),
+        (Output('scan-output', 'children', allow_duplicate=True), 'Scan in progress', ""),
         (Output('cancel-scan-button', 'disabled', allow_duplicate=True), False, True),
     ],
     progress=[
@@ -1090,13 +1114,20 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
         Output('scan-progress', 'label'),
     ]
 )
-def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, ssl: bool,
+def run_scan(set_progress, scan_job_id: int, armed: str, url: str, port: str, prefix: str, ssl: bool,
              api_token: str, cfg: str, dataset_name: str):
     """Execute a plant scan with the specified configuration.
 
     This runs in a separate background process and therefore never touches the
     user's access/refresh tokens: it only uses the scoped API token prepared by
     :func:`prepare_scan`.
+
+    The ``armed`` token must match the triggering job id, otherwise the call
+    is a stale session-store replay (page load, F5) and is refused without
+    touching hardware. ``armed`` lives in a memory-only store so F5 clears
+    it while the session-persisted job id survives — that asymmetry is the
+    whole guard. A refused trigger leaves ``armed`` untouched (a superseded
+    job must not disarm its successor); any real attempt disarms on return.
 
     Parameters
     ----------
@@ -1121,13 +1152,19 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
 
     Returns
     -------
-    Tuple[str, str]
-        A tuple containing two status messages:
-        - First message: Short status for the alert component
-        - Second message: Detailed status for the output component
+    Tuple[str, str, str]
+        ``(response, output, armed)``: short status, detailed status, and the
+        disarmed token (``""`` after any real attempt, ``no_update`` on a
+        refused stale trigger).
     """
+    if str(scan_job_id or 0) != (armed or ""):
+        return ("Scan not started.",
+                "Stale trigger ignored — press Start Scanning to arm a scan.",
+                no_update)
+
     if not api_token:
-        return "Failed to authenticate with plantdb.", "No API token available, please log in and retry."
+        return ("Failed to authenticate with plantdb.",
+                "No API token available, please log in and retry.", "")
 
     # Background callbacks run in a new process. We must re-init the ZMQ context and Controller proxy.
     ctx = zmq.Context()
@@ -1136,17 +1173,18 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
 
     res: None | NoResult = controller.set_db_url(plantdb_url(url, port=port, prefix=prefix, ssl=ssl))
     if isinstance(res, NoResult):
-        return f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}", res.traceback
+        return (f"Failed to connect to {'https' if ssl else 'http'}://{url}:{port}{prefix}",
+                res.traceback, "")
 
     res: None | NoResult = controller.set_api_token(api_token)
     if isinstance(res, NoResult):
-        return "Failed to connect to set access token.", res.traceback
+        return "Failed to connect to set access token.", res.traceback, ""
     res: None | NoResult = controller.set_dataset_name(dataset_name)
     if isinstance(res, NoResult):
-        return f"Failed to set dataset {dataset_name}", res.traceback
+        return f"Failed to set dataset {dataset_name}", res.traceback, ""
     res: None | NoResult = controller.set_config(tomllib.loads(cfg))
     if isinstance(res, NoResult):
-        return "Failed to configure scann", res.traceback
+        return "Failed to configure scann", res.traceback, ""
 
     m_prog = controller.max_progress
 
@@ -1157,9 +1195,9 @@ def run_scan(set_progress, scan_job_id: int, url: str, port: str, prefix: str, s
 
     res: None | NoResult = controller.run_scan()
     if isinstance(res, NoResult):
-        return "Scan Failed", res.traceback
+        return "Scan Failed", res.traceback, ""
 
-    return "Scan finished", "Scan complete"
+    return "Scan finished", "Scan complete", ""
 
 
 @callback(
