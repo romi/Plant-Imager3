@@ -150,6 +150,7 @@ class DummyCamera(Camera, RPCServer):
         self._rotation = 0
         self._encoding = "jpeg"
         self._config = {}
+        self.config = dict(self.DEFAULT_CONTROLS)
         self._image_provider = image_provider()
 
     @RPCServer.register_method_buffer(timeout=10000)
@@ -232,7 +233,9 @@ class DummyCamera(Camera, RPCServer):
     def config(self, value: dict) -> None:
         """Set camera controls/parameters from Picamera2 Appendix C.
 
-        Updates the stored configuration and emits the config-changed signal.
+        Replace-wholesale, mirroring :class:`RPCCamera`: the given dict
+        becomes the full control set. Range validation lives hardware-side;
+        the dummy accepts any keys.
 
         Parameters
         ----------
@@ -242,10 +245,32 @@ class DummyCamera(Camera, RPCServer):
         Notes
         -----
         Control names and values follow the Picamera2 Manual Appendix C.
+        Mirrors the RPCCamera AWB precedence: ``ColourGains`` is dropped
+        when ``AwbEnable`` is true.
         """
-        self._config.update(value)
+        value = dict(value)
+        if value.get("AwbEnable"):
+            value.pop("ColourGains", None)
+        self._config = value
         # Apply controls to the running camera
         self.configChanged.emit(self._config)
+
+    @RPCServer.register_method_json
+    def get_camera_controls(self) -> dict:
+        """Advertised control schema; the dummy has no libcamera ranges."""
+        return {}
+
+    @RPCServer.register_method_json
+    def set_default_controls(self, value: dict) -> dict:
+        """Validate, apply and persist new camera defaults (in-memory)."""
+        self.config = dict(value)
+        return dict(self._config)
+
+    @RPCServer.register_method_json
+    def reset_controls(self, factory: bool = False) -> dict:
+        """Reset live controls to the factory defaults (no file on dummy)."""
+        self.config = dict(self.DEFAULT_CONTROLS)
+        return dict(self._config)
 
     @RPCProperty(notify=Camera.modeChanged)
     def mode(self) -> Literal[CameraMode.VIDEO, CameraMode.STILL]:
