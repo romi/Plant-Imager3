@@ -36,13 +36,25 @@ def main() -> int:
     parser.add_argument("--python-bin", default=None,
                         help="venv bin dir (default: /home/<user>/miniconda3/envs/plant-imager/bin)")
     parser.add_argument("--plantdb-host",
-                        default="mellitus.biologie.ens-lyon.fr")
-    parser.add_argument("--plantdb-port", type=int, default=80)
-    parser.add_argument("--plantdb-prefix", default="/plantdb")
-    parser.add_argument("--plantdb-ssl", default="True")
-    parser.add_argument("--url-prefix", default="/webui")
-    parser.add_argument("--skip-mosquitto", action="store_true")
-    parser.add_argument("--skip-webui", action="store_true")
+                        default="mellitus.biologie.ens-lyon.fr",
+                        help="host address of the PlantDB REST API "
+                             "(default: mellitus.biologie.ens-lyon.fr)")
+    parser.add_argument("--plantdb-port", type=int, default=80,
+                        help="port of the PlantDB REST API (default: 80)")
+    parser.add_argument("--plantdb-prefix", default="/plantdb",
+                        help="URL prefix of the PlantDB REST API "
+                             "(default: /plantdb)")
+    parser.add_argument("--plantdb-ssl", default="True",
+                        help="whether the PlantDB REST API uses SSL "
+                             "(default: True)")
+    parser.add_argument("--url-prefix", default="/webui",
+                        help="URL prefix for the WebUI app, should match "
+                             "the NGINX location if behind a proxy "
+                             "(default: /webui)")
+    parser.add_argument("--skip-mosquitto", action="store_true",
+                        help="skip the mosquitto install and config")
+    parser.add_argument("--skip-webui", action="store_true",
+                        help="skip the webui install")
     parser.add_argument("--start", action="store_true",
                         help="start the units after enabling them")
     parser.add_argument("--dry-run", action="store_true",
