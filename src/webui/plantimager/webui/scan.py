@@ -591,6 +591,7 @@ def populate_cameras(toml_text):
 @callback(
     Output('scan-cfg-toml', 'value', allow_duplicate=True),
     Output('cam-active', 'data', allow_duplicate=True),
+    Output('cfg-populate', 'data', allow_duplicate=True),
     Input('add-cam-btn', 'n_clicks'),
     *[Input(f'cam-{i}-remove', 'n_clicks') for i in range(MAX_CAMERAS)],
     *[Input(f'cam-{i}-{f}', 'value') for i in range(MAX_CAMERAS) for f in CAM_FIELDS],
@@ -649,7 +650,13 @@ def rebuild_cameras(*args):
     for k in [k for k in cfg if k not in ("ScanPath", "Metadata")]:
         cfg.pop(k)
     cfg.update(cameras)
-    return _dump(cfg), active
+    dumped = _dump(cfg)
+    # Add/remove buttons change the set of visible camera cards, which the
+    # form-field values alone cannot express, so re-populate the cards from the
+    # rebuilt config. Plain field edits must NOT re-populate, or they overwrite
+    # what the user is mid-typing (the loop cfg-populate was introduced to break).
+    repopulate = dumped if any(t.endswith(".n_clicks") for t in triggered) else no_update
+    return dumped, active, repopulate
 
 
 # --- Biological metadata configuration ----------------------------------------

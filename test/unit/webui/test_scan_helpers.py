@@ -256,6 +256,43 @@ def _rebuild(toml_text, active, slots, trigger="cam-0-name.value"):
         return _scan.rebuild_cameras(*args)
 
 
+class TestCameraRepopulate(unittest.TestCase):
+    """Add/remove buttons must re-populate the camera cards; field edits must not.
+
+    populate_cameras only fires from the cfg-populate store, so the buttons
+    (which change the visible card set that the field values alone cannot
+    express) must emit it, while plain field edits must keep emitting
+    no_update so they never overwrite what the user is mid-typing.
+    """
+
+    def test_add_button_emits_cfg_populate(self):
+        import tomllib
+        toml_text = _cam_toml(("picamera", 0))
+        _, slots = _slot_vals(toml_text)
+        new_toml, active, repopulate = _rebuild(
+            toml_text, [0], slots, trigger="add-cam-btn.n_clicks")
+        self.assertEqual(repopulate, new_toml)
+        self.assertIn("picamera1", tomllib.loads(new_toml))
+
+    def test_remove_button_emits_cfg_populate(self):
+        toml_text = _cam_toml(("picamera", 0), ("picamera1", 1))
+        _, slots = _slot_vals(toml_text)
+        new_toml, active, repopulate = _rebuild(
+            toml_text, [0, 1], slots, trigger="cam-1-remove.n_clicks")
+        self.assertEqual(repopulate, new_toml)
+        self.assertNotIn(1, active)
+
+    def test_field_edit_does_not_emit_cfg_populate(self):
+        import tomllib
+        from dash import no_update
+        toml_text = _cam_toml(("picamera", 0))
+        _, slots = _slot_vals(toml_text)
+        new_toml, active, repopulate = _rebuild(
+            toml_text, [0], slots, trigger="cam-0-name.value")
+        self.assertIs(repopulate, no_update)
+        self.assertEqual(tomllib.loads(new_toml)["picamera"]["res_x"], 2000)
+
+
 class TestCameraCardNames(unittest.TestCase):
     """The interval auto-fill must never rename real sections.
 
@@ -279,7 +316,7 @@ class TestCameraCardNames(unittest.TestCase):
         for s, name in zip(slots, filled):
             s["name"] = name
         self.assertEqual(slots[0]["name"], "picamera2")
-        new_toml, _ = _rebuild(toml_text, [0], slots)
+        new_toml, _, _ = _rebuild(toml_text, [0], slots)
         import tomllib
         cfg = tomllib.loads(new_toml)
         self.assertIn("picamera2", cfg)
@@ -291,7 +328,7 @@ class TestCameraCardNames(unittest.TestCase):
         filled = _interval_names(slots, ["picamera"])
         for s, name in zip(slots, filled):
             s["name"] = name
-        new_toml, _ = _rebuild(toml_text, [0, 1], slots)
+        new_toml, _, _ = _rebuild(toml_text, [0, 1], slots)
         import tomllib
         cfg = tomllib.loads(new_toml)
         self.assertEqual(cfg["picamera"]["offset"]["z"], 0)
@@ -330,7 +367,7 @@ class TestEncodingRoundTrip(unittest.TestCase):
         slots[0]["encoding"] = "png"
 
         # 3. rebuild_cameras writes the toml with encoding = png
-        new_toml, _ = _rebuild(toml_text, [0], slots, trigger="cam-0-encoding.value")
+        new_toml, _, _ = _rebuild(toml_text, [0], slots, trigger="cam-0-encoding.value")
         cfg = tomllib.loads(new_toml)
         self.assertEqual(cfg["picamera"]["encoding"], "png")
 
