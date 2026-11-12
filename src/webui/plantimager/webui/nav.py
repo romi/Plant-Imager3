@@ -12,12 +12,7 @@ Key Features
 - External links to documentation and tutorials
 - Consistent styling with tooltips for user guidance
 """
-import os
-
 import dash_bootstrap_components as dbc
-from dash import Input
-from dash import Output
-from dash import callback
 from dash import get_asset_url
 from dash import get_relative_path
 from dash import html
@@ -43,24 +38,6 @@ tutorial_tooltip: dbc.Tooltip = dbc.Tooltip(
     placement="bottom",
 )
 
-#: Link component pointing to the home (page
-scan_link: dbc.NavLink = dbc.NavLink(
-    children=html.I(className="bi bi-camera fs-3"),
-    id="scan-link",
-    href="",  # Use get_relative_path to handle prefixes,
-    n_clicks=0,
-    style={'color': "#f3f3f3"},
-)
-
-#: Link component pointing to the camera page
-camera_link: dbc.NavLink = dbc.NavLink(
-    children=html.I(className="bi bi-camera-fill fs-3"),
-    id="camera-link",
-    href="",  # Use get_relative_path to handle prefixes,
-    n_clicks=0,
-    style={'color': "#f3f3f3"},
-)
-
 #: Tooltip component providing help text for the camera link
 camera_tooltip: dbc.Tooltip = dbc.Tooltip(
     children="Camera live view and controls",
@@ -74,15 +51,6 @@ scan_tooltip: dbc.Tooltip = dbc.Tooltip(
     placement="bottom",
 )
 
-#: Link component providing a tutorial link to the Plant Imager documentation page, with a tooltip for user guidance
-dataset_table_link: dbc.NavLink = dbc.NavLink(
-    children=html.I(className="bi bi-table fs-3"),
-    id="dataset-table-link",
-    href="",  # Use get_relative_path to handle prefixes,
-    n_clicks=0,
-    style={'color': "#f3f3f3"},
-)
-
 #: Tooltip component providing help text for the tutorial link
 dataset_table_tooltip: dbc.Tooltip = dbc.Tooltip(
     children="Dataset table page",
@@ -90,85 +58,71 @@ dataset_table_tooltip: dbc.Tooltip = dbc.Tooltip(
     placement="bottom",
 )
 
-# Callback to update the ROMI project logo (used in the navigation bar) src once the app is running
-@callback(
-    Output('navbar-logo', 'src'),
-    Input('url', 'pathname')
-)
-def update_logo_url(_):
-    return get_asset_url("logo.svg")
+def build_navbar_layout() -> dbc.Navbar:
+    """Build the main navigation bar with resolved hrefs and asset URLs.
 
-# Then update the href through a callback when the app starts
-@callback(
-    Output('scan-link', 'href'),
-    Input('url', 'pathname')
-)
-def update_scan_link_href(_):
-    return get_relative_path("/")
+    Hrefs and the logo source are resolved at layout-build time (after the
+    Dash app exists), so the initial layout always carries correct URLs
+    instead of relying on callbacks that can miss a batch.
 
+    Returns
+    -------
+    dash_bootstrap_components.Navbar
+        The navigation bar layout with resolved links.
+    """
+    scan_link = dbc.NavLink(
+        children=html.I(className="bi bi-camera fs-3"),
+        id="scan-link",
+        href=get_relative_path("/"),
+        n_clicks=0,
+        style={'color': "#f3f3f3"},
+    )
+    camera_link = dbc.NavLink(
+        children=html.I(className="bi bi-camera-fill fs-3"),
+        id="camera-link",
+        href=get_relative_path("/cameras"),
+        n_clicks=0,
+        style={'color': "#f3f3f3"},
+    )
+    dataset_table_link = dbc.NavLink(
+        children=html.I(className="bi bi-table fs-3"),
+        id="dataset-table-link",
+        href=get_relative_path("/table"),
+        n_clicks=0,
+        style={'color': "#f3f3f3"},
+    )
 
-# Then update the href of the camera page through a callback when the app starts
-@callback(
-    Output('camera-link', 'href'),
-    Input('url', 'pathname')
-)
-def update_camera_link_href(_):
-    return get_relative_path("/cameras")
+    nav_items = [
+        dbc.NavItem(children=[login_avatar_button, login_avatar_button_tooltip]),
+        dbc.NavItem(children=[tutorial_link, tutorial_tooltip]),
+        dbc.NavItem(children=[scan_link, scan_tooltip]),
+        dbc.NavItem(children=[camera_link, camera_tooltip]),
+        dbc.NavItem(children=[dataset_table_link, dataset_table_tooltip]),
+        dbc.NavItem(children=[cfg_button, cfg_tooltip]),
+    ]
 
-
-# Then update the href of the dataset table page through a callback when the app starts
-@callback(
-    Output('dataset-table-link', 'href'),
-    Input('url', 'pathname')
-)
-def update_table_link_href(_):
-    return get_relative_path("/table")
-
-
-#: Define main navigation items including scan, database, and documentation links
-nav_items: list = [
-    dbc.NavItem(children=[login_avatar_button, login_avatar_button_tooltip]),
-    dbc.NavItem(children=[tutorial_link, tutorial_tooltip]),
-    dbc.NavItem(children=[scan_link, scan_tooltip]),
-    dbc.NavItem(children=[camera_link, camera_tooltip]),
-    dbc.NavItem(children=[dataset_table_link, dataset_table_tooltip]),
-    dbc.NavItem(children=[cfg_button, cfg_tooltip]),
-]
-
-#: Construct a responsive navigation bar with ROMI logo and branding
-navbar_layout = dbc.Navbar(
-    dbc.Container([
-        # Logo and brand section
-        html.A(
+    return dbc.Navbar(
+        dbc.Container([
+            # Logo and brand section
             dbc.Row(children=[
-                dbc.Col(html.Img(id="navbar-logo", height="35px")),
+                dbc.Col(html.A(
+                    html.Img(id="navbar-logo", src=get_asset_url("logo.svg"), height="35px"),
+                    href="https://romi-project.eu/",
+                    style={"textDecoration": "none"},
+                )),
                 dbc.Col(
                     dbc.NavbarBrand(
                         id="navbar-brand",
                         children="Plant Imager",
-                        href="/",
+                        href=get_relative_path("/"),
                         style={'color': "#f3f3f3", 'font-size': '30px'}
                     )
                 ),
             ], align="center"),
-            href="https://romi-project.eu/",
-            style={"textDecoration": "none"},
-        ),
-        dbc.Nav(
-            children=nav_items,
-            navbar=True, className="align-items-center gap-3"
-        ),
-    ], className="align-items-center"),
-    color="#00a960", class_name="mb-3",
-)
-
-
-# Callback to update NavbarBrand href
-@callback(
-    Output('navbar-brand', 'href'),
-    Input('plantdb-prefix', 'data')
-)
-def update_navbar_brand_href(prefix):
-    if prefix:
-        return prefix
-    return "/"
+            dbc.Nav(
+                children=nav_items,
+                navbar=True, className="align-items-center gap-3"
+            ),
+        ], className="align-items-center"),
+        color="#00a960", class_name="mb-3",
+    )

@@ -48,7 +48,7 @@ from plantimager.webui.carousel import caroussel_modal
 from plantimager.webui.config import plantdb_cfg_modal
 from plantimager.webui.controller_proxy import RPCController
 from plantimager.webui.login import login_modal
-from plantimager.webui.nav import navbar_layout
+from plantimager.webui.nav import build_navbar_layout
 from plantimager.webui.new_user import new_user_modal
 
 WEBUI_PORT = "8080"
@@ -137,11 +137,8 @@ def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, pla
     - Configuration and authentication modals
     - Main content area for scan management
     """
-    # Ensure `url_prefix` ends with a trailing slash (as required by Dash)
-    if url_prefix and not url_prefix.endswith('/'):
-        url_prefix += '/'
-    else:
-        url_prefix = None
+    # Normalize `url_prefix` to end with a trailing slash (as required by Dash)
+    url_prefix = url_prefix.rstrip('/') + '/' if url_prefix else None
 
     app = Dash(
         name="plantimager.webui",
@@ -184,7 +181,7 @@ def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, pla
         dcc.Store(id='view-dataset', data=None),  # name of the dataset to visualize (plotly carousel)
         # Navigation and modal components
         html.Div(children=[
-            navbar_layout,
+            build_navbar_layout(),
             plantdb_cfg_modal,
             login_modal,
             new_user_modal,
