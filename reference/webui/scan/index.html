@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/ROMI_ICON_green.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -3713,20 +3713,20 @@ and executing plant scans in the Plant Imager system.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">839</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">840</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">841</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">842</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">843</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">844</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">845</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">846</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">846</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">847</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">848</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">849</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">850</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">851</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">852</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">all_valid_characters</span>(dataset_name: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">852</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">853</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">854</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">855</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">856</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">857</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">858</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">859</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">all_valid_characters</span>(dataset_name: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Validates if all characters in a given dataset name are permissible.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -3764,21 +3764,21 @@ and executing plant scans in the Plant Imager system.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">776</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">777</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">778</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">779</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">780</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">781</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">782</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">783</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">783</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">784</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">785</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">786</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">787</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">788</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">789</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">790</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">790</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">791</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">792</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">793</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">794</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">795</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">796</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">797</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'scan-cfg-toml'</span>, <span style="color: #BA2121">'value'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">'cfg-populate'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">'override-modal'</span>, <span style="color: #BA2121">'is_open'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
@@ -3817,15 +3817,15 @@ and executing plant scans in the Plant Imager system.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1203</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1204</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1205</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1206</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1207</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1208</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1209</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1210</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1211</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1210</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1211</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1212</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1213</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1214</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1215</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1216</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1217</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1218</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'scan-response'</span>, <span style="color: #BA2121">'children'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">'cancel-scan-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
@@ -3931,14 +3931,7 @@ Otherwise, it will hide the message.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">914</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">915</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">916</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">917</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">918</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">919</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">920</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">921</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">921</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">922</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">923</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">924</span>
@@ -3957,7 +3950,14 @@ Otherwise, it will hide the message.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">937</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">938</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">939</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">940</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">940</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">941</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">942</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">943</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">944</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">945</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">946</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">947</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'dataset-exists-message'</span>, <span style="color: #BA2121">'style'</span>),
     Input(<span style="color: #BA2121">'dataset-input-name'</span>, <span style="color: #BA2121">'value'</span>),
     State(<span style="color: #BA2121">'dataset-list'</span>, <span style="color: #BA2121">'data'</span>)
@@ -4022,7 +4022,7 @@ Otherwise, it will hide the message.</p>
                 <code>_</code>
             </td>
             <td>
-                  <code><span title="Any">Any</span></code>
+                  <code>Any</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4144,7 +4144,7 @@ Otherwise, it will hide the message.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="Tuple">Tuple</span>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a>]</code>
+                  <code>Tuple[<a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4183,14 +4183,7 @@ Otherwise, it will hide the message.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1214</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1215</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1216</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1217</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1218</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1219</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1220</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1221</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1221</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1222</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1223</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1224</span>
@@ -4246,7 +4239,14 @@ Otherwise, it will hide the message.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1274</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1275</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1276</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1277</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1277</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1278</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1279</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1280</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1281</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1282</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1283</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1284</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'scan-response'</span>, <span style="color: #BA2121">'children'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">'scan-output'</span>, <span style="color: #BA2121">'children'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">'config-scan-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
@@ -4410,14 +4410,7 @@ if it should be enabled.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">943</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">944</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">945</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">946</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">947</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">948</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">949</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">950</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">950</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">951</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">952</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">953</span>
@@ -4448,7 +4441,14 @@ if it should be enabled.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">978</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">979</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">980</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">981</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">981</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">982</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">983</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">984</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">985</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">986</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">987</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">988</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'start-scan-button'</span>, <span style="color: #BA2121">'disabled'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">'config-scan-button'</span>, <span style="color: #BA2121">'disabled'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">'dataset-input-name'</span>, <span style="color: #BA2121">'valid'</span>),
@@ -4511,14 +4511,7 @@ if it should be enabled.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">751</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">752</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">753</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">754</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">755</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">756</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">757</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">758</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">758</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">759</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">760</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">761</span>
@@ -4533,7 +4526,14 @@ if it should be enabled.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">770</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">771</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">772</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">773</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">773</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">774</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">775</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">776</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">777</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">778</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">779</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">780</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'uploaded-cfg'</span>, <span style="color: #BA2121">'data'</span>),
     Output(<span style="color: #BA2121">'cfg-upload-alert'</span>, <span style="color: #BA2121">'is_open'</span>),
     Output(<span style="color: #BA2121">'cfg-upload-alert'</span>, <span style="color: #BA2121">'children'</span>),
@@ -4651,14 +4651,7 @@ existing datasets, <code>False</code> otherwise.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">855</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">856</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">857</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">858</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">859</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">860</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">861</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">862</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">862</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">863</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">864</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">865</span>
@@ -4670,7 +4663,14 @@ existing datasets, <code>False</code> otherwise.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">871</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">872</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">873</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">874</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_valid_dataset_name</span>(dataset_name: <span style="color: #008000">str</span>, existing_datasets: <span style="color: #008000">list</span>[<span style="color: #008000">str</span>]) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">874</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">875</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">876</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">877</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">878</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">879</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">880</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">881</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_valid_dataset_name</span>(dataset_name: <span style="color: #008000">str</span>, existing_datasets: <span style="color: #008000">list</span>[<span style="color: #008000">str</span>]) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Check if a dataset name is valid and does not already exist.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -4714,16 +4714,16 @@ existing datasets, <code>False</code> otherwise.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">656</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">657</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">658</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">659</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">660</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">661</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">662</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">663</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">663</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">664</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">665</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">665</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">666</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">667</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">668</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">669</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">670</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">671</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">672</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     <span style="color: #666">*</span>[Output(_bio_field_id(s[<span style="color: #BA2121">'path'</span>]), <span style="color: #BA2121">'value'</span>) <span style="color: #008000; font-weight: bold">for</span> s <span style="color: #A2F; font-weight: bold">in</span> FIELD_SPECS],
     Input(<span style="color: #BA2121">'cfg-populate'</span>, <span style="color: #BA2121">'data'</span>),
 )
@@ -4933,7 +4933,7 @@ background scan process never receives the user credentials.</p>
                 <code>_</code>
             </td>
             <td>
-                  <code><span title="Any">Any</span></code>
+                  <code>Any</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5123,14 +5123,7 @@ messages describe what went wrong.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 984</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 985</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 986</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 987</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 988</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 989</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 990</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 991</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 991</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 992</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 993</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 994</span>
@@ -5224,7 +5217,14 @@ messages describe what went wrong.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1082</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1083</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1084</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1085</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1085</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1086</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1087</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1088</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1089</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1090</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1091</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1092</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'access-token'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">'refresh-token'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">'scan-api-token'</span>, <span style="color: #BA2121">'data'</span>),
@@ -5350,21 +5350,21 @@ messages describe what went wrong.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">668</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">669</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">670</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">671</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">672</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">673</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">674</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">675</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">675</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">676</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">677</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">678</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">679</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">680</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">681</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">682</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">682</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">683</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">684</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">685</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">686</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">687</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">688</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">689</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'scan-cfg-toml'</span>, <span style="color: #BA2121">'value'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     <span style="color: #666">*</span>[Input(_bio_field_id(s[<span style="color: #BA2121">'path'</span>]), <span style="color: #BA2121">'value'</span>) <span style="color: #008000; font-weight: bold">for</span> s <span style="color: #A2F; font-weight: bold">in</span> FIELD_SPECS],
     State(<span style="color: #BA2121">'scan-cfg-toml'</span>, <span style="color: #BA2121">'value'</span>),
@@ -5464,9 +5464,17 @@ messages describe what went wrong.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">649</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">650</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">651</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">652</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">652</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">653</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">654</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">655</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">656</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">657</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">658</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">659</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'scan-cfg-toml'</span>, <span style="color: #BA2121">'value'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">'cam-active'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
+    Output(<span style="color: #BA2121">'cfg-populate'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">'add-cam-btn'</span>, <span style="color: #BA2121">'n_clicks'</span>),
     <span style="color: #666">*</span>[Input(<span style="color: #BA2121">f'cam-</span><span style="color: #A45A77; font-weight: bold">{</span>i<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">-remove'</span>, <span style="color: #BA2121">'n_clicks'</span>) <span style="color: #008000; font-weight: bold">for</span> i <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">range</span>(MAX_CAMERAS)],
     <span style="color: #666">*</span>[Input(<span style="color: #BA2121">f'cam-</span><span style="color: #A45A77; font-weight: bold">{</span>i<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">-</span><span style="color: #A45A77; font-weight: bold">{</span>f<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">'</span>, <span style="color: #BA2121">'value'</span>) <span style="color: #008000; font-weight: bold">for</span> i <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">range</span>(MAX_CAMERAS) <span style="color: #008000; font-weight: bold">for</span> f <span style="color: #A2F; font-weight: bold">in</span> CAM_FIELDS],
@@ -5525,7 +5533,13 @@ messages describe what went wrong.</p>
     <span style="color: #008000; font-weight: bold">for</span> k <span style="color: #A2F; font-weight: bold">in</span> [k <span style="color: #008000; font-weight: bold">for</span> k <span style="color: #A2F; font-weight: bold">in</span> cfg <span style="color: #008000; font-weight: bold">if</span> k <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> (<span style="color: #BA2121">"ScanPath"</span>, <span style="color: #BA2121">"Metadata"</span>)]:
         cfg<span style="color: #666">.</span>pop(k)
     cfg<span style="color: #666">.</span>update(cameras)
-    <span style="color: #008000; font-weight: bold">return</span> _dump(cfg), active
+    dumped <span style="color: #666">=</span> _dump(cfg)
+    <span style="color: #3D7B7B; font-style: italic"># Add/remove buttons change the set of visible camera cards, which the</span>
+    <span style="color: #3D7B7B; font-style: italic"># form-field values alone cannot express, so re-populate the cards from the</span>
+    <span style="color: #3D7B7B; font-style: italic"># rebuilt config. Plain field edits must NOT re-populate, or they overwrite</span>
+    <span style="color: #3D7B7B; font-style: italic"># what the user is mid-typing (the loop cfg-populate was introduced to break).</span>
+    repopulate <span style="color: #666">=</span> dumped <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">any</span>(t<span style="color: #666">.</span>endswith(<span style="color: #BA2121">".n_clicks"</span>) <span style="color: #008000; font-weight: bold">for</span> t <span style="color: #A2F; font-weight: bold">in</span> triggered) <span style="color: #008000; font-weight: bold">else</span> no_update
+    <span style="color: #008000; font-weight: bold">return</span> dumped, active, repopulate
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -5626,7 +5640,7 @@ job must not disarm its successor); any real attempt disarms on return.</p>
                 <code>set_progress</code>
             </td>
             <td>
-                  <code><span title="Callable">Callable</span></code>
+                  <code>Callable</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5780,7 +5794,7 @@ job must not disarm its successor); any real attempt disarms on return.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="Tuple">Tuple</span>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a>]</code>
+                  <code>Tuple[<a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5796,14 +5810,7 @@ refused stale trigger).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1088</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1089</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1090</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1091</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1092</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1093</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1094</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1095</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1095</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1096</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1097</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1098</span>
@@ -5908,7 +5915,14 @@ refused stale trigger).</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1197</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1198</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1199</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1200</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1200</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1201</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1202</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1203</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1204</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1205</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1206</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1207</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'scan-response'</span>, <span style="color: #BA2121">'children'</span>),
     Output(<span style="color: #BA2121">'scan-output'</span>, <span style="color: #BA2121">'children'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">'scan-armed'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
@@ -6084,14 +6098,7 @@ refused stale trigger).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">793</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">794</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">795</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">796</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">797</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">798</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">799</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">800</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">800</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">801</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">802</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">803</span>
@@ -6101,7 +6108,14 @@ refused stale trigger).</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">807</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">808</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">809</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">810</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">810</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">811</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">812</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">813</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">814</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">815</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">816</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">817</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'view-cfg-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
     Output(<span style="color: #BA2121">'view-cfg-content'</span>, <span style="color: #BA2121">'children'</span>),
     Input(<span style="color: #BA2121">'view-cfg-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
@@ -6166,14 +6180,7 @@ refused stale trigger).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">693</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">694</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">695</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">696</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">697</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">698</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">699</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">700</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">700</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">701</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">702</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">703</span>
@@ -6200,7 +6207,14 @@ refused stale trigger).</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">724</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">725</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">726</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">727</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">727</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">728</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">729</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">730</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">731</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">732</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">733</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">734</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'available-cameras'</span>, <span style="color: #BA2121">'children'</span>),
     <span style="color: #666">*</span>[Output(<span style="color: #BA2121">f'cam-</span><span style="color: #A45A77; font-weight: bold">{</span>i<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">-name'</span>, <span style="color: #BA2121">'value'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>) <span style="color: #008000; font-weight: bold">for</span> i <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">range</span>(MAX_CAMERAS)],
     Input(<span style="color: #BA2121">'main-interval'</span>, <span style="color: #BA2121">'n_intervals'</span>),
@@ -6352,14 +6366,7 @@ refused stale trigger).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">878</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">879</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">880</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">881</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">882</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">883</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">884</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">885</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">885</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">886</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">887</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">888</span>
@@ -6385,7 +6392,14 @@ refused stale trigger).</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">908</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">909</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">910</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">911</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">911</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">912</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">913</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">914</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">915</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">916</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">917</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">918</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'dataset-input-name'</span>, <span style="color: #BA2121">'invalid'</span>),
     Output(<span style="color: #BA2121">'dataset-input-name'</span>, <span style="color: #BA2121">'valid'</span>),
     Output(<span style="color: #BA2121">'dataset-id'</span>, <span style="color: #BA2121">'data'</span>),
@@ -6443,14 +6457,7 @@ refused stale trigger).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">730</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">731</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">732</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">733</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">734</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">735</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">736</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">737</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">737</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">738</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">739</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">740</span>
@@ -6461,7 +6468,14 @@ refused stale trigger).</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">745</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">746</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">747</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">748</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">748</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">749</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">750</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">751</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">752</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">753</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">754</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">755</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'scan-cfg-toml'</span>, <span style="color: #BA2121">'valid'</span>),
     Output(<span style="color: #BA2121">'scan-cfg-toml'</span>, <span style="color: #BA2121">'invalid'</span>),
     Input(<span style="color: #BA2121">'scan-cfg-toml'</span>, <span style="color: #BA2121">'value'</span>),
@@ -6598,7 +6612,7 @@ refused stale trigger).</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../../assets/_markdown_exec_pyodide.js"></script>
       
