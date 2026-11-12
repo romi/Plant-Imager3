@@ -8,10 +8,10 @@ After=network.target network-online.target
 # A list of units to activate when this one is activated, if any unit listed here fails this unit will deactivate.
 Requires=
 # A list of units to activate when this one is activated, if a unit listed here fails this unit will continue to run.
-Wants=
+Wants=network.target network-online.target
 
 # If this unit restarts more than StartLimitBurst under StartLimitIntervalSec this unit enters a failed state
-StartLimitBurst=2
+StartLimitBurst=10
 StartLimitIntervalSec=30
 
 
