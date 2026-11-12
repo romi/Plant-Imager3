@@ -3335,7 +3335,10 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/app.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">203</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">204</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">205</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">206</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">207</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">208</span>
@@ -3366,10 +3369,7 @@
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">233</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">234</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">235</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">236</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">237</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">238</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">239</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">236</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Run the Plant Imager Web Interface application.</span>
 
 <span style="color: #BA2121; font-style: italic">    This function serves as the entry point for the Plant Imager Web UI. It:</span>
@@ -3817,10 +3817,7 @@ user authentication, and dataset management.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">196</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">197</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">198</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">200</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">201</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">202</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(plantdb_host: <span style="color: #008000">str</span>, plantdb_port: <span style="color: #008000">int</span>, plantdb_prefix: <span style="color: #008000">str</span>, plantdb_ssl: <span style="color: #008000">str</span>,
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">199</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">setup_web_app</span>(plantdb_host: <span style="color: #008000">str</span>, plantdb_port: <span style="color: #008000">int</span>, plantdb_prefix: <span style="color: #008000">str</span>, plantdb_ssl: <span style="color: #008000">str</span>,
                   proxy: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>, url_prefix: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">'/webui'</span>) <span style="color: #666">-&gt;</span> Dash:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Initialize and configure the Plant Imager Dash web application.</span>
 
@@ -3858,11 +3855,8 @@ user authentication, and dataset management.</p>
 <span style="color: #BA2121; font-style: italic">    - Configuration and authentication modals</span>
 <span style="color: #BA2121; font-style: italic">    - Main content area for scan management</span>
 <span style="color: #BA2121; font-style: italic">    """</span>
-    <span style="color: #3D7B7B; font-style: italic"># Ensure `url_prefix` ends with a trailing slash (as required by Dash)</span>
-    <span style="color: #008000; font-weight: bold">if</span> url_prefix <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #A2F; font-weight: bold">not</span> url_prefix<span style="color: #666">.</span>endswith(<span style="color: #BA2121">'/'</span>):
-        url_prefix <span style="color: #666">+=</span> <span style="color: #BA2121">'/'</span>
-    <span style="color: #008000; font-weight: bold">else</span>:
-        url_prefix <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+    <span style="color: #3D7B7B; font-style: italic"># Normalize `url_prefix` to end with a trailing slash (as required by Dash)</span>
+    url_prefix <span style="color: #666">=</span> url_prefix<span style="color: #666">.</span>rstrip(<span style="color: #BA2121">'/'</span>) <span style="color: #666">+</span> <span style="color: #BA2121">'/'</span> <span style="color: #008000; font-weight: bold">if</span> url_prefix <span style="color: #008000; font-weight: bold">else</span> <span style="color: #008000; font-weight: bold">None</span>
 
     app <span style="color: #666">=</span> Dash(
         name<span style="color: #666">=</span><span style="color: #BA2121">"plantimager.webui"</span>,
@@ -3905,7 +3899,7 @@ user authentication, and dataset management.</p>
         dcc<span style="color: #666">.</span>Store(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">'view-dataset'</span>, data<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>),  <span style="color: #3D7B7B; font-style: italic"># name of the dataset to visualize (plotly carousel)</span>
         <span style="color: #3D7B7B; font-style: italic"># Navigation and modal components</span>
         html<span style="color: #666">.</span>Div(children<span style="color: #666">=</span>[
-            navbar_layout,
+            build_navbar_layout(),
             plantdb_cfg_modal,
             login_modal,
             new_user_modal,

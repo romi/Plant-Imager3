@@ -2311,6 +2311,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.webui.nav.build_navbar_layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;build_navbar_layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -3096,6 +3113,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label=" nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plantimager.webui.nav.build_navbar_layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;build_navbar_layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -3164,6 +3198,191 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="plantimager.webui.nav.build_navbar_layout" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">build_navbar_layout</span>
+
+
+<a href="#plantimager.webui.nav.build_navbar_layout" class="headerlink" title="Permanent link">Link</a></h3>
+<div class="language-python doc-signature highlight" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>build_navbar_layout()
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Build the main navigation bar with resolved hrefs and asset URLs.</p>
+<p>Hrefs and the logo source are resolved at layout-build time (after the
+Dash app exists), so the initial layout always carries correct URLs
+instead of relying on callbacks that can miss a batch.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>Navbar</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The navigation bar layout with resolved links.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>plantimager/webui/nav.py</code></summary>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 61</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 62</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 63</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 64</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 65</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 66</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 67</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 68</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 69</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 70</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 71</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 72</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 73</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 74</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 75</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 76</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 77</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 78</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 79</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 80</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 81</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 82</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 83</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 84</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 85</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 86</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 87</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 88</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 89</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 90</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 91</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 92</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 93</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 94</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 95</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 96</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 97</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 98</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 99</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">100</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">101</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">102</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">103</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">104</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">105</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">106</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">111</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">116</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">117</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">118</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">119</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">120</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">121</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">122</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">123</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">124</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">125</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">126</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">127</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">128</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">build_navbar_layout</span>() <span style="color: #666">-&gt;</span> dbc<span style="color: #666">.</span>Navbar:
+<span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Build the main navigation bar with resolved hrefs and asset URLs.</span>
+
+<span style="color: #BA2121; font-style: italic">    Hrefs and the logo source are resolved at layout-build time (after the</span>
+<span style="color: #BA2121; font-style: italic">    Dash app exists), so the initial layout always carries correct URLs</span>
+<span style="color: #BA2121; font-style: italic">    instead of relying on callbacks that can miss a batch.</span>
+
+<span style="color: #BA2121; font-style: italic">    Returns</span>
+<span style="color: #BA2121; font-style: italic">    -------</span>
+<span style="color: #BA2121; font-style: italic">    dash_bootstrap_components.Navbar</span>
+<span style="color: #BA2121; font-style: italic">        The navigation bar layout with resolved links.</span>
+<span style="color: #BA2121; font-style: italic">    """</span>
+    scan_link <span style="color: #666">=</span> dbc<span style="color: #666">.</span>NavLink(
+        children<span style="color: #666">=</span>html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">"bi bi-camera fs-3"</span>),
+        <span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">"scan-link"</span>,
+        href<span style="color: #666">=</span>get_relative_path(<span style="color: #BA2121">"/"</span>),
+        n_clicks<span style="color: #666">=0</span>,
+        style<span style="color: #666">=</span>{<span style="color: #BA2121">'color'</span>: <span style="color: #BA2121">"#f3f3f3"</span>},
+    )
+    camera_link <span style="color: #666">=</span> dbc<span style="color: #666">.</span>NavLink(
+        children<span style="color: #666">=</span>html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">"bi bi-camera-fill fs-3"</span>),
+        <span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">"camera-link"</span>,
+        href<span style="color: #666">=</span>get_relative_path(<span style="color: #BA2121">"/cameras"</span>),
+        n_clicks<span style="color: #666">=0</span>,
+        style<span style="color: #666">=</span>{<span style="color: #BA2121">'color'</span>: <span style="color: #BA2121">"#f3f3f3"</span>},
+    )
+    dataset_table_link <span style="color: #666">=</span> dbc<span style="color: #666">.</span>NavLink(
+        children<span style="color: #666">=</span>html<span style="color: #666">.</span>I(className<span style="color: #666">=</span><span style="color: #BA2121">"bi bi-table fs-3"</span>),
+        <span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">"dataset-table-link"</span>,
+        href<span style="color: #666">=</span>get_relative_path(<span style="color: #BA2121">"/table"</span>),
+        n_clicks<span style="color: #666">=0</span>,
+        style<span style="color: #666">=</span>{<span style="color: #BA2121">'color'</span>: <span style="color: #BA2121">"#f3f3f3"</span>},
+    )
+
+    nav_items <span style="color: #666">=</span> [
+        dbc<span style="color: #666">.</span>NavItem(children<span style="color: #666">=</span>[login_avatar_button, login_avatar_button_tooltip]),
+        dbc<span style="color: #666">.</span>NavItem(children<span style="color: #666">=</span>[tutorial_link, tutorial_tooltip]),
+        dbc<span style="color: #666">.</span>NavItem(children<span style="color: #666">=</span>[scan_link, scan_tooltip]),
+        dbc<span style="color: #666">.</span>NavItem(children<span style="color: #666">=</span>[camera_link, camera_tooltip]),
+        dbc<span style="color: #666">.</span>NavItem(children<span style="color: #666">=</span>[dataset_table_link, dataset_table_tooltip]),
+        dbc<span style="color: #666">.</span>NavItem(children<span style="color: #666">=</span>[cfg_button, cfg_tooltip]),
+    ]
+
+    <span style="color: #008000; font-weight: bold">return</span> dbc<span style="color: #666">.</span>Navbar(
+        dbc<span style="color: #666">.</span>Container([
+            <span style="color: #3D7B7B; font-style: italic"># Logo and brand section</span>
+            dbc<span style="color: #666">.</span>Row(children<span style="color: #666">=</span>[
+                dbc<span style="color: #666">.</span>Col(html<span style="color: #666">.</span>A(
+                    html<span style="color: #666">.</span>Img(<span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">"navbar-logo"</span>, src<span style="color: #666">=</span>get_asset_url(<span style="color: #BA2121">"logo.svg"</span>), height<span style="color: #666">=</span><span style="color: #BA2121">"35px"</span>),
+                    href<span style="color: #666">=</span><span style="color: #BA2121">"https://romi-project.eu/"</span>,
+                    style<span style="color: #666">=</span>{<span style="color: #BA2121">"textDecoration"</span>: <span style="color: #BA2121">"none"</span>},
+                )),
+                dbc<span style="color: #666">.</span>Col(
+                    dbc<span style="color: #666">.</span>NavbarBrand(
+                        <span style="color: #008000">id</span><span style="color: #666">=</span><span style="color: #BA2121">"navbar-brand"</span>,
+                        children<span style="color: #666">=</span><span style="color: #BA2121">"Plant Imager"</span>,
+                        href<span style="color: #666">=</span>get_relative_path(<span style="color: #BA2121">"/"</span>),
+                        style<span style="color: #666">=</span>{<span style="color: #BA2121">'color'</span>: <span style="color: #BA2121">"#f3f3f3"</span>, <span style="color: #BA2121">'font-size'</span>: <span style="color: #BA2121">'30px'</span>}
+                    )
+                ),
+            ], align<span style="color: #666">=</span><span style="color: #BA2121">"center"</span>),
+            dbc<span style="color: #666">.</span>Nav(
+                children<span style="color: #666">=</span>nav_items,
+                navbar<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, className<span style="color: #666">=</span><span style="color: #BA2121">"align-items-center gap-3"</span>
+            ),
+        ], className<span style="color: #666">=</span><span style="color: #BA2121">"align-items-center"</span>),
+        color<span style="color: #666">=</span><span style="color: #BA2121">"#00a960"</span>, class_name<span style="color: #666">=</span><span style="color: #BA2121">"mb-3"</span>,
+    )
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 

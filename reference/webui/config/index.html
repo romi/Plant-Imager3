@@ -3743,7 +3743,8 @@ and managing datasets within the Plant Imager web interface.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">459</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">460</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">461</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">462</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">463</span>
@@ -3837,8 +3838,7 @@ and managing datasets within the Plant Imager web interface.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">551</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">552</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">553</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">554</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">555</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">554</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'connected'</span>, <span style="color: #BA2121">'data'</span>),
     Output(<span style="color: #BA2121">'load-plantdb-button'</span>, <span style="color: #BA2121">'disabled'</span>),
     Output(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>),
@@ -4035,7 +4035,8 @@ The NavLink is styled and positioned according to the application's design.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">112</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">113</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">114</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">115</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">116</span>
@@ -4074,8 +4075,7 @@ The NavLink is styled and positioned according to the application's design.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">149</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">150</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">151</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">152</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">153</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">create_dataset_cfg_icon</span>(is_connected: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>, dataset_list: <span style="color: #008000">list</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> dbc<span style="color: #666">.</span>NavLink:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">152</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">create_dataset_cfg_icon</span>(is_connected: <span style="color: #008000">bool</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">False</span>, dataset_list: <span style="color: #008000">list</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> dbc<span style="color: #666">.</span>NavLink:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Create a navigation link with the database status icon and dataset counter badge.</span>
 
 <span style="color: #BA2121; font-style: italic">    Creates a Bootstrap NavLink component that displays a database status icon and</span>
@@ -4196,7 +4196,8 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 91</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 90</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 91</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 92</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 93</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 94</span>
@@ -4214,8 +4215,7 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">106</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">107</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">108</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">110</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">dataset_cfg_status</span>(is_connected: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> html<span style="color: #666">.</span>I:
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">109</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">dataset_cfg_status</span>(is_connected: <span style="color: #008000">bool</span>) <span style="color: #666">-&gt;</span> html<span style="color: #666">.</span>I:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Generate a database status icon based on the connection state.</span>
 
 <span style="color: #BA2121; font-style: italic">    Creates a Bootstrap icon element representing the database connection status.</span>
@@ -4361,7 +4361,8 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">41</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">42</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">43</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">44</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">45</span>
@@ -4390,8 +4391,7 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">68</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">69</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">70</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">72</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">server_available</span>(host, port, prefix, ssl):
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">71</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">server_available</span>(host, port, prefix, ssl):
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Checks the availability of a server.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
@@ -4516,7 +4516,8 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">294</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">293</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">294</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">295</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">296</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">297</span>
@@ -4538,8 +4539,7 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">313</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">314</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">315</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">316</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">317</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">316</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'api-address'</span>, <span style="color: #BA2121">'value'</span>),
     Input(<span style="color: #BA2121">'plantdb-cfg-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
     State(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>)
@@ -4657,7 +4657,8 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">321</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">320</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">321</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">322</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">323</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">324</span>
@@ -4679,8 +4680,7 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">340</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">341</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">342</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">343</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">344</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">343</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'api-port'</span>, <span style="color: #BA2121">'value'</span>),
     Input(<span style="color: #BA2121">'plantdb-cfg-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
     State(<span style="color: #BA2121">'plantdb-port'</span>, <span style="color: #BA2121">'data'</span>)
@@ -4798,7 +4798,8 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">348</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">347</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">348</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">349</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">350</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">351</span>
@@ -4820,8 +4821,7 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">367</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">368</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">369</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">370</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">371</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">370</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'api-prefix'</span>, <span style="color: #BA2121">'value'</span>),
     Input(<span style="color: #BA2121">'plantdb-cfg-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
     State(<span style="color: #BA2121">'plantdb-prefix'</span>, <span style="color: #BA2121">'data'</span>)
@@ -4939,7 +4939,8 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">375</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">374</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">375</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">376</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">377</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">378</span>
@@ -4961,8 +4962,7 @@ Returns a check icon when connected and a gear icon when disconnected.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">394</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">395</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">396</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">397</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">398</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">397</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'api-ssl'</span>, <span style="color: #BA2121">'value'</span>),
     Input(<span style="color: #BA2121">'plantdb-cfg-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
     State(<span style="color: #BA2121">'plantdb-ssl'</span>, <span style="color: #BA2121">'data'</span>)
@@ -5138,7 +5138,8 @@ the connection status:
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">401</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">400</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">401</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">402</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">403</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">404</span>
@@ -5192,8 +5193,7 @@ the connection status:
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">452</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">453</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">454</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">455</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">456</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">455</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'plantdb-status-form'</span>, <span style="color: #BA2121">'children'</span>),
     Input(<span style="color: #BA2121">'connected'</span>, <span style="color: #BA2121">'data'</span>),
     State(<span style="color: #BA2121">'plantdb-host'</span>, <span style="color: #BA2121">'data'</span>),
@@ -5363,7 +5363,8 @@ modal dialog. It is triggered by:
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">249</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">250</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">251</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">252</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">253</span>
@@ -5403,8 +5404,7 @@ modal dialog. It is triggered by:
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">287</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">288</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">289</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">290</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">291</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">'plantdb-cfg-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">290</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(Output(<span style="color: #BA2121">'plantdb-cfg-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
           Input(<span style="color: #BA2121">'plantdb-cfg-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
           Input(<span style="color: #BA2121">'modal-close-interval'</span>, <span style="color: #BA2121">'n_intervals'</span>),
           State(<span style="color: #BA2121">'plantdb-cfg-modal'</span>, <span style="color: #BA2121">'is_open'</span>),
@@ -5527,7 +5527,8 @@ of the dataset list to a string for display.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">656</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">655</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">656</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">657</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">658</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">659</span>
@@ -5547,8 +5548,7 @@ of the dataset list to a string for display.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">673</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">674</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">675</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">676</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">677</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">676</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'dataset-count-badge'</span>, <span style="color: #BA2121">'children'</span>),
     Input(<span style="color: #BA2121">'dataset-list'</span>, <span style="color: #BA2121">'data'</span>)  <span style="color: #3D7B7B; font-style: italic"># Assuming you have a dataset list stored in dcc.Store</span>
 )
@@ -5738,7 +5738,8 @@ of the dataset list to a string for display.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">591</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">590</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">591</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">592</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">593</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">594</span>
@@ -5799,8 +5800,7 @@ of the dataset list to a string for display.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">649</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">650</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">651</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">652</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">653</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">652</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'load-status-form'</span>, <span style="color: #BA2121">'children'</span>),
     Output(<span style="color: #BA2121">'dataset-list'</span>, <span style="color: #BA2121">'data'</span>),
     Input(<span style="color: #BA2121">'load-plantdb-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
@@ -5950,12 +5950,12 @@ It uses the create_dataset_cfg_icon function to generate the appropriate icon.</
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>NavLink</code>
+                  <code>list of dash components</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>A Dash HTML component representing the configuration button icon
-with the appropriate styling based on the connection status.</p>
+                <p>The icon and dataset badge children of the configuration button,
+avoiding any nested duplicate of the button anchor itself.</p>
               </div>
             </td>
           </tr>
@@ -5965,7 +5965,8 @@ with the appropriate styling based on the connection status.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/config.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">558</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">557</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">558</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">559</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">560</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">561</span>
@@ -5993,13 +5994,12 @@ with the appropriate styling based on the connection status.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">583</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">584</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">585</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">586</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">587</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">586</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'plantdb-cfg-button'</span>, <span style="color: #BA2121">'children'</span>),
     Input(<span style="color: #BA2121">'connected'</span>, <span style="color: #BA2121">'data'</span>),
     State(<span style="color: #BA2121">'dataset-list'</span>, <span style="color: #BA2121">'data'</span>),
 )
-<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_plantdb_cfg_button</span>(status: <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, dataset_list: <span style="color: #008000">list</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> NavLink:
+<span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">update_plantdb_cfg_button</span>(status: <span style="color: #008000">bool</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>, dataset_list: <span style="color: #008000">list</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>:
 <span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">"""Update the PlantDB configuration button's appearance based on connection status.</span>
 
 <span style="color: #BA2121; font-style: italic">    This callback function updates the visual representation of the PlantDB configuration</span>
@@ -6019,11 +6019,11 @@ with the appropriate styling based on the connection status.</p>
 
 <span style="color: #BA2121; font-style: italic">    Returns</span>
 <span style="color: #BA2121; font-style: italic">    -------</span>
-<span style="color: #BA2121; font-style: italic">    dash_bootstrap_components.NavLink</span>
-<span style="color: #BA2121; font-style: italic">        A Dash HTML component representing the configuration button icon</span>
-<span style="color: #BA2121; font-style: italic">        with the appropriate styling based on the connection status.</span>
+<span style="color: #BA2121; font-style: italic">    list of dash components</span>
+<span style="color: #BA2121; font-style: italic">        The icon and dataset badge children of the configuration button,</span>
+<span style="color: #BA2121; font-style: italic">        avoiding any nested duplicate of the button anchor itself.</span>
 <span style="color: #BA2121; font-style: italic">    """</span>
-    <span style="color: #008000; font-weight: bold">return</span> create_dataset_cfg_icon(status, dataset_list)
+    <span style="color: #008000; font-weight: bold">return</span> create_dataset_cfg_icon(status, dataset_list)<span style="color: #666">.</span>children
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
