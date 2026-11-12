@@ -438,6 +438,8 @@ scan_layout = html.Div(
         # clears it while the session-persisted scan-job-id survives, so a
         # stale job id alone can never launch a scan (see run_scan).
         dcc.Store(id='scan-armed', data=''),
+        # Persist scan TOML config across page refreshes.
+        dcc.Store(id='scan-cfg-cache', storage_type='local'),
         dbc.Row([
             dbc.Col(configuration_card, md=6),
             dbc.Col(dataset_name_card + [html.Br()] + camera_card + [html.Br()] + scan_card, md=6)
@@ -484,15 +486,28 @@ scan_layout = html.Div(
 @callback(
     Output('scan-cfg-toml', 'value'),
     Output('cfg-populate', 'data'),
-    Input('url', 'pathname')
+    Input('url', 'pathname'),
+    State('scan-cfg-cache', 'data'),
 )
-def load_default_toml_cfg(_):
+def load_default_toml_cfg(_, cached_toml):
+    # Reuse browser-cached TOML so config survives page refresh.
+    if cached_toml:
+        return cached_toml, cached_toml
     # Construct the path to the sample TOML config file (`assets` directory)
     default_toml_path = os.path.join(current_dir, 'assets', 'config_scan.toml')
     # Load the default TOML configuration file into a string variable
     with open(default_toml_path, 'r') as f:
         default_toml = f.read()
     return default_toml, default_toml
+
+
+@callback(
+    Output('scan-cfg-cache', 'data'),
+    Input('scan-cfg-toml', 'value'),
+)
+def cache_scan_toml(toml_text):
+    """Persist the current scan TOML in browser localStorage."""
+    return toml_text
 
 
 CAM_FIELDS = ['name', 'res-x', 'res-y', 'encoding',
