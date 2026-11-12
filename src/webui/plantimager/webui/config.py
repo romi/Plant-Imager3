@@ -30,7 +30,6 @@ from dash import ctx
 from dash import dcc
 from dash import html
 from dash import no_update
-from dash_bootstrap_components import NavLink
 from plantdb.client.rest_api.urls import PLANTDB_HOST
 from plantdb.client.rest_api.urls import PLANTDB_PORT
 from plantdb.client.rest_api.urls import plantdb_url
@@ -560,7 +559,7 @@ def check_server_availability(
     Input('connected', 'data'),
     State('dataset-list', 'data'),
 )
-def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) -> NavLink:
+def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) -> list:
     """Update the PlantDB configuration button's appearance based on connection status.
 
     This callback function updates the visual representation of the PlantDB configuration
@@ -580,11 +579,11 @@ def update_plantdb_cfg_button(status: bool | None, dataset_list: list | None) ->
 
     Returns
     -------
-    dash_bootstrap_components.NavLink
-        A Dash HTML component representing the configuration button icon
-        with the appropriate styling based on the connection status.
+    list of dash components
+        The icon and dataset badge children of the configuration button,
+        avoiding any nested duplicate of the button anchor itself.
     """
-    return create_dataset_cfg_icon(status, dataset_list)
+    return create_dataset_cfg_icon(status, dataset_list).children
 
 
 # Callback to load a dataset list from PlantDB API

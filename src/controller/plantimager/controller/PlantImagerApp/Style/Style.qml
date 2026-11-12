@@ -16,6 +16,7 @@ QtObject {
     property int largeMargin: scale * 20
 
     property int smallHeight: scale * 20
+    property int compactHeight: scale * 34
     property int mediumHeight: scale * 40
     property int bigHeight: scale * 80
 
@@ -26,6 +27,7 @@ QtObject {
     property int cameraDelegateHeight: scale * 60
 
     property int progressBarLabelWidth: scale * 40
+    property int controlLabelWidth: scale * 110
 
     property int videoWidth: scale * 640
     property int videoHeight: scale * 480

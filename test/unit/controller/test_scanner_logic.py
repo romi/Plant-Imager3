@@ -111,6 +111,29 @@ class TestScannerLogic(unittest.TestCase):
         self.assertEqual(self.scanner._max_progress, 4)
         self.assertEqual(self.scanner.dataset_metadata, {"species": "test"})
 
+    def test_configure_scan_applies_encoding(self):
+        """configure_scan propagates the per-camera encoding to the camera."""
+        config = {
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 100, "n_points": 4}},
+            "Metadata": {"object": {"species": "test"}, "hardware": {"version": "1"}},
+            "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "png", "config": {}},
+        }
+        self.scanner.add_camera(self.mock_camera)
+        self.scanner.configure_scan(config)
+        self.assertEqual(self.mock_camera.encoding, "png")
+        self.assertEqual(self.scanner.config["cam1"]["encoding"], "png")
+
+    def test_configure_scan_applies_jpeg(self):
+        """configure_scan propagates jpeg encoding (default) to the camera."""
+        config = {
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 100, "n_points": 4}},
+            "Metadata": {"object": {}, "hardware": {}},
+            "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "jpeg", "config": {}},
+        }
+        self.scanner.add_camera(self.mock_camera)
+        self.scanner.configure_scan(config)
+        self.assertEqual(self.mock_camera.encoding, "jpeg")
+
     def test_ready_to_scan_false_without_everything(self):
         """ready_to_scan is true once all required components are present."""
         self.assertFalse(self.scanner.ready_to_scan)
@@ -203,6 +226,49 @@ class TestScannerLogic(unittest.TestCase):
                     self.scanner.scan()
                     # Should have moved and grabbed 2*1 =2 times
                     self.assertEqual(mock_uploader.upload.call_count, 2)
+
+    def test_scan_aborts_on_duplicate_dataset(self):
+        """A dataset that already exists aborts before any motion or capture."""
+        config = {
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 100, "n_points": 2}},
+            "Metadata": {"object": {}, "hardware": {}},
+            "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "jpeg", "config": {}},
+        }
+        self.scanner.add_camera(self.mock_camera)
+        mock_client = mock.MagicMock()
+        mock_client.create_scan.side_effect = ValueError("already exists")
+        self.scanner.db_url = "http://127.0.0.1:5000"
+        self.scanner.db_client = mock_client
+        self.scanner.uploader = mock.MagicMock()
+        self.scanner.scan_id = "testscan"
+        self.scanner.configure_scan(config)
+        with mock.patch.object(self.mock_dummy, "moveto") as moveto:
+            with self.assertRaisesRegex(RuntimeError, "already exists"):
+                self.scanner.scan()
+        self.assertFalse(self.scanner.scan_in_progress)
+        moveto.assert_not_called()
+        self.mock_camera.getImage.assert_not_called()
+        self.scanner.uploader.upload.assert_not_called()
+
+    def test_scan_aborts_on_fileset_failure(self):
+        """A fileset that cannot be created aborts the same way."""
+        config = {
+            "ScanPath": {"class_name": "Circle", "kwargs": {"center_x": 200, "center_y": 200, "radius": 100, "n_points": 2}},
+            "Metadata": {"object": {}, "hardware": {}},
+            "cam1": {"offset": {"x": 0, "y": 0, "z": 0, "pan": 0, "tilt": 0}, "res_x": 640, "res_y": 480, "encoding": "jpeg", "config": {}},
+        }
+        self.scanner.add_camera(self.mock_camera)
+        mock_client = mock.MagicMock()
+        mock_client.create_fileset.side_effect = ValueError("already exists")
+        self.scanner.db_url = "http://127.0.0.1:5000"
+        self.scanner.db_client = mock_client
+        self.scanner.uploader = mock.MagicMock()
+        self.scanner.scan_id = "testscan"
+        self.scanner.configure_scan(config)
+        with self.assertRaisesRegex(RuntimeError, "Fileset"):
+            self.scanner.scan()
+        self.assertFalse(self.scanner.scan_in_progress)
+        self.mock_camera.getImage.assert_not_called()
 
     def test_progress_signals(self):
         """progressChanged emits the current progress value."""

@@ -67,3 +67,32 @@ class ControllerDevice(ABC):
     def camera_names(self) -> list[str]:
         """Return the list of camera names."""
         pass
+
+    def get_camera_image(self, name: str, lores: bool = True) -> tuple[memoryview, dict]:
+        """Capture one image from a camera (JPEG bytes + info dict).
+
+        Concrete servers override this; the default only documents the
+        contract so ``register_interface`` proxies it to WebUI clients
+        even where a server never implemented it.
+        """
+        raise NotImplementedError
+
+    def get_camera_config(self, name: str) -> dict:
+        """Return the live control dict of one camera; see above."""
+        raise NotImplementedError
+
+    def set_camera_config(self, name: str, config: dict) -> dict:
+        """Apply a control dict to one camera, return the effective config."""
+        raise NotImplementedError
+
+    def get_camera_controls_schema(self, name: str) -> dict:
+        """Return the advertised libcamera controls schema of one camera."""
+        raise NotImplementedError
+
+    def set_camera_default_controls(self, name: str, config: dict) -> dict:
+        """Validate, apply and persist new defaults for one camera."""
+        raise NotImplementedError
+
+    def reset_camera_controls(self, name: str, factory: bool = False) -> dict:
+        """Reset one camera to persisted (or factory) defaults."""
+        raise NotImplementedError

@@ -12,6 +12,8 @@ Control {
 
     required property QtObject bridge
 
+    property bool controlMode: false
+
     onBridgeChanged: {
         if(bridge !== undefined && bridge !== null) {
             if(bridge.mode === "STILL") {
@@ -20,6 +22,9 @@ Control {
             } else if(bridge.mode === "VIDEO") {
                 image_button.checked = false
                 video_button.checked = true
+            }
+            if(controlMode) {
+                control_panel.refreshFromBridge()
             }
         }
         //focus_highlight_button.text = bridge.displayMode ? bridge.displayMode : " "
@@ -40,6 +45,11 @@ Control {
                 video_button.checked = true
             }
         }
+        function onConfigChanged() {
+            if(controlMode) {
+                control_panel.refreshFromBridge()
+            }
+        }
     }
 
     Label {
@@ -55,8 +65,26 @@ Control {
         leftPadding: P.Style.smallMargin
     }
 
+    P.IconButton {
+        id: _control_toggle
+        anchors.top: parent.top
+        anchors.bottom: _title.bottom
+        anchors.right: parent.right
+        anchors.rightMargin: P.Style.mediumMargin
+        iconName: P.Icons.icons["cog"]
+        size: P.Style.iconMedium
+        enabled: bridge ? bridge.status !== "invalid" : false
+        onClicked: {
+            if(!controlMode) {
+                control_panel.refreshFromBridge()
+            }
+            controlMode = !controlMode
+        }
+    }
+
     StackLayout {
         id: media_control
+        visible: !controlMode
         anchors.top: _title.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -119,6 +147,7 @@ Control {
 
     GridLayout {
         id: buttons_layout
+        visible: !controlMode
         anchors.top: media_control.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -193,5 +222,17 @@ Control {
                 bridge.getLoresImage()
             }
         }
+    }
+
+    P.CameraControlView {
+        id: control_panel
+        visible: controlMode
+        anchors.top: _title.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: P.Style.mediumMargin
+        anchors.rightMargin: P.Style.mediumMargin
+        bridge: _self.bridge
     }
 }
