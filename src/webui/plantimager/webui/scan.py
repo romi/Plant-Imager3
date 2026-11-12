@@ -719,7 +719,7 @@ def update_interval(n_intervals, *current):
         controller.cameraNamesChanged.connect(update_available_cameras)
         update_available_cameras(controller.camera_names)
 
-    markdown = "\n".join(f"- {camera}" for camera in available_cameras) if available_cameras \
+    markdown = "".join(f"- {camera}\n" for camera in sorted(available_cameras)) if available_cameras \
         else "No camera connected"
     names = []
     for i in range(MAX_CAMERAS):

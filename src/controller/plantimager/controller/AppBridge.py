@@ -144,7 +144,7 @@ class AppBridge(QObject):
 
     @Property(QObject, notify=deviceListChanged)
     def deviceList(self) -> QStringListModel:
-        self.model = QStringListModel(self.device_list)
+        self.model = QStringListModel(sorted(self.device_list))
         return self.model
 
     @Slot(str, str, str)
