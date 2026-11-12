@@ -86,10 +86,9 @@ class TestNewScanHelpers(unittest.TestCase):
         self.assertEqual(_num("0"), 0)
 
     def test_free_camera_name(self):
-        self.assertEqual(_free_camera_name(set()), "picamera")
-        self.assertEqual(_free_camera_name({"picamera"}), "picamera1")
-        self.assertEqual(_free_camera_name({"picamera", "picamera1"}), "picamera2")
-        self.assertEqual(_free_camera_name({"picamera", "picamera1", "picamera2"}), "picamera3")
+        self.assertEqual(_free_camera_name(set()), "picamera1")
+        self.assertEqual(_free_camera_name({"picamera1"}), "picamera2")
+        self.assertEqual(_free_camera_name({"picamera1", "picamera2"}), "picamera3")
 
     def test_bio_field_id(self):
         self.assertEqual(_bio_field_id("object.investigation.title"), "bio-object__investigation__title")
