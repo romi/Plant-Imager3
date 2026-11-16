@@ -180,14 +180,14 @@ class TestScanArmGate(unittest.TestCase):
     def test_stale_trigger_refused_without_touching_hardware(self):
         response, output, armed = run_scan(
             None, 5, "", "host", "1", "", False, "token", "a = 1", "ds")
-        self.assertEqual(response, "Scan not started.")
-        self.assertIn("Stale trigger", output)
+        self.assertIs(response, no_update)
+        self.assertIs(output, no_update)
         self.assertIs(armed, no_update)
 
     def test_fresh_load_refused(self):
         response, _, armed = run_scan(
             None, 0, "", "host", "1", "", False, "token", "a = 1", "ds")
-        self.assertEqual(response, "Scan not started.")
+        self.assertIs(response, no_update)
         self.assertIs(armed, no_update)
 
     def test_failed_prepare_leaves_disarmed_seven_tuple(self):

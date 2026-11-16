@@ -434,9 +434,9 @@ scan_card = [
 scan_layout = html.Div(
     children=[
         dcc.Interval(id='main-interval', disabled=False, interval=4000),
-        # Arm token for the background scan. Memory-only on purpose: F5
-        # clears it while the session-persisted scan-job-id survives, so a
-        # stale job id alone can never launch a scan (see run_scan).
+        # Arm token for the background scan. Memory-only like scan-job-id:
+        # a page reload clears both, so a stale job id can never launch a
+        # scan (see run_scan). The token must match the triggering job id.
         dcc.Store(id='scan-armed', data=''),
         # Persist scan TOML config across page refreshes.
         dcc.Store(id='scan-cfg-cache', storage_type='local'),
@@ -1145,11 +1145,12 @@ def run_scan(set_progress, scan_job_id: int, armed: str, url: str, port: str, pr
     :func:`prepare_scan`.
 
     The ``armed`` token must match the triggering job id, otherwise the call
-    is a stale session-store replay (page load, F5) and is refused without
-    touching hardware. ``armed`` lives in a memory-only store so F5 clears
-    it while the session-persisted job id survives — that asymmetry is the
-    whole guard. A refused trigger leaves ``armed`` untouched (a superseded
-    job must not disarm its successor); any real attempt disarms on return.
+    is a duplicate or stale trigger and is refused without touching hardware.
+    Both ``armed`` and the job id live in memory-only stores cleared on page
+    reload, so a reload re-arms nothing; the guard remains as defense in
+    depth against duplicate triggers (e.g. a double-clicked arm). A refused
+    trigger leaves ``armed`` untouched (a superseded job must not disarm its
+    successor); any real attempt disarms on return.
 
     Parameters
     ----------
@@ -1180,9 +1181,10 @@ def run_scan(set_progress, scan_job_id: int, armed: str, url: str, port: str, pr
         refused stale trigger).
     """
     if str(scan_job_id or 0) != (armed or ""):
-        return ("Scan not started.",
-                "Stale trigger ignored — press Start Scanning to arm a scan.",
-                no_update)
+        # Silent no_update: Dash dispatches this background callback on page
+        # load with null values even when prevent_initial_call is set
+        # (plotly/dash#2911), so a refused trigger must not paint the UI.
+        return (no_update, no_update, no_update)
 
     if not api_token:
         return ("Failed to authenticate with plantdb.",
