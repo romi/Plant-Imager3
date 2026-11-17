@@ -14,6 +14,7 @@ Key Features
 - Configuration file upload functionality
 - Comprehensive error handling and user feedback
 """
+import logging
 import os
 import re
 import tomllib
@@ -52,7 +53,7 @@ from plantimager.commons.logging import create_logger
 from plantimager.webui.auth import ensure_valid_token
 from plantimager.webui.controller_proxy import RPCController
 
-logger = create_logger(__name__)
+logger = create_logger(__name__, level=logging.DEBUG)
 
 
 def _trigger_props():
@@ -1076,6 +1077,12 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
     logger.debug(f"prepare_scan entry: trigger={_trigger_props()} job_id={scan_job_id} "
                  f"username={bool(username)} dataset={dataset_name!r} "
                  f"tokens(access={bool(access_token)},refresh={bool(refresh_token)})")
+
+    # Navigating to the scan page remounts the button and Dash dispatches its
+    # n_clicks (None or 0) as a change, bypassing prevent_initial_call; a
+    # genuine click always carries n_clicks >= 1.
+    if not _:
+        raise PreventUpdate
 
     if not username:
         return (access_token, refresh_token, None, scan_job_id, "",

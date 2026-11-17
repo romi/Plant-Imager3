@@ -190,9 +190,16 @@ class TestScanArmGate(unittest.TestCase):
         self.assertIs(response, no_update)
         self.assertIs(armed, no_update)
 
+    def test_unclicked_button_raises(self):
+        for n_clicks in (None, 0):
+            with self.subTest(n_clicks=n_clicks):
+                with self.assertRaises(PreventUpdate):
+                    prepare_scan(n_clicks, "host", "1", "", False,
+                                 "access", "refresh", "user", "ds", 0)
+
     def test_failed_prepare_leaves_disarmed_seven_tuple(self):
         result = prepare_scan(
-            None, "host", "1", "", False, "access", "refresh", "", "ds", 3)
+            1, "host", "1", "", False, "access", "refresh", "", "ds", 3)
         self.assertEqual(len(result), 7)
         self.assertEqual(result[3], 3)
         self.assertEqual(result[4], "")
