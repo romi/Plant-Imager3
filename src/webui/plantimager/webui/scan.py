@@ -54,6 +54,14 @@ from plantimager.webui.controller_proxy import RPCController
 
 logger = create_logger(__name__)
 
+
+def _trigger_props():
+    """Prop ids that fired the current callback, or a placeholder outside one."""
+    try:
+        return [t["prop_id"] for t in callback_context.triggered]
+    except Exception:
+        return ["<no-context>"]
+
 #: Characters not allowed in dataset names for system compatibility
 FORBIDDEN_CHAR = [":", "/", "*", "#", "@", ">", "<", "?", "|", "\"", "\'"]
 
@@ -627,7 +635,7 @@ def rebuild_cameras(*args):
         base = i * len(CAM_FIELDS)
         return {f: field_vals[base + j] for j, f in enumerate(CAM_FIELDS)}
 
-    triggered = [t["prop_id"] for t in callback_context.triggered]
+    triggered = _trigger_props()
 
     added_slot = None
     if any(t.startswith("add-cam-btn") for t in triggered) and len(active) < MAX_CAMERAS:
@@ -1026,7 +1034,6 @@ def disable_scan_button(valid: bool, n_intervals: int, previous_state: bool) -> 
 def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: str, refresh_token: str,
                  username: str, dataset_name: str, scan_job_id: int):
     """Authenticate and create a scoped per-scan API token.
-
     This runs in the main web UI process only. It makes the user token
     refresh deliberate (persisting any rotated pair back to the Dash Stores)
     and creates the short-lived API token that the scanner will use, so the
@@ -1066,6 +1073,10 @@ def prepare_scan(_, url: str, port: str, prefix: str, ssl: bool, access_token: s
         token ``None``, the job id unchanged, ``armed`` cleared and the status
         messages describe what went wrong.
     """
+    logger.debug(f"prepare_scan entry: trigger={_trigger_props()} job_id={scan_job_id} "
+                 f"username={bool(username)} dataset={dataset_name!r} "
+                 f"tokens(access={bool(access_token)},refresh={bool(refresh_token)})")
+
     if not username:
         return (access_token, refresh_token, None, scan_job_id, "",
                 "Not authenticated with plantdb.",
@@ -1180,6 +1191,9 @@ def run_scan(set_progress, scan_job_id: int, armed: str, url: str, port: str, pr
         disarmed token (``""`` after any real attempt, ``no_update`` on a
         refused stale trigger).
     """
+    logger.debug(f"run_scan entry: trigger={_trigger_props()} job_id={scan_job_id} "
+                 f"armed={armed!r} cfg={bool(cfg)} dataset={dataset_name!r} api_token={bool(api_token)}")
+
     if str(scan_job_id or 0) != (armed or ""):
         # Silent no_update: Dash dispatches this background callback on page
         # load with null values even when prevent_initial_call is set
