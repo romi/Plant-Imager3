@@ -53,7 +53,7 @@ from plantimager.commons.logging import create_logger
 from plantimager.webui.auth import ensure_valid_token
 from plantimager.webui.controller_proxy import RPCController
 
-logger = create_logger(__name__, level=logging.DEBUG)
+logger = create_logger(__name__, level=logging.INFO)
 
 
 def _trigger_props():
