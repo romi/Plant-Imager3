@@ -3876,15 +3876,15 @@ and executing plant scans in the Plant Imager system.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1225</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1226</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1227</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1227</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1228</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1229</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1230</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1231</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1232</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1233</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1233</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1234</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1235</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'scan-response'</span>, <span style="color: #BA2121">'children'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">'cancel-scan-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
     prevent_initial_call<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
@@ -4242,9 +4242,7 @@ Otherwise, it will hide the message.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>plantimager/webui/scan.py</code></summary>
-              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1236</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1237</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1238</span>
+              <div class="language-python highlight" style="background: #f8f8f8"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1238</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1239</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1240</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1241</span>
@@ -4305,7 +4303,9 @@ Otherwise, it will hide the message.</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1296</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1297</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1298</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1299</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1299</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1300</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1301</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'scan-response'</span>, <span style="color: #BA2121">'children'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">'scan-output'</span>, <span style="color: #BA2121">'children'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Input(<span style="color: #BA2121">'config-scan-button'</span>, <span style="color: #BA2121">'n_clicks'</span>),
@@ -5676,11 +5676,12 @@ messages describe what went wrong.</p>
 user's access/refresh tokens: it only uses the scoped API token prepared by
 :func:<code>prepare_scan</code>.</p>
 <p>The <code>armed</code> token must match the triggering job id, otherwise the call
-is a stale session-store replay (page load, F5) and is refused without
-touching hardware. <code>armed</code> lives in a memory-only store so F5 clears
-it while the session-persisted job id survives — that asymmetry is the
-whole guard. A refused trigger leaves <code>armed</code> untouched (a superseded
-job must not disarm its successor); any real attempt disarms on return.</p>
+is a duplicate or stale trigger and is refused without touching hardware.
+Both <code>armed</code> and the job id live in memory-only stores cleared on page
+reload, so a reload re-arms nothing; the guard remains as defense in
+depth against duplicate triggers (e.g. a double-clicked arm). A refused
+trigger leaves <code>armed</code> untouched (a superseded job must not disarm its
+successor); any real attempt disarms on return.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5981,7 +5982,9 @@ refused stale trigger).</p>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1219</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1220</span>
 <span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1221</span>
-<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1222</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1222</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1223</span>
+<span style="color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px;">1224</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><code><span style="color: #A2F">@callback</span>(
     Output(<span style="color: #BA2121">'scan-response'</span>, <span style="color: #BA2121">'children'</span>),
     Output(<span style="color: #BA2121">'scan-output'</span>, <span style="color: #BA2121">'children'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
     Output(<span style="color: #BA2121">'scan-armed'</span>, <span style="color: #BA2121">'data'</span>, allow_duplicate<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>),
@@ -6019,11 +6022,12 @@ refused stale trigger).</p>
 <span style="color: #BA2121; font-style: italic">    :func:`prepare_scan`.</span>
 
 <span style="color: #BA2121; font-style: italic">    The ``armed`` token must match the triggering job id, otherwise the call</span>
-<span style="color: #BA2121; font-style: italic">    is a stale session-store replay (page load, F5) and is refused without</span>
-<span style="color: #BA2121; font-style: italic">    touching hardware. ``armed`` lives in a memory-only store so F5 clears</span>
-<span style="color: #BA2121; font-style: italic">    it while the session-persisted job id survives — that asymmetry is the</span>
-<span style="color: #BA2121; font-style: italic">    whole guard. A refused trigger leaves ``armed`` untouched (a superseded</span>
-<span style="color: #BA2121; font-style: italic">    job must not disarm its successor); any real attempt disarms on return.</span>
+<span style="color: #BA2121; font-style: italic">    is a duplicate or stale trigger and is refused without touching hardware.</span>
+<span style="color: #BA2121; font-style: italic">    Both ``armed`` and the job id live in memory-only stores cleared on page</span>
+<span style="color: #BA2121; font-style: italic">    reload, so a reload re-arms nothing; the guard remains as defense in</span>
+<span style="color: #BA2121; font-style: italic">    depth against duplicate triggers (e.g. a double-clicked arm). A refused</span>
+<span style="color: #BA2121; font-style: italic">    trigger leaves ``armed`` untouched (a superseded job must not disarm its</span>
+<span style="color: #BA2121; font-style: italic">    successor); any real attempt disarms on return.</span>
 
 <span style="color: #BA2121; font-style: italic">    Parameters</span>
 <span style="color: #BA2121; font-style: italic">    ----------</span>
@@ -6054,9 +6058,10 @@ refused stale trigger).</p>
 <span style="color: #BA2121; font-style: italic">        refused stale trigger).</span>
 <span style="color: #BA2121; font-style: italic">    """</span>
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">str</span>(scan_job_id <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #666">0</span>) <span style="color: #666">!=</span> (armed <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #BA2121">""</span>):
-        <span style="color: #008000; font-weight: bold">return</span> (<span style="color: #BA2121">"Scan not started."</span>,
-                <span style="color: #BA2121">"Stale trigger ignored — press Start Scanning to arm a scan."</span>,
-                no_update)
+        <span style="color: #3D7B7B; font-style: italic"># Silent no_update: Dash dispatches this background callback on page</span>
+        <span style="color: #3D7B7B; font-style: italic"># load with null values even when prevent_initial_call is set</span>
+        <span style="color: #3D7B7B; font-style: italic"># (plotly/dash#2911), so a refused trigger must not paint the UI.</span>
+        <span style="color: #008000; font-weight: bold">return</span> (no_update, no_update, no_update)
 
     <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> api_token:
         <span style="color: #008000; font-weight: bold">return</span> (<span style="color: #BA2121">"Failed to authenticate with plantdb."</span>,
