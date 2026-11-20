@@ -12,6 +12,7 @@ nav:
     - 'Services Overview': usage/services_overview.md
     - 'Services Startup': usage/services_startup.md
     - 'Services Usage': usage/services_usage.md
+    - 'Camera Tuning': camera-tuning.md
   - 'Developer':
     - developer/index.md
     - developer/guidelines.md

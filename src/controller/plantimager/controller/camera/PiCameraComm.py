@@ -1,3 +1,4 @@
+import logging
 import weakref
 from concurrent.futures import Future
 from concurrent.futures import ThreadPoolExecutor
@@ -17,7 +18,7 @@ from plantimager.commons.RPC import RPCClient
 from plantimager.commons.cameradevice import Camera
 from plantimager.commons.logging import create_logger
 
-logger = create_logger(__name__)
+logger = create_logger(__name__, level=logging.DEBUG)
 
 
 class CameraStates(StrEnum):
@@ -105,7 +106,12 @@ class PiCameraComm(QObject):
             self._set_state(CameraStates.DISCONNECTED)
             self._attempt_connection()
         else:
-            self._set_state(current_state)
+            # Only restore the entry state if nothing moved on meanwhile:
+            # a capture finishing mid-read flips us back to CONNECTED, and
+            # restoring the stale entry state would wedge us in WAITING
+            # forever with an idle worker and no error logged.
+            if self.state == CameraStates.WAITING:
+                self._set_state(current_state)
 
     def _set_attr_async(self, attr_name: str, value: Any) -> None:
         def callback(ft_: Future):
@@ -115,9 +121,23 @@ class PiCameraComm(QObject):
             else:
                 self._set_state(CameraStates.CONNECTED)
 
-        if self._camera and self.state == CameraStates.CONNECTED:
+        if self._camera and self._state not in  (CameraStates.DISCONNECTED, CameraStates.INVALID):
             self._set_state(CameraStates.WAITING)
             ft = self._thread_pool.submit(lambda: setattr(self._camera, attr_name, value))
+            ft.add_done_callback(callback)
+
+    def _call_async(self, method_name: str, *args: Any) -> None:
+        """Runs one RPC method on the camera without blocking the caller."""
+        def callback(ft_: Future):
+            if ft_.exception():
+                self._set_state(CameraStates.DISCONNECTED)
+                self._attempt_connection()
+            else:
+                self._set_state(CameraStates.CONNECTED)
+
+        if self._camera and self.state == CameraStates.CONNECTED:
+            self._set_state(CameraStates.WAITING)
+            ft = self._thread_pool.submit(lambda: getattr(self._camera, method_name)(*args))
             ft.add_done_callback(callback)
 
     @Property(str, notify=stateChanged)
@@ -199,14 +219,15 @@ class PiCameraComm(QObject):
     def resolution(self, value: tuple[int, int]):
         self._set_attr_async("resolution", value)
 
-    @Property(int, notify=encodingChanged)
+    @Property(str, notify=encodingChanged)
     def encoding(self):
         with self.camera() as camera:
             val = camera.encoding if camera else ""
         return val
 
     @encoding.setter
-    def encoding(self, value: tuple[int, int]):
+    def encoding(self, value: str):
+        logger.debug(f"Setting encoding to {value}")
         self._set_attr_async("encoding", value)
 
     @Property(int, notify=configChanged)
@@ -218,3 +239,20 @@ class PiCameraComm(QObject):
     @config.setter
     def config(self, value: tuple[int, int]):
         self._set_attr_async("config", value)
+
+    @Slot(result="QVariant")
+    def getCameraControls(self):
+        """Returns the advertised libcamera controls schema, or {} offline."""
+        with self.camera() as camera:
+            val = camera.get_camera_controls() if camera is not None else {}
+        return val
+
+    @Slot("QVariantMap")
+    def setDefaultControls(self, value):
+        """Validates, applies and persists ``value`` as camera defaults."""
+        self._call_async("set_default_controls", dict(value))
+
+    @Slot(bool)
+    def resetControls(self, factory=False):
+        """Resets live controls to persisted (or factory) defaults."""
+        self._call_async("reset_controls", factory)

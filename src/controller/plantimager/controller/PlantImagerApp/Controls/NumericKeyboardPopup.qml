@@ -9,11 +9,55 @@ import PlantImagerApp.Style as P
 Popup {
     id: popup
 
-    property int input: 0
+    property real input: 0
+    property bool _decimal: false
+    property int _places: 0
+    property bool _fresh: true
+
+    onOpened: _fresh = true
+
+    function _consumeFresh() {
+        if(_fresh) {
+            _fresh = false
+            input = 0
+            _decimal = false
+            _places = 0
+        }
+    }
+
+    function pushDigit(n) {
+        _consumeFresh()
+        if (_decimal) {
+            _places += 1
+            input = Math.round((input + n / Math.pow(10, _places)) * 1e9) / 1e9
+        } else {
+            input = input * 10 + n
+        }
+    }
+
+    function backspace() {
+        _consumeFresh()
+        if (_places > 0) {
+            _places -= 1
+            input = Math.floor(input * Math.pow(10, _places)) / Math.pow(10, _places)
+            if (_places === 0) {
+                _decimal = false
+            }
+        } else {
+            _decimal = false
+            input = Math.floor(input / 10)
+        }
+    }
+
+    function clear() {
+        input = 0
+        _decimal = false
+        _places = 0
+    }
 
     modal: true
     width: 300
-    height: 320
+    height: 360
 
     GridLayout {
         id: grid
@@ -32,9 +76,7 @@ Popup {
             Layout.fillWidth: true
             text: "Clear"
 
-            onClicked: {
-                input = 0
-            }
+            onClicked: clear()
 
         }
         TextInput {
@@ -59,71 +101,81 @@ Popup {
             text: "7"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = input * 10 + 7
+            onClicked: pushDigit(7)
         }
         Button {
             text: "8"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = input * 10 + 8
+            onClicked: pushDigit(8)
         }
         Button {
             text: "9"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = input * 10 + 9
+            onClicked: pushDigit(9)
         }
         Button {
             text: "4"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = input * 10 + 4
+            onClicked: pushDigit(4)
         }
         Button {
             text: "5"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = input * 10 + 5
+            onClicked: pushDigit(5)
         }
         Button {
             text: "6"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = input * 10 + 6
+            onClicked: pushDigit(6)
         }
         Button {
             text: "1"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = input * 10 + 1
+            onClicked: pushDigit(1)
         }
         Button {
             text: "2"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = input * 10 + 2
+            onClicked: pushDigit(2)
         }
         Button {
             text: "3"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = input * 10 + 3
+            onClicked: pushDigit(3)
         }
         Button {
             text: "⌫"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = Math.floor(input / 10)
+            onClicked: backspace()
         }
         Button {
             text: "0"
             Layout.fillWidth: true
             //Layout.fillHeight: true
-            onClicked: input = input * 10
+            onClicked: pushDigit(0)
+        }
+        Button {
+            text: "."
+            Layout.fillWidth: true
+            //Layout.fillHeight: true
+            onClicked: {
+                _consumeFresh()
+                _decimal = true
+            }
         }
         Button {
             text: "󰸞"
             Layout.fillWidth: true
+            Layout.columnSpan: 3
             //Layout.fillHeight: true
             onClicked: popup.close()
         }

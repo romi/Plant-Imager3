@@ -25,6 +25,7 @@ from dash import Output
 from dash import State
 from dash import callback
 from dash import html
+from dash import no_update
 from plantdb.client.rest_api.requests import request_check_username
 from plantdb.client.rest_api.requests import request_login
 from plantdb.client.rest_api.requests import request_logout
@@ -227,7 +228,7 @@ login_modal = dbc.Modal(children=[
                 class_name="me-2"
             )
         ])
-], id='login-modal', is_open=True, backdrop='static')
+], id='login-modal', is_open=False, backdrop='static')
 
 
 @callback(Output('login-modal', 'is_open', allow_duplicate=True),
@@ -570,18 +571,20 @@ def timeout_modal(username: str | None) -> bool:
 
     Returns
     -------
-    bool
-        ``False`` if a user is logged in (closes modal), ``True`` otherwise (keeps modal open)
+    bool or no_update
+        ``False`` when a user is logged in (closes the modal), ``no_update``
+        otherwise so the modal stays as the user left it
 
     Notes
     -----
     The function includes a 1-second sleep delay to provide time for the logout callback to unset the username.
+    Note that this callback fires when the ``logged-username`` session store is
+    restored on page load, even with ``prevent_initial_call=True``.
     """
     time.sleep(1)
     if username:
-        return False  # close the login modal
-    else:
-        return True  # keep the login modal open
+        return False  # close the login modal after successful login
+    return no_update  # nobody logged in: leave the modal as the user left it
 
 
 @callback(

@@ -1,0 +1,29 @@
+[Unit]
+Description="MQTT lifecycle agent for the Plant-Imager v3 picamera"
+After=network.target network-online.target
+Wants=network-online.target
+
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+[Service]
+Type=simple
+
+# System unit by design: only root can reboot/poweroff the Pi on MQTT
+# command (see step 13). The camera server itself still runs as the
+# login user via its own User= directive.
+User=root
+
+WorkingDirectory=/home/romi
+
+# Broker on the controller Pi over the isolated USB network (see mosquitto.conf).
+Environment=MQTT_BROKER=tcp://10.10.11.1:26400
+ExecStart=/home/romi/picamera-env/bin/picamera-mqtt-agent
+
+KillSignal=SIGTERM
+TimeoutStopSec=10
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -48,7 +48,7 @@ from plantimager.webui.carousel import caroussel_modal
 from plantimager.webui.config import plantdb_cfg_modal
 from plantimager.webui.controller_proxy import RPCController
 from plantimager.webui.login import login_modal
-from plantimager.webui.nav import navbar_layout
+from plantimager.webui.nav import build_navbar_layout
 from plantimager.webui.new_user import new_user_modal
 
 WEBUI_PORT = "8080"
@@ -137,11 +137,8 @@ def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, pla
     - Configuration and authentication modals
     - Main content area for scan management
     """
-    # Ensure `url_prefix` ends with a trailing slash (as required by Dash)
-    if url_prefix and not url_prefix.endswith('/'):
-        url_prefix += '/'
-    else:
-        url_prefix = None
+    # Normalize `url_prefix` to end with a trailing slash (as required by Dash)
+    url_prefix = url_prefix.rstrip('/') + '/' if url_prefix else None
 
     app = Dash(
         name="plantimager.webui",
@@ -176,7 +173,7 @@ def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, pla
         dcc.Store(id='access-token', data=None, storage_type='session'),  # access token of the logged user
         dcc.Store(id='refresh-token', data=None, storage_type='session'),  # refresh token of the logged user
         dcc.Store(id='scan-api-token', data=None, storage_type='session'),  # scoped API token for the current scan
-        dcc.Store(id='scan-job-id', data=0, storage_type='session'),  # trigger to launch the background scan
+        dcc.Store(id='scan-job-id', data=0),  # trigger to launch the background scan
         dcc.Store(id='dataset-list', data=[]),  # list of datasets known to the database
         dcc.Store(id='dataset-id', data=None),  # name of the dataset to create (scan operation)
         dcc.Store(id='dataset-dict', data={}, storage_type='session'),
@@ -184,7 +181,7 @@ def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, pla
         dcc.Store(id='view-dataset', data=None),  # name of the dataset to visualize (plotly carousel)
         # Navigation and modal components
         html.Div(children=[
-            navbar_layout,
+            build_navbar_layout(),
             plantdb_cfg_modal,
             login_modal,
             new_user_modal,

@@ -12,6 +12,8 @@ from PySide6.QtQml import QmlElement
 from PySide6.QtQml import QmlUncreatable
 
 from plantimager.commons.logging import create_logger
+from plantimager.commons.camera_controls import AWB_MODES
+from plantimager.commons.camera_controls import COMMON_CONTROLS
 from plantimager.controller.ImageProvider import imageProvider
 from plantimager.controller.camera.PiCameraComm import CameraStates
 from plantimager.controller.camera.PiCameraComm import PiCameraComm
@@ -66,6 +68,7 @@ class CameraBridge(QObject):
     videoSourceChanged = Signal(str)
     imageSourceChanged = Signal(str)
     videoReady = Signal()
+    configChanged = Signal(dict)
     modeChanged = Signal(str)
     rotationChanged = Signal(int)
     displayModeChanged = Signal(str)
@@ -86,6 +89,7 @@ class CameraBridge(QObject):
         self.camera.modeChanged.connect(self._modeChanged)
         self.camera.videoUrlChanged.connect(self._videoUrlChanged)
         self.camera.stateChanged.connect(self.statusChanged)
+        self.camera.configChanged.connect(self.configChanged)
 
         self._mode: Literal["VIDEO", "STILL"] = self.camera.mode
         self._rotation: int = self.camera.rotation
@@ -109,6 +113,45 @@ class CameraBridge(QObject):
         """Gets a low-resolution image from the camera"""
         if self.camera:
             self.camera.getImage(lores=True)
+
+    @Property("QVariantMap", notify=configChanged)
+    def config(self):
+        if self.camera:
+            return dict(self.camera.config)
+        return {}
+
+    @config.setter
+    def config(self, value):
+        if self.camera:
+            if hasattr(value, "toVariant"):
+                value = value.toVariant()
+            self.camera.config = dict(value)
+
+    @Slot(result="QVariant")
+    def getCameraControls(self):
+        if self.camera:
+            return self.camera.getCameraControls()
+        return {}
+
+    @Slot("QVariantMap")
+    def setDefaultControls(self, value):
+        if self.camera:
+            if hasattr(value, "toVariant"):
+                value = value.toVariant()
+            self.camera.setDefaultControls(dict(value))
+
+    @Slot(bool)
+    def resetControls(self, factory=False):
+        if self.camera:
+            self.camera.resetControls(factory)
+
+    @Property("QVariant", constant=True)
+    def controlFields(self):
+        return list(COMMON_CONTROLS)
+
+    @Property("QVariant", constant=True)
+    def awbModeNames(self):
+        return [{"value": value, "name": name} for value, name in AWB_MODES]
 
     @Property(str, notify=modeChanged)
     def mode(self):
@@ -223,6 +266,11 @@ class DummyCameraBridge(CameraBridge):
     statusChanged = Signal(str)
 
     def __init__(self, parent: QObject):
+        QObject.__init__(self, parent)
+        self._name = ""
+        self._video_source = ""
+        self._image_source = ""
+        self._i = 0
         self._status = CameraStates.INVALID
         self.camera = None
         self._mode = "STILL"

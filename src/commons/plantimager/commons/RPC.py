@@ -52,7 +52,7 @@ from plantimager.commons.utils import is_instance_of_generic
 
 __all__ = ["RPCClient", "RPCServer", "RPCProperty", "RPCSignal", "NoResult"]
 
-logger = create_logger("RPC")
+logger = create_logger("RPC", level=logging.DEBUG)
 
 
 class RPCEvents(StrEnum):

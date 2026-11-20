@@ -70,8 +70,11 @@ fi
 # Change to user's home directory
 cd "/home/$user" || exit 1
 
-# Stop existing service if it's running
+# Stop existing services if running (user units from pre-step-13 installs
+# as well as the current system units).
 systemctl --user is-active --quiet picamera-server.service && systemctl --user stop picamera-server.service
+systemctl is-active --quiet picamera-server.service && sudo systemctl stop picamera-server.service
+systemctl is-active --quiet picamera-mqtt-agent.service && sudo systemctl stop picamera-mqtt-agent.service
 
 echo "installing dependencies"
 # Update apt and install required system packages
@@ -105,26 +108,10 @@ fi
 picamera-env/bin/pip install Plant-Imager3/src/commons || exit 1
 picamera-env/bin/pip install Plant-Imager3/src/picamera || exit 1
 
-echo "installing picamera-server.service"
-# Create systemd user directory if it doesn't exist
-mkdir -p .config/systemd/user
-
-# Copy service definition file to user's systemd directory
-cp Plant-Imager3/system-config/picamera/services/picamera-server.service .config/systemd/user/picamera-server.service
-
-# Update service file with provided registry address and IP
-sed -i "s/PI_REGISTRY=.*/PI_REGISTRY=$registry_address/" .config/systemd/user/picamera-server.service
-sed -i "s/IP_ADDR=.*/IP_ADDR=$self_ip/" .config/systemd/user/picamera-server.service
-
-# Update service file with correct user path
-sed -i "s/ExecStart=\/home\/.*\/picamera-env\/bin\/picamera-server/ExecStart=\/home\/$user\/picamera-env\/bin\/picamera-server/" .config/systemd/user/picamera-server.service
-
-# Enable user services to persist after logout
-loginctl enable-linger "$user"
-
-# Reload systemd, enable and start the service
-systemctl --user daemon-reload
-systemctl --user enable picamera-server.service
-systemctl --user start picamera-server.service
+echo "installing picamera systemd services"
+# System unit files, daemon-reload, enable and start are handled by
+# the picamera-install entry point (templates live in the package).
+# It writes to /etc/systemd/system, so it needs sudo.
+sudo picamera-env/bin/picamera-install --user "$user" --registry "$registry_address" --ip "$self_ip" --start || exit 1
 
 
