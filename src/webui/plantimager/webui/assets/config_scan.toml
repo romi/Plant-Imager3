@@ -29,7 +29,7 @@ encoding = "jpeg"  # "jpeg" or "png"
 # https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf
 
 
-[picamera.offset] # top camera
+[picamera1.offset] # top camera
 x = 0
 y = 0
 z = 0
