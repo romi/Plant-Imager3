@@ -18,7 +18,7 @@ from plantimager.commons.RPC import RPCClient
 from plantimager.commons.cameradevice import Camera
 from plantimager.commons.logging import create_logger
 
-logger = create_logger(__name__, level=logging.DEBUG)
+logger = create_logger(__name__, level=logging.INFO)
 
 
 class CameraStates(StrEnum):

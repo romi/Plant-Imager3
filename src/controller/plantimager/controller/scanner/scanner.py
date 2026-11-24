@@ -66,7 +66,7 @@ from plantimager.controller.scanner.path import Pose
 QML_IMPORT_NAME = "PlantImagerApp.Scanner"
 QML_IMPORT_MAJOR_VERSION = 1
 
-logger = create_logger(__name__, level=logging.DEBUG)
+logger = create_logger(__name__, level=logging.INFO)
 
 
 class DataUploader():
