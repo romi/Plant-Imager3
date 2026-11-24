@@ -11,3 +11,5 @@ include plantimager/controller/PlantImagerApp/Style/*.png
 include plantimager/controller/PlantImagerApp/ttf/*.ttf
 include plantimager/controller/PlantImagerApp/ttf/OFL.txt
 include plantimager/controller/PlantImagerApp/ttf/ttf.qrc
+include plantimager/controller/services/*.service
+include plantimager/controller/services/mosquitto.conf
