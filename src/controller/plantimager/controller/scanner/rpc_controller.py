@@ -251,6 +251,7 @@ class RPCControllerServer(ControllerDevice, RPCServer):
         return self.scanner.get_active_timelapse()
 
     @RPCServer.register_method_json()
+    @run_on_main_thread
     def cancel_timelapse(self):
         """Cancel the active timelapse, if any."""
         self.scanner.cancel_timelapse()
