@@ -44,6 +44,15 @@ The CSV format should follow:
 ```csv
 ssh://user@host:port/path/to/repo,branch_name,subpackage_folder,env_type:env_path
 ```
+
+Optional host-level post-update commands run once that host's updates finish.
+Declare them after a bare `post:` line, one `uri, command` per entry. The URI
+path is the command's working directory; omitting it runs in the user's home.
+
+```csv
+post:
+ssh://romi@picamera2.biologie.ens-lyon.fr/home/romi, systemctl --user restart plant-imager-app.service
+```
 """
 
 import os
@@ -81,6 +90,13 @@ class Task:
 
     def __str__(self):
         return f"[{self.host_string}] {self.package_subpath} ({self.branch})"
+
+
+@dataclass
+class PostCommand:
+    host_string: str
+    cwd: str        # working directory from the URI path; '' means the user's home
+    command: str    # shell command run once the host's updates are done
 
 
 # --- Configuration Parsing ---
@@ -130,23 +146,58 @@ def parse_config_line(line: str) -> Task:
     )
 
 
-def group_tasks_by_host(config_path: str) -> Dict[str, List[Task]]:
+def parse_post_line(line: str) -> PostCommand:
+    """Parses a post-update line: '<ssh_uri>, <command>'."""
+    uri, sep, command = line.partition(',')
+    uri, command = uri.strip(), command.strip()
+    if not sep or not command:
+        raise ValueError(f"Invalid post line, expected '<uri>, <command>': {line}")
+
+    if uri.startswith('ssh://'):
+        parsed = urllib.parse.urlparse(uri)
+        host_str = parsed.hostname
+        if parsed.username:
+            host_str = f"{parsed.username}@{host_str}"
+        if parsed.port:
+            host_str = f"{host_str}:{parsed.port}"
+        cwd = parsed.path  # '' => user's home (SSH default); set to change dir
+    else:
+        host_str, cwd = uri, ""
+
+    return PostCommand(host_string=host_str, cwd=cwd, command=command)
+
+
+def group_tasks_by_host(config_path: str):
+    """Returns (tasks_by_host, post_by_host) parsed from the config file.
+
+    A line that is just ``post:`` switches the rest of the file to post-update
+    directives ``<ssh_uri>, <command>``, grouped by host. The URI path is used
+    as the command's working directory; an empty path means the user's home.
+    """
     tasks_by_host = {}
+    post_by_host = {}
+    in_post = False
 
     with open(config_path, 'r') as f:
-        # Skip empty lines or comments
         lines = [l for l in f.readlines() if l.strip() and not l.strip().startswith('#')]
 
-        for line in lines:
-            try:
-                task = parse_config_line(line)
-                if task.host_string not in tasks_by_host:
-                    tasks_by_host[task.host_string] = []
-                tasks_by_host[task.host_string].append(task)
-            except Exception as e:
-                click.secho(f"Skipping invalid line: {line.strip()} -> {e}", fg='yellow')
+    for line in lines:
+        if line.strip().lower().rstrip(':') == 'post':
+            in_post = True
+            continue
 
-    return tasks_by_host
+        try:
+            if in_post:
+                post = parse_post_line(line)
+                post_by_host.setdefault(post.host_string, []).append(post)
+            else:
+                task = parse_config_line(line)
+                tasks_by_host.setdefault(task.host_string, []).append(task)
+        except Exception as e:
+            kind = "post line" if in_post else "line"
+            click.secho(f"Skipping invalid {kind}: {line.strip()} -> {e}", fg='yellow')
+
+    return tasks_by_host, post_by_host
 
 
 # --- Core Logic ---
@@ -245,11 +296,13 @@ def execute_task(conn: Connection, task: Task):
             raise RuntimeError(f"Command failed: {e.result.command}\nStderr: {e.result.stderr}")
 
 
-def process_host(host_string: str, tasks: List[Task]) -> List[str]:
+def process_host(host_string: str, tasks: List[Task], post_cmds: List[PostCommand] = None) -> List[str]:
     """
     Worker function running in a thread.
-    Processes all tasks for a specific host sequentially.
+    Processes all tasks for a specific host sequentially, then runs the
+    host's post-update commands in config order.
     """
+    post_cmds = post_cmds or []
     logs = []
 
     try:
@@ -264,11 +317,25 @@ def process_host(host_string: str, tasks: List[Task]) -> List[str]:
                 logs.append(f"[SUCCESS] {task.package_subpath}")
             except Exception as e:
                 logs.append(f"[FAILURE] {task.package_subpath}: {str(e)}")
-                # CRITICAL: Stop processing this host if one component fails?
                 # Based on 'update system', usually dependencies matter.
                 # We break here to prevent cascading errors.
                 logs.append("Aborting remaining tasks for this host due to failure.")
                 break
+
+        # Post-update commands, once all tasks for this host are done.
+        for post in post_cmds:
+            try:
+                if post.cwd:
+                    with conn.cd(post.cwd):
+                        res = conn.run(post.command, hide=True, warn=True)
+                else:
+                    res = conn.run(post.command, hide=True, warn=True)
+                if res.failed:
+                    logs.append(f"[WARNING] post command failed ({post.command}): {res.stderr.strip()}")
+                else:
+                    logs.append(f"[SUCCESS] post: {post.command}")
+            except Exception as e:
+                logs.append(f"[WARNING] post command errored ({post.command}): {e}")
 
         conn.close()
 
@@ -289,7 +356,7 @@ def main(config, workers):
     Updates git repositories and pip installs packages across multiple hosts via SSH.
     """
     click.secho("Parsing configuration...", fg='blue')
-    tasks_by_host = group_tasks_by_host(config)
+    tasks_by_host, post_by_host = group_tasks_by_host(config)
 
     if not tasks_by_host:
         click.secho("No valid tasks found.", fg='red')
@@ -303,7 +370,7 @@ def main(config, workers):
     with ThreadPoolExecutor(max_workers=workers) as executor:
         # Map futures to hosts
         future_to_host = {
-            executor.submit(process_host, host, tasks): host
+            executor.submit(process_host, host, tasks, post_by_host.get(host, [])): host
             for host, tasks in tasks_by_host.items()
         }
 

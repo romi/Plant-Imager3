@@ -8,3 +8,9 @@ ssh://romi@picamera1.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/
 ssh://romi@picamera1.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/picamera, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
 ssh://romi@picamera2.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/commons, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
 ssh://romi@picamera2.biologie.ens-lyon.fr/home/romi/Plant-Imager3, develop, src/picamera, venv:../picamera-env, --proxy socks5h://localhost:9090 --no-build-isolation
+
+post:
+ssh://romi@plant-imager.biologie.ens-lyon.fr/home/romi, systemctl --user restart plant-imager-app.service
+ssh://romi@plant-imager.biologie.ens-lyon.fr/home/romi, systemctl --user restart plant-imager-webui.service
+ssh://romi@picamera1.biologie.ens-lyon.fr/home/romi, systemctl --user restart picamera-server.service
+ssh://romi@picamera2.biologie.ens-lyon.fr/home/romi, systemctl --user restart picamera-server.service
