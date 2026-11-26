@@ -28,6 +28,7 @@ $ python app.py --plantdb-host example-server.local --plantdb-port 5000
 """
 
 import argparse
+import logging
 import os
 from pathlib import Path
 from threading import Thread
@@ -137,6 +138,11 @@ def setup_web_app(plantdb_host: str, plantdb_port: int, plantdb_prefix: str, pla
     - Configuration and authentication modals
     - Main content area for scan management
     """
+    # Dash's background callback poller floods the Werkzeug access log.
+    logging.getLogger("werkzeug").addFilter(
+        lambda record: "_dash-update-component" not in record.getMessage()
+    )
+
     # Ensure `url_prefix` ends with a trailing slash (as required by Dash)
     if url_prefix and not url_prefix.endswith('/'):
         url_prefix += '/'
